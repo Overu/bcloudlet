@@ -1,0 +1,9 @@
+<module rename-to='core'>
+	<inherits name='com.sencha.gxt.ui.GXT' />
+	<inherits name='org.cloudlet.web.boot.Boot' />
+	<extend-configuration-property name="gin.module" value="org.cloudlet.web.core.client.CoreGinModule" />
+
+	<!-- Specify the paths for translatable code -->
+	<source path='client' />
+	<source path='shared' />
+</module>
