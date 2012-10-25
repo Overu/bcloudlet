@@ -589,6 +589,7 @@
 	<modules>
 		<module>web</module>
 		<module>epub</module>
+		<module>examples</module>
 	</modules>
 
 	<reporting>
