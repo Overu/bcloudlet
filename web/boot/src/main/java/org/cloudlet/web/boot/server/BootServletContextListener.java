@@ -36,7 +36,7 @@ public final class BootServletContextListener extends
 
 	@Override
 	public void contextInitialized(final ServletContextEvent servletContextEvent) {
-		BootUtil.restoreSystemProperties();
+		BootstrapUtil.restoreSystemProperties();
 		if (servletContextListeners == null) {
 			servletContextListeners = ServiceLoader
 					.load(ServletContextListener.class);

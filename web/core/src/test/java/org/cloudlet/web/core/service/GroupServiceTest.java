@@ -4,29 +4,30 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Collections;
 
+import org.cloudlet.web.core.server.CoreResourceConfig;
 import org.cloudlet.web.core.shared.Group;
+import org.cloudlet.web.core.shared.GroupService;
 import org.cloudlet.web.core.shared.User;
+import org.cloudlet.web.core.shared.UserService;
+import org.cloudlet.web.test.WebTest;
 import org.glassfish.jersey.client.proxy.WebResourceFactory;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 import org.junit.Test;
 
-public class GroupServiceTest extends JerseyTest {
+import com.google.inject.Inject;
+
+public class GroupServiceTest extends WebTest {
 
 	private GroupService rootGroupService;
 
+	@Inject
+	CoreResourceConfig config;
+
 	@Override
 	protected ResourceConfig configure() {
-		// mvn test
-		// -DargLine="-Djersey.config.test.container.factory=org.glassfish.jersey.test.inmemory.InMemoryTestContainerFactory"
-		// mvn test
-		// -DargLine="-Djersey.config.test.container.factory=org.glassfish.jersey.test.grizzly.GrizzlyTestContainerFactory"
-		// mvn test
-		// -DargLine="-Djersey.config.test.container.factory=org.glassfish.jersey.test.jdkhttp.JdkHttpServerTestContainerFactory"
 		enable(TestProperties.LOG_TRAFFIC);
-		// enable(TestProperties.DUMP_ENTITY);
-		return CoreApplication.createApp();
+		return config;
 	}
 
 	@Override

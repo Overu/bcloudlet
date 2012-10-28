@@ -16,6 +16,7 @@ public class BootServletModule extends ServletModule {
 	}
 
 	private void loadFromClasspath() {
+
 		ServiceLoader<ServletModule> servletModules = ServiceLoader
 				.load(ServletModule.class);
 		Iterator<ServletModule> servletModuleItr = servletModules.iterator();

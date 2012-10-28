@@ -6,17 +6,9 @@
 	<inherits name='com.google.gwt.user.User' />
 	<inherits name='com.google.gwt.user.theme.clean.Clean' />
 	<inherits name='com.google.gwt.editor.Editor' />
+	<inherits name='com.google.web.bindery.requestfactory.RequestFactory' />
 	<inherits name='com.google.gwt.inject.Inject' />
 
-	<!-- Default Locale. -->
-	<!-- 
-	<extend-property name="locale" values="zh" />
-	<set-property name="locale" value="zh" />
-	<set-property-fallback name="locale" value="zh" />
-
-	<set-property name="user.agent" value="safari" />
-    -->
-    
 	<!-- Specify the app entry point class. -->
 	<entry-point class='org.cloudlet.web.boot.client.Boot' />
 

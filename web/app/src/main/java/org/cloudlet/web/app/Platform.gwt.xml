@@ -2,4 +2,11 @@
 	<inherits name='org.cloudlet.web.core.Core' />
 	<source path='client' />
 	<source path='shared' />
+
+	<!-- Default Locale. -->
+	<extend-property name="locale" values="zh" />
+	<set-property name="locale" value="zh" />
+	<set-property-fallback name="locale" value="zh" />
+
+	<set-property name="user.agent" value="safari" />
 </module>

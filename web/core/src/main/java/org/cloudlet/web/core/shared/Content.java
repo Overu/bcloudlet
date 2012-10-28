@@ -12,7 +12,7 @@ import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
-@TypeDef(name = "principal", typeClass = ContentType.class)
+@TypeDef(name = "principal", typeClass = PrincipalType.class)
 @MappedSuperclass
 @XmlType
 public class Content {
@@ -23,7 +23,7 @@ public class Content {
 	@Version
 	protected Long version;
 
-	@ManyToOne(targetEntity = Content.class)
+	@ManyToOne
 	protected User owner;
 
 	@XmlTransient
@@ -61,6 +61,25 @@ public class Content {
 		return tenant;
 	}
 
+	public String getUri() {
+		return getUriBuilder().toString();
+	}
+
+	public StringBuilder getUriBuilder() {
+		if (container == null) {
+			return new StringBuilder();
+		}
+		StringBuilder builder = container.getUriBuilder();
+		builder.append("/");
+		if (path == null) {
+			// TODO path
+		}
+		builder.append(path);
+		// TODO many
+		builder.append("/").append(getId());
+		return builder;
+	}
+
 	public Long getVersion() {
 		return version;
 	}
@@ -88,5 +107,4 @@ public class Content {
 	public void setVersion(final Long version) {
 		this.version = version;
 	}
-
 }

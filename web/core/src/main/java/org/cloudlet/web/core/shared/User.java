@@ -11,11 +11,31 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class User extends Content {
 
 	@NotNull(message = "你必须指定用户名")
-	protected String name;
+	private String name;
 
-	protected String email;
+	private String email;
 
-	protected String phone;
+	private String phone;
+
+	private String state;
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public String getZip() {
+		return zip;
+	}
+
+	public void setZip(String zip) {
+		this.zip = zip;
+	}
+
+	private String zip;
 
 	public String getName() {
 		return name;
@@ -29,17 +49,17 @@ public class User extends Content {
 		return phone;
 	}
 
-	public void setName(final String value) {
-		this.name = value;
+	public void setName(final String userName) {
+		this.name = userName;
 	}
 
-	public User setEmail(final String value) {
-		this.email = value;
+	public User setEmail(final String password) {
+		this.email = password;
 		return this;
 	}
 
-	public User setPhone(final String value) {
-		this.phone = value;
+	public User setPhone(final String passwordSalt) {
+		this.phone = passwordSalt;
 		return this;
 	}
 

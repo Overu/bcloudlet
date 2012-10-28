@@ -1,1 +1,1 @@
-com.goodow.web.logging.server.ioc.LoggingServletModule
+org.cloudlet.web.logging.server.ioc.LoggingServletModule

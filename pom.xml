@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.cloudlet</groupId>
 	<artifactId>cloudlet</artifactId>
@@ -9,22 +8,21 @@
 	<version>1.0.0-SNAPSHOT</version>
 
 	<properties>
-		<!-- Jersey version -->
+		<!-- Convenience property to set the GWT version -->
 		<jersey.version>2.0-SNAPSHOT</jersey.version>
-		<shiro.version>1.2.0</shiro.version>
-		<slf4j.version>1.6.1</slf4j.version>
 		<gwt.version>2.5.0-rc2</gwt.version>
+		<guice.version>3.0</guice.version>
 		<gin.version>2.0.0</gin.version>
 
-		<gae.version>1.6.5</gae.version>
-		<gae-test.version>1.6.5</gae-test.version>
-		<gae.home>${user.home}/.m2/repository/com/google/appengine/appengine-java-sdk/${gae.version}/appengine-java-sdk-${gae.version}</gae.home>
+		<shiro.version>1.2.0</shiro.version>
+		<slf4j.version>1.6.1</slf4j.version>
 
 		<datanucleus.version>3.0.2</datanucleus.version>
 		<hibernate.version>4.1.0.Final</hibernate.version>
 
-		<!-- Convenience property to set the GWT version -->
-		<guice.version>3.0</guice.version>
+		<gae.version>1.6.5</gae.version>
+		<gae-test.version>1.6.5</gae-test.version>
+		<gae.home>${user.home}/.m2/repository/com/google/appengine/appengine-java-sdk/${gae.version}/appengine-java-sdk-${gae.version}</gae.home>
 
 		<!-- GWT needs at least java 1.6 -->
 		<maven.compiler.source>1.6</maven.compiler.source>
@@ -37,6 +35,18 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<!-- Security -->
+			<dependency>
+				<groupId>org.apache.shiro</groupId>
+				<artifactId>shiro-web</artifactId>
+				<version>${shiro.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.shiro</groupId>
+				<artifactId>shiro-guice</artifactId>
+				<version>${shiro.version}</version>
+			</dependency>
+
 			<!-- logging -->
 			<dependency>
 				<groupId>org.slf4j</groupId>
@@ -59,38 +69,6 @@
 				<version>${slf4j.version}</version>
 			</dependency>
 
-			<!-- Security -->
-			<dependency>
-				<groupId>org.apache.shiro</groupId>
-				<artifactId>shiro-web</artifactId>
-				<version>${shiro.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.shiro</groupId>
-				<artifactId>shiro-guice</artifactId>
-				<version>${shiro.version}</version>
-			</dependency>
-
-			<!-- Jersey -->
-			<dependency>
-				<groupId>org.glassfish.jersey.containers</groupId>
-				<artifactId>jersey-container-grizzly2-http</artifactId>
-				<version>${jersey.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.glassfish.jersey.test-framework.providers</groupId>
-				<artifactId>jersey-test-framework-provider-bundle</artifactId>
-				<version>${jersey.version}</version>
-				<type>pom</type>
-				<scope>test</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>com.google.guava</groupId>
-				<artifactId>guava</artifactId>
-				<version>13.0</version>
-			</dependency>
 			<!-- persistence -->
 			<dependency>
 				<groupId>javax.validation</groupId>
@@ -123,9 +101,40 @@
 				<version>1.1</version>
 			</dependency>
 			<dependency>
+				<groupId>org.datanucleus</groupId>
+				<artifactId>datanucleus-core</artifactId>
+				<version>${datanucleus.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>javax.transaction</groupId>
 				<artifactId>transaction-api</artifactId>
 				<version>1.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.datanucleus</groupId>
+				<artifactId>datanucleus-api-jpa</artifactId>
+				<version>${datanucleus.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.datanucleus</groupId>
+				<artifactId>datanucleus-api-jdo</artifactId>
+				<version>${datanucleus.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.datanucleus</groupId>
+				<artifactId>datanucleus-cache</artifactId>
+				<version>[3.0.1, )</version>
+			</dependency>
+			<dependency>
+				<groupId>org.datanucleus</groupId>
+				<artifactId>datanucleus-enhancer</artifactId>
+				<version>[3.0.1, )</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.datanucleus</groupId>
+				<artifactId>datanucleus-rdbms</artifactId>
+				<version>${datanucleus.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.hsqldb</groupId>
@@ -162,21 +171,39 @@
 				<artifactId>hibernate-entitymanager</artifactId>
 				<version>${hibernate.version}</version>
 			</dependency>
-
+			<!-- Jersey -->
 			<dependency>
-				<groupId>javax.servlet</groupId>
-				<artifactId>servlet-api</artifactId>
-				<version>2.5</version>
-				<scope>provided</scope>
+				<groupId>org.glassfish.jersey.containers</groupId>
+				<artifactId>jersey-container-grizzly2-http</artifactId>
+				<version>${jersey.version}</version>
 			</dependency>
-
-			<!-- GXT -->
 			<dependency>
-				<groupId>com.sencha.gxt</groupId>
-				<artifactId>gxt</artifactId>
-				<version>3.0.1</version>
+				<groupId>org.glassfish.jersey.containers</groupId>
+				<artifactId>jersey-container-grizzly2-servlet</artifactId>
+				<version>${jersey.version}</version>
 			</dependency>
-
+			<dependency>
+				<groupId>org.glassfish.jersey.media</groupId>
+				<artifactId>jersey-media-json-jettison</artifactId>
+				<version>${jersey.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.glassfish.jersey.ext</groupId>
+				<artifactId>jersey-proxy-client</artifactId>
+				<version>${jersey.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.glassfish.jersey.test-framework.providers</groupId>
+				<artifactId>jersey-test-framework-provider-bundle</artifactId>
+				<version>${jersey.version}</version>
+				<type>pom</type>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>13.0</version>
+			</dependency>
 			<!-- Google Web Toolkit (GWT) -->
 			<dependency>
 				<groupId>com.google.gwt</groupId>
@@ -205,8 +232,6 @@
 				<version>${gwt.version}</version>
 				<scope>runtime</scope>
 			</dependency>
-
-
 			<!-- RequestFactory server -->
 			<dependency>
 				<groupId>com.google.web.bindery</groupId>
@@ -224,6 +249,17 @@
 				<groupId>org.json</groupId>
 				<artifactId>json</artifactId>
 				<version>20090211</version>
+			</dependency>
+			<!-- GXT -->
+			<dependency>
+				<groupId>com.sencha.gxt</groupId>
+				<artifactId>gxt</artifactId>
+				<version>3.0.1</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sencha.gxt</groupId>
+				<artifactId>gxt-chart</artifactId>
+				<version>3.0.1</version>
 			</dependency>
 
 			<!-- GIN and Guice for IoC / DI -->
@@ -262,6 +298,13 @@
 						<artifactId>gwt-servlet</artifactId>
 					</exclusion>
 				</exclusions>
+			</dependency>
+
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>servlet-api</artifactId>
+				<version>2.5</version>
+				<scope>provided</scope>
 			</dependency>
 
 			<!-- Google App Engine -->
@@ -554,7 +597,7 @@
 						</additionalBuildcommands>
 						<additionalProjectnatures>
 							<projectnature>com.google.gwt.eclipse.core.gwtNature</projectnature>
-							<!-- <projectnature>com.google.appengine.eclipse.core.gaeNature</projectnature> -->
+							<projectnature>com.google.appengine.eclipse.core.gaeNature</projectnature>
 						</additionalProjectnatures>
 					</configuration>
 				</plugin>
@@ -562,7 +605,7 @@
 				<!-- Add source folders to test classpath in order to run gwt-tests as normal junit-tests -->
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.12.4</version>
+					<version>2.5</version>
 					<configuration>
 						<additionalClasspathElements>
 							<additionalClasspathElement>${project.build.sourceDirectory}</additionalClasspathElement>
@@ -581,27 +624,9 @@
 						</systemProperties>
 					</configuration>
 				</plugin>
-
 			</plugins>
 		</pluginManagement>
 	</build>
-
-	<modules>
-		<module>web</module>
-		<module>epub</module>
-		<module>examples</module>
-	</modules>
-
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>2.12.4</version>
-			</plugin>
-		</plugins>
-	</reporting>
-
 	<repositories>
 		<repository>
 			<id>snapshot-repository.java.net</id>
@@ -642,4 +667,9 @@
 			<url>http://dev.retechcorp.com:8081/nexus/content/repositories/thirdparty</url>
 		</repository>
 	</repositories>
+
+	<modules>
+		<module>web</module>
+		<module>examples</module>
+	</modules>
 </project>

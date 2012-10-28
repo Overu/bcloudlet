@@ -20,6 +20,10 @@
 			<artifactId>gwt-user</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-servlet</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.cloudlet.web</groupId>
 			<artifactId>org.cloudlet.web.boot</artifactId>
 			<version>${project.version}</version>
