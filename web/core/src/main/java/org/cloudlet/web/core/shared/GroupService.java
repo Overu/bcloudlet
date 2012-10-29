@@ -11,29 +11,20 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @Path("groups")
-public interface GroupService extends ContentService<Group> {
-
-	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-	String getIt();
+public interface GroupService extends Service<Group, GroupsFeed> {
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_XML })
 	@Produces({ MediaType.APPLICATION_XML })
-	List<Group> postIt(List<Group> entity);
+	List<Group> createGroups(List<Group> entity);
 
-	@Path("{id}")
 	@GET
+	@Path("{path}")
 	@Consumes(MediaType.WILDCARD)
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Override
-	Group getById(@PathParam("id") String id);
+	Group getEntry(@PathParam("path") String path);
 
-	@Path("query")
-	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-	String getByName(@PathParam("name") String name);
+	@Path("{path}/users")
+	UserService getUserService(@PathParam("path") String path);
 
-	@Path("{id}/users")
-	UserService getUserService(@PathParam("id") String groupId);
 }

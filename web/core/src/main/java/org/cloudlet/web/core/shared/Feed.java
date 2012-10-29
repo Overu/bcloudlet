@@ -3,12 +3,16 @@ package org.cloudlet.web.core.shared;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 
-@XmlRootElement
-public class Feed<E extends Content> {
+@MappedSuperclass
+public class Feed<E extends Entry> extends Content {
 
 	private long totalResults;
+
+	@Transient
+	private List<E> entries = new ArrayList<E>();
 
 	public long getTotalResults() {
 		return totalResults;
@@ -17,8 +21,6 @@ public class Feed<E extends Content> {
 	public void setTotalResults(long totalResults) {
 		this.totalResults = totalResults;
 	}
-
-	private List<E> entries = new ArrayList<E>();
 
 	public List<E> getEntries() {
 		return entries;

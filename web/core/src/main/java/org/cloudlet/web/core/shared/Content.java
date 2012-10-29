@@ -5,14 +5,16 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
+import org.cloudlet.web.core.server.ContentType;
 import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
-@TypeDef(name = "principal", typeClass = PrincipalType.class)
+@TypeDef(name = "content", typeClass = ContentType.class)
 @MappedSuperclass
 @XmlType
 public class Content {
@@ -20,28 +22,22 @@ public class Content {
 	@Id
 	protected String id;
 
+	protected String path;
+
 	@Version
 	protected Long version;
 
 	@ManyToOne
 	protected User owner;
 
-	@XmlTransient
-	@Type(type = "principal")
-	@Columns(columns = { @Column(name = "tenantType"),
-			@Column(name = "tenantName") })
-	private Content tenant;
+	@Type(type = "content")
+	@Columns(columns = { @Column(name = "parentType"),
+			@Column(name = "parentId") })
+	private Content parent;
 
 	@XmlTransient
-	@Type(type = "principal")
-	@Columns(columns = { @Column(name = "containerType"),
-			@Column(name = "containerId") })
-	private Content container;
-
-	private String path;
-
-	public Content getContainer() {
-		return container;
+	public Content getParent() {
+		return parent;
 	}
 
 	public String getId() {
@@ -56,27 +52,17 @@ public class Content {
 		return path;
 	}
 
-	@XmlTransient
-	public Content getTenant() {
-		return tenant;
-	}
-
+	@XmlElement
 	public String getUri() {
 		return getUriBuilder().toString();
 	}
 
 	public StringBuilder getUriBuilder() {
-		if (container == null) {
+		if (parent == null) {
 			return new StringBuilder();
 		}
-		StringBuilder builder = container.getUriBuilder();
-		builder.append("/");
-		if (path == null) {
-			// TODO path
-		}
-		builder.append(path);
-		// TODO many
-		builder.append("/").append(getId());
+		StringBuilder builder = parent.getUriBuilder();
+		builder.append("/").append(path);
 		return builder;
 	}
 
@@ -84,8 +70,8 @@ public class Content {
 		return version;
 	}
 
-	public void setContainer(final Content container) {
-		this.container = container;
+	public void setParent(final Content container) {
+		this.parent = container;
 	}
 
 	public void setId(final String id) {
@@ -98,10 +84,6 @@ public class Content {
 
 	public void setPath(final String path) {
 		this.path = path;
-	}
-
-	public void setTenant(final Content tenant) {
-		this.tenant = tenant;
 	}
 
 	public void setVersion(final Long version) {

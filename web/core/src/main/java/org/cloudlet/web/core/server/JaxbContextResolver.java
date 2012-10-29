@@ -9,10 +9,11 @@ import javax.xml.bind.JAXBContext;
 
 import org.cloudlet.web.core.shared.Feed;
 import org.cloudlet.web.core.shared.Group;
+import org.cloudlet.web.core.shared.GroupsFeed;
 import org.cloudlet.web.core.shared.User;
+import org.cloudlet.web.core.shared.UsersFeed;
 import org.glassfish.jersey.jettison.JettisonConfiguration;
 import org.glassfish.jersey.jettison.JettisonJaxbContext;
-
 
 @Provider
 public final class JaxbContextResolver implements ContextResolver<JAXBContext> {
@@ -25,7 +26,8 @@ public final class JaxbContextResolver implements ContextResolver<JAXBContext> {
 		jsonXml2JsonNs.put("http://www.w3.org/2001/XMLSchema-instance", "xsi");
 		this.context = new JettisonJaxbContext(JettisonConfiguration
 				.mappedJettison().xml2JsonNs(jsonXml2JsonNs).build(),
-				Feed.class, User.class, Group.class);
+				Feed.class, UsersFeed.class, GroupsFeed.class, User.class,
+				Group.class);
 	}
 
 	@Override

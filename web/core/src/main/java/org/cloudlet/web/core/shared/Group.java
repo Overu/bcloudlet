@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "t_group")
-public class Group extends Content {
+public class Group extends Entry {
 
 	protected String name;
 
@@ -18,7 +18,7 @@ public class Group extends Content {
 		return name;
 	}
 
-	public void setName(final String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 

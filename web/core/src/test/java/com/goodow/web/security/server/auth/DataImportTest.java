@@ -59,7 +59,7 @@ public class DataImportTest extends WebTest {
 			userName = pm;
 			user = userService.findUserByUsername(userName);
 			if (user != null) {
-				userService.remove(user);
+				userService.deleteEntry(user);
 			}
 			String hashedPwd = new SimpleHash(JpaRealm.ALGORITHM_NAME,
 					pwd.toCharArray(), ByteSource.Util.bytes(pwd)).toHex();
@@ -67,7 +67,7 @@ public class DataImportTest extends WebTest {
 			user.setName(userName);
 			user.setEmail(hashedPwd);
 			user.setPhone(pwd);
-			userService.save(user);
+			userService.createEntry(user);
 		}
 
 		em.get().getTransaction().commit();

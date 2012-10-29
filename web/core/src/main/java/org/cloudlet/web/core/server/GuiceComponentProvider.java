@@ -2,7 +2,7 @@ package org.cloudlet.web.core.server;
 
 import java.util.Set;
 
-import org.cloudlet.web.core.shared.ContentService;
+import org.cloudlet.web.core.shared.Service;
 import org.cloudlet.web.core.shared.WebPlatform;
 import org.glassfish.hk2.api.DynamicConfiguration;
 import org.glassfish.hk2.api.Factory;
@@ -23,7 +23,7 @@ public class GuiceComponentProvider implements ComponentProvider {
 
 		@Override
 		public T provide() {
-			return WebPlatform.getInstance().getInjector().getInstance(clz);
+			return WebPlatform.get().getInjector().getInstance(clz);
 		}
 
 		@Override
@@ -47,7 +47,7 @@ public class GuiceComponentProvider implements ComponentProvider {
 					"Guice component is not initialized properly.");
 		}
 
-		if (!ContentService.class.isAssignableFrom(component)) {
+		if (!Service.class.isAssignableFrom(component)) {
 			return false;
 		}
 

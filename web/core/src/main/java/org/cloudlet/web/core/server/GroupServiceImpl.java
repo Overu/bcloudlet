@@ -2,65 +2,54 @@ package org.cloudlet.web.core.server;
 
 import java.util.List;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
 import org.cloudlet.web.core.shared.Group;
 import org.cloudlet.web.core.shared.GroupService;
+import org.cloudlet.web.core.shared.GroupsFeed;
+import org.cloudlet.web.core.shared.Service;
 import org.cloudlet.web.core.shared.UserService;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.persist.Transactional;
 
-@Path("groups")
-public class GroupServiceImpl extends ContentServiceImpl<Group> implements
+public class GroupServiceImpl extends ServiceImpl<Group, GroupsFeed> implements
 		GroupService {
 
-	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-	public String getIt() {
-		return "Got it!";
+	public GroupServiceImpl() {
 	}
 
-	@POST
-	@Consumes({ MediaType.APPLICATION_XML })
-	@Produces({ MediaType.APPLICATION_XML })
-	public List<Group> postIt(List<Group> entity) {
-		return entity;
-	}
-
-	@Path("{id}")
-	@GET
-	@Consumes(MediaType.WILDCARD)
-	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Override
-	public Group getById(@PathParam("id") String id) {
-		Group g = new Group();
-		g.setId(id);
-		g.setName(id);
-		return g;
-	}
-
-	@Path("query")
-	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-	public String getByName(@PathParam("name") String name) {
-		return name;
+	@Transactional
+	public List<Group> createGroups(List<Group> groups) {
+		for (Group group : groups) {
+			createEntry(group);
+		}
+		return groups;
 	}
 
 	@Inject
-	Provider<UserService> userServiceProvider;
+	Provider<UserServiceImpl> userServiceProvider;
 
-	@Path("{id}/users")
-	public UserService getUserService(@PathParam("id") String groupId) {
-		Group g = getById(groupId);
+	public UserService getUserService(String groupId) {
+		Group g = getEntry(groupId);
 		UserService service = userServiceProvider.get();
 		service.setContainer(g);
+		service.setPath("users");
 		return service;
 	}
+
+	@Override
+	protected Class<Group> getEntryType() {
+		return Group.class;
+	}
+
+	@Override
+	protected Class<GroupsFeed> getFeedType() {
+		return GroupsFeed.class;
+	}
+
+	@Override
+	protected Class<? extends Service<Group, GroupsFeed>> getServiceType() {
+		return GroupService.class;
+	}
+
 }

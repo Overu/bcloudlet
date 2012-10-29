@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Entity
 @Table(name = "t_user")
-public class User extends Content {
+public class User extends Entry {
 
 	@NotNull(message = "你必须指定用户名")
 	private String name;
@@ -49,17 +49,17 @@ public class User extends Content {
 		return phone;
 	}
 
-	public void setName(final String userName) {
-		this.name = userName;
+	public void setName(final String value) {
+		this.name = value;
 	}
 
-	public User setEmail(final String password) {
-		this.email = password;
+	public User setEmail(final String value) {
+		this.email = value;
 		return this;
 	}
 
-	public User setPhone(final String passwordSalt) {
-		this.phone = passwordSalt;
+	public User setPhone(final String value) {
+		this.phone = value;
 		return this;
 	}
 

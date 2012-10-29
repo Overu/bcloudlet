@@ -10,14 +10,14 @@ import javax.ws.rs.core.MediaType;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 
 @Path("users")
-public interface UserService extends ContentService<User> {
+public interface UserService extends Service<User, UsersFeed> {
 
 	@Path("{id}")
 	@GET
 	@Consumes(MediaType.WILDCARD)
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	User getById(@PathParam("id") String id);
+	User getEntry(@PathParam("path") String path);
 
 	User findUserByUsername(final String userName);
 
@@ -26,5 +26,5 @@ public interface UserService extends ContentService<User> {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_ATOM_XML, MediaType.APPLICATION_JSON })
-	Feed<User> getFeed();
+	UsersFeed getFeed();
 }

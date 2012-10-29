@@ -48,7 +48,7 @@ public class WebPlace extends Place {
 	private static final Logger logger = Logger.getLogger(WebPlace.class
 			.getName());
 
-	private Content content;
+	private Entry content;
 
 	public void addChild(final WebPlace place) {
 		children.add(place);
@@ -99,7 +99,7 @@ public class WebPlace extends Place {
 		return children;
 	}
 
-	public Content getContent() {
+	public Entry getContent() {
 		return content;
 	}
 
@@ -165,7 +165,7 @@ public class WebPlace extends Place {
 		this.buttonText = buttonText;
 	}
 
-	public void setContent(final Content content) {
+	public void setContent(final Entry content) {
 		this.content = content;
 	}
 
