@@ -11,7 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @Path("groups")
-public interface GroupService extends Service<Group, GroupsFeed> {
+public interface GroupService extends Service<Group, GroupFeed> {
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_XML })

@@ -10,7 +10,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 
 @Path("users")
-public interface UserService extends Service<User, UsersFeed> {
+public interface UserService extends Service<User, UserFeed> {
 
 	@Path("{id}")
 	@GET
@@ -26,5 +26,5 @@ public interface UserService extends Service<User, UsersFeed> {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_ATOM_XML, MediaType.APPLICATION_JSON })
-	UsersFeed getFeed();
+	UserFeed getFeed();
 }

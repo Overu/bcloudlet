@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.cloudlet.web.core.shared.Group;
 import org.cloudlet.web.core.shared.GroupService;
-import org.cloudlet.web.core.shared.GroupsFeed;
+import org.cloudlet.web.core.shared.GroupFeed;
 import org.cloudlet.web.core.shared.Service;
 import org.cloudlet.web.core.shared.UserService;
 
@@ -12,7 +12,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.persist.Transactional;
 
-public class GroupServiceImpl extends ServiceImpl<Group, GroupsFeed> implements
+public class GroupServiceImpl extends ServiceImpl<Group, GroupFeed> implements
 		GroupService {
 
 	public GroupServiceImpl() {
@@ -43,12 +43,12 @@ public class GroupServiceImpl extends ServiceImpl<Group, GroupsFeed> implements
 	}
 
 	@Override
-	protected Class<GroupsFeed> getFeedType() {
-		return GroupsFeed.class;
+	protected Class<GroupFeed> getFeedType() {
+		return GroupFeed.class;
 	}
 
 	@Override
-	protected Class<? extends Service<Group, GroupsFeed>> getServiceType() {
+	protected Class<? extends Service<Group, GroupFeed>> getServiceType() {
 		return GroupService.class;
 	}
 

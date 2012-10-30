@@ -13,10 +13,10 @@ import org.cloudlet.web.core.shared.Group;
 import org.cloudlet.web.core.shared.Service;
 import org.cloudlet.web.core.shared.User;
 import org.cloudlet.web.core.shared.UserService;
-import org.cloudlet.web.core.shared.UsersFeed;
+import org.cloudlet.web.core.shared.UserFeed;
 
 @Path("users")
-public class UserServiceImpl extends ServiceImpl<User, UsersFeed> implements
+public class UserServiceImpl extends ServiceImpl<User, UserFeed> implements
 		UserService {
 
 	private static final Logger logger = Logger.getLogger(UserServiceImpl.class
@@ -58,12 +58,12 @@ public class UserServiceImpl extends ServiceImpl<User, UsersFeed> implements
 	}
 
 	@Override
-	protected Class<UsersFeed> getFeedType() {
-		return UsersFeed.class;
+	protected Class<UserFeed> getFeedType() {
+		return UserFeed.class;
 	}
 
 	@Override
-	protected Class<? extends Service<User, UsersFeed>> getServiceType() {
+	protected Class<? extends Service<User, UserFeed>> getServiceType() {
 		return UserService.class;
 	}
 }

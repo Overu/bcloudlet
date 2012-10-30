@@ -5,6 +5,5 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @Entity
-public class GroupsFeed extends Feed<Group> {
-
+public class UserFeed extends Feed<User> {
 }

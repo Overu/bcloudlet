@@ -11,7 +11,7 @@ import org.cloudlet.web.core.shared.Group;
 import org.cloudlet.web.core.shared.GroupService;
 import org.cloudlet.web.core.shared.User;
 import org.cloudlet.web.core.shared.UserService;
-import org.cloudlet.web.core.shared.UsersFeed;
+import org.cloudlet.web.core.shared.UserFeed;
 import org.cloudlet.web.test.WebTest;
 import org.glassfish.jersey.client.proxy.WebResourceFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -53,7 +53,7 @@ public class GroupServiceTest extends WebTest {
 			groupService.createEntry(group);
 		}
 		UserService userService = groupService.getUserService(group.getPath());
-		UsersFeed users = userService.getFeed(0, 0);
+		UserFeed users = userService.getFeed(0, 0);
 		long total = users.getTotalResults();
 		User user = new User();
 		long r = total + 1;
