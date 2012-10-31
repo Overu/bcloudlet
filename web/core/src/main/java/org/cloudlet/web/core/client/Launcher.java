@@ -7,7 +7,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class Launcher {
 	@Inject
-	public Launcher(UsersGrid example) {
+	public Launcher(UserGrid example) {
 		RootPanel.get().add(example);
 	}
 }

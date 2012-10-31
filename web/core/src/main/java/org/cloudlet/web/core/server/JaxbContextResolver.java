@@ -7,11 +7,11 @@ import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
 import javax.xml.bind.JAXBContext;
 
-import org.cloudlet.web.core.shared.Feed;
-import org.cloudlet.web.core.shared.Group;
-import org.cloudlet.web.core.shared.GroupFeed;
-import org.cloudlet.web.core.shared.User;
-import org.cloudlet.web.core.shared.UserFeed;
+import org.cloudlet.web.core.Feed;
+import org.cloudlet.web.core.Group;
+import org.cloudlet.web.core.GroupFeed;
+import org.cloudlet.web.core.User;
+import org.cloudlet.web.core.UserFeed;
 import org.glassfish.jersey.jettison.JettisonConfiguration;
 import org.glassfish.jersey.jettison.JettisonJaxbContext;
 

@@ -17,8 +17,8 @@ import org.apache.shiro.crypto.hash.Sha1Hash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
-import org.cloudlet.web.core.shared.User;
-import org.cloudlet.web.core.shared.UserService;
+import org.cloudlet.web.core.User;
+import org.cloudlet.web.core.service.UserService;
 
 import com.google.inject.Inject;
 

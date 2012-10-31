@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.cloudlet.web.core.Entry;
 
 import com.google.gwt.inject.client.AsyncProvider;
 import com.google.gwt.place.shared.Place;

@@ -6,6 +6,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.cloudlet.web.boot.server.BootModule;
+import org.cloudlet.web.core.Group;
+import org.cloudlet.web.core.WebPlatform;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.jettison.JettisonBinder;
@@ -20,12 +22,13 @@ public class CoreResourceConfig extends ResourceConfig {
 
 	@Inject
 	public CoreResourceConfig() {
-		super(JaxbContextResolver.class, UserServiceImpl.class, GroupServiceImpl.class);
+		super(JaxbContextResolver.class);
 		addBinders(new JettisonBinder());
+		addClasses(WebPlatform.class, Group.class);
 	}
 
 	private static final URI BASE_URI = URI
-			.create("http://localhost:8080/core/");
+			.create("http://localhost:8080/web/");
 
 	public static void main(String[] args) {
 		try {

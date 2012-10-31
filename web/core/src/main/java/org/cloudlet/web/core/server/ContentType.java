@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.cloudlet.web.core.shared.Content;
+import org.cloudlet.web.core.Content;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.engine.spi.SessionImplementor;

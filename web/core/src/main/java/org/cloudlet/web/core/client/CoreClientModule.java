@@ -2,10 +2,10 @@ package org.cloudlet.web.core.client;
 
 import java.util.logging.Logger;
 
+import org.cloudlet.web.core.WebPlatform;
 import org.cloudlet.web.core.shared.HomePlace;
 import org.cloudlet.web.core.shared.WebPlace;
 import org.cloudlet.web.core.shared.WebPlaceManager;
-import org.cloudlet.web.core.shared.WebPlatform;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
@@ -113,7 +113,7 @@ public class CoreClientModule extends AbstractGinModule {
 	@HomePlace
 	@Provides
 	@Singleton
-	public WebPlace getHomePage(final WebPlace homePlace, UsersGrid usersGrid) {
+	public WebPlace getHomePage(final WebPlace homePlace, UserGrid usersGrid) {
 		homePlace.setWidget(usersGrid);
 		return homePlace;
 	}

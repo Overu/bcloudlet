@@ -1,9 +1,11 @@
 package org.cloudlet.web.core.server;
 
 import java.util.Set;
+import java.util.logging.Logger;
 
-import org.cloudlet.web.core.shared.Service;
-import org.cloudlet.web.core.shared.WebPlatform;
+import javax.swing.text.AbstractDocument.Content;
+
+import org.cloudlet.web.core.WebPlatform;
 import org.glassfish.hk2.api.DynamicConfiguration;
 import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -12,6 +14,9 @@ import org.glassfish.jersey.internal.inject.ServiceBindingBuilder;
 import org.glassfish.jersey.server.spi.ComponentProvider;
 
 public class GuiceComponentProvider implements ComponentProvider {
+
+	private static final Logger LOGGER = Logger
+			.getLogger(GuiceComponentProvider.class.getName());
 
 	private class GuiceFactory<T> implements Factory<T> {
 
@@ -23,7 +28,7 @@ public class GuiceComponentProvider implements ComponentProvider {
 
 		@Override
 		public T provide() {
-			return WebPlatform.get().getInjector().getInstance(clz);
+			return WebPlatform.getDefault().getInjector().getInstance(clz);
 		}
 
 		@Override
@@ -47,7 +52,10 @@ public class GuiceComponentProvider implements ComponentProvider {
 					"Guice component is not initialized properly.");
 		}
 
-		if (!Service.class.isAssignableFrom(component)) {
+		LOGGER.info("Bind " + component);
+		if (!WebPlatform.class.equals(component)
+				&& !Content.class.isAssignableFrom(component)) {
+			LOGGER.warning("Out of Guice's control " + component);
 			return false;
 		}
 

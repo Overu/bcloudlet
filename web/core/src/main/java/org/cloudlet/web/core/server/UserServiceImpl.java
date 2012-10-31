@@ -3,28 +3,22 @@ package org.cloudlet.web.core.server;
 import java.util.logging.Logger;
 
 import javax.persistence.NoResultException;
-import javax.ws.rs.Path;
 
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.util.ByteSource;
-import org.cloudlet.web.core.shared.Group;
-import org.cloudlet.web.core.shared.Service;
-import org.cloudlet.web.core.shared.User;
-import org.cloudlet.web.core.shared.UserService;
-import org.cloudlet.web.core.shared.UserFeed;
+import org.cloudlet.web.core.User;
+import org.cloudlet.web.core.service.UserService;
 
-@Path("users")
-public class UserServiceImpl extends ServiceImpl<User, UserFeed> implements
+import com.google.inject.Singleton;
+
+@Singleton
+public class UserServiceImpl extends EntryServiceImpl<User> implements
 		UserService {
 
 	private static final Logger logger = Logger.getLogger(UserServiceImpl.class
 			.getName());
-
-	public User getEntry(String id) {
-		return super.getEntry(id);
-	}
 
 	public User findUserByUsername(final String userName) {
 		User toRtn = null;
@@ -52,18 +46,4 @@ public class UserServiceImpl extends ServiceImpl<User, UserFeed> implements
 		em().persist(user);
 	}
 
-	@Override
-	protected Class<User> getEntryType() {
-		return User.class;
-	}
-
-	@Override
-	protected Class<UserFeed> getFeedType() {
-		return UserFeed.class;
-	}
-
-	@Override
-	protected Class<? extends Service<User, UserFeed>> getServiceType() {
-		return UserService.class;
-	}
 }
