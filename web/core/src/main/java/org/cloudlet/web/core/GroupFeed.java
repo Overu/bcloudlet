@@ -9,5 +9,8 @@ import org.cloudlet.web.core.service.GroupFeedService;
 @Entity
 @Handler(GroupFeedService.class)
 public class GroupFeed extends Feed<Group> {
-
+	@Override
+	public Class<Group> getEntryType() {
+		return Group.class;
+	}
 }

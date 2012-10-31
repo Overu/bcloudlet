@@ -43,11 +43,14 @@ public class UserGrid implements IsWidget, EntryPoint {
 		@Override
 		public ListLoadResult<JSONObject> read(Object loadConfig, String data) {
 			JSONObject root = JSONParser.parseLenient(data).isObject();
-			JSONObject feed = root.get("feed").isObject();
-			JSONArray records = feed.get("entries").isArray();
-			List<JSONObject> users = new ArrayList<JSONObject>(records.size());
-			for (int i = 0; i < records.size(); i++) {
-				users.add(records.get(i).isObject());
+			JSONObject feed = root.get("userFeed").isObject();
+			JSONValue entries = feed.get("entries");
+			JSONArray records;
+			List<JSONObject> users = new ArrayList<JSONObject>();
+			if (entries != null && (records = entries.isArray()) != null) {
+				for (int i = 0; i < records.size(); i++) {
+					users.add(records.get(i).isObject());
+				}
 			}
 			ListLoadResultBean<JSONObject> result = new ListLoadResultBean<JSONObject>(
 					users);
@@ -98,7 +101,7 @@ public class UserGrid implements IsWidget, EntryPoint {
 
 		JSONFeedReader reader = new JSONFeedReader();
 
-		String path = "api/groups/g1/users";
+		String path = "api/groups/mygroup/users";
 		RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, path);
 		builder.setHeader("Accept", "application/json");
 		HttpProxy<ListLoadConfig> proxy = new HttpProxy<ListLoadConfig>(builder);

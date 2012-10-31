@@ -8,6 +8,7 @@ import javax.persistence.NoResultException;
 import javax.ws.rs.NotFoundException;
 
 import org.cloudlet.web.core.Group;
+import org.cloudlet.web.core.GroupFeed;
 import org.cloudlet.web.core.User;
 import org.cloudlet.web.core.UserFeed;
 import org.cloudlet.web.core.WebPlatform;
@@ -35,18 +36,22 @@ public class GroupServiceTest extends WebTest {
 		System.out.println(UUID.randomUUID().toString());
 		Group root = (Group) WebPlatform.getDefault().getRoot();
 		Group group;
-		group = root.getGroups().getChild("mygroup");
+		GroupFeed groups = root.getGroups();
+		group = groups.getChild("mygroup");
 		if (group == null) {
-
-		}
-		try {
-			group.load();
-		} catch (NotFoundException e) {
-			group.save();
-		} catch (NoResultException e) {
-			group.save();
-		} catch (Exception e) {
-			group.save();
+			group = new Group();
+			group.setPath("mygroup");
+			group = groups.create(group);
+		} else {
+			try {
+				group.load();
+			} catch (NotFoundException e) {
+				group.save();
+			} catch (NoResultException e) {
+				group.save();
+			} catch (Exception e) {
+				group.save();
+			}
 		}
 		UserFeed users = (UserFeed) group.getUsers().load();
 		long total = users.getTotalResults();

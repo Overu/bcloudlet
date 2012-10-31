@@ -67,17 +67,20 @@ public class ServiceImpl<T extends Content> implements Service<T> {
 	}
 
 	@Override
+	@Transactional
 	public T update(T content) {
 		em().persist(content);
 		return content;
 	}
 
 	@Override
+	@Transactional
 	public void delete(T content) {
 		em().remove(content);
 	}
 
 	@Override
+	@Transactional
 	public T save(T content) {
 		if (content.getId() == null) {
 			content.setId(UUID.randomUUID().toString());

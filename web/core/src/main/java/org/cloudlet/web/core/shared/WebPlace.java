@@ -4,11 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.cloudlet.web.core.Entry;
-
 import com.google.gwt.inject.client.AsyncProvider;
 import com.google.gwt.place.shared.Place;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -16,7 +13,6 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.googlecode.mgwt.ui.client.MGWTStyle;
 
 public class WebPlace extends Place {
 
@@ -38,8 +34,6 @@ public class WebPlace extends Place {
 
 	private IsWidget widget;
 
-	private ImageResource buttonImage;
-
 	private String buttonText;
 
 	private Provider<? extends IsWidget> widgetProvider;
@@ -48,8 +42,6 @@ public class WebPlace extends Place {
 
 	private static final Logger logger = Logger.getLogger(WebPlace.class
 			.getName());
-
-	private Entry content;
 
 	public void addChild(final WebPlace place) {
 		children.add(place);
@@ -71,14 +63,6 @@ public class WebPlace extends Place {
 		return result;
 	}
 
-	public ImageResource getButtonImage() {
-		if (buttonImage == null) {
-			buttonImage = MGWTStyle.getTheme().getMGWTClientBundle()
-					.tabBarFavoritesImage();
-		}
-		return buttonImage;
-	}
-
 	public String getButtonText() {
 		return buttonText;
 	}
@@ -98,10 +82,6 @@ public class WebPlace extends Place {
 
 	public List<WebPlace> getChildren() {
 		return children;
-	}
-
-	public Entry getContent() {
-		return content;
 	}
 
 	public WebPlace getParent() {
@@ -158,16 +138,8 @@ public class WebPlace extends Place {
 		render(panel, null);
 	}
 
-	public void setButtonImage(final ImageResource buttonImage) {
-		this.buttonImage = buttonImage;
-	}
-
 	public void setButtonText(final String buttonText) {
 		this.buttonText = buttonText;
-	}
-
-	public void setContent(final Entry content) {
-		this.content = content;
 	}
 
 	public void setPath(final String path) {

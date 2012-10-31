@@ -2,20 +2,6 @@
 <module rename-to="core">
 	<inherits name="org.cloudlet.web.boot.Boot" />
 	<inherits name='com.sencha.gxt.ui.GXT' />
-	<inherits name="com.googlecode.mgwt.MGWT" />
-	<inherits name="com.googlecode.mgwt.linker.Linker" />
-	<inherits name="com.google.web.bindery.requestfactory.RequestFactory" />
-	<inherits name='com.googlecode.gwtphonegap.PhoneGap' />
-
-	<set-property name="gwt.logging.simpleRemoteHandler" value="DISABLED" />
-	<set-property name="gwt.logging.popupHandler" value="DISABLED" />
-	<add-linker name="xsiframe" />
-
-	<add-linker name="permutationmaplinker" />
-
-	<extend-configuration-property name="html5manifestlinker_files" value="./" />
-	<extend-configuration-property name="html5manifestlinker_files" value="index.html" />
-	<extend-configuration-property name="html5manifestlinker_files" value="logo.png" />
 
 	<extend-configuration-property name="gin.module" value="org.cloudlet.web.core.client.CoreClientModule" />
 
