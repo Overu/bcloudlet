@@ -17,7 +17,11 @@ public class ViewType {
 
   public static final String CONTAINER = "/";
 
-  public static final String HOME_PAGE = "";
+  public static final String HOME = "";
 
   public static final String WELCOME_PAGE = "welcome";
+
+  public static final String POST = "post";
+
+  public static final String DEATAIL = "detail";
 }

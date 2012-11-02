@@ -9,6 +9,6 @@ import org.cloudlet.web.core.shared.CoreTypes;
 public class Launcher {
   @Inject
   public Launcher(UserGrid example) {
-    CoreTypes.UserFeed.bind(ViewType.HOME_PAGE).toInstance(example);
+    CoreTypes.UserFeed.bind(ViewType.HOME).toInstance(example);
   }
 }

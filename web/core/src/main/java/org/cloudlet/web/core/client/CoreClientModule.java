@@ -39,6 +39,9 @@ public class CoreClientModule extends AbstractGinModule {
     @Inject
     UserGrid userGrid;
 
+    @Inject
+    UserForm userForm;
+
     SimplePanel main;
 
     @Inject
@@ -64,7 +67,8 @@ public class CoreClientModule extends AbstractGinModule {
     }
 
     private void start() {
-      CoreTypes.UserFeed.bind(ViewType.HOME_PAGE).toInstance(userGrid);
+      CoreTypes.UserFeed.bind(ViewType.HOME).toInstance(userGrid);
+      CoreTypes.UserFeed.bind(ViewType.POST).toInstance(userForm);
       main = new SimplePanel();
       main.getElement().setId("main");
       RootPanel.get().add(main);

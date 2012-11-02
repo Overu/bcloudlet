@@ -41,7 +41,9 @@ public class WebPlace extends Place {
 
   private static final Logger logger = Logger.getLogger(WebPlace.class.getName());
 
-  private String viewType = ViewType.HOME_PAGE;
+  private String viewType = ViewType.HOME;
+
+  private String activeView;
 
   public void addChild(final WebPlace place) {
     children.add(place);
@@ -61,6 +63,10 @@ public class WebPlace extends Place {
     }
     result.viewType = viewType;
     return result;
+  }
+
+  public String getActiveView() {
+    return activeView;
   }
 
   public String getButtonText() {
@@ -144,6 +150,9 @@ public class WebPlace extends Place {
       public void onSuccess(AcceptsOneWidget result) {
         IsWidget widget = getViewers().get(viewType);
         if (widget != null) {
+          if (widget instanceof WebView) {
+            ((WebView) widget).setPlace(WebPlace.this);
+          }
           result.setWidget(widget);
         } else {
           placeType.renderView(result, viewType, new AsyncCallback<IsWidget>() {
@@ -154,12 +163,19 @@ public class WebPlace extends Place {
 
             @Override
             public void onSuccess(IsWidget result) {
+              if (result instanceof WebView) {
+                ((WebView) result).setPlace(WebPlace.this);
+              }
               getViewers().put(viewType, result);
             }
           });
         }
       }
     });
+  }
+
+  public void setActiveView(String activeView) {
+    this.activeView = activeView;
   }
 
   public void setButtonText(final String buttonText) {
@@ -200,6 +216,9 @@ public class WebPlace extends Place {
       final AsyncCallback<AcceptsOneWidget> childContainer) {
     if (container != null) {
       parentContainer.setWidget((IsWidget) container);
+      if (container instanceof WebView) {
+        ((WebView) container).setPlace(WebPlace.this);
+      }
       if (childContainer != null) {
         childContainer.onSuccess(container);
       }
@@ -214,6 +233,9 @@ public class WebPlace extends Place {
             public void onSuccess(IsWidget result) {
               if (result instanceof AcceptsOneWidget) {
                 container = (AcceptsOneWidget) result;
+                if (container instanceof WebView) {
+                  ((WebView) container).setPlace(WebPlace.this);
+                }
                 if (childContainer != null) {
                   childContainer.onSuccess(container);
                 }
