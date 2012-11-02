@@ -8,21 +8,35 @@ import com.google.inject.Provider;
 
 import org.cloudlet.web.boot.shared.MapBinder;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class PlaceType extends MapBinder<String, IsWidget> {
 
-  public static PlaceType ROOT = new PlaceType();
-
   private static final Logger logger = Logger.getLogger(PlaceType.class.getName());
 
   private PlaceType parent;
+
+  public static Map<String, PlaceType> types = new HashMap<String, PlaceType>();
+
+  public static PlaceType getType(String name) {
+    return types.get(name);
+  }
+
+  private String name;
 
   public PlaceType() {
   }
 
   public PlaceType(PlaceType parent, String name) {
     this.parent = parent;
+    this.name = name;
+    types.put(name, parent);
+  }
+
+  public PlaceType(String name) {
+    this(null, name);
   }
 
   public boolean renderView(final AcceptsOneWidget panel, final String viewType,
@@ -54,6 +68,8 @@ public class PlaceType extends MapBinder<String, IsWidget> {
           }
         });
         return true;
+      } else if (parent != null) {
+        return parent.renderView(panel, viewType, callback);
       } else {
         return false;
       }
@@ -66,7 +82,7 @@ public class PlaceType extends MapBinder<String, IsWidget> {
   private void appendWidget(final AcceptsOneWidget panel, final IsWidget widget,
       final AsyncCallback<IsWidget> callback) {
     panel.setWidget(widget);
-    if (callback != null && widget instanceof AcceptsOneWidget) {
+    if (callback != null) {
       callback.onSuccess(widget);
     }
   }

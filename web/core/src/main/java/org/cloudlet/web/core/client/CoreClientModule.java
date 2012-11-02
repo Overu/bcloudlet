@@ -15,6 +15,7 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import org.cloudlet.web.core.shared.CoreTypes;
 import org.cloudlet.web.core.shared.HomePlace;
 import org.cloudlet.web.core.shared.WebPlace;
 import org.cloudlet.web.core.shared.WebPlaceManager;
@@ -35,10 +36,14 @@ public class CoreClientModule extends AbstractGinModule {
     @Inject
     PlaceHistoryHandler historyHandler;
 
+    @Inject
+    UserGrid userGrid;
+
     SimplePanel main;
 
     @Inject
     public Render() {
+
       new Timer() {
         @Override
         public void run() {
@@ -49,22 +54,17 @@ public class CoreClientModule extends AbstractGinModule {
 
     @Override
     public void onPlaceChange(final PlaceChangeEvent event) {
-      WebPlace place = (WebPlace) event.getNewPlace();
-      place.render(main);
-    }
-
-    private void gotoPlace(final WebPlace place) {
-      logger.info("Loading " + place.getUri());
       Scheduler.get().scheduleDeferred(new ScheduledCommand() {
         @Override
         public void execute() {
-          placeController.goTo(place);
+          WebPlace place = (WebPlace) event.getNewPlace();
+          place.render(main);
         }
       });
     }
 
     private void start() {
-
+      CoreTypes.UserFeed.bind(ViewType.HOME_PAGE).toInstance(userGrid);
       main = new SimplePanel();
       main.getElement().setId("main");
       RootPanel.get().add(main);
@@ -80,8 +80,8 @@ public class CoreClientModule extends AbstractGinModule {
   @HomePlace
   @Provides
   @Singleton
-  public WebPlace getHomePage(final WebPlace homePlace, UserGrid usersGrid) {
-    homePlace.setWidget(usersGrid);
+  public WebPlace getHomePage(final WebPlace homePlace) {
+    homePlace.setPlaceType(CoreTypes.UserFeed);
     return homePlace;
   }
 

@@ -1,17 +1,18 @@
 package org.cloudlet.web.core.shared;
 
-import com.google.gwt.inject.client.AsyncProvider;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
+import org.cloudlet.web.core.client.ViewType;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class WebPlace extends Place {
@@ -30,15 +31,17 @@ public class WebPlace extends Place {
 
   private List<WebPlace> children = new ArrayList<WebPlace>();
 
-  private IsWidget widget;
+  private AcceptsOneWidget container;
+
+  private Map<String, IsWidget> viewers;
 
   private String buttonText;
 
-  private Provider<? extends IsWidget> widgetProvider;
-
-  private AsyncProvider<? extends IsWidget> asyncWidgetProvider;
+  private PlaceType placeType;
 
   private static final Logger logger = Logger.getLogger(WebPlace.class.getName());
+
+  private String viewType = ViewType.HOME_PAGE;
 
   public void addChild(final WebPlace place) {
     children.add(place);
@@ -46,8 +49,8 @@ public class WebPlace extends Place {
   }
 
   public WebPlace findChild(final String uri) {
-    String[] pair = uri.split("\\?");
-    String viewType = pair.length > 1 ? pair[1] : null;
+    String[] pair = uri.split("#");
+    String viewType = pair.length > 1 ? pair[1] : "";
     String[] segments = pair[0].split("/");
     WebPlace result = this;
     for (String path : segments) {
@@ -56,7 +59,7 @@ public class WebPlace extends Place {
       }
       result = result.getChild(path);
     }
-
+    result.viewType = viewType;
     return result;
   }
 
@@ -89,6 +92,10 @@ public class WebPlace extends Place {
     return path;
   }
 
+  public PlaceType getPlaceType() {
+    return placeType;
+  }
+
   public String getTitle() {
     if (title == null) {
       return getPath();
@@ -112,8 +119,8 @@ public class WebPlace extends Place {
     }
   }
 
-  public IsWidget getWidget() {
-    return widget;
+  public String getViewType() {
+    return viewType;
   }
 
   public boolean isChildOf(final WebPlace place) {
@@ -128,7 +135,31 @@ public class WebPlace extends Place {
   }
 
   public void render(final AcceptsOneWidget panel) {
-    render(panel, null);
+    renderParents(panel, new AsyncCallback<AcceptsOneWidget>() {
+      @Override
+      public void onFailure(Throwable caught) {
+      }
+
+      @Override
+      public void onSuccess(AcceptsOneWidget result) {
+        IsWidget widget = getViewers().get(viewType);
+        if (widget != null) {
+          result.setWidget(widget);
+        } else {
+          placeType.renderView(result, viewType, new AsyncCallback<IsWidget>() {
+            @Override
+            public void onFailure(Throwable caught) {
+              logger.severe("No view found for " + getUri() + "#" + viewType);
+            }
+
+            @Override
+            public void onSuccess(IsWidget result) {
+              getViewers().put(viewType, result);
+            }
+          });
+        }
+      }
+    });
   }
 
   public void setButtonText(final String buttonText) {
@@ -139,20 +170,16 @@ public class WebPlace extends Place {
     this.path = path;
   }
 
+  public void setPlaceType(PlaceType placeType) {
+    this.placeType = placeType;
+  }
+
   public void setTitle(final String title) {
     this.title = title;
   }
 
-  public void setWidget(final AsyncProvider<? extends IsWidget> asyncWidgetProvider) {
-    this.asyncWidgetProvider = asyncWidgetProvider;
-  }
-
-  public void setWidget(final IsWidget widget) {
-    this.widget = widget;
-  }
-
-  public void setWidget(final Provider<? extends IsWidget> provider) {
-    this.widgetProvider = provider;
+  public void setViewType(String viewType) {
+    this.viewType = viewType;
   }
 
   @Override
@@ -162,81 +189,64 @@ public class WebPlace extends Place {
     return builder.toString();
   }
 
-  private void append(final AcceptsOneWidget panel, final AsyncCallback<AcceptsOneWidget> callback) {
-    if (widget == null && widgetProvider == null && asyncWidgetProvider == null) {
-      Object view = null;
-      if (view != null) {
-        if (view instanceof AsyncProvider) {
-          asyncWidgetProvider = (AsyncProvider<IsWidget>) view;
-        } else if (view instanceof Provider) {
-          widgetProvider = (Provider<IsWidget>) view;
-        } else if (view instanceof IsWidget) {
-          widget = (IsWidget) view;
-        }
-      }
+  private Map<String, IsWidget> getViewers() {
+    if (viewers == null) {
+      viewers = new HashMap<String, IsWidget>();
     }
-    if (widget == null && widgetProvider == null && asyncWidgetProvider == null) {
-      widget = new SimplePanel();
-    }
-    if (widget != null) {
-      showWidget(panel, callback);
-    } else if (widgetProvider != null) {
-      widget = widgetProvider.get();
-      showWidget(panel, callback);
-    } else if (asyncWidgetProvider != null) {
-      asyncWidgetProvider.get(new AsyncCallback<IsWidget>() {
-        @Override
-        public void onFailure(final Throwable caught) {
-          String msg =
-              "Network connection cloud be lost. Failed to load widget for " + this
-                  + " asynchronously.\r\n" + caught.getMessage();
-          logger.severe(msg);
-          showError(panel, msg);
-          if (callback != null) {
-            callback.onFailure(caught);
-          }
-        }
+    return viewers;
+  }
 
-        @Override
-        public void onSuccess(final IsWidget result) {
-          widget = result;
-          showWidget(panel, callback);
-        }
-      });
+  private void renderContainer(final AcceptsOneWidget parentContainer,
+      final AsyncCallback<AcceptsOneWidget> childContainer) {
+    if (container != null) {
+      parentContainer.setWidget((IsWidget) container);
+      if (childContainer != null) {
+        childContainer.onSuccess(container);
+      }
+    } else if (placeType != null) {
+      boolean hasContainerView =
+          placeType.renderView(parentContainer, ViewType.CONTAINER, new AsyncCallback<IsWidget>() {
+            @Override
+            public void onFailure(Throwable caught) {
+            }
+
+            @Override
+            public void onSuccess(IsWidget result) {
+              if (result instanceof AcceptsOneWidget) {
+                container = (AcceptsOneWidget) result;
+                if (childContainer != null) {
+                  childContainer.onSuccess(container);
+                }
+              } else {
+                logger.severe("Parent widget does not implement AcceptsOneWidget. Can not render "
+                    + this);
+              }
+            }
+          });
+      if (!hasContainerView) { // No container for this place skip to child node
+        childContainer.onSuccess(parentContainer);
+      }
     }
   };
 
-  private void render(final AcceptsOneWidget panel, final AsyncCallback<AcceptsOneWidget> callback) {
+  private void renderParents(final AcceptsOneWidget panel,
+      final AsyncCallback<AcceptsOneWidget> callback) {
     if (parent != null) {
-      parent.render(panel, new AsyncCallback<AcceptsOneWidget>() {
+      parent.renderParents(panel, new AsyncCallback<AcceptsOneWidget>() {
         @Override
         public void onFailure(final Throwable caught) {
           logger.info("Failured to load parent widget. Show " + this + " directly.");
-          append(panel, callback);
+          renderContainer(panel, callback);
         }
 
         @Override
         public void onSuccess(final AcceptsOneWidget result) {
-          append(result, callback);
+          renderContainer((AcceptsOneWidget) result, callback);
         }
       });
     } else {
-      append(panel, callback);
+      renderContainer(panel, callback);
     }
   }
 
-  private void showError(final AcceptsOneWidget panel, final String message) {
-    Label label = new Label(message);
-    panel.setWidget(label);
-  }
-
-  private void showWidget(final AcceptsOneWidget panel,
-      final AsyncCallback<AcceptsOneWidget> callback) {
-    panel.setWidget(widget);
-    if (widget instanceof AcceptsOneWidget) {
-      if (callback != null) {
-        callback.onSuccess((AcceptsOneWidget) widget);
-      }
-    }
-  }
 }
