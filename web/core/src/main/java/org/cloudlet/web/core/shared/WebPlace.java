@@ -43,7 +43,7 @@ public class WebPlace extends Place {
   }
 
   public WebPlace findChild(final String uri) {
-    String[] segments = uri.split("/\\?");
+    String[] segments = uri.split("/|\\?");
     WebPlace result = this;
     for (String path : segments) {
       if (path.length() == 0) {
@@ -61,7 +61,7 @@ public class WebPlace extends Place {
       }
     }
     if (isFolder(path)) {
-      PlaceType t = placeType.getReference(path);
+      PlaceType t = placeType.getTargetType(path);
       if (t != null) {
         WebPlace place = placeProvider.get();
         place.setPath(path);

@@ -62,9 +62,8 @@ public class CoreClientModule extends AbstractGinModule {
         @Override
         public void execute() {
           WebPlace place = (WebPlace) event.getNewPlace();
-          if (place.isFolder()) {
-            place = place.getHome();
-            placeController.goTo(place);
+          if (place.isFolder() && place.getHome() != null) {
+            placeController.goTo(place.getHome());
           } else {
             place.render(main);
           }
@@ -91,7 +90,7 @@ public class CoreClientModule extends AbstractGinModule {
   @Provides
   @Singleton
   public WebPlace getHomePage(final WebPlace homePlace) {
-    homePlace.setPlaceType(CoreTypes.UserFeed);
+    homePlace.setPlaceType(CoreTypes.Group);
     return homePlace;
   }
 

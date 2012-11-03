@@ -1,32 +1,21 @@
-/*
- * Copyright 2012 Retechcorp.com
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
- */
 package org.cloudlet.web.core.shared;
 
 public class CoreTypes {
 
   public static PlaceType Content = new PlaceType("content");
 
-  public static PlaceType Entry = new PlaceType(Content, "entry");
-  public static PlaceType Feed = new PlaceType(Content, "feed");
+  public static EntryType Entry = new EntryType(Content, "entry");
+  public static FeedType Feed = new FeedType(Content, "feed", Entry);
 
-  public static PlaceType Group = new PlaceType(Entry, "group");
-  public static PlaceType User = new PlaceType(Entry, "user");
+  public static EntryType Group = new EntryType(Entry, "group");
+  public static EntryType User = new EntryType(Entry, "user");
 
-  public static PlaceType GroupFeed = new PlaceType(Feed, "groupFeed");
-  public static PlaceType UserFeed = new PlaceType(Feed, "userFeed");
+  public static FeedType GroupFeed = new FeedType(Feed, "groupFeed", Group);
+  public static FeedType UserFeed = new FeedType(Feed, "userFeed", User);
 
   static {
-
+    Group.addReference("users", UserFeed);
+    Group.addReference("groups", GroupFeed);
   }
+
 }

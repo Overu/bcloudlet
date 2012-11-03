@@ -1,5 +1,12 @@
 package org.cloudlet.web.core;
 
+import org.cloudlet.web.core.server.ContentType;
+import org.cloudlet.web.core.service.Service;
+import org.codehaus.jettison.json.JSONObject;
+import org.hibernate.annotations.Columns;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,191 +29,185 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.stream.XMLStreamReader;
 
-import org.cloudlet.web.core.server.ContentType;
-import org.cloudlet.web.core.service.Service;
-import org.codehaus.jettison.json.JSONObject;
-import org.hibernate.annotations.Columns;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-
 @TypeDef(name = "content", typeClass = ContentType.class)
 @MappedSuperclass
 @XmlType
 public abstract class Content {
 
-	@Id
-	protected String id;
+  @Id
+  protected String id;
 
-	protected String path;
+  protected String path;
 
-	@Version
-	protected Long version;
+  @Version
+  protected Long version;
 
-	@ManyToOne
-	protected User owner;
+  @ManyToOne
+  protected User owner;
 
-	@Type(type = "content")
-	@Columns(columns = { @Column(name = "parentType"),
-			@Column(name = "parentId") })
-	private Content parent;
+  @Type(type = "content")
+  @Columns(columns = {@Column(name = "parentType"), @Column(name = "parentId")})
+  private Content parent;
 
-	@XmlTransient
-	public Content getParent() {
-		return parent;
-	}
+  @Transient
+  private Map<String, Content> children;
 
-	public String getId() {
-		return id;
-	}
+  @DELETE
+  public void delete() {
+    getService().delete(this);
+  }
 
-	public User getOwner() {
-		return owner;
-	}
+  @Path("{path}")
+  public <T extends Content> T getChild(@PathParam("path") String path) {
+    Content result = getChildren().get(path);
+    if (result != null) {
+      return (T) result;
+    }
+    for (Method m : getClass().getMethods()) {
+      Path p = m.getAnnotation(Path.class);
+      if (p != null && p.value().equals(path)) {
+        Class<?> rt = m.getReturnType();
+        if (Content.class.isAssignableFrom(rt)) {
+          Class<Content> childType = (Class<Content>) rt;
+          result = getService().getChild(this, path, childType);
+          getChildren().put(path, result);
+          return (T) result;
+        } else {
+          // TODO log exception
+        }
+      }
+    }
+    return null;
+  }
 
-	public String getPath() {
-		return path;
-	}
+  public Map<String, Content> getChildren() {
+    if (children == null) {
+      children = new HashMap<String, Content>();
+    }
+    return children;
+  }
 
-	@XmlElement
-	public String getUri() {
-		return getUriBuilder().toString();
-	}
+  public String getId() {
+    return id;
+  }
 
-	public StringBuilder getUriBuilder() {
-		if (parent == null) {
-			return new StringBuilder();
-		}
-		StringBuilder builder = parent.getUriBuilder();
-		builder.append("/").append(path);
-		return builder;
-	}
+  public User getOwner() {
+    return owner;
+  }
 
-	public Long getVersion() {
-		return version;
-	}
+  @XmlTransient
+  public Content getParent() {
+    return parent;
+  }
 
-	public void setParent(final Content parent) {
-		this.parent = parent;
-	}
+  public String getPath() {
+    return path;
+  }
 
-	public void setId(final String id) {
-		this.id = id;
-	}
+  public Service getService() {
+    return WebPlatform.getDefault().getSerivce(getServiceType(getClass()));
+  }
 
-	public void setOwner(final User owner) {
-		this.owner = owner;
-	}
+  public <T extends Service> Class<T> getServiceType(Class<? extends Content> contentClass) {
+    Handler handler = contentClass.getAnnotation(Handler.class);
+    if (handler != null) {
+      return (Class<T>) handler.value();
+    }
+    Class superClass = contentClass.getSuperclass();
+    if (Content.class.isAssignableFrom(superClass)) {
+      return getServiceType(superClass);
+    }
+    // TODO proxy-based creation
+    return null;
+  }
 
-	public void setPath(final String path) {
-		this.path = path;
-	}
+  @XmlElement
+  public String getUri() {
+    return getUriBuilder().toString();
+  }
 
-	public void setVersion(final Long version) {
-		this.version = version;
-	}
+  public StringBuilder getUriBuilder() {
+    if (parent == null) {
+      return new StringBuilder();
+    }
+    StringBuilder builder = parent.getUriBuilder();
+    builder.append("/").append(path);
+    return builder;
+  }
 
-	public Service getService() {
-		return WebPlatform.getDefault().getSerivce(getServiceType(getClass()));
-	}
+  public Long getVersion() {
+    return version;
+  }
 
-	public <T extends Service> Class<T> getServiceType(
-			Class<? extends Content> contentClass) {
-		Handler handler = contentClass.getAnnotation(Handler.class);
-		if (handler != null)
-			return (Class<T>) handler.value();
-		Class superClass = contentClass.getSuperclass();
-		if (Content.class.isAssignableFrom(superClass))
-			return getServiceType(superClass);
-		// TODO proxy-based creation
-		return null;
-	}
+  public Content load() {
+    return this;
+  }
 
-	//
-	// @POST
-	// @Consumes(MediaType.APPLICATION_JSON)
-	// public Content create(JSONObject json) {
-	// Content child = null; // TODO new conent;
-	// child.read(json);
-	// return create(child);
-	// }
-	//
-	// @POST
-	// @Consumes(MediaType.APPLICATION_XML)
-	// public Content create(XMLStreamReader xml) {
-	// Content child = null; // TODO new conent;
-	// child.read(xml);
-	// return create(child);
-	// }
+  //
+  // @POST
+  // @Consumes(MediaType.APPLICATION_JSON)
+  // public Content create(JSONObject json) {
+  // Content child = null; // TODO new conent;
+  // child.read(json);
+  // return create(child);
+  // }
+  //
+  // @POST
+  // @Consumes(MediaType.APPLICATION_XML)
+  // public Content create(XMLStreamReader xml) {
+  // Content child = null; // TODO new conent;
+  // child.read(xml);
+  // return create(child);
+  // }
 
-	protected abstract <T extends Content> T create(T child);
+  public void read(JSONObject json) {
+    // TODO
+  }
 
-	public <T extends Content> T save() {
-		if (parent == null) {
-			return (T) getService().save(this);
-		} else {
-			return (T) parent.create(this);
-		}
-	}
+  public void read(XMLStreamReader xml) {
+    // TODO
+  }
 
-	public void read(JSONObject json) {
-		// TODO
-	}
+  public <T extends Content> T save() {
+    if (parent == null) {
+      return (T) getService().save(this);
+    } else {
+      return (T) parent.create(this);
+    }
+  }
 
-	public void read(XMLStreamReader xml) {
-		// TODO
-	}
+  public void setId(final String id) {
+    this.id = id;
+  }
 
-	public Content load() {
-		return this;
-	}
+  public void setOwner(final User owner) {
+    this.owner = owner;
+  }
 
-	@Transient
-	private Map<String, Content> children;
+  public void setParent(final Content parent) {
+    this.parent = parent;
+  }
 
-	public Map<String, Content> getChildren() {
-		if (children == null) {
-			children = new HashMap<String, Content>();
-		}
-		return children;
-	}
+  public void setPath(final String path) {
+    this.path = path;
+  }
 
-	@Path("{path}")
-	public <T extends Content> T getChild(@PathParam("path") String path) {
-		Content result = getChildren().get(path);
-		if (result != null)
-			return (T) result;
-		for (Method m : getClass().getMethods()) {
-			Path p = m.getAnnotation(Path.class);
-			if (p != null && p.value().equals(path)) {
-				Class<?> rt = m.getReturnType();
-				if (Content.class.isAssignableFrom(rt)) {
-					Class<Content> childType = (Class<Content>) rt;
-					result = getService().getChild(this, path, childType);
-					getChildren().put(path, result);
-					return (T) result;
-				} else {
-					// TODO log exception
-				}
-			}
-		}
-		return null;
-	}
+  public void setVersion(final Long version) {
+    this.version = version;
+  }
 
-	@PUT
-	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public Content update(JSONObject json) {
-		read(json);
-		return update();
-	}
+  public Content update() {
+    return getService().update(this);
+  }
 
-	public Content update() {
-		return getService().update(this);
-	}
+  @PUT
+  @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  public Content update(JSONObject json) {
+    read(json);
+    return update();
+  }
 
-	@DELETE
-	public void delete() {
-		getService().delete(this);
-	}
+  protected abstract <T extends Content> T create(T child);
 
 }

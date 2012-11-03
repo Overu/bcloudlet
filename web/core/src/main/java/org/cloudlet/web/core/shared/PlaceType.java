@@ -13,27 +13,24 @@ public class PlaceType {
 
   private static final Logger logger = Logger.getLogger(PlaceType.class.getName());
 
-  private PlaceType parent;
+  private PlaceType superType;
 
   public static Map<String, PlaceType> types = new HashMap<String, PlaceType>();
-
-  public static Map<String, PlaceType> references = new HashMap<String, PlaceType>();
-
-  public static Map<String, Object> viewers = new HashMap<String, Object>();
 
   public static PlaceType getType(String name) {
     return types.get(name);
   }
 
+  private Map<String, PlaceType> references = new HashMap<String, PlaceType>();
+
+  private Map<String, Object> viewers = new HashMap<String, Object>();
+
   private String name;
 
-  public PlaceType() {
-  }
-
-  public PlaceType(PlaceType parent, String name) {
-    this.parent = parent;
+  public PlaceType(PlaceType superType, String name) {
+    this.superType = superType;
     this.name = name;
-    types.put(name, parent);
+    types.put(name, superType);
   }
 
   public PlaceType(String name) {
@@ -48,7 +45,7 @@ public class PlaceType {
     return name;
   }
 
-  public PlaceType getReference(String path) {
+  public PlaceType getTargetType(String path) {
     return references.get(path);
   }
 
@@ -56,11 +53,22 @@ public class PlaceType {
     return viewers.get(name);
   }
 
+  public boolean hasSuperType(PlaceType type) {
+
+    if (this.equals(type)) {
+      return true;
+    }
+    if (superType == null) {
+      return false;
+    }
+    return superType.hasSuperType(type);
+  }
+
   public boolean loadWidget(final String widgetId, final AsyncCallback<IsWidget> callback) {
     Object widget = getWidget(widgetId);
     if (widget == null) {
-      if (parent != null) {
-        return parent.loadWidget(widgetId, callback);
+      if (superType != null) {
+        return superType.loadWidget(widgetId, callback);
       } else {
         return false;
       }
