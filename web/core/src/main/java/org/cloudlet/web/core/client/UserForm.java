@@ -77,7 +77,7 @@ public class UserForm extends WebView implements IsWidget, EntryPoint {
 
       @Override
       public void onResponseReceived(final Request request, final Response response) {
-        placeManager.goTo(place, ViewType.HOME);
+        placeManager.goTo(place, WebView.HOME);
       }
 
     });

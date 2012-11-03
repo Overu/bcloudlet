@@ -182,7 +182,7 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
 
       @Override
       public void onSelect(final SelectEvent event) {
-        placeController.goTo(place, ViewType.POST);
+        placeController.goTo(place, WebView.POST);
       }
     }));
     cp2.addButton(new TextButton("Load Json", new SelectHandler() {

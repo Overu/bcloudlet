@@ -7,15 +7,15 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import org.cloudlet.web.core.client.ViewType;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 public class WebPlace extends Place {
+
+  public static boolean isFolder(String uri) {
+    return uri == null || (uri.length() > 0 && !uri.contains("="));
+  }
 
   @Inject
   Provider<WebPlace> placeProvider;
@@ -25,25 +25,17 @@ public class WebPlace extends Place {
 
   private String path;
 
-  private String title;
-
   private WebPlace parent;
 
   private List<WebPlace> children = new ArrayList<WebPlace>();
 
-  private AcceptsOneWidget container;
-
-  private Map<String, IsWidget> viewers;
-
-  private String buttonText;
+  private IsWidget widget;
 
   private PlaceType placeType;
 
   private static final Logger logger = Logger.getLogger(WebPlace.class.getName());
 
-  private String viewType = ViewType.HOME;
-
-  private String activeView;
+  private boolean viewer;
 
   public void addChild(final WebPlace place) {
     children.add(place);
@@ -51,9 +43,7 @@ public class WebPlace extends Place {
   }
 
   public WebPlace findChild(final String uri) {
-    String[] pair = uri.split("#");
-    String viewType = pair.length > 1 ? pair[1] : "";
-    String[] segments = pair[0].split("/");
+    String[] segments = uri.split("/\\?");
     WebPlace result = this;
     for (String path : segments) {
       if (path.length() == 0) {
@@ -61,33 +51,36 @@ public class WebPlace extends Place {
       }
       result = result.getChild(path);
     }
-    result.viewType = viewType;
     return result;
   }
 
-  public String getActiveView() {
-    return activeView;
-  }
-
-  public String getButtonText() {
-    return buttonText;
-  }
-
-  public WebPlace getChild(final int index) {
-    return children.get(index);
-  }
-
-  public WebPlace getChild(final String path) {
+  public WebPlace getChild(String path) {
     for (WebPlace p : children) {
       if (path.equals(p.getPath())) {
         return p;
       }
     }
+    if (isFolder(path)) {
+      PlaceType t = placeType.getReference(path);
+      if (t != null) {
+        WebPlace place = placeProvider.get();
+        place.setPath(path);
+        place.setPlaceType(t);
+        addChild(place);
+        return place;
+      }
+    } else if (placeType.getWidget(path) != null) {
+      WebPlace place = placeProvider.get();
+      place.setPath(path);
+      place.setPlaceType(placeType);
+      addChild(place);
+      return place;
+    }
     return null;
   }
 
-  public List<WebPlace> getChildren() {
-    return children;
+  public WebPlace getHome() {
+    return getChild(WebView.HOME);
   }
 
   public WebPlace getParent() {
@@ -102,13 +95,6 @@ public class WebPlace extends Place {
     return placeType;
   }
 
-  public String getTitle() {
-    if (title == null) {
-      return getPath();
-    }
-    return title;
-  }
-
   public String getUri() {
     return getUriBuilder().toString();
   }
@@ -118,15 +104,24 @@ public class WebPlace extends Place {
       return new StringBuilder();
     } else {
       StringBuilder builder = parent.getUriBuilder();
-      if (path != null) {
-        builder.append("/").append(path);
+      if (path.length() > 0) {
+        if (isFolder()) {
+          builder.append("/");
+        } else {
+          builder.append("?");
+        }
+        builder.append(path);
       }
       return builder;
     }
   }
 
-  public String getViewType() {
-    return viewType;
+  public String getWidgetId() {
+    if (isFolder()) {
+      return WebView.FOLDER;
+    } else {
+      return path;
+    }
   }
 
   public boolean isChildOf(final WebPlace place) {
@@ -136,50 +131,19 @@ public class WebPlace extends Place {
       return parent.isChildOf(place);
     } else {
       return false;
-
     }
   }
 
+  public boolean isFolder() {
+    return isFolder(path);
+  }
+
+  public boolean isViewer() {
+    return viewer;
+  }
+
   public void render(final AcceptsOneWidget panel) {
-    renderParents(panel, new AsyncCallback<AcceptsOneWidget>() {
-      @Override
-      public void onFailure(Throwable caught) {
-      }
-
-      @Override
-      public void onSuccess(AcceptsOneWidget result) {
-        IsWidget widget = getViewers().get(viewType);
-        if (widget != null) {
-          if (widget instanceof WebView) {
-            ((WebView) widget).setPlace(WebPlace.this);
-          }
-          result.setWidget(widget);
-        } else {
-          placeType.renderView(result, viewType, new AsyncCallback<IsWidget>() {
-            @Override
-            public void onFailure(Throwable caught) {
-              logger.severe("No view found for " + getUri() + "#" + viewType);
-            }
-
-            @Override
-            public void onSuccess(IsWidget result) {
-              if (result instanceof WebView) {
-                ((WebView) result).setPlace(WebPlace.this);
-              }
-              getViewers().put(viewType, result);
-            }
-          });
-        }
-      }
-    });
-  }
-
-  public void setActiveView(String activeView) {
-    this.activeView = activeView;
-  }
-
-  public void setButtonText(final String buttonText) {
-    this.buttonText = buttonText;
+    render(panel, null);
   }
 
   public void setPath(final String path) {
@@ -190,85 +154,69 @@ public class WebPlace extends Place {
     this.placeType = placeType;
   }
 
-  public void setTitle(final String title) {
-    this.title = title;
-  }
-
-  public void setViewType(String viewType) {
-    this.viewType = viewType;
-  }
-
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
-    builder.append(getTitle()).append(" (").append(getUri()).append(")");
+    builder.append(placeType.getName()).append(" (").append(getUri()).append(")");
     return builder.toString();
-  }
-
-  private Map<String, IsWidget> getViewers() {
-    if (viewers == null) {
-      viewers = new HashMap<String, IsWidget>();
-    }
-    return viewers;
-  }
-
-  private void renderContainer(final AcceptsOneWidget parentContainer,
-      final AsyncCallback<AcceptsOneWidget> childContainer) {
-    if (container != null) {
-      parentContainer.setWidget((IsWidget) container);
-      if (container instanceof WebView) {
-        ((WebView) container).setPlace(WebPlace.this);
-      }
-      if (childContainer != null) {
-        childContainer.onSuccess(container);
-      }
-    } else if (placeType != null) {
-      boolean hasContainerView =
-          placeType.renderView(parentContainer, ViewType.CONTAINER, new AsyncCallback<IsWidget>() {
-            @Override
-            public void onFailure(Throwable caught) {
-            }
-
-            @Override
-            public void onSuccess(IsWidget result) {
-              if (result instanceof AcceptsOneWidget) {
-                container = (AcceptsOneWidget) result;
-                if (container instanceof WebView) {
-                  ((WebView) container).setPlace(WebPlace.this);
-                }
-                if (childContainer != null) {
-                  childContainer.onSuccess(container);
-                }
-              } else {
-                logger.severe("Parent widget does not implement AcceptsOneWidget. Can not render "
-                    + this);
-              }
-            }
-          });
-      if (!hasContainerView) { // No container for this place skip to child node
-        childContainer.onSuccess(parentContainer);
-      }
-    }
   };
 
-  private void renderParents(final AcceptsOneWidget panel,
-      final AsyncCallback<AcceptsOneWidget> callback) {
+  private void appendWidget(final AcceptsOneWidget panel, final AsyncCallback<IsWidget> callback) {
+    panel.setWidget(widget);
+    if (widget instanceof WebView) {
+      ((WebView) widget).setPlace(WebPlace.this);
+    }
+    if (callback != null) {
+      callback.onSuccess(widget);
+    }
+  }
+
+  private void render(final AcceptsOneWidget panel, final AsyncCallback<IsWidget> callback) {
     if (parent != null) {
-      parent.renderParents(panel, new AsyncCallback<AcceptsOneWidget>() {
+      parent.render(panel, new AsyncCallback<IsWidget>() {
         @Override
         public void onFailure(final Throwable caught) {
           logger.info("Failured to load parent widget. Show " + this + " directly.");
-          renderContainer(panel, callback);
+          renderWidget(panel, callback);
         }
 
         @Override
-        public void onSuccess(final AcceptsOneWidget result) {
-          renderContainer((AcceptsOneWidget) result, callback);
+        public void onSuccess(final IsWidget result) {
+          if (result instanceof AcceptsOneWidget) {
+            renderWidget((AcceptsOneWidget) result, callback);
+          } else {
+            logger.info(result.getClass().getName()
+                + " must implement AcceptsOneWidget to render child widget.");
+          }
         }
       });
     } else {
-      renderContainer(panel, callback);
+      renderWidget(panel, callback);
     }
   }
 
+  private void renderWidget(final AcceptsOneWidget panel, final AsyncCallback<IsWidget> callback) {
+    if (widget != null) {
+      appendWidget(panel, callback);
+    } else if (placeType != null) {
+      boolean hasWidget = placeType.loadWidget(getWidgetId(), new AsyncCallback<IsWidget>() {
+        @Override
+        public void onFailure(Throwable caught) {
+        }
+
+        @Override
+        public void onSuccess(IsWidget result) {
+          widget = result;
+          appendWidget(panel, callback);
+        }
+
+      });
+      if (!hasWidget && callback != null) {
+        // No container for this place skip to child node
+        if (panel instanceof IsWidget) {
+          callback.onSuccess((IsWidget) panel);
+        }
+      }
+    }
+  }
 }

@@ -19,6 +19,7 @@ import org.cloudlet.web.core.shared.CoreTypes;
 import org.cloudlet.web.core.shared.HomePlace;
 import org.cloudlet.web.core.shared.WebPlace;
 import org.cloudlet.web.core.shared.WebPlaceManager;
+import org.cloudlet.web.core.shared.WebView;
 
 import java.util.logging.Logger;
 
@@ -61,14 +62,19 @@ public class CoreClientModule extends AbstractGinModule {
         @Override
         public void execute() {
           WebPlace place = (WebPlace) event.getNewPlace();
-          place.render(main);
+          if (place.isFolder()) {
+            place = place.getHome();
+            placeController.goTo(place);
+          } else {
+            place.render(main);
+          }
         }
       });
     }
 
     private void start() {
-      CoreTypes.UserFeed.bind(ViewType.HOME).toInstance(userGrid);
-      CoreTypes.UserFeed.bind(ViewType.POST).toInstance(userForm);
+      CoreTypes.UserFeed.setWidget(WebView.HOME, userGrid);
+      CoreTypes.UserFeed.setWidget(WebView.POST, userForm);
       main = new SimplePanel();
       main.getElement().setId("main");
       RootPanel.get().add(main);

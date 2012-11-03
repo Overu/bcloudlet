@@ -25,4 +25,8 @@ public class CoreTypes {
 
   public static PlaceType GroupFeed = new PlaceType(Feed, "groupFeed");
   public static PlaceType UserFeed = new PlaceType(Feed, "userFeed");
+
+  static {
+
+  }
 }
