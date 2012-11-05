@@ -16,7 +16,7 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 import org.cloudlet.web.core.client.style.BaseResources;
-import org.cloudlet.web.core.shared.CoreTypes;
+import org.cloudlet.web.core.shared.CorePackage;
 import org.cloudlet.web.core.shared.HomePlace;
 import org.cloudlet.web.core.shared.WebPlace;
 import org.cloudlet.web.core.shared.WebPlaceManager;
@@ -45,7 +45,7 @@ public class CoreClientModule extends AbstractGinModule {
     UserForm userForm;
 
     @Inject
-    GroupMainPanel groupMainPanel;
+    RepositoryExplorer repositoryExplorer;
 
     SimplePanel main;
 
@@ -76,10 +76,10 @@ public class CoreClientModule extends AbstractGinModule {
     }
 
     private void start() {
-      CoreTypes.Repository.setWidget(WebView.FOLDER, groupMainPanel);
+      CorePackage.Repository.setWidget(WebView.FOLDER, repositoryExplorer);
 
-      CoreTypes.UserFeed.setWidget(WebView.HOME, userGrid);
-      CoreTypes.UserFeed.setWidget(WebView.POST, userForm);
+      CorePackage.UserFeed.setWidget(WebView.HOME, userGrid);
+      CorePackage.UserFeed.setWidget(WebView.POST, userForm);
 
       BaseResources.INSTANCE();
       main = new SimplePanel();
@@ -98,7 +98,7 @@ public class CoreClientModule extends AbstractGinModule {
   @Provides
   @Singleton
   public WebPlace getHomePage(final WebPlace homePlace) {
-    homePlace.setPlaceType(CoreTypes.Repository);
+    homePlace.setPlaceType(CorePackage.Repository);
     return homePlace;
   }
 

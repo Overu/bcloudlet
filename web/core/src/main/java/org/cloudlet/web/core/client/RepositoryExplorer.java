@@ -33,7 +33,7 @@ import com.sencha.gxt.widget.core.client.container.MarginData;
 
 import org.cloudlet.web.core.shared.WebView;
 
-public class GroupMainPanel extends WebView implements IsWidget, AcceptsOneWidget, EntryPoint {
+public class RepositoryExplorer extends WebView implements IsWidget, AcceptsOneWidget, EntryPoint {
 
   private DelayedTask windowResizeTask;
   private BorderLayoutContainer con;
@@ -41,7 +41,7 @@ public class GroupMainPanel extends WebView implements IsWidget, AcceptsOneWidge
 
   ContentPanel center;
 
-  public GroupMainPanel() {
+  public RepositoryExplorer() {
     con = new BorderLayoutContainer();
 
     if (windowResizeTask == null) {
@@ -74,7 +74,7 @@ public class GroupMainPanel extends WebView implements IsWidget, AcceptsOneWidge
 
     ContentPanel west = new ContentPanel();
     center = new ContentPanel();
-    center.setHeadingText("BorderLayout Example");
+    // center.setHeadingText("BorderLayout Example");
 
     BorderLayoutData northData = new BorderLayoutData(100);
     northData.setMargins(new Margins(5));

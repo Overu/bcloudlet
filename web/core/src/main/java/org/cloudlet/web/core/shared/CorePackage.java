@@ -1,6 +1,6 @@
 package org.cloudlet.web.core.shared;
 
-public class CoreTypes {
+public class CorePackage {
 
   public static PlaceType Content = new PlaceType("content");
 
@@ -16,8 +16,8 @@ public class CoreTypes {
   public static FeedType UserFeed = new FeedType(Feed, "userFeed", User);
 
   static {
-    Repository.addReference("users", UserFeed);
-    Repository.addReference("groups", GroupFeed);
+    Repository.addChild("users", UserFeed);
+    Repository.addChild("groups", GroupFeed);
   }
 
 }

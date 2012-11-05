@@ -37,7 +37,7 @@ public class PlaceType {
     this(null, name);
   }
 
-  public void addReference(String path, PlaceType type) {
+  public void addChild(String path, PlaceType type) {
     references.put(path, type);
   }
 
