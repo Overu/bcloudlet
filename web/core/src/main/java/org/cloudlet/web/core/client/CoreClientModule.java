@@ -15,6 +15,7 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import org.cloudlet.web.core.client.style.BaseResources;
 import org.cloudlet.web.core.shared.CoreTypes;
 import org.cloudlet.web.core.shared.HomePlace;
 import org.cloudlet.web.core.shared.WebPlace;
@@ -42,6 +43,9 @@ public class CoreClientModule extends AbstractGinModule {
 
     @Inject
     UserForm userForm;
+
+    @Inject
+    GroupMainPanel groupMainPanel;
 
     SimplePanel main;
 
@@ -73,8 +77,12 @@ public class CoreClientModule extends AbstractGinModule {
     }
 
     private void start() {
+      CoreTypes.Group.setWidget(WebView.FOLDER, groupMainPanel);
+
       CoreTypes.UserFeed.setWidget(WebView.HOME, userGrid);
       CoreTypes.UserFeed.setWidget(WebView.POST, userForm);
+
+      BaseResources.INSTANCE();
       main = new SimplePanel();
       main.getElement().setId("main");
       RootPanel.get().add(main);
