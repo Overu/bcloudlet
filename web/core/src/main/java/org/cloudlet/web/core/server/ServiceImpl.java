@@ -28,6 +28,11 @@ public class ServiceImpl<T extends Content> implements Service<T> {
   }
 
   @Override
+  public T getById(String id, Class<T> type) {
+    return em().find(type, id);
+  }
+
+  @Override
   public <CHILD extends Content> CHILD getChild(T parent, String path, Class<CHILD> childType) {
     TypedQuery<CHILD> query =
         em().createQuery(
@@ -60,6 +65,7 @@ public class ServiceImpl<T extends Content> implements Service<T> {
       content.setId(UUID.randomUUID().toString());
     }
     em().persist(content);
+
     return content;
   }
 

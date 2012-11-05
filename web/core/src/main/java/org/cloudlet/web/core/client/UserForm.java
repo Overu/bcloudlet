@@ -4,7 +4,10 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -12,12 +15,16 @@ import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.RequestFactory;
 
 import com.sencha.gxt.widget.core.client.FramedPanel;
+import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.MarginData;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData;
+import com.sencha.gxt.widget.core.client.event.SelectEvent;
+import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.FormPanel;
 import com.sencha.gxt.widget.core.client.form.TextField;
+import com.sencha.gxt.widget.core.client.info.Info;
 
 import org.cloudlet.web.core.shared.WebPlaceManager;
 import org.cloudlet.web.core.shared.WebView;
@@ -61,14 +68,13 @@ public class UserForm extends WebView implements IsWidget, EntryPoint {
     // formPanel.setEncoding(Encoding.URLENCODED);
     formPanel.add(p);
 
-    FramedPanel cp1 = new FramedPanel();
-    cp1.setHeadingText("Form Panel");
-    cp1.setCollapsible(true);
-    cp1.setWidget(formPanel);
-    cp1.setWidth(300);
+    FramedPanel cp = new FramedPanel();
+    cp.setHeadingText("Form Panel");
+    cp.setCollapsible(true);
+    cp.setWidget(formPanel);
+    cp.setWidth(300);
 
-    final RequestBuilder builder1 =
-        new RequestBuilder(RequestBuilder.POST, "api/groups/mygroup/users");
+    final RequestBuilder builder1 = new RequestBuilder(RequestBuilder.POST, "api/users");
     builder1.setHeader("Content-Type", RequestFactory.JSON_CONTENT_TYPE_UTF8);
     builder1.setCallback(new RequestCallback() {
       @Override
@@ -81,8 +87,30 @@ public class UserForm extends WebView implements IsWidget, EntryPoint {
       }
 
     });
+    cp.addButton(new TextButton("Add User", new SelectHandler() {
 
-    return cp1;
+      @Override
+      public void onSelect(final SelectEvent event) {
+        if (name.getValue() == null || email.getValue() == null) {
+          Info.display("name or email is Null", "");
+          return;
+        }
+        JSONObject json = new JSONObject();
+        json.put("name", new JSONString(getParameter(name.getValue())));
+        json.put("email", new JSONString(getParameter(email.getValue())));
+        json.put("phone", new JSONString(getParameter(phone.getValue())));
+        json.put("state", new JSONString(getParameter(state.getValue())));
+        json.put("zip", new JSONString(getParameter(zip.getValue())));
+        try {
+          builder1.setRequestData("{" + "\"user\":" + json.toString() + "}");
+          builder1.send();
+        } catch (RequestException e) {
+          e.printStackTrace();
+        }
+      }
+    }));
+
+    return cp;
   }
 
   @Override

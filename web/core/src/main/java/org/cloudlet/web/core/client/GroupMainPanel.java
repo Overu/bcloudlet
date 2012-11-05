@@ -14,44 +14,56 @@
 package org.cloudlet.web.core.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.shared.GWT;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
 
+import com.sencha.gxt.core.client.util.DelayedTask;
 import com.sencha.gxt.core.client.util.Margins;
 import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
+import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer.BorderLayoutData;
 import com.sencha.gxt.widget.core.client.container.HtmlLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.MarginData;
 
-public class GroupMainPanel extends BorderLayoutContainer implements EntryPoint {
+import org.cloudlet.web.core.shared.WebView;
 
-  // private DelayedTask windowResizeTask;
-  // private BorderLayoutContainer con;
-  // private int windowResizeDelay = !GWT.isScript() ? 100 : 0;
+public class GroupMainPanel extends WebView implements IsWidget, AcceptsOneWidget, EntryPoint {
+
+  private DelayedTask windowResizeTask;
+  private BorderLayoutContainer con;
+  private int windowResizeDelay = !GWT.isScript() ? 100 : 0;
+
+  ContentPanel center;
 
   public GroupMainPanel() {
-    // con = new BorderLayoutContainer();
+    con = new BorderLayoutContainer();
 
-    // if (windowResizeTask == null) {
-    // windowResizeTask = new DelayedTask() {
-    // @Override
-    // public void onExecute() {
-    // onWindowResize(Window.getClientWidth(), Window.getClientHeight());
-    // }
-    // };
-    // }
-    // Window.addResizeHandler(new ResizeHandler() {
-    // @Override
-    // public void onResize(final ResizeEvent event) {
-    // windowResizeTask.delay(windowResizeDelay);
-    // }
-    // });
-    this.monitorWindowResize = true;
+    if (windowResizeTask == null) {
+      windowResizeTask = new DelayedTask() {
+        @Override
+        public void onExecute() {
+          onWindowResize(Window.getClientWidth(), Window.getClientHeight());
+        }
+      };
+    }
+    Window.addResizeHandler(new ResizeHandler() {
+      @Override
+      public void onResize(final ResizeEvent event) {
+        windowResizeTask.delay(windowResizeDelay);
+      }
+    });
+
     Window.enableScrolling(false);
-    this.setPixelSize(Window.getClientWidth(), Window.getClientHeight());
+    con.setPixelSize(Window.getClientWidth(), Window.getClientHeight());
 
-    this.setStateful(true);
-    this.setStateId("explorerLayout");
+    con.setStateful(true);
+    con.setStateId("explorerLayout");
 
     StringBuffer sb = new StringBuffer();
     sb.append("<div id='demo-theme'></div><div id=demo-title>Retech Explorer Demo</div>");
@@ -61,7 +73,7 @@ public class GroupMainPanel extends BorderLayoutContainer implements EntryPoint 
     northPanel.addStyleName("x-small-editor");
 
     ContentPanel west = new ContentPanel();
-    ContentPanel center = new ContentPanel();
+    center = new ContentPanel();
     center.setHeadingText("BorderLayout Example");
 
     BorderLayoutData northData = new BorderLayoutData(100);
@@ -72,18 +84,28 @@ public class GroupMainPanel extends BorderLayoutContainer implements EntryPoint 
 
     MarginData centerData = new MarginData(0, 5, 5, 0);
 
-    this.setNorthWidget(northPanel, northData);
-    this.setWestWidget(west, westData);
-    this.setCenterWidget(center, centerData);
+    con.setNorthWidget(northPanel, northData);
+    con.setWestWidget(west, westData);
+    con.setCenterWidget(center, centerData);
+
+  }
+
+  @Override
+  public Widget asWidget() {
+    return con;
   }
 
   @Override
   public void onModuleLoad() {
-    RootPanel.get().add(this);
+    RootPanel.get().add(con);
   }
 
   @Override
+  public void setWidget(IsWidget w) {
+    center.setWidget(w);
+  }
+
   protected void onWindowResize(final int width, final int height) {
-    this.setPixelSize(width, height);
+    con.setPixelSize(width, height);
   }
 }

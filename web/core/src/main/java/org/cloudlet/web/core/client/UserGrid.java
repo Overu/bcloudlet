@@ -184,7 +184,7 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
 
     JSONFeedReader reader = new JSONFeedReader();
 
-    String path = "api/groups/mygroup/users";
+    String path = "api/users";
     RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, path);
     builder.setHeader("Accept", "application/json");
     HttpProxy<ListLoadConfig> proxy = new HttpProxy<ListLoadConfig>(builder);

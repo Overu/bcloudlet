@@ -1,61 +1,43 @@
+/*
+ * Copyright 2012 Retechcorp.com
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package org.cloudlet.web.core;
-
-import javax.persistence.EntityManager;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-
-import org.cloudlet.web.core.service.Service;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import org.cloudlet.web.core.service.Service;
+
 @Singleton
-@Path("/")
 public class WebPlatform {
 
-	@Inject
-	private static WebPlatform instance;
+  @Inject
+  private static WebPlatform instance;
 
-	@Inject
-	private Injector injector;
+  @Inject
+  private static Injector injector;
 
-	public Injector getInjector() {
-		return injector;
-	}
+  public static WebPlatform getInstance() {
+    return instance;
+  }
 
-	public static WebPlatform getDefault() {
-		return instance;
-	}
+  public Injector getInjector() {
+    return injector;
+  }
 
-	public <T extends Service<?>> T getSerivce(Class<T> type) {
-		// TODO proxy-based creation
-		return injector.getInstance(type);
-	}
-
-	@Inject
-	private Provider<EntityManager> entityManagerProvider;
-
-	public static final String ROOT_ID = "00000000-0000-0000-0000-000000000000";
-
-	private Entry root;
-
-	public Entry getRoot() {
-		if (root == null) {
-			EntityManager em = entityManagerProvider.get();
-			root = em.find(Group.class, ROOT_ID);
-			if (root == null) {
-				root = new Group();
-				root.setId(ROOT_ID);
-				root.save();
-			}
-		}
-		return root;
-	}
-
-	@Path("{path}")
-	public Content getContent(@PathParam("path") String path) {
-		return getRoot().getChild(path);
-	}
+  public <T extends Service<?>> T getSerivce(Class<T> type) {
+    // TODO proxy-based creation
+    return injector.getInstance(type);
+  }
 }

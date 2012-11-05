@@ -76,7 +76,7 @@ public class CoreClientModule extends AbstractGinModule {
     }
 
     private void start() {
-      CoreTypes.Group.setWidget(WebView.FOLDER, groupMainPanel);
+      CoreTypes.Repository.setWidget(WebView.FOLDER, groupMainPanel);
 
       CoreTypes.UserFeed.setWidget(WebView.HOME, userGrid);
       CoreTypes.UserFeed.setWidget(WebView.POST, userForm);
@@ -98,7 +98,7 @@ public class CoreClientModule extends AbstractGinModule {
   @Provides
   @Singleton
   public WebPlace getHomePage(final WebPlace homePlace) {
-    homePlace.setPlaceType(CoreTypes.Group);
+    homePlace.setPlaceType(CoreTypes.Repository);
     return homePlace;
   }
 

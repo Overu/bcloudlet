@@ -105,7 +105,7 @@ public abstract class Content {
   }
 
   public Service getService() {
-    return WebPlatform.getDefault().getSerivce(getServiceType(getClass()));
+    return WebPlatform.getInstance().getSerivce(getServiceType(getClass()));
   }
 
   public <T extends Service> Class<T> getServiceType(Class<? extends Content> contentClass) {

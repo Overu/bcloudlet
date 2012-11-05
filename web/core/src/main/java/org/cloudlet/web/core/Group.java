@@ -1,38 +1,33 @@
 package org.cloudlet.web.core;
 
+import org.cloudlet.web.core.service.GroupService;
+
+import java.security.Principal;
+
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 import javax.ws.rs.Path;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cloudlet.web.core.service.GroupService;
-
 @XmlRootElement
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "t_group")
 @Handler(GroupService.class)
-public class Group extends Entry {
+public class Group extends Entry implements Principal {
 
-	protected String name;
+  protected String name;
 
-	public String getName() {
-		return name;
-	}
+  @Path("members")
+  public MemberFeed getMembers() {
+    return (MemberFeed) getChild("members");
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  @Override
+  public String getName() {
+    return name;
+  }
 
-	@Path("users")
-	public UserFeed getUsers() {
-		return (UserFeed) getChild("users");
-	}
-
-	@Path("groups")
-	public GroupFeed getGroups() {
-		return (GroupFeed) getChild("groups");
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
 }

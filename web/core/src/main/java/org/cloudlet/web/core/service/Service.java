@@ -4,13 +4,14 @@ import org.cloudlet.web.core.Content;
 
 public interface Service<T extends Content> {
 
-	<CHILD extends Content> CHILD getChild(T parent, String path,
-			Class<CHILD> childType);
+  void delete(T content);
 
-	T update(T content);
+  T getById(String id, Class<T> type);
 
-	T save(T content);
+  <CHILD extends Content> CHILD getChild(T parent, String path, Class<CHILD> childType);
 
-	void delete(T content);
+  T save(T content);
+
+  T update(T content);
 
 }

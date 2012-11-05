@@ -1,69 +1,72 @@
 package org.cloudlet.web.core;
 
+import org.cloudlet.web.core.service.UserService;
+
+import java.security.Principal;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.cloudlet.web.core.service.UserService;
-
 @XmlRootElement
 @Entity
 @Table(name = "t_user")
 @Handler(UserService.class)
-public class User extends Entry {
+public class User extends Entry implements Principal {
 
-	@NotNull(message = "你必须指定用户名")
-	private String name;
+  @NotNull(message = "你必须指定用户名")
+  private String name;
 
-	private String email;
+  private String email;
 
-	private String phone;
+  private String phone;
 
-	private String state;
+  private String state;
 
-	public String getState() {
-		return state;
-	}
+  private String zip;
 
-	public void setState(String state) {
-		this.state = state;
-	}
+  public String getEmail() {
+    return email;
+  }
 
-	public String getZip() {
-		return zip;
-	}
+  @Override
+  public String getName() {
+    return name;
+  }
 
-	public void setZip(String zip) {
-		this.zip = zip;
-	}
+  public String getPhone() {
+    return phone;
+  }
 
-	private String zip;
+  public String getState() {
+    return state;
+  }
 
-	public String getName() {
-		return name;
-	}
+  public String getZip() {
+    return zip;
+  }
 
-	public String getEmail() {
-		return email;
-	}
+  public User setEmail(final String value) {
+    this.email = value;
+    return this;
+  }
 
-	public String getPhone() {
-		return phone;
-	}
+  public void setName(final String value) {
+    this.name = value;
+  }
 
-	public void setName(final String value) {
-		this.name = value;
-	}
+  public User setPhone(final String value) {
+    this.phone = value;
+    return this;
+  }
 
-	public User setEmail(final String value) {
-		this.email = value;
-		return this;
-	}
+  public void setState(String state) {
+    this.state = state;
+  }
 
-	public User setPhone(final String value) {
-		this.phone = value;
-		return this;
-	}
+  public void setZip(String zip) {
+    this.zip = zip;
+  }
 
 }
