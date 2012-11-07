@@ -30,7 +30,7 @@ public class PlaceType {
   public PlaceType(PlaceType superType, String name) {
     this.superType = superType;
     this.name = name;
-    types.put(name, superType);
+    types.put(name, this);
   }
 
   public PlaceType(String name) {

@@ -3,6 +3,7 @@ package org.cloudlet.web.core.client;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.inject.Inject;
@@ -25,6 +26,7 @@ import com.sencha.gxt.widget.core.client.tree.Tree;
 
 import org.cloudlet.web.core.shared.CorePackage;
 import org.cloudlet.web.core.shared.HomePlace;
+import org.cloudlet.web.core.shared.PlaceType;
 import org.cloudlet.web.core.shared.WebPlace;
 import org.cloudlet.web.core.shared.WebPlaceManager;
 
@@ -38,15 +40,21 @@ public class PlaceTree extends BorderLayoutContainer {
     @Override
     public List<WebPlace> read(final Object loadConfig, final String data) {
       JSONObject root = JSONParser.parseLenient(data).isObject();
-      // JSONObject feed = root.get("repository").isObject();
+      JSONObject feed = root.get("repository").isObject();
+      JSONArray children = feed.get(CorePackage.Content.CHILDREN).isArray();
 
       List<WebPlace> result = new ArrayList<WebPlace>();
-      WebPlace place = placeProvider.get();
-      place.setPath("users");
-      place.setTitle("用户");
-      place.setPlaceType(CorePackage.UserFeed.TYPE);
-      rootPlace.addChild(place);
-      result.add(place);
+      for (int i = 0; i < children.size(); i++) {
+        WebPlace place = placeProvider.get();
+        JSONObject object = children.get(i).isObject();
+        place.setPath(object.get("path").isString().stringValue());
+        place.setTitle(object.get("title").isString().stringValue());
+        String targetTypeName = object.get("@xsi.type").isString().stringValue();
+        PlaceType targetType = PlaceType.getType(targetTypeName);
+        place.setPlaceType(targetType);
+        rootPlace.addChild(place);
+        result.add(place);
+      }
       return result;
     }
   }
