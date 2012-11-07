@@ -1,15 +1,14 @@
 package org.cloudlet.web.core.service;
 
-import java.util.List;
-
 import org.cloudlet.web.core.Entry;
 import org.cloudlet.web.core.Feed;
 
-public interface FeedService<F extends Feed<E>, E extends Entry> extends
-		Service<F> {
+import java.util.List;
 
-	E create(F parent, E child);
+public interface FeedService<F extends Feed<E>, E extends Entry> extends Service<F> {
 
-	List<E> findChildren(F parent, int start, int limit, Class<E> entryType);
+  E create(F parent, E child);
+
+  List<E> findChildren(F parent, int start, int limit, Class<E> entryType);
 
 }

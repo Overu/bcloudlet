@@ -2,28 +2,25 @@ package org.cloudlet.web.core;
 
 import org.cloudlet.web.core.service.FeedService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 @MappedSuperclass
 public abstract class Feed<E extends Entry> extends Content {
 
-  private long totalResults;
+  protected long totalResults;
 
   @Transient
-  private List<E> entries = new ArrayList<E>();
+  protected List<E> entries;
 
   @POST
   @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -62,18 +59,11 @@ public abstract class Feed<E extends Entry> extends Content {
   }
 
   @Override
-  public Content load() {
-    return load(0, -1);
-  }
-
   @GET
   @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  public Content load(@QueryParam("start") @DefaultValue("0") int start,
-      @QueryParam("limit") @DefaultValue("-1") int limit) {
-    if (limit != 0) {
-      List<E> entries = getService().findChildren(this, start, limit, getEntryType());
-      setEntries(entries);
-    }
+  public Content load() {
+    loadBasicInfo();
+    entries = getService().findChildren(this, 0, -1, getEntryType());
     return this;
   }
 

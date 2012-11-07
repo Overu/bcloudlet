@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Handler(UserFeedService.class)
 @Path("users")
-public class UserFeed extends Feed<User> {
+public class UserFeed extends PagingFeed<User> {
   @Override
   public Class<User> getEntryType() {
     return User.class;

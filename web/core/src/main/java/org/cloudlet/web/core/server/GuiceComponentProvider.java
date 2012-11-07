@@ -7,6 +7,7 @@ import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.jersey.internal.inject.Injections;
 import org.glassfish.jersey.internal.inject.ServiceBindingBuilder;
+import org.glassfish.jersey.server.internal.JerseyResourceContext;
 import org.glassfish.jersey.server.spi.ComponentProvider;
 
 import java.util.Set;
@@ -28,13 +29,17 @@ public class GuiceComponentProvider implements ComponentProvider {
 
     @Override
     public T provide() {
-      return WebPlatform.getInstance().getInjector().getInstance(clz);
+      T resource = WebPlatform.getInstance().getInjector().getInstance(clz);
+      resourceContext.initResource(resource);
+      return resource;
     }
   }
 
   private static final Logger LOGGER = Logger.getLogger(GuiceComponentProvider.class.getName());
 
   private ServiceLocator locator = null;
+
+  JerseyResourceContext resourceContext;
 
   @SuppressWarnings("unchecked")
   @Override
@@ -73,6 +78,7 @@ public class GuiceComponentProvider implements ComponentProvider {
   @Override
   public void initialize(final ServiceLocator locator) {
     this.locator = locator;
+    resourceContext = locator.getService(JerseyResourceContext.class);
   }
 
 }

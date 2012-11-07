@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Handler(GroupFeedService.class)
 @Path("groups")
-public class GroupFeed extends Feed<Group> {
+public class GroupFeed extends PagingFeed<Group> {
   @Override
   public Class<Group> getEntryType() {
     return Group.class;

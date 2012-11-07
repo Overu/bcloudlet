@@ -5,6 +5,7 @@ import org.cloudlet.web.core.Group;
 import org.cloudlet.web.core.GroupFeed;
 import org.cloudlet.web.core.GroupMember;
 import org.cloudlet.web.core.MemberFeed;
+import org.cloudlet.web.core.Repository;
 import org.cloudlet.web.core.User;
 import org.cloudlet.web.core.UserFeed;
 import org.cloudlet.web.core.UserMember;
@@ -30,7 +31,7 @@ public final class JaxbContextResolver implements ContextResolver<JAXBContext> {
     this.context =
         new JettisonJaxbContext(JettisonConfiguration.mappedJettison().xml2JsonNs(jsonXml2JsonNs)
             .build(), Feed.class, UserFeed.class, GroupFeed.class, User.class, Group.class,
-            MemberFeed.class, UserMember.class, GroupMember.class);
+            MemberFeed.class, UserMember.class, GroupMember.class, Repository.class);
   }
 
   @Override

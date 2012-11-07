@@ -8,22 +8,30 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.NoResultException;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.container.ResourceContext;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
@@ -33,6 +41,20 @@ import javax.xml.stream.XMLStreamReader;
 @MappedSuperclass
 @XmlType
 public abstract class Content {
+
+  protected String title;
+
+  @Transient
+  @QueryParam("children")
+  protected boolean loadChildren;
+
+  @Context
+  @Transient
+  UriInfo uriInfo;
+
+  @Context
+  @Transient
+  ResourceContext resourceContext;
 
   @Id
   protected String id;
@@ -50,40 +72,66 @@ public abstract class Content {
   private Content parent;
 
   @Transient
-  private Map<String, Content> children;
+  private Map<String, Content> cache;
+
+  @Transient
+  private List<Content> children;
 
   @DELETE
   public void delete() {
     getService().delete(this);
   }
 
+  public Map<String, Content> getCache() {
+    if (cache == null) {
+      cache = new HashMap<String, Content>();
+    }
+    return cache;
+  }
+
   @Path("{path}")
   public <T extends Content> T getChild(@PathParam("path") String path) {
-    Content result = getChildren().get(path);
-    if (result != null) {
-      return (T) result;
-    }
-    for (Method m : getClass().getMethods()) {
-      Path p = m.getAnnotation(Path.class);
-      if (p != null && p.value().equals(path)) {
-        Class<?> rt = m.getReturnType();
-        if (Content.class.isAssignableFrom(rt)) {
-          Class<Content> childType = (Class<Content>) rt;
-          result = getService().getChild(this, path, childType);
-          getChildren().put(path, result);
-          return (T) result;
-        } else {
-          // TODO log exception
+    Content result = getCache().get(path);
+    if (result == null) {
+      for (Method m : getClass().getMethods()) {
+        Path p = m.getAnnotation(Path.class);
+        if (p != null && p.value().equals(path)) {
+          Class<?> rt = m.getReturnType();
+          if (Content.class.isAssignableFrom(rt)) {
+            Class<Content> childType = (Class<Content>) rt;
+            try {
+              result = getService().getChild(this, path, childType);
+            } catch (NoResultException e) {
+              try {
+                result = childType.newInstance();
+              } catch (InstantiationException e1) {
+                e1.printStackTrace();
+              } catch (IllegalAccessException e1) {
+                e1.printStackTrace();
+              }
+              result.setPath(path);
+              Relation rel = m.getAnnotation(Relation.class);
+              if (rel != null) {
+                result.setTitle(rel.value());
+              }
+              result = create(result);
+            }
+            getCache().put(path, result);
+            break;
+          } else {
+            // TODO log exception
+          }
         }
       }
     }
-    return null;
+    if (resourceContext != null) {
+      resourceContext.initResource(result);
+    }
+    return (T) result;
   }
 
-  public Map<String, Content> getChildren() {
-    if (children == null) {
-      children = new HashMap<String, Content>();
-    }
+  @XmlElement
+  public List<Content> getChildren() {
     return children;
   }
 
@@ -121,6 +169,10 @@ public abstract class Content {
     return null;
   }
 
+  public String getTitle() {
+    return title;
+  }
+
   @XmlElement
   public String getUri() {
     return getUriBuilder().toString();
@@ -139,8 +191,38 @@ public abstract class Content {
     return version;
   }
 
+  @GET
+  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
   public Content load() {
+    loadBasicInfo();
     return this;
+  }
+
+  public void loadChildren() {
+    children = new ArrayList<Content>();
+    for (Method m : getClass().getMethods()) {
+      Path p = m.getAnnotation(Path.class);
+      if (p != null && !p.value().contains("{")) {
+        Content child = getChild(p.value());
+        children.add(child);
+      }
+    }
+  }
+
+  public void read(JSONObject json) {
+    // TODO
+  }
+
+  public void read(XMLStreamReader xml) {
+    // TODO
+  }
+
+  public <T extends Content> T save() {
+    if (parent == null) {
+      return (T) getService().save(this);
+    } else {
+      return (T) parent.create(this);
+    }
   }
 
   //
@@ -160,22 +242,6 @@ public abstract class Content {
   // return create(child);
   // }
 
-  public void read(JSONObject json) {
-    // TODO
-  }
-
-  public void read(XMLStreamReader xml) {
-    // TODO
-  }
-
-  public <T extends Content> T save() {
-    if (parent == null) {
-      return (T) getService().save(this);
-    } else {
-      return (T) parent.create(this);
-    }
-  }
-
   public void setId(final String id) {
     this.id = id;
   }
@@ -190,6 +256,10 @@ public abstract class Content {
 
   public void setPath(final String path) {
     this.path = path;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
   }
 
   public void setVersion(final Long version) {
@@ -209,5 +279,11 @@ public abstract class Content {
   }
 
   protected abstract <T extends Content> T create(T child);
+
+  protected void loadBasicInfo() {
+    if (loadChildren) {
+      loadChildren();
+    }
+  }
 
 }
