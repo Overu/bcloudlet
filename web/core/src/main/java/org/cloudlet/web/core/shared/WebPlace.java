@@ -113,16 +113,17 @@ public class WebPlace extends Place {
 
   public StringBuilder getUriBuilder() {
     if (parent == null) {
-      return new StringBuilder();
+      return new StringBuilder("/");
     } else {
       StringBuilder builder = parent.getUriBuilder();
       if (path.length() > 0) {
         if (isFolder()) {
+          builder.append(path);
           builder.append("/");
         } else {
           builder.append("?");
+          builder.append(path);
         }
-        builder.append(path);
       }
       return builder;
     }
