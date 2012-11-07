@@ -5,6 +5,7 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -25,6 +26,7 @@ import org.cloudlet.web.core.shared.WebPlace;
 import org.cloudlet.web.core.shared.WebPlaceManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class PlaceTree extends BorderLayoutContainer {
@@ -33,23 +35,28 @@ public class PlaceTree extends BorderLayoutContainer {
 
     @Override
     public List<WebPlace> read(final Object loadConfig, final String data) {
+      WebPlace parentPlace = loadConfig == null ? rootPlace : (WebPlace) loadConfig;
       JSONObject root = JSONParser.parseLenient(data).isObject();
-      JSONObject feed = root.get("repository").isObject();
-      JSONArray children = feed.get(CorePackage.Content.CHILDREN).isArray();
-
-      List<WebPlace> result = new ArrayList<WebPlace>();
-      for (int i = 0; i < children.size(); i++) {
-        WebPlace place = placeProvider.get();
-        JSONObject object = children.get(i).isObject();
-        place.setPath(object.get("path").isString().stringValue());
-        place.setTitle(object.get("title").isString().stringValue());
-        String targetTypeName = object.get("@xsi.type").isString().stringValue();
-        PlaceType targetType = PlaceType.getType(targetTypeName);
-        place.setPlaceType(targetType);
-        rootPlace.addChild(place);
-        result.add(place);
+      JSONObject feed = root.get(parentPlace.getPlaceType().getName()).isObject();
+      JSONValue c = feed.get(CorePackage.Content.CHILDREN);
+      if (c != null) {
+        JSONArray children = c.isArray();
+        List<WebPlace> result = new ArrayList<WebPlace>();
+        for (int i = 0; i < children.size(); i++) {
+          WebPlace place = placeProvider.get();
+          JSONObject object = children.get(i).isObject();
+          place.setPath(object.get("path").isString().stringValue());
+          place.setTitle(object.get("title").isString().stringValue());
+          String targetTypeName = object.get("@xsi.type").isString().stringValue();
+          PlaceType targetType = PlaceType.getType(targetTypeName);
+          place.setPlaceType(targetType);
+          parentPlace.addChild(place);
+          result.add(place);
+        }
+        return result;
+      } else {
+        return Collections.EMPTY_LIST;
       }
-      return result;
     }
   }
 

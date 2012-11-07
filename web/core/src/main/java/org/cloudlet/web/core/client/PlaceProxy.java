@@ -29,7 +29,8 @@ public class PlaceProxy implements DataProxy<WebPlace, String> {
   public void load(final WebPlace loadConfig, final Callback<String, Throwable> callback) {
     try {
       String data = null;
-      StringBuilder url = loadConfig == null ? place.getUriBuilder() : loadConfig.getUriBuilder();
+      final StringBuilder url =
+          loadConfig == null ? place.getUriBuilder() : loadConfig.getUriBuilder();
       url.append("?children=true");
       url.insert(0, "api");
       RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url.toString());
@@ -44,8 +45,8 @@ public class PlaceProxy implements DataProxy<WebPlace, String> {
         @Override
         public void onResponseReceived(Request request, Response response) {
           if (response.getStatusCode() != Response.SC_OK) {
-            callback.onFailure(new RuntimeException("HttpProxy: Invalid status code "
-                + response.getStatusCode()));
+            callback.onFailure(new RuntimeException("GET " + url.toString()
+                + "\r\nInvalid status code " + response.getStatusCode()));
             return;
           }
           callback.onSuccess(response.getText());

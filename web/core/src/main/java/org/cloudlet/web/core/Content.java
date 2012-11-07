@@ -18,7 +18,6 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.NoResultException;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.ws.rs.Consumes;
@@ -91,41 +90,9 @@ public abstract class Content {
   }
 
   @Path("{path}")
-  public <T extends Content> T getChild(@PathParam("path") String path) {
-    Content result = getCache().get(path);
-    if (result == null) {
-      for (Method m : getClass().getMethods()) {
-        Path p = m.getAnnotation(Path.class);
-        if (p != null && p.value().equals(path)) {
-          Class<?> rt = m.getReturnType();
-          if (Content.class.isAssignableFrom(rt)) {
-            Class<Content> childType = (Class<Content>) rt;
-            try {
-              result = getService().getChild(this, path, childType);
-            } catch (NoResultException e) {
-              try {
-                result = childType.newInstance();
-              } catch (InstantiationException e1) {
-                e1.printStackTrace();
-              } catch (IllegalAccessException e1) {
-                e1.printStackTrace();
-              }
-              result.setPath(path);
-              Relation rel = m.getAnnotation(Relation.class);
-              if (rel != null) {
-                result.setTitle(rel.value());
-              }
-              result = create(result);
-            }
-            getCache().put(path, result);
-            break;
-          } else {
-            // TODO log exception
-          }
-        }
-      }
-    }
-    if (resourceContext != null) {
+  public final <T extends Content> T getChild(@PathParam("path") String path) {
+    Content result = lookupChild(path);
+    if (result != null && resourceContext != null) {
       resourceContext.initResource(result);
     }
     return (T) result;
@@ -226,6 +193,10 @@ public abstract class Content {
     }
   }
 
+  public void setId(final String id) {
+    this.id = id;
+  }
+
   //
   // @POST
   // @Consumes(MediaType.APPLICATION_JSON)
@@ -242,10 +213,6 @@ public abstract class Content {
   // child.read(xml);
   // return create(child);
   // }
-
-  public void setId(final String id) {
-    this.id = id;
-  }
 
   public void setOwner(final User owner) {
     this.owner = owner;
@@ -285,6 +252,42 @@ public abstract class Content {
     if (loadChildren) {
       loadChildren();
     }
+  }
+
+  protected Content lookupChild(String path) {
+    Content result = getCache().get(path);
+    if (result == null) {
+      for (Method m : getClass().getMethods()) {
+        Path p = m.getAnnotation(Path.class);
+        if (p != null && p.value().equals(path)) {
+          Class<?> rt = m.getReturnType();
+          if (Content.class.isAssignableFrom(rt)) {
+            Class<Content> childType = (Class<Content>) rt;
+            result = getService().getChild(this, path, childType);
+            if (result == null) {
+              try {
+                result = childType.newInstance();
+              } catch (InstantiationException e1) {
+                e1.printStackTrace();
+              } catch (IllegalAccessException e1) {
+                e1.printStackTrace();
+              }
+              result.setPath(path);
+              Relation rel = m.getAnnotation(Relation.class);
+              if (rel != null) {
+                result.setTitle(rel.value());
+              }
+              result = create(result);
+            }
+            getCache().put(path, result);
+            break;
+          } else {
+            // TODO log exception
+          }
+        }
+      }
+    }
+    return result;
   }
 
 }

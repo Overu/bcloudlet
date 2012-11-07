@@ -6,7 +6,6 @@ import java.security.Principal;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
@@ -15,7 +14,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Handler(UserService.class)
 public class User extends Entry implements Principal {
 
-  @NotNull(message = "你必须指定用户名")
   private String name;
 
   private String email;
