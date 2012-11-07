@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.RequestFactory;
 
-import com.sencha.gxt.widget.core.client.FramedPanel;
+import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.MarginData;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
@@ -34,9 +34,9 @@ public class UserForm extends WebView implements IsWidget, EntryPoint {
   @Inject
   WebPlaceManager placeManager;
 
-  @Override
-  public Widget asWidget() {
+  private ContentPanel cp;
 
+  public UserForm() {
     VerticalLayoutContainer p = new VerticalLayoutContainer();
     p.setLayoutData(new MarginData(8));
 
@@ -63,16 +63,11 @@ public class UserForm extends WebView implements IsWidget, EntryPoint {
     p.add(new FieldLabel(zip, "zip"), new VerticalLayoutData(1, -1));
 
     final FormPanel formPanel = new FormPanel();
-    // formPanel.setAction("api/groups/mygroup/users");
-    // formPanel.setMethod(Method.POST);
-    // formPanel.setEncoding(Encoding.URLENCODED);
     formPanel.add(p);
 
-    FramedPanel cp = new FramedPanel();
+    cp = new ContentPanel();
     cp.setHeadingText("Form Panel");
-    cp.setCollapsible(true);
     cp.setWidget(formPanel);
-    cp.setWidth(300);
 
     final RequestBuilder builder1 = new RequestBuilder(RequestBuilder.POST, "api/users");
     builder1.setHeader("Content-Type", RequestFactory.JSON_CONTENT_TYPE_UTF8);
@@ -109,6 +104,10 @@ public class UserForm extends WebView implements IsWidget, EntryPoint {
         }
       }
     }));
+  }
+
+  @Override
+  public Widget asWidget() {
 
     return cp;
   }

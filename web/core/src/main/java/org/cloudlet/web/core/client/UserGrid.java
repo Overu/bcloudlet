@@ -169,6 +169,8 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
   @Inject
   WebPlaceManager placeController;
 
+  private ContentPanel cp;
+
   private static Renderer r;
   private static Resources resources;
 
@@ -178,8 +180,7 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
     resources.css().ensureInjected();
   }
 
-  @Override
-  public Widget asWidget() {
+  public UserGrid() {
     final Style style = resources.css();
 
     JSONFeedReader reader = new JSONFeedReader();
@@ -306,10 +307,9 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
     con.add(toolBar, new VerticalLayoutData(1, -1));
     con.add(viewContainer, new VerticalLayoutData(1, 1));
 
-    ContentPanel cp = new ContentPanel();
+    cp = new ContentPanel();
     cp.setHeadingText("Json Grid Example");
     cp.setWidget(con);
-    cp.setPixelSize(575, 350);
     cp.setButtonAlign(BoxLayoutPack.CENTER);
     cp.addButton(new TextButton("Add User", new SelectHandler() {
 
@@ -325,7 +325,10 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
         loader.load();
       }
     }));
+  }
 
+  @Override
+  public Widget asWidget() {
     return cp;
   }
 

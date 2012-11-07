@@ -30,6 +30,8 @@ import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer.BorderLayoutData;
 import com.sencha.gxt.widget.core.client.container.HtmlLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.MarginData;
+import com.sencha.gxt.widget.core.client.container.ResizeContainer;
+import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 
 import org.cloudlet.web.core.shared.WebView;
 
@@ -39,7 +41,7 @@ public class RepositoryExplorer extends WebView implements IsWidget, AcceptsOneW
   private BorderLayoutContainer con;
   private int windowResizeDelay = !GWT.isScript() ? 100 : 0;
 
-  ContentPanel center;
+  SimpleContainer center;
 
   public RepositoryExplorer() {
     con = new BorderLayoutContainer();
@@ -62,9 +64,6 @@ public class RepositoryExplorer extends WebView implements IsWidget, AcceptsOneW
     Window.enableScrolling(false);
     con.setPixelSize(Window.getClientWidth(), Window.getClientHeight());
 
-    con.setStateful(true);
-    con.setStateId("explorerLayout");
-
     StringBuffer sb = new StringBuffer();
     sb.append("<div id='demo-theme'></div><div id=demo-title>Retech Explorer Demo</div>");
     HtmlLayoutContainer northPanel = new HtmlLayoutContainer(sb.toString());
@@ -73,8 +72,8 @@ public class RepositoryExplorer extends WebView implements IsWidget, AcceptsOneW
     northPanel.addStyleName("x-small-editor");
 
     ContentPanel west = new ContentPanel();
-    center = new ContentPanel();
-    // center.setHeadingText("BorderLayout Example");
+
+    center = new SimpleContainer();
 
     BorderLayoutData northData = new BorderLayoutData(100);
     northData.setMargins(new Margins(5));
@@ -82,12 +81,11 @@ public class RepositoryExplorer extends WebView implements IsWidget, AcceptsOneW
     BorderLayoutData westData = new BorderLayoutData(150);
     westData.setMargins(new Margins(0, 5, 5, 5));
 
-    MarginData centerData = new MarginData(0, 5, 5, 0);
+    MarginData centerData = new MarginData(0, 5, 4, 0);
 
     con.setNorthWidget(northPanel, northData);
     con.setWestWidget(west, westData);
     con.setCenterWidget(center, centerData);
-
   }
 
   @Override
@@ -101,8 +99,12 @@ public class RepositoryExplorer extends WebView implements IsWidget, AcceptsOneW
   }
 
   @Override
-  public void setWidget(IsWidget w) {
+  public void setWidget(final IsWidget w) {
     center.setWidget(w);
+    if (w instanceof WebView) {
+      ResizeContainer widget = (ResizeContainer) w.asWidget();
+      widget.onResize();
+    }
   }
 
   protected void onWindowResize(final int width, final int height) {
