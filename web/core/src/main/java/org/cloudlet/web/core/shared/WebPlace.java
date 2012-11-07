@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 public class WebPlace extends Place {
 
-  public static boolean isFolder(String uri) {
+  public static boolean isFolder(final String uri) {
     return uri == null || (uri.length() > 0 && !uri.contains("="));
   }
 
@@ -30,6 +30,8 @@ public class WebPlace extends Place {
   private List<WebPlace> children = new ArrayList<WebPlace>();
 
   private IsWidget widget;
+
+  private String title;
 
   private PlaceType placeType;
 
@@ -54,7 +56,7 @@ public class WebPlace extends Place {
     return result;
   }
 
-  public WebPlace getChild(String path) {
+  public WebPlace getChild(final String path) {
     for (WebPlace p : children) {
       if (path.equals(p.getPath())) {
         return p;
@@ -93,6 +95,10 @@ public class WebPlace extends Place {
 
   public PlaceType getPlaceType() {
     return placeType;
+  }
+
+  public String getTitle() {
+    return title;
   }
 
   public String getUri() {
@@ -150,8 +156,12 @@ public class WebPlace extends Place {
     this.path = path;
   }
 
-  public void setPlaceType(PlaceType placeType) {
+  public void setPlaceType(final PlaceType placeType) {
     this.placeType = placeType;
+  };
+
+  public void setTitle(final String title) {
+    this.title = title;
   }
 
   @Override
@@ -159,7 +169,7 @@ public class WebPlace extends Place {
     StringBuilder builder = new StringBuilder();
     builder.append(placeType.getName()).append(" (").append(getUri()).append(")");
     return builder.toString();
-  };
+  }
 
   private void appendWidget(final AcceptsOneWidget panel, final AsyncCallback<IsWidget> callback) {
     panel.setWidget(widget);
@@ -201,11 +211,11 @@ public class WebPlace extends Place {
     } else if (placeType != null) {
       boolean hasWidget = placeType.loadWidget(getWidgetId(), new AsyncCallback<IsWidget>() {
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(final Throwable caught) {
         }
 
         @Override
-        public void onSuccess(IsWidget result) {
+        public void onSuccess(final IsWidget result) {
           widget = result;
           appendWidget(panel, callback);
         }
