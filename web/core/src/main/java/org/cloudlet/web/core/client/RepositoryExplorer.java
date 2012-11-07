@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.util.DelayedTask;
 import com.sencha.gxt.core.client.util.Margins;
@@ -43,7 +44,8 @@ public class RepositoryExplorer extends WebView implements IsWidget, AcceptsOneW
 
   SimpleContainer center;
 
-  public RepositoryExplorer() {
+  @Inject
+  public RepositoryExplorer(final PlaceTree placeTree) {
     con = new BorderLayoutContainer();
 
     if (windowResizeTask == null) {
@@ -72,6 +74,7 @@ public class RepositoryExplorer extends WebView implements IsWidget, AcceptsOneW
     northPanel.addStyleName("x-small-editor");
 
     ContentPanel west = new ContentPanel();
+    west.setWidget(placeTree);
 
     center = new SimpleContainer();
 
