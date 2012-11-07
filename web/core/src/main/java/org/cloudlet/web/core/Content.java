@@ -2,6 +2,7 @@ package org.cloudlet.web.core;
 
 import org.cloudlet.web.core.server.ContentType;
 import org.cloudlet.web.core.service.Service;
+import org.cloudlet.web.core.shared.CorePackage;
 import org.codehaus.jettison.json.JSONObject;
 import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Type;
@@ -45,7 +46,7 @@ public abstract class Content {
   protected String title;
 
   @Transient
-  @QueryParam("children")
+  @QueryParam(CorePackage.Content.CHILDREN)
   protected boolean loadChildren;
 
   @Context

@@ -20,7 +20,6 @@ import org.cloudlet.web.core.shared.CorePackage;
 import org.cloudlet.web.core.shared.HomePlace;
 import org.cloudlet.web.core.shared.WebPlace;
 import org.cloudlet.web.core.shared.WebPlaceManager;
-import org.cloudlet.web.core.shared.WebView;
 
 import java.util.logging.Logger;
 
@@ -76,10 +75,10 @@ public class CoreClientModule extends AbstractGinModule {
     }
 
     private void start() {
-      CorePackage.Repository.setWidget(WebView.FOLDER, repositoryExplorer);
+      CorePackage.Repository.TYPE.setWidget(WebPlace.FOLDER, repositoryExplorer);
 
-      CorePackage.UserFeed.setWidget(WebView.HOME, userGrid);
-      CorePackage.UserFeed.setWidget(WebView.POST, userForm);
+      CorePackage.UserFeed.TYPE.setWidget(WebPlace.HOME, userGrid);
+      CorePackage.UserFeed.TYPE.setWidget(WebPlace.POST, userForm);
 
       BaseResources.INSTANCE();
       main = new SimplePanel();
@@ -98,7 +97,7 @@ public class CoreClientModule extends AbstractGinModule {
   @Provides
   @Singleton
   public WebPlace getHomePage(final WebPlace homePlace) {
-    homePlace.setPlaceType(CorePackage.Repository);
+    homePlace.setPlaceType(CorePackage.Repository.TYPE);
     return homePlace;
   }
 

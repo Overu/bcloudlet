@@ -27,7 +27,6 @@ import org.cloudlet.web.core.shared.CorePackage;
 import org.cloudlet.web.core.shared.HomePlace;
 import org.cloudlet.web.core.shared.WebPlace;
 import org.cloudlet.web.core.shared.WebPlaceManager;
-import org.cloudlet.web.core.shared.WebView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +44,7 @@ public class PlaceTree extends BorderLayoutContainer {
       WebPlace place = placeProvider.get();
       place.setPath("users");
       place.setTitle("用户");
-      place.setPlaceType(CorePackage.UserFeed);
+      place.setPlaceType(CorePackage.UserFeed.TYPE);
       rootPlace.addChild(place);
       result.add(place);
       return result;
@@ -74,7 +73,8 @@ public class PlaceTree extends BorderLayoutContainer {
 
     JSONFeedReader reader = new JSONFeedReader();
 
-    RequestBuilder rb = new RequestBuilder(RequestBuilder.GET, "api/users");
+    RequestBuilder rb =
+        new RequestBuilder(RequestBuilder.GET, "api/?" + CorePackage.Content.CHILDREN + "=true");
     rb.setHeader("Accept", "application/json");
     HttpProxy<WebPlace> jsonProxy = new HttpProxy<WebPlace>(rb);
     final TreeLoader<WebPlace> loader = new TreeLoader<WebPlace>(jsonProxy, reader) {
@@ -108,7 +108,7 @@ public class PlaceTree extends BorderLayoutContainer {
     tree.getSelectionModel().addSelectionHandler(new SelectionHandler<WebPlace>() {
       @Override
       public void onSelection(final SelectionEvent<WebPlace> event) {
-        placeManager.goTo(event.getSelectedItem(), WebView.HOME);
+        placeManager.goTo(event.getSelectedItem(), WebPlace.HOME);
         tree.getSelectionModel().deselectAll();
       }
     });

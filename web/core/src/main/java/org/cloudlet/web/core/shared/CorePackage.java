@@ -2,22 +2,41 @@ package org.cloudlet.web.core.shared;
 
 public class CorePackage {
 
-  public static PlaceType Content = new PlaceType("content");
+  public static class Content {
+    public static final String CHILDREN = "children";
+    public static PlaceType TYPE = new PlaceType("content");
+  }
 
-  public static PlaceType Repository = new PlaceType(Content, "repository");
+  public static class Entry {
+    public static EntryType TYPE = new EntryType(Content.TYPE, "entry");
+  }
 
-  public static EntryType Entry = new EntryType(Content, "entry");
-  public static FeedType Feed = new FeedType(Content, "feed", Entry);
+  public static class Feed {
+    public static FeedType TYPE = new FeedType(Content.TYPE, "feed", Entry.TYPE);
+  }
 
-  public static EntryType Group = new EntryType(Entry, "group");
-  public static EntryType User = new EntryType(Entry, "user");
+  public static class Group {
+    public static EntryType TYPE = new EntryType(Entry.TYPE, "group");
+  }
 
-  public static FeedType GroupFeed = new FeedType(Feed, "groupFeed", Group);
-  public static FeedType UserFeed = new FeedType(Feed, "userFeed", User);
+  public static class GroupFeed {
+    public static FeedType TYPE = new FeedType(Feed.TYPE, "groupFeed", Group.TYPE);
+  }
 
-  static {
-    Repository.addChild("users", UserFeed);
-    Repository.addChild("groups", GroupFeed);
+  public static class Repository {
+    public static PlaceType TYPE = new PlaceType(Content.TYPE, "repository");
+    static {
+      TYPE.addChild("users", UserFeed.TYPE);
+      TYPE.addChild("groups", GroupFeed.TYPE);
+    }
+  }
+
+  public static class User {
+    public static EntryType TYPE = new EntryType(Entry.TYPE, "user");
+  }
+
+  public static class UserFeed {
+    public static FeedType TYPE = new FeedType(Feed.TYPE, "userFeed", User.TYPE);
   }
 
 }

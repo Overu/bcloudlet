@@ -13,6 +13,12 @@ import java.util.logging.Logger;
 
 public class WebPlace extends Place {
 
+  public static final String HOME = "";
+
+  public static final String FOLDER = "/";
+
+  public static final String POST = "action=create";
+
   public static boolean isFolder(final String uri) {
     return uri == null || (uri.length() > 0 && !uri.contains("="));
   }
@@ -82,7 +88,7 @@ public class WebPlace extends Place {
   }
 
   public WebPlace getHome() {
-    return getChild(WebView.HOME);
+    return getChild(WebPlace.HOME);
   }
 
   public WebPlace getParent() {
@@ -124,7 +130,7 @@ public class WebPlace extends Place {
 
   public String getWidgetId() {
     if (isFolder()) {
-      return WebView.FOLDER;
+      return WebPlace.FOLDER;
     } else {
       return path;
     }

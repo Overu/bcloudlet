@@ -26,6 +26,7 @@ import com.sencha.gxt.widget.core.client.form.FormPanel;
 import com.sencha.gxt.widget.core.client.form.TextField;
 import com.sencha.gxt.widget.core.client.info.Info;
 
+import org.cloudlet.web.core.shared.WebPlace;
 import org.cloudlet.web.core.shared.WebPlaceManager;
 import org.cloudlet.web.core.shared.WebView;
 
@@ -78,7 +79,7 @@ public class UserForm extends WebView implements IsWidget, EntryPoint {
 
       @Override
       public void onResponseReceived(final Request request, final Response response) {
-        placeManager.goTo(place, WebView.HOME);
+        placeManager.goTo(place, WebPlace.HOME);
       }
 
     });
