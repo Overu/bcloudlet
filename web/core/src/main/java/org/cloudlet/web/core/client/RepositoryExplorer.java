@@ -74,6 +74,7 @@ public class RepositoryExplorer extends WebView implements IsWidget, AcceptsOneW
     northPanel.addStyleName("x-small-editor");
 
     ContentPanel west = new ContentPanel();
+    west.setBodyBorder(true);
     west.setWidget(placeTree);
 
     center = new SimpleContainer();

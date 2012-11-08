@@ -264,7 +264,8 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
 
       @Override
       public SafeHtml render(final JSONObject object) {
-        return r.renderItem(object.get("name").isString().stringValue(), style);
+        return r.renderItem(object.containsKey("name") ? object.get("name").isString()
+            .stringValue() : "", style);
       }
     }));
     listView.getSelectionModel().addSelectionChangedHandler(

@@ -92,13 +92,14 @@ public class UserForm extends WebView implements IsWidget, EntryPoint {
           return;
         }
         JSONObject json = new JSONObject();
+        json.put("@xsi.type", new JSONString("user"));
         json.put("name", new JSONString(getParameter(name.getValue())));
         json.put("email", new JSONString(getParameter(email.getValue())));
         json.put("phone", new JSONString(getParameter(phone.getValue())));
         json.put("state", new JSONString(getParameter(state.getValue())));
         json.put("zip", new JSONString(getParameter(zip.getValue())));
         try {
-          builder1.setRequestData("{" + "\"user\":" + json.toString() + "}");
+          builder1.setRequestData("{\"dataGraph\":{\"root\":" + json.toString() + "}}");
           builder1.send();
         } catch (RequestException e) {
           e.printStackTrace();
