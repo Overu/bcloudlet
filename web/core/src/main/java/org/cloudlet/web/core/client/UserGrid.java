@@ -76,7 +76,7 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
     @Override
     public ListLoadResult<JSONObject> read(final Object loadConfig, final String data) {
       JSONObject root = JSONParser.parseLenient(data).isObject();
-      JSONObject feed = root.get("userFeed").isObject();
+      JSONObject feed = root.get("dataGraph").isObject().get("root").isObject();
       JSONValue entries = feed.get("entries");
       JSONArray records;
       List<JSONObject> users = new ArrayList<JSONObject>();
