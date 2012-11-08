@@ -11,6 +11,7 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
 public class ServiceImpl<T extends Content> implements Service<T> {
@@ -33,12 +34,17 @@ public class ServiceImpl<T extends Content> implements Service<T> {
 
   @Override
   public <CHILD extends Content> CHILD getChild(T parent, String path, Class<CHILD> childType) {
-    TypedQuery<CHILD> query =
-        em().createQuery(
-            "from " + childType.getName() + " f where f.parent=:parent and f.path=:path", childType);
-    query.setParameter("parent", parent);
-    query.setParameter("path", path);
-    return query.getSingleResult();
+    try {
+      TypedQuery<CHILD> query =
+          em().createQuery(
+              "from " + childType.getName() + " f where f.parent=:parent and f.path=:path",
+              childType);
+      query.setParameter("parent", parent);
+      query.setParameter("path", path);
+      return query.getSingleResult();
+    } catch (NoResultException e) {
+      return null;
+    }
   }
 
   @Override

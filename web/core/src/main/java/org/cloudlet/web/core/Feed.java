@@ -9,8 +9,6 @@ import javax.persistence.Transient;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -29,18 +27,6 @@ public abstract class Feed<E extends Entry> extends Content {
     child.setParent(this);
     FeedService<Feed<E>, E> service = (FeedService<Feed<E>, E>) getService();
     return service.create(this, child);
-  }
-
-  @Override
-  @Path("{path}")
-  public <T extends Content> T getChild(@PathParam("path") String path) {
-    Class<E> entryType = getEntryType();
-    Content entry = getService().getChild(this, path, entryType);
-    if (entry == null) {
-      return super.getChild(path);
-    } else {
-      return (T) entry;
-    }
   }
 
   public List<E> getEntries() {
@@ -79,6 +65,16 @@ public abstract class Feed<E extends Entry> extends Content {
   protected <T extends Content> T create(T child) {
     E entry = (E) child;
     return (T) create(entry);
+  }
+
+  @Override
+  protected Content lookupChild(String path) {
+    Content result = super.lookupChild(path);
+    if (result == null) {
+      Class<E> entryType = getEntryType();
+      result = getService().getChild(this, path, entryType);
+    }
+    return result;
   }
 
 }
