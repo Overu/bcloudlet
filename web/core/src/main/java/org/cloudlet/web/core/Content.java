@@ -79,7 +79,7 @@ public abstract class Content {
   @POST
   @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
   @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  public DataGraph create(DataGraph data) {
+  public DataGraph<Content> create(DataGraph<Content> data) {
     data.root = create(data.root);
     return data;
   }
@@ -173,9 +173,9 @@ public abstract class Content {
 
   @GET
   @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  public DataGraph load() {
+  public DataGraph<Content> load() {
     loadBasicInfo();
-    DataGraph data = new DataGraph();
+    DataGraph<Content> data = new DataGraph<Content>();
     data.root = this;
     return data;
   }
@@ -222,7 +222,7 @@ public abstract class Content {
   @PUT
   @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
   @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  public DataGraph update(DataGraph data) {
+  public DataGraph<Content> update(DataGraph<Content> data) {
     readFrom(data.root);
     update();
     data.root = this;
