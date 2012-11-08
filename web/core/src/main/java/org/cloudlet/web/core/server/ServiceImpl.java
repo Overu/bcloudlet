@@ -23,6 +23,20 @@ public class ServiceImpl<T extends Content> implements Service<T> {
 
   @Override
   @Transactional
+  public <CHILD extends Content> CHILD create(T parent, CHILD child) {
+    child.setParent(parent);
+    if (child.getId() == null) {
+      child.setId(UUID.randomUUID().toString());
+    }
+    if (child.getPath() == null) {
+      child.setPath(child.getId());
+    }
+    em().persist(child);
+    return child;
+  }
+
+  @Override
+  @Transactional
   public void delete(T content) {
     em().remove(content);
   }
@@ -63,19 +77,6 @@ public class ServiceImpl<T extends Content> implements Service<T> {
   public T update(T content) {
     em().persist(content);
     return content;
-  }
-
-  @Transactional
-  protected <CHILD extends Content> CHILD create(T parent, CHILD child) {
-    child.setParent(parent);
-    if (child.getId() == null) {
-      child.setId(UUID.randomUUID().toString());
-    }
-    if (child.getPath() == null) {
-      child.setPath(child.getId());
-    }
-    em().persist(child);
-    return child;
   }
 
   protected EntityManager em() {

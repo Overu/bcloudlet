@@ -36,9 +36,9 @@ public class PlaceTree extends BorderLayoutContainer {
     @Override
     public List<WebPlace> read(final Object loadConfig, final String data) {
       WebPlace parentPlace = loadConfig == null ? rootPlace : (WebPlace) loadConfig;
-      JSONObject root = JSONParser.parseLenient(data).isObject();
-      JSONObject feed = root.get(parentPlace.getPlaceType().getName()).isObject();
-      JSONValue c = feed.get(CorePackage.Content.CHILDREN);
+      JSONObject dg = JSONParser.parseLenient(data).isObject();
+      JSONObject root = dg.get("dataGraph").isObject().get("root").isObject();
+      JSONValue c = root.get(CorePackage.Content.CHILDREN);
       if (c != null) {
         JSONArray children = c.isArray();
         List<WebPlace> result = new ArrayList<WebPlace>();

@@ -4,6 +4,8 @@ import org.cloudlet.web.core.Content;
 
 public interface Service<T extends Content> {
 
+  <CHILD extends Content> CHILD create(T parent, CHILD child);
+
   void delete(T content);
 
   T getById(String id, Class<T> type);

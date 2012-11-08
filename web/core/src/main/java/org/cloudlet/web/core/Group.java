@@ -7,9 +7,9 @@ import java.security.Principal;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.ws.rs.Path;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement
+@XmlType
 @Entity
 @Table(name = "t_group")
 @Handler(GroupService.class)

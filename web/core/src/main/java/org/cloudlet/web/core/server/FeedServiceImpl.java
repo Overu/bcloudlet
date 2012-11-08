@@ -1,7 +1,5 @@
 package org.cloudlet.web.core.server;
 
-import com.google.inject.persist.Transactional;
-
 import org.cloudlet.web.core.Entry;
 import org.cloudlet.web.core.Feed;
 import org.cloudlet.web.core.service.FeedService;
@@ -14,9 +12,8 @@ public class FeedServiceImpl<F extends Feed<E>, E extends Entry> extends Service
     FeedService<F, E> {
 
   @Override
-  @Transactional
-  public E create(F parent, E child) {
-    E result = super.create(parent, child);
+  public <CHILD extends org.cloudlet.web.core.Content> CHILD create(F parent, CHILD child) {
+    CHILD result = super.create(parent, child);
     parent.setTotalResults(parent.getTotalResults() + 1);
     parent.update();
     return result;

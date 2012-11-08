@@ -6,9 +6,9 @@ import java.security.Principal;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement
+@XmlType
 @Entity
 @Table(name = "t_user")
 @Handler(UserService.class)
@@ -65,6 +65,30 @@ public class User extends Entry implements Principal {
 
   public void setZip(String zip) {
     this.zip = zip;
+  }
+
+  @Override
+  protected void readFrom(Content delta) {
+    super.readFrom(delta);
+    readFrom((User) delta);
+  }
+
+  protected void readFrom(User delta) {
+    if (delta.name != null) {
+      this.name = delta.name;
+    }
+    if (delta.email != null) {
+      this.email = delta.email;
+    }
+    if (delta.phone != null) {
+      this.phone = delta.phone;
+    }
+    if (delta.state != null) {
+      this.state = delta.state;
+    }
+    if (delta.zip != null) {
+      this.zip = delta.zip;
+    }
   }
 
 }

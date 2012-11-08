@@ -36,11 +36,4 @@ public class Repository extends Content {
     return (UserFeed) getChild("users");
   }
 
-  @Override
-  protected <T extends Content> T create(T child) {
-    child = getService().create(this, child);
-    getCache().put(child.getPath(), child);
-    return child;
-  }
-
 }

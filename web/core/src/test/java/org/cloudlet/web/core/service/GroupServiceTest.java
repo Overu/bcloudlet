@@ -17,9 +17,6 @@ import org.junit.Test;
 
 import java.util.UUID;
 
-import javax.persistence.NoResultException;
-import javax.ws.rs.NotFoundException;
-
 public class GroupServiceTest extends WebTest {
 
   @Inject
@@ -38,17 +35,10 @@ public class GroupServiceTest extends WebTest {
       group.setPath("mygroup");
       group = groups.create(group);
     } else {
-      try {
-        group.load();
-      } catch (NotFoundException e) {
-        group.save();
-      } catch (NoResultException e) {
-        group.save();
-      } catch (Exception e) {
-        group.save();
-      }
+      group.load();
     }
-    UserFeed users = (UserFeed) repo.getUsers().load();
+    UserFeed users = (UserFeed) repo.getUsers();
+    users.load();
     long total = users.getTotalResults();
     User user = new User();
     long r = total + 1;
@@ -56,7 +46,7 @@ public class GroupServiceTest extends WebTest {
     user.setEmail("fantongx@gmail.com");
     user.setPhone(Long.toString(r));
     users.create(user);
-    users = (UserFeed) users.load();
+    users.load();
     assertEquals(total + 1, users.getTotalResults());
   }
 

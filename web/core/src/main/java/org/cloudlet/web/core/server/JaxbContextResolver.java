@@ -1,5 +1,6 @@
 package org.cloudlet.web.core.server;
 
+import org.cloudlet.web.core.DataGraph;
 import org.cloudlet.web.core.Feed;
 import org.cloudlet.web.core.Group;
 import org.cloudlet.web.core.GroupFeed;
@@ -31,7 +32,7 @@ public final class JaxbContextResolver implements ContextResolver<JAXBContext> {
     this.context =
         new JettisonJaxbContext(JettisonConfiguration.mappedJettison().xml2JsonNs(jsonXml2JsonNs)
             .build(), Feed.class, UserFeed.class, GroupFeed.class, User.class, Group.class,
-            MemberFeed.class, UserMember.class, GroupMember.class, Repository.class);
+            MemberFeed.class, UserMember.class, GroupMember.class, Repository.class, DataGraph.class);
   }
 
   @Override

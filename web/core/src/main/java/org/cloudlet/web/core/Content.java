@@ -3,7 +3,6 @@ package org.cloudlet.web.core;
 import org.cloudlet.web.core.server.ContentType;
 import org.cloudlet.web.core.service.Service;
 import org.cloudlet.web.core.shared.CorePackage;
-import org.codehaus.jettison.json.JSONObject;
 import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -23,6 +22,7 @@ import javax.persistence.Version;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -35,7 +35,6 @@ import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
-import javax.xml.stream.XMLStreamReader;
 
 @TypeDef(name = "content", typeClass = ContentType.class)
 @MappedSuperclass
@@ -76,6 +75,19 @@ public abstract class Content {
 
   @Transient
   private List<Content> children;
+
+  @POST
+  @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  public DataGraph create(DataGraph data) {
+    data.root = create(data.root);
+    return data;
+  }
+
+  public <T extends Content> T create(T child) {
+    Service<Content> service = getService();
+    return service.create(this, child);
+  }
 
   @DELETE
   public void delete() {
@@ -161,9 +173,11 @@ public abstract class Content {
 
   @GET
   @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  public Content load() {
+  public DataGraph load() {
     loadBasicInfo();
-    return this;
+    DataGraph data = new DataGraph();
+    data.root = this;
+    return data;
   }
 
   public void loadChildren() {
@@ -177,42 +191,9 @@ public abstract class Content {
     }
   }
 
-  public void read(JSONObject json) {
-    // TODO
-  }
-
-  public void read(XMLStreamReader xml) {
-    // TODO
-  }
-
-  public <T extends Content> T save() {
-    if (parent == null) {
-      return (T) getService().save(this);
-    } else {
-      return (T) parent.create(this);
-    }
-  }
-
   public void setId(final String id) {
     this.id = id;
   }
-
-  //
-  // @POST
-  // @Consumes(MediaType.APPLICATION_JSON)
-  // public Content create(JSONObject json) {
-  // Content child = null; // TODO new conent;
-  // child.read(json);
-  // return create(child);
-  // }
-  //
-  // @POST
-  // @Consumes(MediaType.APPLICATION_XML)
-  // public Content create(XMLStreamReader xml) {
-  // Content child = null; // TODO new conent;
-  // child.read(xml);
-  // return create(child);
-  // }
 
   public void setOwner(final User owner) {
     this.owner = owner;
@@ -241,12 +222,12 @@ public abstract class Content {
   @PUT
   @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
   @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  public Content update(JSONObject json) {
-    read(json);
-    return update();
+  public DataGraph update(DataGraph data) {
+    readFrom(data.root);
+    update();
+    data.root = this;
+    return data;
   }
-
-  protected abstract <T extends Content> T create(T child);
 
   protected void loadBasicInfo() {
     if (loadChildren) {
@@ -288,6 +269,15 @@ public abstract class Content {
       }
     }
     return result;
+  }
+
+  protected void readFrom(Content delta) {
+    if (delta.title != null) {
+      this.title = delta.title;
+    }
+    if (delta.path != null) {
+      this.path = delta.path;
+    }
   }
 
 }

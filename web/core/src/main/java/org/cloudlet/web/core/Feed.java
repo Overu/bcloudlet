@@ -6,28 +6,16 @@ import java.util.List;
 
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import javax.xml.bind.annotation.XmlType;
 
 @MappedSuperclass
+@XmlType
 public abstract class Feed<E extends Entry> extends Content {
 
   protected long totalResults;
 
   @Transient
   protected List<E> entries;
-
-  @POST
-  @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  public E create(E child) {
-    child.setParent(this);
-    FeedService<Feed<E>, E> service = (FeedService<Feed<E>, E>) getService();
-    return service.create(this, child);
-  }
 
   public List<E> getEntries() {
     return entries;
@@ -44,14 +32,14 @@ public abstract class Feed<E extends Entry> extends Content {
     return totalResults;
   }
 
-  @Override
-  @GET
-  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  public Content load() {
-    loadBasicInfo();
-    entries = getService().findChildren(this, 0, -1, getEntryType());
-    return this;
-  }
+  // @Override
+  // @GET
+  // @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  // public Content load() {
+  // loadBasicInfo();
+  // entries = getService().findChildren(this, 0, -1, getEntryType());
+  // return this;
+  // }
 
   public void setEntries(List<E> entries) {
     this.entries = entries;
@@ -62,9 +50,9 @@ public abstract class Feed<E extends Entry> extends Content {
   }
 
   @Override
-  protected <T extends Content> T create(T child) {
-    E entry = (E) child;
-    return (T) create(entry);
+  protected void loadBasicInfo() {
+    super.loadBasicInfo();
+    entries = getService().findChildren(this, 0, -1, getEntryType());
   }
 
   @Override
