@@ -7,6 +7,12 @@ import java.util.List;
 
 public interface FeedService<F extends Feed<E>, E extends Entry> extends Service<F> {
 
-  List<E> findChildren(F parent, int start, int limit, Class<E> entryType);
+  long countEntries(F feed);
+
+  E createEntry(F feed, E entry);
+
+  List<E> findEntries(F feed, int start, int limit);
+
+  E findEntry(F parent, String path);
 
 }

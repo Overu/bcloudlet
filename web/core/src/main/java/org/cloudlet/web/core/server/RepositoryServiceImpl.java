@@ -1,8 +1,6 @@
 package org.cloudlet.web.core.server;
 
 import com.google.inject.Provider;
-import com.google.inject.Singleton;
-import com.google.inject.persist.Transactional;
 
 import org.cloudlet.web.core.Repository;
 import org.cloudlet.web.core.service.RepositoryService;
@@ -11,29 +9,29 @@ import java.util.logging.Logger;
 
 import javax.persistence.NoResultException;
 
-@Singleton
-public class RepositoryServiceImpl extends ServiceImpl<Repository> implements RepositoryService,
-    Provider<Repository> {
+public abstract class RepositoryServiceImpl<T extends Repository> extends EntryServiceImpl<T>
+    implements RepositoryService<T>, Provider<T> {
 
   private static final Logger logger = Logger.getLogger(RepositoryServiceImpl.class.getName());
 
   @Override
-  @Transactional
-  public <CHILD extends org.cloudlet.web.core.Content> CHILD create(Repository parent, CHILD child) {
-    return super.create(parent, child);
-  }
-
-  @Override
-  public Repository get() {
-    Repository repo;
+  public T get() {
+    T repo = null;
     try {
       repo =
-          em().createQuery("from " + Repository.class.getName(), Repository.class)
+          em().createQuery("from " + getRepositoryType().getName(), getRepositoryType())
               .getSingleResult();
     } catch (NoResultException e) {
-      repo = new Repository();
-      repo = save(repo);
+      try {
+        repo = getRepositoryType().newInstance();
+        repo = save(repo);
+      } catch (Exception e1) {
+        logger.severe("Failed to intialize repository.\r\n" + e1.getMessage());
+      }
     }
     return repo;
   }
+
+  protected abstract Class<T> getRepositoryType();
+
 }

@@ -1,5 +1,7 @@
 package org.cloudlet.web.core;
 
+import org.cloudlet.web.core.service.FeedService;
+
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import javax.ws.rs.DefaultValue;
@@ -19,10 +21,11 @@ public abstract class PagingFeed<E extends Entry> extends Feed<E> {
   protected int limit;
 
   @Override
-  protected void loadBasicInfo() {
-    super.loadBasicInfo();
+  protected void loadEntries() {
     if (limit != 0) {
-      entries = getService().findChildren(this, start, limit, getEntryType());
+      FeedService service = getService();
+      entries = service.findEntries(this, 0, -1);
+      queryCount = service.countEntries(this);
     }
   }
 }

@@ -2,18 +2,18 @@ package com.goodow.web.core.jaxb;
 
 import com.google.inject.Inject;
 
+import org.cloudlet.web.core.CoreRepository;
 import org.cloudlet.web.core.Feed;
 import org.cloudlet.web.core.Group;
 import org.cloudlet.web.core.GroupFeed;
 import org.cloudlet.web.core.GroupRole;
 import org.cloudlet.web.core.Member;
 import org.cloudlet.web.core.MemberFeed;
-import org.cloudlet.web.core.Repository;
 import org.cloudlet.web.core.User;
 import org.cloudlet.web.core.UserFeed;
 import org.cloudlet.web.core.UserMember;
 import org.cloudlet.web.core.server.CoreResourceConfig;
-import org.cloudlet.web.test.WebTest;
+import org.cloudlet.web.core.service.CoreRepositoryTest;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.TestProperties;
 import org.junit.Test;
@@ -26,13 +26,13 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-public class JAXBTest extends WebTest {
+public class JAXBTest extends CoreRepositoryTest {
 
   @Inject
   CoreResourceConfig config;
 
   @Inject
-  Repository repo;
+  CoreRepository repo;
 
   @Test
   public void testJAXB() throws JAXBException {
@@ -52,25 +52,25 @@ public class JAXBTest extends WebTest {
   @Test
   public void testMembers() throws JAXBException {
     GroupFeed groups = repo.getGroups();
-    Group group = groups.getChild("mygroup");
+    Group group = groups.getEntry("mygroup");
     if (group == null) {
       group = new Group();
       group.setName("My Group");
       group.setPath("mygroup");
-      groups.create(group);
+      groups.createEntry(group);
     }
 
     UserFeed users = repo.getUsers();
     User user = new User();
     user.setName("user" + System.currentTimeMillis());
     user.setPath(user.getName());
-    users.create(user);
+    users.createEntry(user);
 
     MemberFeed members = group.getMembers();
     UserMember member1 = new UserMember();
     member1.setUser(user);
     member1.setRole(GroupRole.MANAGER);
-    members.create(member1);
+    members.createEntry(member1);
 
     members.load();
 

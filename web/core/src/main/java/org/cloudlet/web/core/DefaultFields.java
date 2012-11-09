@@ -9,7 +9,6 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Relation {
-
-  String value();
+public @interface DefaultFields {
+  DefaultField[] value();
 }

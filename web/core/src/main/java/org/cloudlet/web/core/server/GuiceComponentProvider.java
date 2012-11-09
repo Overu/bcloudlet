@@ -29,7 +29,7 @@ public class GuiceComponentProvider implements ComponentProvider {
 
     @Override
     public T provide() {
-      T resource = WebPlatform.getInstance().getInjector().getInstance(clz);
+      T resource = WebPlatform.getInstance().getService(clz);
       resourceContext.initResource(resource);
       return resource;
     }

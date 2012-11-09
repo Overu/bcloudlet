@@ -48,10 +48,12 @@ public abstract class WebTest {
   public final GuiceBerryRule guiceBerry = new GuiceBerryRule(WebTestModule.class);
 
   private static final Logger LOGGER = Logger.getLogger(JerseyTest.class.getName());
+
   /**
    * Holds the default test container factory class to be used for running the tests.
    */
   private static Class<? extends TestContainerFactory> testContainerFactoryClass;
+
   /**
    * The test container factory which creates an instance of the test container on which the tests
    * would be run.

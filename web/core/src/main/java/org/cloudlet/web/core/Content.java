@@ -2,15 +2,11 @@ package org.cloudlet.web.core;
 
 import org.cloudlet.web.core.server.ContentType;
 import org.cloudlet.web.core.service.Service;
-import org.cloudlet.web.core.shared.CorePackage;
 import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Column;
@@ -24,10 +20,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.container.ResourceContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -41,11 +34,13 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType
 public abstract class Content {
 
+  public static final String TITLE = "title";
+
+  public static final String PATH = "path";
+
   protected String title;
 
-  @Transient
-  @QueryParam(CorePackage.Content.CHILDREN)
-  protected boolean loadChildren;
+  protected long totalCount;
 
   @Context
   @Transient
@@ -73,20 +68,12 @@ public abstract class Content {
   @Transient
   private Map<String, Content> cache;
 
-  @Transient
-  private List<Content> children;
-
   @POST
   @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
   @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
   public DataGraph<Content> create(DataGraph<Content> data) {
-    data.root = create(data.root);
+    data.root = createChild(data.root);
     return data;
-  }
-
-  public <T extends Content> T create(T child) {
-    Service<Content> service = getService();
-    return service.create(this, child);
   }
 
   @DELETE
@@ -99,20 +86,6 @@ public abstract class Content {
       cache = new HashMap<String, Content>();
     }
     return cache;
-  }
-
-  @Path("{path}")
-  public final <T extends Content> T getChild(@PathParam("path") String path) {
-    Content result = lookupChild(path);
-    if (result != null && resourceContext != null) {
-      resourceContext.initResource(result);
-    }
-    return (T) result;
-  }
-
-  @XmlElement
-  public List<Content> getChildren() {
-    return children;
   }
 
   public String getId() {
@@ -132,8 +105,18 @@ public abstract class Content {
     return path;
   }
 
+  public Object getProperty(String name) {
+    if (TITLE.equals(name)) {
+      return title;
+    }
+    if (PATH.equals(name)) {
+      return path;
+    }
+    return null;
+  }
+
   public Service getService() {
-    return WebPlatform.getInstance().getSerivce(getServiceType(getClass()));
+    return WebPlatform.getInstance().getService(getServiceType(getClass()));
   }
 
   public <T extends Service> Class<T> getServiceType(Class<? extends Content> contentClass) {
@@ -153,6 +136,10 @@ public abstract class Content {
     return title;
   }
 
+  public long getTotalCount() {
+    return totalCount;
+  }
+
   @XmlElement
   public String getUri() {
     return getUriBuilder().toString();
@@ -160,10 +147,10 @@ public abstract class Content {
 
   public StringBuilder getUriBuilder() {
     if (parent == null) {
-      return new StringBuilder();
+      return new StringBuilder("/");
     }
     StringBuilder builder = parent.getUriBuilder();
-    builder.append("/").append(path);
+    builder.append(path).append("/");
     return builder;
   }
 
@@ -174,21 +161,14 @@ public abstract class Content {
   @GET
   @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
   public DataGraph<Content> load() {
-    loadBasicInfo();
+    doLoad();
     DataGraph<Content> data = new DataGraph<Content>();
     data.root = this;
     return data;
   }
 
-  public void loadChildren() {
-    children = new ArrayList<Content>();
-    for (Method m : getClass().getMethods()) {
-      Path p = m.getAnnotation(Path.class);
-      if (p != null && !p.value().contains("{")) {
-        Content child = getChild(p.value());
-        children.add(child);
-      }
-    }
+  public Content save() {
+    return getService().save(this);
   }
 
   public void setId(final String id) {
@@ -207,8 +187,20 @@ public abstract class Content {
     this.path = path;
   }
 
+  public void setProperty(String name, String value) {
+    if (TITLE.equals(name)) {
+      title = value;
+    } else if (PATH.equals(name)) {
+      path = value;
+    }
+  }
+
   public void setTitle(String title) {
     this.title = title;
+  }
+
+  public void setTotalCount(long totalResults) {
+    this.totalCount = totalResults;
   }
 
   public void setVersion(final Long version) {
@@ -229,46 +221,9 @@ public abstract class Content {
     return data;
   }
 
-  protected void loadBasicInfo() {
-    if (loadChildren) {
-      loadChildren();
-    }
-  }
+  protected abstract Content createChild(Content child);
 
-  protected Content lookupChild(String path) {
-    Content result = getCache().get(path);
-    if (result == null) {
-      for (Method m : getClass().getMethods()) {
-        Path p = m.getAnnotation(Path.class);
-        if (p != null && p.value().equals(path)) {
-          Class<?> rt = m.getReturnType();
-          if (Content.class.isAssignableFrom(rt)) {
-            Class<Content> childType = (Class<Content>) rt;
-            result = getService().getChild(this, path, childType);
-            if (result == null) {
-              try {
-                result = childType.newInstance();
-              } catch (InstantiationException e1) {
-                e1.printStackTrace();
-              } catch (IllegalAccessException e1) {
-                e1.printStackTrace();
-              }
-              result.setPath(path);
-              Relation rel = m.getAnnotation(Relation.class);
-              if (rel != null) {
-                result.setTitle(rel.value());
-              }
-              result = create(result);
-            }
-            getCache().put(path, result);
-            break;
-          } else {
-            // TODO log exception
-          }
-        }
-      }
-    }
-    return result;
+  protected void doLoad() {
   }
 
   protected void readFrom(Content delta) {

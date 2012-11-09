@@ -11,8 +11,6 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
 
 public class ServiceImpl<T extends Content> implements Service<T> {
 
@@ -20,20 +18,6 @@ public class ServiceImpl<T extends Content> implements Service<T> {
 
   @Inject
   private Provider<EntityManager> entityManagerProvider;
-
-  @Override
-  @Transactional
-  public <CHILD extends Content> CHILD create(T parent, CHILD child) {
-    child.setParent(parent);
-    if (child.getId() == null) {
-      child.setId(UUID.randomUUID().toString());
-    }
-    if (child.getPath() == null) {
-      child.setPath(child.getId());
-    }
-    em().persist(child);
-    return child;
-  }
 
   @Override
   @Transactional
@@ -47,28 +31,15 @@ public class ServiceImpl<T extends Content> implements Service<T> {
   }
 
   @Override
-  public <CHILD extends Content> CHILD getChild(T parent, String path, Class<CHILD> childType) {
-    try {
-      TypedQuery<CHILD> query =
-          em().createQuery(
-              "from " + childType.getName() + " f where f.parent=:parent and f.path=:path",
-              childType);
-      query.setParameter("parent", parent);
-      query.setParameter("path", path);
-      return query.getSingleResult();
-    } catch (NoResultException e) {
-      return null;
-    }
-  }
-
-  @Override
   @Transactional
   public T save(T content) {
     if (content.getId() == null) {
       content.setId(UUID.randomUUID().toString());
     }
+    if (content.getPath() == null) {
+      content.setPath(content.getId());
+    }
     em().persist(content);
-
     return content;
   }
 

@@ -38,7 +38,7 @@ public class Member extends Entry {
         } else {
           Handler handler = cls.getAnnotation(Handler.class);
           Class<Service> serviceClass = (Class<Service>) handler.value();
-          Service service = WebPlatform.getInstance().getSerivce(serviceClass);
+          Service service = WebPlatform.getInstance().getService(serviceClass);
           role = (Role) service.getById(roleName, (Class<? extends Content>) cls);
         }
       } catch (ClassNotFoundException e) {

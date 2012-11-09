@@ -1,26 +1,49 @@
 package org.cloudlet.web.core.server;
 
+import com.google.inject.persist.Transactional;
+
 import org.cloudlet.web.core.Entry;
 import org.cloudlet.web.core.Feed;
 import org.cloudlet.web.core.service.FeedService;
 
 import java.util.List;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
 public class FeedServiceImpl<F extends Feed<E>, E extends Entry> extends ServiceImpl<F> implements
     FeedService<F, E> {
 
   @Override
-  public <CHILD extends org.cloudlet.web.core.Content> CHILD create(F parent, CHILD child) {
-    CHILD result = super.create(parent, child);
-    parent.setTotalResults(parent.getTotalResults() + 1);
-    parent.update();
-    return result;
+  public long countEntries(F feed) {
+    Class<E> entryType = feed.getEntryType();
+    TypedQuery<Long> query =
+        em().createQuery(
+            "select count(o) from " + entryType.getName() + " o where o.parent=:parent", Long.class);
+    query.setParameter("parent", feed);
+    return query.getSingleResult().longValue();
   }
 
   @Override
-  public List<E> findChildren(F parent, int start, int limit, Class<E> entryType) {
+  @Transactional
+  public E createEntry(F feed, E entry) {
+    // check if child path conflicts
+    if (entry.getPath() != null && findEntry(feed, entry.getPath()) != null) {
+      throw new EntityExistsException("A child with path=" + entry.getPath() + " already exists");
+    }
+    entry.setParent(feed);
+    entry.save();
+
+    feed.setTotalCount(feed.getTotalCount() + 1);
+    update(feed);
+
+    return entry;
+  }
+
+  @Override
+  public List<E> findEntries(F parent, int start, int limit) {
+    Class<E> entryType = parent.getEntryType();
     TypedQuery<E> query =
         em().createQuery("from " + entryType.getName() + " f where f.parent=:parent", entryType);
     if (start >= 0 && limit >= 0) {
@@ -29,6 +52,22 @@ public class FeedServiceImpl<F extends Feed<E>, E extends Entry> extends Service
     }
     query.setParameter("parent", parent);
     return query.getResultList();
+  }
+
+  @Override
+  public E findEntry(F parent, String path) {
+    try {
+      Class<E> entryType = parent.getEntryType();
+      TypedQuery<E> query =
+          em().createQuery(
+              "from " + entryType.getName() + " e where e.parent=:parent and e.path=:path",
+              entryType);
+      query.setParameter("parent", parent);
+      query.setParameter("path", path);
+      return query.getSingleResult();
+    } catch (NoResultException e) {
+      return null;
+    }
   }
 
 }
