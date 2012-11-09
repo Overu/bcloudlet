@@ -41,7 +41,10 @@ public class CoreClientModule extends AbstractGinModule {
     UserGrid userGrid;
 
     @Inject
-    UserForm userForm;
+    UserFrom userForm;
+
+    @Inject
+    UserModify userModify;
 
     @Inject
     RepositoryExplorer repositoryExplorer;
@@ -79,6 +82,7 @@ public class CoreClientModule extends AbstractGinModule {
 
       CorePackage.UserFeed.TYPE.setWidget(WebPlace.HOME, userGrid);
       CorePackage.UserFeed.TYPE.setWidget(WebPlace.POST, userForm);
+      CorePackage.User.TYPE.setWidget(WebPlace.HOME, userModify);
 
       BaseResources.INSTANCE();
       main = new SimplePanel();

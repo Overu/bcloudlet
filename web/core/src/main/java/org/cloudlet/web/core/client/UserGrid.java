@@ -57,8 +57,6 @@ import com.sencha.gxt.widget.core.client.form.SimpleComboBox;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
-import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent;
-import com.sencha.gxt.widget.core.client.selection.SelectionChangedEvent.SelectionChangedHandler;
 import com.sencha.gxt.widget.core.client.toolbar.LabelToolItem;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
@@ -175,6 +173,11 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
   private static Renderer r;
   private static Resources resources;
 
+  private String userPath;
+  private Grid<JSONObject> grid;
+  private ListView<JSONObject, JSONObject> listView;
+  private SimpleContainer viewContainer;
+
   static {
     r = GWT.create(Renderer.class);
     resources = GWT.create(Resources.class);
@@ -226,12 +229,20 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
     l.add(cc5);
     ColumnModel<JSONObject> cm = new ColumnModel<JSONObject>(l);
 
-    final Grid<JSONObject> grid = new Grid<JSONObject>(store, cm);
+    grid = new Grid<JSONObject>(store, cm);
     grid.getView().setForceFit(true);
     grid.setLoader(loader);
     grid.setLoadMask(true);
     grid.setBorders(true);
     grid.getView().setEmptyText("Please hit the load button.");
+    // grid.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+    grid.getSelectionModel().addSelectionHandler(new SelectionHandler<JSONObject>() {
+
+      @Override
+      public void onSelection(final SelectionEvent<JSONObject> event) {
+        setUserPath(event.getSelectedItem());
+      }
+    });
 
     ListViewCustomAppearance<JSONObject> appearance =
         new ListViewCustomAppearance<JSONObject>("." + style.thumbWrap(), style.over(), style
@@ -254,12 +265,11 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
           }
         };
 
-    final ListView<JSONObject, JSONObject> listView =
-        new ListView<JSONObject, JSONObject>(store, new IdentityValueProvider<JSONObject>() {
-          @Override
-          public void setValue(final JSONObject object, final JSONObject value) {
-          }
-        }, appearance);
+    listView = new ListView<JSONObject, JSONObject>(store, new IdentityValueProvider<JSONObject>() {
+      @Override
+      public void setValue(final JSONObject object, final JSONObject value) {
+      }
+    }, appearance);
     listView.setCell(new SimpleSafeHtmlCell<JSONObject>(new AbstractSafeHtmlRenderer<JSONObject>() {
 
       @Override
@@ -268,17 +278,16 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
             .stringValue() : "", style);
       }
     }));
-    listView.getSelectionModel().addSelectionChangedHandler(
-        new SelectionChangedHandler<JSONObject>() {
-          @Override
-          public void onSelectionChanged(final SelectionChangedEvent<JSONObject> event) {
-            // panel.setHeadingText("Simple ListView (" + event.getSelection().size()
-            // + " items selected)");
-          }
-        });
+    // listView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+    listView.getSelectionModel().addSelectionHandler(new SelectionHandler<JSONObject>() {
 
-    final SimpleContainer viewContainer = new SimpleContainer();
-    viewContainer.setWidget(grid);
+      @Override
+      public void onSelection(final SelectionEvent<JSONObject> event) {
+        setUserPath(event.getSelectedItem());
+      }
+    });
+
+    viewContainer = new SimpleContainer();
 
     SimpleComboBox<String> type = new SimpleComboBox<String>(new StringLabelProvider<String>());
     type.setTriggerAction(TriggerAction.ALL);
@@ -287,17 +296,11 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
     type.add("Table");
     type.add("List");
     type.setValue("Table");
+    selectView(type.getValue());
     type.addSelectionHandler(new SelectionHandler<String>() {
-
       @Override
       public void onSelection(final SelectionEvent<String> event) {
-        boolean cell = event.getSelectedItem().equals("Table");
-        if (cell) {
-          viewContainer.setWidget(grid);
-        } else {
-          viewContainer.setWidget(listView);
-        }
-        viewContainer.onResize();
+        selectView(event.getSelectedItem());
       }
     });
 
@@ -327,6 +330,16 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
         loader.load();
       }
     }));
+    cp.addButton(new TextButton("Modify User", new SelectHandler() {
+
+      @Override
+      public void onSelect(final SelectEvent event) {
+        if (userPath == null || userPath.equals("")) {
+          return;
+        }
+        placeController.goTo(place, userPath);
+      }
+    }));
   }
 
   @Override
@@ -337,5 +350,23 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
   @Override
   public void onModuleLoad() {
     RootPanel.get().add(this);
+  }
+
+  private void selectView(final String viewName) {
+    boolean cell = viewName.equals("Table");
+    if (cell) {
+      viewContainer.setWidget(grid);
+    } else {
+      viewContainer.setWidget(listView);
+    }
+    viewContainer.onResize();
+  }
+
+  private void setUserPath(final JSONObject object) {
+    if (object == null || !object.containsKey("path")) {
+      userPath = "";
+      return;
+    }
+    userPath = object.get("path").isString().stringValue();
   }
 }
