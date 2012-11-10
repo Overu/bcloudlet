@@ -2,8 +2,8 @@ package org.cloudlet.web.core.server;
 
 import com.google.inject.Provider;
 
-import org.cloudlet.web.core.Repository;
-import org.cloudlet.web.core.service.RepositoryService;
+import org.cloudlet.web.core.shared.Repository;
+import org.cloudlet.web.core.shared.RepositoryService;
 
 import java.util.logging.Logger;
 

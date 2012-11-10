@@ -9,8 +9,7 @@ import com.google.inject.persist.finder.Finder;
 import com.google.inject.persist.jpa.JpaPersistModule;
 
 import org.aopalliance.intercept.MethodInterceptor;
-import org.cloudlet.web.core.WebPlatform;
-import org.cloudlet.web.core.WebServerPlatform;
+import org.cloudlet.web.core.shared.WebPlatform;
 
 import java.util.logging.Logger;
 

@@ -13,7 +13,7 @@
  */
 package org.cloudlet.web.core.service;
 
-import org.cloudlet.web.core.CoreRepository;
+import org.cloudlet.web.core.shared.CoreRepository;
 
 public class CoreRepositoryTest extends RepositoryTest<CoreRepository> {
 

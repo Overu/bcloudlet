@@ -1,8 +1,8 @@
 package org.cloudlet.web.core.shared;
 
-public class EntryType extends PlaceType {
+public class EntryType<T extends Entry> extends ObjectType<T> {
 
-  public EntryType(PlaceType parent, String name) {
+  public EntryType(ObjectType parent, String name) {
     super(parent, name);
   }
 

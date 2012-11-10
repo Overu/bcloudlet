@@ -2,9 +2,9 @@ package org.cloudlet.web.core.server;
 
 import com.google.inject.persist.Transactional;
 
-import org.cloudlet.web.core.Entry;
-import org.cloudlet.web.core.Feed;
-import org.cloudlet.web.core.service.FeedService;
+import org.cloudlet.web.core.shared.Entry;
+import org.cloudlet.web.core.shared.Feed;
+import org.cloudlet.web.core.shared.FeedService;
 
 import java.util.List;
 

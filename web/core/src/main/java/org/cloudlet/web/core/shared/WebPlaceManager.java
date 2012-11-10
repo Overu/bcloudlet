@@ -11,40 +11,41 @@ public class WebPlaceManager implements PlaceHistoryMapper {
 
   @HomePlace
   @Inject
-  WebPlace homePlace;
+  Content root;
 
   @Inject
   PlaceController placeController;
 
   @Override
-  public Place getPlace(final String token) {
-    WebPlace place = homePlace.findChild(token);
+  public Content getPlace(String token) {
+    Content place = root.findChild(token);
     return place;
   }
 
   @Override
-  public String getToken(final Place place) {
-    WebPlace p = (WebPlace) place;
+  public String getToken(Place place) {
+    Content p = (Content) place;
     StringBuilder builder = p.getUriBuilder();
     return builder.toString();
   }
 
-  public WebPlace getWhere() {
-    return (WebPlace) placeController.getWhere();
+  public Content getWhere() {
+    return (Content) placeController.getWhere();
   }
 
-  public void goTo(final String uri) {
-    goTo(homePlace, uri);
-  }
-
-  public void goTo(WebPlace newPlace) {
+  public void goTo(Content newPlace) {
     placeController.goTo(newPlace);
   }
 
-  public void goTo(final WebPlace place, String uri) {
-    WebPlace newPlace = place.isFolder() ? place.findChild(uri) : place.getParent().findChild(uri);
+  public void goTo(Content place, String uri) {
+    Content newPlace =
+        (place instanceof View) ? place.getParent().findChild(uri) : place.findChild(uri);
     if (newPlace != null) {
       goTo(newPlace);
     }
+  }
+
+  public void goTo(String uri) {
+    goTo(root, uri);
   }
 }

@@ -1,15 +1,15 @@
 package org.cloudlet.web.core.server;
 
-import org.cloudlet.web.core.DataGraph;
-import org.cloudlet.web.core.Feed;
-import org.cloudlet.web.core.Group;
-import org.cloudlet.web.core.GroupFeed;
-import org.cloudlet.web.core.GroupMember;
-import org.cloudlet.web.core.MemberFeed;
-import org.cloudlet.web.core.Repository;
-import org.cloudlet.web.core.User;
-import org.cloudlet.web.core.UserFeed;
-import org.cloudlet.web.core.UserMember;
+import org.cloudlet.web.core.shared.DataGraph;
+import org.cloudlet.web.core.shared.Feed;
+import org.cloudlet.web.core.shared.Group;
+import org.cloudlet.web.core.shared.GroupFeed;
+import org.cloudlet.web.core.shared.GroupMember;
+import org.cloudlet.web.core.shared.MemberFeed;
+import org.cloudlet.web.core.shared.Repository;
+import org.cloudlet.web.core.shared.User;
+import org.cloudlet.web.core.shared.UserFeed;
+import org.cloudlet.web.core.shared.UserMember;
 import org.glassfish.jersey.jettison.JettisonConfiguration;
 import org.glassfish.jersey.jettison.JettisonJaxbContext;
 

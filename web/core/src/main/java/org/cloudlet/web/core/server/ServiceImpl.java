@@ -4,8 +4,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.persist.Transactional;
 
-import org.cloudlet.web.core.Content;
-import org.cloudlet.web.core.service.Service;
+import org.cloudlet.web.core.shared.Content;
+import org.cloudlet.web.core.shared.Service;
 
 import java.util.UUID;
 import java.util.logging.Logger;

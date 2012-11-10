@@ -2,13 +2,13 @@ package org.cloudlet.web.core.shared;
 
 public class WebView {
 
-  protected WebPlace place;
+  protected Content place;
 
-  public WebPlace getPlace() {
+  public Content getPlace() {
     return place;
   }
 
-  public void setPlace(WebPlace place) {
+  public void setPlace(Content place) {
     this.place = place;
   }
 

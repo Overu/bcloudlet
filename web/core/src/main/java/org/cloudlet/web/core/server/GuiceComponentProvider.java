@@ -1,7 +1,7 @@
 package org.cloudlet.web.core.server;
 
-import org.cloudlet.web.core.Content;
-import org.cloudlet.web.core.WebPlatform;
+import org.cloudlet.web.core.shared.Content;
+import org.cloudlet.web.core.shared.WebPlatform;
 import org.glassfish.hk2.api.DynamicConfiguration;
 import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.api.ServiceLocator;

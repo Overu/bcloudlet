@@ -4,12 +4,12 @@ import static org.junit.Assert.assertEquals;
 
 import com.google.inject.Inject;
 
-import org.cloudlet.web.core.CoreRepository;
-import org.cloudlet.web.core.Group;
-import org.cloudlet.web.core.GroupFeed;
-import org.cloudlet.web.core.User;
-import org.cloudlet.web.core.UserFeed;
 import org.cloudlet.web.core.server.CoreResourceConfig;
+import org.cloudlet.web.core.shared.CoreRepository;
+import org.cloudlet.web.core.shared.Group;
+import org.cloudlet.web.core.shared.GroupFeed;
+import org.cloudlet.web.core.shared.User;
+import org.cloudlet.web.core.shared.UserFeed;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.TestProperties;
 import org.junit.Test;

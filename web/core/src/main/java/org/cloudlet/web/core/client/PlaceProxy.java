@@ -8,30 +8,31 @@ import com.google.gwt.http.client.Response;
 
 import com.sencha.gxt.data.shared.loader.DataProxy;
 
-import org.cloudlet.web.core.shared.WebPlace;
+import org.cloudlet.web.core.shared.Content;
+import org.cloudlet.web.core.shared.Entry;
 
-public class PlaceProxy implements DataProxy<WebPlace, String> {
+public class PlaceProxy implements DataProxy<Content, String> {
 
-  private WebPlace place;
+  private Content place;
 
   public PlaceProxy() {
   }
 
-  public PlaceProxy(WebPlace place) {
+  public PlaceProxy(Content place) {
     this.place = place;
   }
 
-  public WebPlace getPlace() {
+  public Content getPlace() {
     return place;
   }
 
   @Override
-  public void load(final WebPlace loadConfig, final Callback<String, Throwable> callback) {
+  public void load(final Content loadConfig, final Callback<String, Throwable> callback) {
     try {
       String data = null;
       final StringBuilder url =
           loadConfig == null ? place.getUriBuilder() : loadConfig.getUriBuilder();
-      url.append("?children=true");
+      url.append("?" + Entry.RELATIONSHIPS + "=true");
       url.insert(0, "api");
       RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url.toString());
       builder.setHeader("Accept", "application/json");
@@ -58,7 +59,7 @@ public class PlaceProxy implements DataProxy<WebPlace, String> {
     }
   }
 
-  public void setPlace(WebPlace place) {
+  public void setPlace(Content place) {
     this.place = place;
   }
 

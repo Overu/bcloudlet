@@ -7,7 +7,6 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
@@ -19,10 +18,10 @@ import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 
-import org.cloudlet.web.core.shared.CorePackage;
+import org.cloudlet.web.core.shared.Content;
+import org.cloudlet.web.core.shared.Entry;
 import org.cloudlet.web.core.shared.HomePlace;
-import org.cloudlet.web.core.shared.PlaceType;
-import org.cloudlet.web.core.shared.WebPlace;
+import org.cloudlet.web.core.shared.View;
 import org.cloudlet.web.core.shared.WebPlaceManager;
 
 import java.util.ArrayList;
@@ -31,27 +30,23 @@ import java.util.List;
 
 public class PlaceTree extends BorderLayoutContainer {
 
-  class JSONFeedReader implements DataReader<List<WebPlace>, String> {
+  class JSONFeedReader implements DataReader<List<Content>, String> {
 
     @Override
-    public List<WebPlace> read(final Object loadConfig, final String data) {
-      WebPlace parentPlace = loadConfig == null ? rootPlace : (WebPlace) loadConfig;
+    public List<Content> read(final Object loadConfig, final String data) {
+      Content parent = loadConfig == null ? root : (Content) loadConfig;
       JSONObject dg = JSONParser.parseLenient(data).isObject();
       JSONObject root = dg.get("dataGraph").isObject().get("root").isObject();
-      JSONValue c = root.get(CorePackage.Content.CHILDREN);
+      JSONValue c = root.get(Entry.RELATIONSHIPS);
       if (c != null) {
         JSONArray children = c.isArray();
-        List<WebPlace> result = new ArrayList<WebPlace>();
+        List<Content> result = new ArrayList<Content>();
         for (int i = 0; i < children.size(); i++) {
-          WebPlace place = placeProvider.get();
           JSONObject object = children.get(i).isObject();
-          place.setPath(object.get("path").isString().stringValue());
-          place.setTitle(object.get("title").isString().stringValue());
-          String targetTypeName = object.get("@xsi.type").isString().stringValue();
-          PlaceType targetType = PlaceType.getType(targetTypeName);
-          place.setPlaceType(targetType);
-          parentPlace.addChild(place);
-          result.add(place);
+          Content child = CoreClientModule.readContent(object);
+          child.setParent(parent);
+          parent.getCache().put(child.getPath(), child);
+          result.add(child);
         }
         return result;
       } else {
@@ -60,39 +55,38 @@ public class PlaceTree extends BorderLayoutContainer {
     }
   }
 
-  private WebPlace place;
-  private final WebPlace rootPlace;
-  private final Provider<WebPlace> placeProvider;
+  private Content place;
+
+  private final Content root;
 
   @Inject
   WebPlaceManager placeManager;
 
   @Inject
-  public PlaceTree(@HomePlace final WebPlace rootPlace, final Provider<WebPlace> placeProvider) {
-    this.rootPlace = rootPlace;
-    this.placeProvider = placeProvider;
-    ModelKeyProvider<WebPlace> keyProvider = new ModelKeyProvider<WebPlace>() {
+  public PlaceTree(@HomePlace final Content root) {
+    this.root = root;
+    ModelKeyProvider<Content> keyProvider = new ModelKeyProvider<Content>() {
       @Override
-      public String getKey(final WebPlace item) {
+      public String getKey(final Content item) {
         return item.getUri();
       }
     };
 
-    TreeStore<WebPlace> store = new TreeStore<WebPlace>(keyProvider);
+    TreeStore<Content> store = new TreeStore<Content>(keyProvider);
 
     JSONFeedReader reader = new JSONFeedReader();
 
-    PlaceProxy jsonProxy = new PlaceProxy(rootPlace);
-    final TreeLoader<WebPlace> loader = new TreeLoader<WebPlace>(jsonProxy, reader) {
+    PlaceProxy jsonProxy = new PlaceProxy(root);
+    final TreeLoader<Content> loader = new TreeLoader<Content>(jsonProxy, reader) {
       @Override
-      public boolean hasChildren(final WebPlace parent) {
-        return parent.isFolder();
+      public boolean hasChildren(final Content parent) {
+        return parent.getTotalCount() > 0;
       }
     };
-    loader.addLoadHandler(new ChildTreeStoreBinding<WebPlace>(store));
+    loader.addLoadHandler(new ChildTreeStoreBinding<Content>(store));
 
-    final Tree<WebPlace, String> tree =
-        new Tree<WebPlace, String>(store, new ValueProvider<WebPlace, String>() {
+    final Tree<Content, String> tree =
+        new Tree<Content, String>(store, new ValueProvider<Content, String>() {
 
           @Override
           public String getPath() {
@@ -100,21 +94,21 @@ public class PlaceTree extends BorderLayoutContainer {
           }
 
           @Override
-          public String getValue(final WebPlace object) {
+          public String getValue(final Content object) {
             return object.getTitle();
           }
 
           @Override
-          public void setValue(final WebPlace object, final String value) {
+          public void setValue(final Content object, final String value) {
             object.setTitle(value);
           }
         });
     tree.setLoader(loader);
     // tree.getStyle().setLeafIcon(ExampleImages.INSTANCE.music());
-    tree.getSelectionModel().addSelectionHandler(new SelectionHandler<WebPlace>() {
+    tree.getSelectionModel().addSelectionHandler(new SelectionHandler<Content>() {
       @Override
-      public void onSelection(final SelectionEvent<WebPlace> event) {
-        placeManager.goTo(event.getSelectedItem(), WebPlace.HOME);
+      public void onSelection(final SelectionEvent<Content> event) {
+        placeManager.goTo(event.getSelectedItem(), View.HOME);
         tree.getSelectionModel().deselectAll();
       }
     });

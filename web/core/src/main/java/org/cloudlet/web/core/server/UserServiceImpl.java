@@ -8,8 +8,8 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.util.ByteSource;
-import org.cloudlet.web.core.User;
-import org.cloudlet.web.core.service.UserService;
+import org.cloudlet.web.core.shared.User;
+import org.cloudlet.web.core.shared.UserService;
 
 import com.google.inject.Singleton;
 

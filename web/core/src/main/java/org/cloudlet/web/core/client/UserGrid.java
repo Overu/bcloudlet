@@ -60,7 +60,7 @@ import com.sencha.gxt.widget.core.client.grid.Grid;
 import com.sencha.gxt.widget.core.client.toolbar.LabelToolItem;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
-import org.cloudlet.web.core.shared.WebPlace;
+import org.cloudlet.web.core.shared.View;
 import org.cloudlet.web.core.shared.WebPlaceManager;
 import org.cloudlet.web.core.shared.WebView;
 
@@ -320,7 +320,7 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
 
       @Override
       public void onSelect(final SelectEvent event) {
-        placeController.goTo(place, WebPlace.POST);
+        placeController.goTo(place, View.POST);
       }
     }));
     cp.addButton(new TextButton("Load Json", new SelectHandler() {

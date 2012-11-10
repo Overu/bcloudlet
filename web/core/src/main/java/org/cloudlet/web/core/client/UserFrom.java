@@ -5,7 +5,7 @@ import com.google.web.bindery.requestfactory.shared.RequestFactory;
 
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
-import org.cloudlet.web.core.shared.WebPlace;
+import org.cloudlet.web.core.shared.View;
 
 public class UserFrom extends AbstractUserFieldView {
 
@@ -20,7 +20,7 @@ public class UserFrom extends AbstractUserFieldView {
 
           @Override
           public void completed(final String text) {
-            placeManager.goTo(place, WebPlace.HOME);
+            placeManager.goTo(place, View.HOME);
           }
         });
   }
