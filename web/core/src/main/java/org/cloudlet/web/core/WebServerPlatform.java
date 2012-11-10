@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 @Singleton
 public class WebServerPlatform extends WebPlatform {
 
-  private static final Logger logger = Logger.getLogger(WebPlatform.class.getName());
+  private static final Logger logger = Logger.getLogger(WebServerPlatform.class.getName());
 
   @Inject
   private Injector injector;
@@ -24,7 +24,7 @@ public class WebServerPlatform extends WebPlatform {
         Class<? extends Enum> enumClass = (Class<? extends Enum>) cls;
         return Enum.valueOf(enumClass, id);
       } else if (Content.class.isAssignableFrom(cls)) {
-        Service service = WebPlatform.getInstance().getService((Class<? extends Content>) cls);
+        Service service = getService((Class<? extends Content>) cls);
         return service.getById(id, (Class<? extends Content>) cls);
       }
     } catch (ClassNotFoundException e) {
