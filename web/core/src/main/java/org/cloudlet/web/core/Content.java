@@ -116,20 +116,7 @@ public abstract class Content {
   }
 
   public Service getService() {
-    return WebPlatform.getInstance().getService(getServiceType(getClass()));
-  }
-
-  public <T extends Service> Class<T> getServiceType(Class<? extends Content> contentClass) {
-    Handler handler = contentClass.getAnnotation(Handler.class);
-    if (handler != null) {
-      return (Class<T>) handler.value();
-    }
-    Class superClass = contentClass.getSuperclass();
-    if (Content.class.isAssignableFrom(superClass)) {
-      return getServiceType(superClass);
-    }
-    // TODO proxy-based creation
-    return null;
+    return WebPlatform.getInstance().getService(getClass());
   }
 
   public String getTitle() {

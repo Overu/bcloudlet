@@ -10,6 +10,7 @@ import com.google.inject.persist.jpa.JpaPersistModule;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.cloudlet.web.core.WebPlatform;
+import org.cloudlet.web.core.WebServerPlatform;
 
 import java.util.logging.Logger;
 
@@ -24,7 +25,7 @@ public class WebServerModule extends AbstractModule {
 
     install(new JpaPersistModule("persist.jpaUnit")); // TODO read from
 
-    requestStaticInjection(WebPlatform.class);
+    bind(WebPlatform.class).to(WebServerPlatform.class).asEagerSingleton();
 
     MethodInterceptor finderInterceptor = new JpaFinderProxy();
     requestInjection(finderInterceptor);

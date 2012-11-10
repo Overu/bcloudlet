@@ -1,7 +1,6 @@
 package org.cloudlet.web.core;
 
 import org.cloudlet.web.core.service.MemberService;
-import org.cloudlet.web.core.service.Service;
 
 import java.util.logging.Logger;
 
@@ -30,20 +29,7 @@ public class Member extends Entry {
   @XmlTransient
   public Role getRole() {
     if (role == null && roleType != null && roleName != null) {
-      try {
-        Class<?> cls = Class.forName(roleType);
-        if (Enum.class.isAssignableFrom(cls)) {
-          Class<? extends Enum> enumClass = (Class<? extends Enum>) cls;
-          role = (Role) Enum.valueOf(enumClass, roleName);
-        } else {
-          Handler handler = cls.getAnnotation(Handler.class);
-          Class<Service> serviceClass = (Class<Service>) handler.value();
-          Service service = WebPlatform.getInstance().getService(serviceClass);
-          role = (Role) service.getById(roleName, (Class<? extends Content>) cls);
-        }
-      } catch (ClassNotFoundException e) {
-        logger.severe(e.getMessage());
-      }
+      WebPlatform.getInstance().getObject(roleType, roleName);
     }
     return role;
   }

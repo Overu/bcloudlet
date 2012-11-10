@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 public class GuiceComponentProvider implements ComponentProvider {
 
-  private class GuiceFactory<T> implements Factory<T> {
+  private class GuiceFactory<T extends Content> implements Factory<T> {
 
     private Class<T> clz;
 
@@ -29,7 +29,7 @@ public class GuiceComponentProvider implements ComponentProvider {
 
     @Override
     public T provide() {
-      T resource = WebPlatform.getInstance().getService(clz);
+      T resource = WebPlatform.getInstance().getResource(clz);
       resourceContext.initResource(resource);
       return resource;
     }

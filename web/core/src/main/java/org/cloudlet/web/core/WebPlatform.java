@@ -13,23 +13,15 @@
  */
 package org.cloudlet.web.core;
 
-import com.google.inject.Inject;
-import com.google.inject.Injector;
-import com.google.inject.Singleton;
+import org.cloudlet.web.core.service.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Singleton
-public class WebPlatform {
+public abstract class WebPlatform {
 
-  @Inject
   private static WebPlatform instance;
 
-  @Inject
-  private static Injector injector;
-
-  @Inject
   public static WebPlatform getInstance() {
     return instance;
   }
@@ -37,6 +29,12 @@ public class WebPlatform {
   private Class<? extends Repository> repositoryType;
 
   private Map<String, Package> packages = new HashMap<String, Package>();
+
+  public WebPlatform() {
+    instance = this;
+  }
+
+  public abstract Object getObject(String type, String id);
 
   public Map<String, Package> getPackages() {
     return packages;
@@ -46,10 +44,9 @@ public class WebPlatform {
     return repositoryType;
   }
 
-  public <T> T getService(Class<T> type) {
-    // TODO proxy-based creation
-    return injector.getInstance(type);
-  }
+  public abstract <T extends Content> T getResource(Class<T> contentType);
+
+  public abstract <S extends Service> S getService(Class<? extends Content> contentType);
 
   public void setRepositoryType(Class<? extends Repository> repositoryType) {
     this.repositoryType = repositoryType;
