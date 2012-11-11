@@ -31,12 +31,14 @@ import javax.xml.bind.annotation.XmlType;
 
 @TypeDef(name = "content", typeClass = ResourceEntity.class)
 @MappedSuperclass
-@XmlType
+@XmlType(name = Resource.TYPE_NAME)
 public abstract class Resource extends Place {
+
+  public static final String TYPE_NAME = "Resource";
 
   private static final Logger logger = Logger.getLogger(Resource.class.getName());
 
-  public static ResourceType TYPE = new ResourceType("resource");
+  public static ResourceType TYPE = new ResourceType(TYPE_NAME);
 
   public static final String ID = "id";
 
@@ -68,7 +70,7 @@ public abstract class Resource extends Place {
 
   @Type(type = "content")
   @Columns(columns = {@Column(name = "parentType"), @Column(name = "parentId")})
-  protected Content parent;
+  private Content parent;
 
   @Transient
   private transient Object nativeData;
@@ -92,6 +94,9 @@ public abstract class Resource extends Place {
 
   @XmlTransient
   public Content getParent() {
+    if (parent == null) {
+      parent = WebPlatform.getInstance().getRepository();
+    }
     return parent;
   }
 
@@ -128,10 +133,10 @@ public abstract class Resource extends Place {
   }
 
   public StringBuilder getUriBuilder() {
-    if (parent == null) {
+    if (getParent() == null) {
       return new StringBuilder("/");
     }
-    StringBuilder builder = parent.getUriBuilder();
+    StringBuilder builder = getParent().getUriBuilder();
     if (builder.length() > 1) {
       builder.append("/");
     }
@@ -152,13 +157,6 @@ public abstract class Resource extends Place {
 
   @XmlTransient
   public abstract String getWidgetKey();
-
-  // public void readFrom(JSONObject json) {
-  // id = readString(json, ID);
-  // title = readString(json, TITLE);
-  // path = readString(json, PATH);
-  // version = readLong(json, VERSION);
-  // }
 
   @GET
   @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})

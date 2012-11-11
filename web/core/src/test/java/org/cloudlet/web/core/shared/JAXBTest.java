@@ -1,19 +1,18 @@
-package com.goodow.web.core.jaxb;
+package org.cloudlet.web.core.shared;
 
 import com.google.inject.Inject;
 
 import org.cloudlet.web.core.server.CoreResourceConfig;
-import org.cloudlet.web.core.service.CoreRepositoryTest;
-import org.cloudlet.web.core.shared.CoreRepository;
-import org.cloudlet.web.core.shared.Feed;
 import org.cloudlet.web.core.shared.Group;
 import org.cloudlet.web.core.shared.GroupFeed;
 import org.cloudlet.web.core.shared.GroupRole;
 import org.cloudlet.web.core.shared.Member;
 import org.cloudlet.web.core.shared.MemberFeed;
+import org.cloudlet.web.core.shared.Repository;
 import org.cloudlet.web.core.shared.User;
 import org.cloudlet.web.core.shared.UserFeed;
 import org.cloudlet.web.core.shared.UserMember;
+import org.cloudlet.web.test.WebTest;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.TestProperties;
 import org.junit.Test;
@@ -26,17 +25,22 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-public class JAXBTest extends CoreRepositoryTest {
+public class JAXBTest extends WebTest {
 
   @Inject
   CoreResourceConfig config;
 
   @Inject
-  CoreRepository repo;
+  Repository repo;
+
+  @Inject
+  UserFeed users;
+
+  @Inject
+  GroupFeed groups;
 
   @Test
   public void testJAXB() throws JAXBException {
-    Feed<User> users = repo.getUsers();
     User user = new User();
     user.setName("user1");
     List<User> userList = new ArrayList<User>();
@@ -51,7 +55,6 @@ public class JAXBTest extends CoreRepositoryTest {
 
   @Test
   public void testMembers() throws JAXBException {
-    GroupFeed groups = repo.getGroups();
     Group group = groups.getEntry("mygroup");
     if (group == null) {
       group = new Group();
@@ -60,7 +63,6 @@ public class JAXBTest extends CoreRepositoryTest {
       groups.createEntry(group);
     }
 
-    UserFeed users = repo.getUsers();
     User user = new User();
     user.setName("user" + System.currentTimeMillis());
     user.setPath(user.getName());

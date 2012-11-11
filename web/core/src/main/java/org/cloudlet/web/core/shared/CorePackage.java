@@ -5,9 +5,14 @@ import com.google.inject.Singleton;
 @Singleton
 public class CorePackage extends Package {
 
+  public static final String NAME = "org.cloudlet.web.core.shared";
+
   public CorePackage() {
-    addContentTypes(Resource.TYPE, Entry.TYPE, User.TYPE, Group.TYPE, Member.TYPE, Repository.TYPE,
-        CoreRepository.TYPE, UserFeed.TYPE, GroupFeed.TYPE);
+    setName(NAME);
+    addResourceType(Resource.TYPE, Entry.TYPE, Content.TYPE, Repository.TYPE);
+    addResourceType(User.TYPE, Group.TYPE, Member.TYPE, UserFeed.TYPE, GroupFeed.TYPE,
+        MemberFeed.TYPE);
+    init();
   }
 
 }

@@ -11,18 +11,27 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cloudlet.web.core.server;
+package org.cloudlet.web.core.shared;
 
-import com.google.inject.Singleton;
+import java.util.logging.Logger;
 
-import org.cloudlet.web.core.shared.CoreRepository;
+public class ClassUtil {
 
-@Singleton
-public class CoreRepositoryServiceImpl extends RepositoryServiceImpl<CoreRepository> {
+  static Logger logger = Logger.getLogger(ClassUtil.class.getName());
 
-  @Override
-  protected Class<CoreRepository> getRepositoryType() {
-    return CoreRepository.class;
+  public static String getSimpleName(Class<?> cls) {
+    String name = cls.getName();
+    int index = name.lastIndexOf(".");
+    return index > 0 ? name.substring(index + 1) : name;
+  }
+
+  public static <T> T newInstance(Class<T> cls) {
+    try {
+      return cls.newInstance();
+    } catch (Exception e) {
+      logger.severe(e.getMessage());
+      return null;
+    }
   }
 
 }

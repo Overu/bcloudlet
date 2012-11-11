@@ -6,13 +6,13 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlType
+@XmlType(name = User.TYPE_NAME)
 @Entity
 @Table(name = "t_user")
 @Handler(UserService.class)
 public class User extends Entry implements Principal {
-
-  public static EntryType TYPE = new EntryType(Entry.TYPE, "user") {
+  public static final String TYPE_NAME = "User";
+  public static EntryType TYPE = new EntryType(Entry.TYPE, "TYPE_NAME") {
     @Override
     public Entry createInstance() {
       return new User();

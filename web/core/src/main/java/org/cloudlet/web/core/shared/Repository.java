@@ -7,19 +7,26 @@ import javax.ws.rs.Path;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlType
+@XmlType(name = Repository.TYPE_NAME)
 @Path("/")
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Handler(RepositoryService.class)
-public class Repository extends Entry {
+public final class Repository extends Entry {
 
-  public static EntryType<Repository> TYPE = new EntryType<Repository>(Entry.TYPE, "repository") {
+  public static final String TYPE_NAME = "Repository";
+
+  public static EntryType<Repository> TYPE = new EntryType<Repository>(Entry.TYPE, TYPE_NAME) {
     @Override
     public Repository createInstance() {
       return new Repository();
     }
   };
+
+  @Override
+  public Content getParent() {
+    return null;
+  }
 
   @Override
   public EntryType<?> getResourceType() {

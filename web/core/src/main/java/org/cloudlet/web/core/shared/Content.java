@@ -19,12 +19,14 @@ import javax.xml.bind.annotation.XmlType;
 
 @TypeDef(name = "content", typeClass = ResourceEntity.class)
 @MappedSuperclass
-@XmlType
+@XmlType(name = Content.TYPE_NAME)
 public abstract class Content extends Resource {
+
+  public static final String TYPE_NAME = "Content";
 
   private static final Logger logger = Logger.getLogger(Content.class.getName());
 
-  public static ContentType TYPE = new ContentType(Resource.TYPE, "content");
+  public static ContentType TYPE = new ContentType(Resource.TYPE, TYPE_NAME);
 
   public static final String CHILDREN_COUNT = "childrenCount";
 

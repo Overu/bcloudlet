@@ -1,4 +1,4 @@
-package com.goodow.web.security.server.auth;
+package org.cloudlet.web.core.shared;
 
 import static org.junit.Assert.fail;
 
@@ -9,12 +9,12 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.subject.Subject;
-import org.cloudlet.web.core.service.BaseRepositoryTest;
 import org.cloudlet.web.core.shared.UserService;
+import org.cloudlet.web.test.WebTest;
 import org.junit.Before;
 import org.junit.Test;
 
-public class JpaRealmTest extends BaseRepositoryTest {
+public class JpaRealmTest extends WebTest {
 
   String userName = "admin";
   String pwd = "1234";

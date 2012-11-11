@@ -22,7 +22,7 @@ import org.cloudlet.web.core.shared.Content;
 import org.cloudlet.web.core.shared.Entry;
 import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.ResourceManager;
-import org.cloudlet.web.core.shared.RootResource;
+import org.cloudlet.web.core.shared.Root;
 import org.cloudlet.web.core.shared.View;
 
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ public class PlaceTree extends BorderLayoutContainer {
   ResourceManager placeManager;
 
   @Inject
-  public PlaceTree(@RootResource final Entry root) {
+  public PlaceTree(@Root final Entry root) {
     this.root = root;
     ModelKeyProvider<Resource> keyProvider = new ModelKeyProvider<Resource>() {
       @Override

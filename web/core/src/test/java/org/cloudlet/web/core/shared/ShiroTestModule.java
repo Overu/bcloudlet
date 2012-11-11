@@ -1,4 +1,4 @@
-package com.goodow.web.security.server.auth;
+package org.cloudlet.web.core.shared;
 
 
 import com.google.inject.name.Names;

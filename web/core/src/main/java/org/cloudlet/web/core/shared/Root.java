@@ -13,5 +13,5 @@ import java.lang.annotation.Target;
 @BindingAnnotation
 @Target({FIELD, PARAMETER, METHOD})
 @Retention(RUNTIME)
-public @interface RootResource {
+public @interface Root {
 }

@@ -17,8 +17,6 @@ public abstract class WebPlatform {
 
   private Map<String, Package> packages = new HashMap<String, Package>();
 
-  private Repository repository;
-
   public WebPlatform() {
     instance = this;
   }
@@ -50,15 +48,17 @@ public abstract class WebPlatform {
     return packages;
   }
 
-  public Repository getRepository() {
-    return repository;
-  }
+  public abstract Repository getRepository();
 
   public Class<? extends Repository> getRepositoryType() {
     return repositoryType;
   }
 
-  public abstract <T extends Resource> T getResource(Class<T> contentType);
+  public abstract <T extends Resource> T getResource(Class<T> resourceType);
+
+  public <T extends Resource> ResourceType<T> getResourceType(Class<T> cls) {
+    return (ResourceType<T>) getType(cls.getName());
+  }
 
   public ResourceType getResourceType(String name) {
     return resourceTypes.get(name);
@@ -77,13 +77,14 @@ public abstract class WebPlatform {
     return null;
   }
 
-  public WebType getWebType(final String fullName) {
-    WebType type = getType(fullName);
+  public WebType getWebType(Class cls) {
+    WebType type = getType(cls.getName());
     return type;
   }
 
-  public void setRepository(Repository repository) {
-    this.repository = repository;
+  public WebType getWebType(final String fullName) {
+    WebType type = getType(fullName);
+    return type;
   }
 
   public void setRepositoryType(Class<? extends Repository> repositoryType) {

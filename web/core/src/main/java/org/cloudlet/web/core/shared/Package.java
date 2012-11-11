@@ -22,7 +22,7 @@ public class Package extends NamedElement {
     return type;
   }
 
-  protected void addContentTypes(final ResourceType... types) {
+  protected void addResourceType(final ResourceType... types) {
     for (ResourceType type : types) {
       type.setPackage(this);
       addType(type);

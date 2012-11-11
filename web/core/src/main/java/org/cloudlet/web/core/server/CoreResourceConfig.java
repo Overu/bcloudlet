@@ -6,7 +6,7 @@ import com.google.inject.Injector;
 import com.google.inject.persist.PersistService;
 
 import org.cloudlet.web.boot.server.BootModule;
-import org.cloudlet.web.core.shared.CoreRepository;
+import org.cloudlet.web.core.shared.Repository;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.jettison.JettisonBinder;
@@ -24,7 +24,7 @@ public class CoreResourceConfig extends ResourceConfig {
   public static void main(String[] args) {
     try {
       System.out.println("JSON with JAXB Jersey Example App");
-      final Injector injector = Guice.createInjector(new BootModule(), new CoreRepositoryModule());
+      final Injector injector = Guice.createInjector(new BootModule());
       PersistService persistService = injector.getInstance(PersistService.class);
       persistService.start();
       CoreResourceConfig app = injector.getInstance(CoreResourceConfig.class);
@@ -44,7 +44,7 @@ public class CoreResourceConfig extends ResourceConfig {
   public CoreResourceConfig() {
     super(JaxbContextResolver.class);
     addBinders(new JettisonBinder());
-    addClasses(CoreRepository.class);
+    addClasses(Repository.class);
   }
 
 }

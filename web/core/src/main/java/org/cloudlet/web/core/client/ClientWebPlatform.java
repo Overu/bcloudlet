@@ -2,6 +2,7 @@ package org.cloudlet.web.core.client;
 
 import com.google.inject.Singleton;
 
+import org.cloudlet.web.core.shared.Repository;
 import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.Service;
 import org.cloudlet.web.core.shared.WebPlatform;
@@ -9,9 +10,19 @@ import org.cloudlet.web.core.shared.WebPlatform;
 @Singleton
 public class ClientWebPlatform extends WebPlatform {
 
+  private Repository repository;
+
   @Override
   public Object getObject(String type, String id) {
     return null;
+  }
+
+  @Override
+  public Repository getRepository() {
+    if (repository == null) {
+      repository = new Repository();
+    }
+    return repository;
   }
 
   @Override

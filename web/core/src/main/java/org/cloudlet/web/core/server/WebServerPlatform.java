@@ -2,10 +2,12 @@ package org.cloudlet.web.core.server;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.Handler;
+import org.cloudlet.web.core.shared.Repository;
+import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.Service;
 import org.cloudlet.web.core.shared.WebPlatform;
 
@@ -18,6 +20,9 @@ public class WebServerPlatform extends WebPlatform {
 
   @Inject
   private Injector injector;
+
+  @Inject
+  private Provider<Repository> repository;
 
   @Override
   public Object getObject(String type, String id) {
@@ -37,8 +42,13 @@ public class WebServerPlatform extends WebPlatform {
   }
 
   @Override
-  public <T extends Resource> T getResource(Class<T> contentType) {
-    return injector.getInstance(contentType);
+  public Repository getRepository() {
+    return repository.get();
+  }
+
+  @Override
+  public <T extends Resource> T getResource(Class<T> resourceType) {
+    return injector.getInstance(resourceType);
   }
 
   @Override

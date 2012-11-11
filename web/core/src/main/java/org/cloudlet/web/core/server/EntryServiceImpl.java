@@ -2,13 +2,13 @@ package org.cloudlet.web.core.server;
 
 import com.google.inject.persist.Transactional;
 
-import org.cloudlet.web.core.shared.Resource;
+import org.cloudlet.web.core.shared.ClassUtil;
 import org.cloudlet.web.core.shared.DefaultField;
 import org.cloudlet.web.core.shared.DefaultFields;
 import org.cloudlet.web.core.shared.Entry;
 import org.cloudlet.web.core.shared.EntryService;
 import org.cloudlet.web.core.shared.Relationship;
-import org.cloudlet.web.core.shared.WebPlatform;
+import org.cloudlet.web.core.shared.Resource;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -58,21 +58,6 @@ public class EntryServiceImpl<E extends Entry> extends ServiceImpl<E> implements
   }
 
   @Override
-  public Resource getRelationship(E entry, String path) {
-    try {
-      TypedQuery<Relationship> query =
-          em().createQuery(
-              "from " + Relationship.class.getName()
-                  + " rel where rel.source=:source and rel.path=:path", Relationship.class);
-      query.setParameter("source", entry);
-      query.setParameter("path", path);
-      return query.getSingleResult().getTarget();
-    } catch (NoResultException e) {
-      return null;
-    }
-  }
-
-  @Override
   public <C extends Resource> C findRelationship(E entry, String path, Class<C> childType) {
     try {
       TypedQuery<C> query =
@@ -102,6 +87,21 @@ public class EntryServiceImpl<E extends Entry> extends ServiceImpl<E> implements
   }
 
   @Override
+  public Resource getRelationship(E entry, String path) {
+    try {
+      TypedQuery<Relationship> query =
+          em().createQuery(
+              "from " + Relationship.class.getName()
+                  + " rel where rel.source=:source and rel.path=:path", Relationship.class);
+      query.setParameter("source", entry);
+      query.setParameter("path", path);
+      return query.getSingleResult().getTarget();
+    } catch (NoResultException e) {
+      return null;
+    }
+  }
+
+  @Override
   @Transactional
   public E save(E entry) {
     super.save(entry);
@@ -113,7 +113,7 @@ public class EntryServiceImpl<E extends Entry> extends ServiceImpl<E> implements
       Class<?> rt = m.getReturnType();
       if (p != null && Resource.class.isAssignableFrom(rt)) {
         Class<Resource> childType = (Class<Resource>) rt;
-        Resource result = WebPlatform.getInstance().getResource(childType);
+        Resource result = ClassUtil.newInstance(childType);
         result.setPath(p.value());
         DefaultFields fields = m.getAnnotation(DefaultFields.class);
         if (fields != null) {

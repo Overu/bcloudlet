@@ -1,17 +1,18 @@
-package org.cloudlet.web.core.service;
+package org.cloudlet.web.core.shared;
 
 import static org.junit.Assert.assertEquals;
 
 import com.google.inject.Inject;
 
 import org.cloudlet.web.core.server.CoreResourceConfig;
-import org.cloudlet.web.core.shared.CoreRepository;
 import org.cloudlet.web.core.shared.DataGraph;
 import org.cloudlet.web.core.shared.Group;
 import org.cloudlet.web.core.shared.GroupFeed;
+import org.cloudlet.web.core.shared.Repository;
 import org.cloudlet.web.core.shared.User;
 import org.cloudlet.web.core.shared.UserFeed;
 import org.cloudlet.web.core.shared.View;
+import org.cloudlet.web.test.WebTest;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.TestProperties;
 import org.junit.Test;
@@ -23,18 +24,23 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-public class GroupServiceTest extends CoreRepositoryTest {
+public class GroupServiceTest extends WebTest {
 
   @Inject
   CoreResourceConfig config;
 
   @Inject
-  CoreRepository repo;
+  Repository repo;
+
+  @Inject
+  GroupFeed groups;
+
+  @Inject
+  UserFeed users;
 
   @Test
   public void testSubResource() throws JAXBException {
     System.out.println(UUID.randomUUID().toString());
-    GroupFeed groups = repo.getGroups();
     Group group = groups.getEntry("mygroup");
     if (group == null) {
       group = new Group();
@@ -43,7 +49,6 @@ public class GroupServiceTest extends CoreRepositoryTest {
     } else {
       group.load();
     }
-    UserFeed users = repo.getUsers();
     users.load();
     long total = users.getChildrenCount();
     User user = new User();
@@ -59,8 +64,8 @@ public class GroupServiceTest extends CoreRepositoryTest {
     DataGraph dg = repo.load();
 
     JAXBContext jc =
-        JAXBContext.newInstance(CoreRepository.class, DataGraph.class, GroupFeed.class,
-            UserFeed.class, User.class, View.class);
+        JAXBContext.newInstance(Repository.class, DataGraph.class, GroupFeed.class, UserFeed.class,
+            User.class, View.class);
     Marshaller marshaller = jc.createMarshaller();
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     marshaller.marshal(dg, os);

@@ -2,8 +2,8 @@ package org.cloudlet.web.core.shared;
 
 import com.google.inject.ImplementedBy;
 
-import org.cloudlet.web.core.server.BaseRepositoryServiceImpl;
+import org.cloudlet.web.core.server.RepositoryServiceImpl;
 
-@ImplementedBy(BaseRepositoryServiceImpl.class)
-public interface RepositoryService<T extends Repository> extends EntryService<T> {
+@ImplementedBy(RepositoryServiceImpl.class)
+public interface RepositoryService extends EntryService<Repository> {
 }

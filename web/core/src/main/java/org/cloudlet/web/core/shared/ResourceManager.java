@@ -9,7 +9,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class ResourceManager implements PlaceHistoryMapper {
 
-  @RootResource
+  @Root
   @Inject
   Entry root;
 
