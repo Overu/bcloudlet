@@ -94,9 +94,6 @@ public abstract class Resource extends Place {
 
   @XmlTransient
   public Content getParent() {
-    if (parent == null) {
-      parent = WebPlatform.getInstance().getRepository();
-    }
     return parent;
   }
 

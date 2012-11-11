@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlType;
 @Entity
 @Handler(UserFeedService.class)
 @Path("users")
+@DefaultField(key = "title", value = "系统用户")
 public class UserFeed extends PagingFeed<User> {
   public static final String TYPE_NAME = "UserFeed";
 

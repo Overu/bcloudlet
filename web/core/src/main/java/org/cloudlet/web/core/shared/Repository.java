@@ -24,11 +24,6 @@ public final class Repository extends Entry {
   };
 
   @Override
-  public Content getParent() {
-    return null;
-  }
-
-  @Override
   public EntryType<?> getResourceType() {
     return TYPE;
   }
