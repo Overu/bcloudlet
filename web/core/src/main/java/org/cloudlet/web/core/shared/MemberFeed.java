@@ -25,7 +25,7 @@ public class MemberFeed extends Feed<Member> {
   }
 
   @Override
-  public FeedType<MemberFeed, Member> getObjectType() {
+  public FeedType<MemberFeed, Member> getResourceType() {
     return TYPE;
   }
 }

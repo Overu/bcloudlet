@@ -13,7 +13,7 @@
  */
 package org.cloudlet.web.core.shared;
 
-import org.cloudlet.web.core.server.ContentUserType;
+import org.cloudlet.web.core.server.ResourceEntity;
 import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -25,7 +25,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "web_relationsip")
-@TypeDef(name = "content", typeClass = ContentUserType.class)
+@TypeDef(name = "content", typeClass = ResourceEntity.class)
 public class Relationship {
 
   @Id
@@ -33,11 +33,11 @@ public class Relationship {
 
   @Type(type = "content")
   @Columns(columns = {@Column(name = "sourceType"), @Column(name = "sourceId")})
-  private Content source;
+  private Resource source;
 
   @Type(type = "content")
   @Columns(columns = {@Column(name = "targetType"), @Column(name = "targetId")})
-  private Content target;
+  private Resource target;
 
   private String path;
 
@@ -58,14 +58,14 @@ public class Relationship {
   /**
    * @return the source
    */
-  public Content getSource() {
+  public Resource getSource() {
     return source;
   }
 
   /**
    * @return the target
    */
-  public Content getTarget() {
+  public Resource getTarget() {
     return target;
   }
 
@@ -86,14 +86,14 @@ public class Relationship {
   /**
    * @param source the source to set
    */
-  public void setSource(Content source) {
+  public void setSource(Resource source) {
     this.source = source;
   }
 
   /**
    * @param target the target to set
    */
-  public void setTarget(Content target) {
+  public void setTarget(Resource target) {
     this.target = target;
   }
 

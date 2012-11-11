@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType
 public abstract class Feed<E extends Entry> extends Content {
 
-  public static FeedType TYPE = new FeedType(Content.TYPE, "content", Entry.TYPE);
+  public static FeedType TYPE = new FeedType(Content.TYPE, "feed", Entry.TYPE);
 
   @Transient
   protected List<E> entries;
@@ -31,8 +31,8 @@ public abstract class Feed<E extends Entry> extends Content {
   @POST
   @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
   @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  public DataGraph<Content> create(DataGraph<Content> data) {
-    if (!getObjectType().getEntryType().isInstance(data.root)) {
+  public DataGraph<Resource> create(DataGraph<Resource> data) {
+    if (!getResourceType().getEntryType().isInstance(data.root)) {
       // does not accept an entry of given type
       throw new WebApplicationException(Status.BAD_REQUEST);
     }
@@ -51,14 +51,8 @@ public abstract class Feed<E extends Entry> extends Content {
   @Path("{path}")
   public final E getEntry(@PathParam("path") String path) {
     E result = (E) getCache().get(path);
-    if (result == null) {
-      if (GWT.isClient()) {
-        E entry = (E) getObjectType().getEntryType().createInstance();
-        entry.setPath(path);
-        entry.setParent(this);
-      } else {
-        result = (E) getService().findEntry(this, path);
-      }
+    if (result == null && !GWT.isClient()) {
+      result = (E) getService().findEntry(this, path);
       if (result != null) {
         getCache().put(path, result);
       }
@@ -71,14 +65,14 @@ public abstract class Feed<E extends Entry> extends Content {
 
   public abstract Class<E> getEntryType();
 
-  @Override
-  public FeedType getObjectType() {
-    return TYPE;
-  }
-
   @XmlElement
   public Long getQueryCount() {
     return queryCount;
+  }
+
+  @Override
+  public FeedType getResourceType() {
+    return TYPE;
   }
 
   @Override

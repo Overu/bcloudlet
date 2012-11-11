@@ -25,7 +25,8 @@ public abstract class Entry extends Content {
   public static final String RELATIONSHIPS = "relationships";
 
   @Transient
-  private List<Content> relationships;
+  private List<Resource> relationships;
+
   @Transient
   @QueryParam(RELATIONSHIPS)
   protected boolean loadRelationships;
@@ -33,31 +34,20 @@ public abstract class Entry extends Content {
   @POST
   @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
   @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  public DataGraph<Content> create(DataGraph<Content> data) {
+  public DataGraph<Resource> create(DataGraph<Resource> data) {
     data.root = createRelationship(data.root);
     return data;
   }
 
-  public Content createRelationship(Content child) {
+  public Resource createRelationship(Resource child) {
     return getService().createRelationship(this, child);
   }
 
-  @Override
-  public EntryType getObjectType() {
-    return TYPE;
-  }
-
   @Path("{path}")
-  public <T extends Content> T getRelationship(@PathParam("path") String path) {
-    Content result = getCache().get(path);
-    if (result == null) {
-      if (GWT.isClient()) {
-        result = new ContentProxy();
-        result.setPath(path);
-        result.setParent(this);
-      } else {
-        result = getService().getRelationship(this, path);
-      }
+  public <T extends Resource> T getRelationship(@PathParam("path") String path) {
+    Resource result = getCache().get(path);
+    if (result == null && !GWT.isClient()) {
+      result = getService().getRelationship(this, path);
       if (result != null) {
         getCache().put(path, result);
       }
@@ -69,8 +59,13 @@ public abstract class Entry extends Content {
   }
 
   @XmlElement
-  public List<Content> getRelationships() {
+  public List<Resource> getRelationships() {
     return relationships;
+  }
+
+  @Override
+  public EntryType<?> getResourceType() {
+    return TYPE;
   }
 
   @Override
@@ -79,14 +74,14 @@ public abstract class Entry extends Content {
   }
 
   public void loadRelationships() {
-    if (loadRelationships) {
-      relationships = getService().findRelationships(this);
-    }
+    relationships = getService().findRelationships(this);
   }
 
   @Override
   protected void doLoad() {
     super.doLoad();
-    loadRelationships();
+    if (loadRelationships) {
+      loadRelationships();
+    }
   }
 }

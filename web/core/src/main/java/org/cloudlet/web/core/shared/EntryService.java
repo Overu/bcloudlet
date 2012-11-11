@@ -7,12 +7,12 @@ public interface EntryService<E extends Entry> extends Service<E> {
 
   long countRelationships(E entry);
 
-  <C extends Content> C createRelationship(E entry, C child);
+  <C extends Resource> C createRelationship(E entry, C child);
 
-  Content getRelationship(E content, String path);
+  Resource getRelationship(E content, String path);
 
-  <C extends Content> C findRelationship(E entry, String path, Class<C> childType);
+  <C extends Resource> C findRelationship(E entry, String path, Class<C> childType);
 
-  List<Content> findRelationships(E entry);
+  List<Resource> findRelationships(E entry);
 
 }

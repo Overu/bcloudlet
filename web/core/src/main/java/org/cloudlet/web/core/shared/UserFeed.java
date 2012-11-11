@@ -25,7 +25,7 @@ public class UserFeed extends PagingFeed<User> {
   }
 
   @Override
-  public FeedType<UserFeed, User> getObjectType() {
+  public FeedType<UserFeed, User> getResourceType() {
     return TYPE;
   }
 }

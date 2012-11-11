@@ -27,7 +27,7 @@ public class CoreRepository extends Repository {
   }
 
   @Override
-  public EntryType<CoreRepository> getObjectType() {
+  public EntryType<CoreRepository> getResourceType() {
     return TYPE;
   }
 

@@ -28,7 +28,7 @@ import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.TextField;
 import com.sencha.gxt.widget.core.client.info.Info;
 
-import org.cloudlet.web.core.shared.WebPlaceManager;
+import org.cloudlet.web.core.shared.ResourceManager;
 import org.cloudlet.web.core.shared.WebView;
 
 import java.util.HashMap;
@@ -43,7 +43,7 @@ public abstract class AbstractUserFieldView extends WebView implements IsWidget,
   }
 
   @Inject
-  WebPlaceManager placeManager;
+  ResourceManager placeManager;
 
   private ContentPanel cp;
 

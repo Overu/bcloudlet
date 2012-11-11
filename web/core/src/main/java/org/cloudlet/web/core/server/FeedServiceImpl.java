@@ -35,7 +35,7 @@ public class FeedServiceImpl<F extends Feed<E>, E extends Entry> extends Service
     entry.setParent(feed);
     entry.save();
 
-    feed.setTotalCount(feed.getTotalCount() + 1);
+    feed.setChildrenCount(feed.getChildrenCount() + 1);
     update(feed);
 
     return entry;

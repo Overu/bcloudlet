@@ -22,7 +22,7 @@ public class Repository extends Entry {
   };
 
   @Override
-  public EntryType getObjectType() {
+  public EntryType<?> getResourceType() {
     return TYPE;
   }
 

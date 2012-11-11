@@ -1,6 +1,5 @@
 package org.cloudlet.web.core.shared;
 
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,36 +13,30 @@ public abstract class WebPlatform {
 
   private Class<? extends Repository> repositoryType;
 
-  public Map<String, ObjectType> types = new HashMap<String, ObjectType>();
+  public Map<String, ResourceType> resourceTypes = new HashMap<String, ResourceType>();
 
   private Map<String, Package> packages = new HashMap<String, Package>();
+
+  private Repository repository;
 
   public WebPlatform() {
     instance = this;
   }
 
-  public void addType(ObjectType type) {
-    types.put(type.getName(), type);
-  }
-
-  public ObjectType getByName(String name) {
-    return types.get(name);
+  public void addType(ResourceType type) {
+    resourceTypes.put(type.getName(), type);
   }
 
   public abstract Object getObject(String type, String id);
 
-  public ObjectType getObjectType(final String fullName) {
-    WebType type = getType(fullName);
-    return (ObjectType) type;
-  }
-
   public Operation getOperation(final String fullName) {
     int index = fullName.lastIndexOf(".");
     String typeName = fullName.substring(0, index);
-    ObjectType type = getObjectType(typeName);
-    if (type != null) {
+    WebType type = getWebType(typeName);
+    if (type != null && type instanceof ResourceType) {
+      ResourceType resType = (ResourceType) type;
       String simpleName = fullName.substring(index + 1);
-      return type.getOperation(simpleName);
+      return resType.getOperation(simpleName);
     }
     return null;
 
@@ -57,13 +50,21 @@ public abstract class WebPlatform {
     return packages;
   }
 
+  public Repository getRepository() {
+    return repository;
+  }
+
   public Class<? extends Repository> getRepositoryType() {
     return repositoryType;
   }
 
-  public abstract <T extends Content> T getResource(Class<T> contentType);
+  public abstract <T extends Resource> T getResource(Class<T> contentType);
 
-  public abstract <S extends Service> S getService(Class<? extends Content> contentType);
+  public ResourceType getResourceType(String name) {
+    return resourceTypes.get(name);
+  }
+
+  public abstract <S extends Service> S getService(Class<? extends Resource> contentType);
 
   public WebType getType(final String fullName) {
     int index = fullName.lastIndexOf(".");
@@ -74,6 +75,15 @@ public abstract class WebPlatform {
       return pkg.getType(simpleName);
     }
     return null;
+  }
+
+  public WebType getWebType(final String fullName) {
+    WebType type = getType(fullName);
+    return type;
+  }
+
+  public void setRepository(Repository repository) {
+    this.repository = repository;
   }
 
   public void setRepositoryType(Class<? extends Repository> repositoryType) {

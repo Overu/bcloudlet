@@ -1,6 +1,6 @@
 package org.cloudlet.web.core.server;
 
-import org.cloudlet.web.core.shared.Content;
+import org.cloudlet.web.core.shared.Resource;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.engine.spi.SessionImplementor;
@@ -12,7 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ContentUserType implements UserType {
+public class ResourceEntity implements UserType {
 
   @Override
   public Object assemble(final Serializable cached, final Object arg1) throws HibernateException {
@@ -37,8 +37,8 @@ public class ContentUserType implements UserType {
     if (o1 == null || o2 == null) {
       return false;
     }
-    final Content p1 = (Content) o1;
-    final Content p2 = (Content) o2;
+    final Resource p1 = (Resource) o1;
+    final Resource p2 = (Resource) o2;
     return p1.getClass() == p2.getClass() && p1.getId().equals(p2.getId());
   }
 
@@ -71,7 +71,7 @@ public class ContentUserType implements UserType {
       StringType.INSTANCE.nullSafeSet(st, null, index, session);
       StringType.INSTANCE.nullSafeSet(st, null, index + 1, session);
     } else {
-      Content content = (Content) value;
+      Resource content = (Resource) value;
       StringType.INSTANCE.nullSafeSet(st, content.getClass().getName(), index, session);
       StringType.INSTANCE.nullSafeSet(st, content.getId(), index + 1, session);
     }
@@ -85,7 +85,7 @@ public class ContentUserType implements UserType {
 
   @Override
   public Class<?> returnedClass() {
-    return Content.class;
+    return Resource.class;
   }
 
   @Override

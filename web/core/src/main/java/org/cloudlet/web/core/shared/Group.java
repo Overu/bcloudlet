@@ -34,7 +34,7 @@ public class Group extends Entry implements Principal {
   }
 
   @Override
-  public EntryType getObjectType() {
+  public EntryType getResourceType() {
     return TYPE;
   }
 

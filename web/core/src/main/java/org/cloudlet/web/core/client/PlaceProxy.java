@@ -8,26 +8,26 @@ import com.google.gwt.http.client.Response;
 
 import com.sencha.gxt.data.shared.loader.DataProxy;
 
-import org.cloudlet.web.core.shared.Content;
+import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.Entry;
 
-public class PlaceProxy implements DataProxy<Content, String> {
+public class PlaceProxy implements DataProxy<Resource, String> {
 
-  private Content place;
+  private Resource place;
 
   public PlaceProxy() {
   }
 
-  public PlaceProxy(Content place) {
+  public PlaceProxy(Resource place) {
     this.place = place;
   }
 
-  public Content getPlace() {
+  public Resource getPlace() {
     return place;
   }
 
   @Override
-  public void load(final Content loadConfig, final Callback<String, Throwable> callback) {
+  public void load(final Resource loadConfig, final Callback<String, Throwable> callback) {
     try {
       String data = null;
       final StringBuilder url =
@@ -59,7 +59,7 @@ public class PlaceProxy implements DataProxy<Content, String> {
     }
   }
 
-  public void setPlace(Content place) {
+  public void setPlace(Resource place) {
     this.place = place;
   }
 

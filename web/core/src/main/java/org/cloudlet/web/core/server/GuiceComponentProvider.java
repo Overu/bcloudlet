@@ -1,6 +1,6 @@
 package org.cloudlet.web.core.server;
 
-import org.cloudlet.web.core.shared.Content;
+import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.WebPlatform;
 import org.glassfish.hk2.api.DynamicConfiguration;
 import org.glassfish.hk2.api.Factory;
@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 public class GuiceComponentProvider implements ComponentProvider {
 
-  private class GuiceFactory<T extends Content> implements Factory<T> {
+  private class GuiceFactory<T extends Resource> implements Factory<T> {
 
     private Class<T> clz;
 
@@ -50,7 +50,7 @@ public class GuiceComponentProvider implements ComponentProvider {
     }
 
     LOGGER.info("Bind " + component);
-    if (!Content.class.isAssignableFrom(component)) {
+    if (!Resource.class.isAssignableFrom(component)) {
       LOGGER.warning("Out of Guice's control " + component);
       return false;
     }

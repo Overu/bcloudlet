@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.persist.Transactional;
 
-import org.cloudlet.web.core.shared.Content;
+import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.Service;
 
 import java.util.UUID;
@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 
-public class ServiceImpl<T extends Content> implements Service<T> {
+public class ServiceImpl<T extends Resource> implements Service<T> {
 
   private static final Logger logger = Logger.getLogger(ServiceImpl.class.getName());
 

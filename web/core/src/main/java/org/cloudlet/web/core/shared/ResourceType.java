@@ -6,9 +6,7 @@ import java.util.Map;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlType
-public class ObjectType<T extends Content> extends WebType<T> {
-
-  public static ObjectType VARIABLE = new ObjectType();
+public class ResourceType<T extends Resource> extends WebType<T> {
 
   public static final String OPERATIONS = "operations";
 
@@ -16,7 +14,7 @@ public class ObjectType<T extends Content> extends WebType<T> {
 
   private boolean _abstract;
 
-  private ObjectType superType;
+  protected ResourceType superType;
 
   private transient Map<String, Property> properties = new HashMap<String, Property>();
 
@@ -24,18 +22,16 @@ public class ObjectType<T extends Content> extends WebType<T> {
 
   private transient Map<String, Operation> operations = new HashMap<String, Operation>();
 
-  private transient Map<String, Object> widgets = new HashMap<String, Object>();
-
-  public ObjectType() {
+  public ResourceType() {
   }
 
-  public ObjectType(ObjectType superType, String name) {
+  public ResourceType(ResourceType superType, String name) {
     this.superType = superType;
     this.name = name;
     WebPlatform.getInstance().addType(this);
   }
 
-  public ObjectType(String name) {
+  public ResourceType(String name) {
     this(null, name);
   }
 
@@ -85,19 +81,11 @@ public class ObjectType<T extends Content> extends WebType<T> {
     return getPackage().getName() + "." + getName();
   }
 
-  public ObjectType getSuperType() {
+  public ResourceType getSuperType() {
     return superType;
   }
 
-  public Object getWidget(String kind) {
-    Object result = widgets.get(kind);
-    if (result == null && superType != null) {
-      result = superType.getWidget(kind);
-    }
-    return result;
-  }
-
-  public boolean hasSuperType(ObjectType type) {
+  public boolean hasSuperType(ResourceType type) {
     if (type == this) {
       return true;
     }
@@ -111,22 +99,19 @@ public class ObjectType<T extends Content> extends WebType<T> {
     return _abstract;
   }
 
-  public boolean isInstance(Content content) {
+  public boolean isInstance(Resource content) {
     if (content == null) {
       return false;
     }
-    return content.getObjectType().hasSuperType(this);
+    return content.getResourceType().hasSuperType(this);
   }
 
   public void setAbstract(final boolean value) {
     this._abstract = value;
   }
 
-  public void setSuperType(final ObjectType superType) {
+  public void setSuperType(final ResourceType superType) {
     this.superType = superType;
   }
 
-  public void setWidget(String kind, Object widget) {
-    widgets.put(kind, widget);
-  }
 }

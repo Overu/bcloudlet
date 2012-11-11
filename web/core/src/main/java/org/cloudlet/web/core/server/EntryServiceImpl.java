@@ -2,7 +2,7 @@ package org.cloudlet.web.core.server;
 
 import com.google.inject.persist.Transactional;
 
-import org.cloudlet.web.core.shared.Content;
+import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.DefaultField;
 import org.cloudlet.web.core.shared.DefaultFields;
 import org.cloudlet.web.core.shared.Entry;
@@ -34,7 +34,7 @@ public class EntryServiceImpl<E extends Entry> extends ServiceImpl<E> implements
 
   @Override
   @Transactional
-  public <C extends Content> C createRelationship(E entry, C child) {
+  public <C extends Resource> C createRelationship(E entry, C child) {
     // check if child path conflicts
     if (child.getPath() != null && getRelationship(entry, child.getPath()) != null) {
       throw new EntityExistsException("A child of " + entry + " with path=" + child.getPath()
@@ -51,14 +51,14 @@ public class EntryServiceImpl<E extends Entry> extends ServiceImpl<E> implements
     rel.setPath(child.getPath());
     em().persist(rel);
 
-    entry.setTotalCount(entry.getTotalCount() + 1);
+    entry.setChildrenCount(entry.getChildrenCount() + 1);
     update(entry);
 
     return child;
   }
 
   @Override
-  public Content getRelationship(E entry, String path) {
+  public Resource getRelationship(E entry, String path) {
     try {
       TypedQuery<Relationship> query =
           em().createQuery(
@@ -73,7 +73,7 @@ public class EntryServiceImpl<E extends Entry> extends ServiceImpl<E> implements
   }
 
   @Override
-  public <C extends Content> C findRelationship(E entry, String path, Class<C> childType) {
+  public <C extends Resource> C findRelationship(E entry, String path, Class<C> childType) {
     try {
       TypedQuery<C> query =
           em().createQuery(
@@ -88,13 +88,13 @@ public class EntryServiceImpl<E extends Entry> extends ServiceImpl<E> implements
   }
 
   @Override
-  public java.util.List<Content> findRelationships(E entry) {
+  public java.util.List<Resource> findRelationships(E entry) {
     TypedQuery<Relationship> query =
         em().createQuery("from " + Relationship.class.getName() + " rel where rel.source=:source",
             Relationship.class);
     query.setParameter("source", entry);
     List<Relationship> rels = query.getResultList();
-    List<Content> children = new ArrayList<Content>(rels.size());
+    List<Resource> children = new ArrayList<Resource>(rels.size());
     for (Relationship rel : rels) {
       children.add(rel.getTarget());
     }
@@ -111,9 +111,9 @@ public class EntryServiceImpl<E extends Entry> extends ServiceImpl<E> implements
       }
       Path p = m.getAnnotation(Path.class);
       Class<?> rt = m.getReturnType();
-      if (p != null && Content.class.isAssignableFrom(rt)) {
-        Class<Content> childType = (Class<Content>) rt;
-        Content result = WebPlatform.getInstance().getResource(childType);
+      if (p != null && Resource.class.isAssignableFrom(rt)) {
+        Class<Resource> childType = (Class<Resource>) rt;
+        Resource result = WebPlatform.getInstance().getResource(childType);
         result.setPath(p.value());
         DefaultFields fields = m.getAnnotation(DefaultFields.class);
         if (fields != null) {

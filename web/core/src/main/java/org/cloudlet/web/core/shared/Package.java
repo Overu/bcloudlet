@@ -22,14 +22,14 @@ public class Package extends NamedElement {
     return type;
   }
 
-  protected void addContentTypes(final ObjectType... types) {
-    for (ObjectType type : types) {
+  protected void addContentTypes(final ResourceType... types) {
+    for (ResourceType type : types) {
       type.setPackage(this);
       addType(type);
     }
   }
 
-  protected <T> void addProperty(final ObjectType entityType, final String name,
+  protected <T> void addProperty(final ResourceType entityType, final String name,
       final WebType type, final boolean many) {
     Property property = new Property();
     property.setName(name);

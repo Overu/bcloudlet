@@ -13,20 +13,42 @@
  */
 package org.cloudlet.web.core.shared;
 
-public class ContentProxy extends Content {
+public class ResourceProxy extends Resource {
 
-  private Content realContent;
+  private Resource realResource;
 
   private boolean loaded;
 
-  public ContentProxy() {
+  public ResourceProxy() {
   }
 
   /**
    * @return the realContent
    */
-  public Content getRealContent() {
-    return realContent;
+  public Resource getRealResource() {
+    return realResource;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.cloudlet.web.core.shared.Resource#getUriBuilder()
+   */
+  @Override
+  public StringBuilder getUriBuilder() {
+    StringBuilder builder = getParent().getUriBuilder();
+    builder.append(path);
+    return builder;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.cloudlet.web.core.shared.Resource#getWidgetId()
+   */
+  @Override
+  public String getWidgetKey() {
+    return realResource.getWidgetKey();
   }
 
   /**
@@ -46,8 +68,8 @@ public class ContentProxy extends Content {
   /**
    * @param realContent the realContent to set
    */
-  public void setRealContent(Content realContent) {
-    this.realContent = realContent;
+  public void setRealResource(Resource realContent) {
+    this.realResource = realContent;
   }
 
 }

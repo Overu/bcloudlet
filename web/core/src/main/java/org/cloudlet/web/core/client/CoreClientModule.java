@@ -1,7 +1,5 @@
 package org.cloudlet.web.core.client;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -30,15 +28,17 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import org.cloudlet.web.core.client.style.BaseResources;
 import org.cloudlet.web.core.shared.Content;
-import org.cloudlet.web.core.shared.ContentProxy;
 import org.cloudlet.web.core.shared.CorePackage;
-import org.cloudlet.web.core.shared.HomePlace;
-import org.cloudlet.web.core.shared.ObjectType;
+import org.cloudlet.web.core.shared.Entry;
 import org.cloudlet.web.core.shared.Repository;
+import org.cloudlet.web.core.shared.Resource;
+import org.cloudlet.web.core.shared.ResourceManager;
+import org.cloudlet.web.core.shared.ResourceProxy;
+import org.cloudlet.web.core.shared.ResourceType;
+import org.cloudlet.web.core.shared.RootResource;
 import org.cloudlet.web.core.shared.User;
 import org.cloudlet.web.core.shared.UserFeed;
 import org.cloudlet.web.core.shared.View;
-import org.cloudlet.web.core.shared.WebPlaceManager;
 import org.cloudlet.web.core.shared.WebPlatform;
 import org.cloudlet.web.core.shared.WebView;
 
@@ -73,6 +73,10 @@ public class CoreClientModule extends AbstractGinModule {
 
     SimplePanel main;
 
+    @RootResource
+    @Inject
+    Entry rootEntry;
+
     @Inject
     public Launcher() {
 
@@ -86,21 +90,54 @@ public class CoreClientModule extends AbstractGinModule {
 
     @Override
     public void onPlaceChange(final PlaceChangeEvent event) {
-      Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-        @Override
-        public void execute() {
-          Content content = (Content) event.getNewPlace();
-          if (content instanceof View || content.getDefaultView() == null) {
-            renderContent(content, main);
-          } else {
-            placeController.goTo(content.getDefaultView());
+      Resource resource = (Resource) event.getNewPlace();
+      if (resource instanceof ResourceProxy) {
+        loadResource((ResourceProxy) resource, new AsyncCallback<Resource>() {
+          @Override
+          public void onFailure(Throwable caught) {
           }
-        }
-      });
+
+          @Override
+          public void onSuccess(Resource result) {
+            render(result, main);
+          }
+        });
+      } else {
+        render(resource, main);
+      }
+    }
+
+    protected void loadResource(final ResourceProxy proxy, final AsyncCallback<Resource> callback) {
+      final StringBuilder url = new StringBuilder("api").append(proxy.getUri());
+      RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url.toString());
+      builder.setHeader("Accept", "application/json");
+      try {
+        builder.sendRequest(url.toString(), new RequestCallback() {
+          @Override
+          public void onError(Request request, Throwable exception) {
+            // TODO handle error
+          }
+
+          @Override
+          public void onResponseReceived(Request request, Response response) {
+            if (response.getStatusCode() != Response.SC_OK) {
+              // TODO handle bad request
+              return;
+            }
+
+            JSONObject dg = JSONParser.parseLenient(response.getText()).isObject();
+            JSONObject root = dg.get("dataGraph").isObject().get("root").isObject();
+            Resource resource = readResource(root);
+            resource.setParent(proxy.getParent()); // TODO load recursively
+            callback.onSuccess(resource);
+          }
+        });
+      } catch (RequestException e) {
+      }
     }
 
     private void start() {
-      Repository.TYPE.setWidget(View.FOLDER, repositoryExplorer);
+      Repository.TYPE.setWidget(View.CONTENT, repositoryExplorer);
 
       UserFeed.TYPE.setWidget(View.HOME, userGrid);
       UserFeed.TYPE.setWidget(View.POST, userForm);
@@ -130,18 +167,6 @@ public class CoreClientModule extends AbstractGinModule {
       return value.isBoolean().booleanValue();
     }
     return null;
-  }
-
-  public static Content readContent(JSONObject json) {
-    String type = json.get("@xsi.type").isString().stringValue();
-    ObjectType objectType = WebPlatform.getInstance().getByName(type);
-    Content content = objectType.createInstance();
-    content.setPath(readString(json, Content.PATH));
-    content.setTitle(readString(json, Content.TITLE));
-    content.setTotalCount(readLong(json, Content.TOTAL_COUNT));
-    // content.readFrom(root);
-    content.setNativeData(json);
-    return content;
   }
 
   public static Date readDate(JSONObject json, String field) {
@@ -200,6 +225,20 @@ public class CoreClientModule extends AbstractGinModule {
     return null;
   }
 
+  public static Resource readResource(JSONObject json) {
+    String type = json.get("@xsi.type").isString().stringValue();
+    ResourceType objectType = WebPlatform.getInstance().getResourceType(type);
+    Resource content = objectType.createInstance();
+    content.setPath(readString(json, Resource.PATH));
+    content.setTitle(readString(json, Resource.TITLE));
+    if (content instanceof Content) {
+      ((Content) content).setChildrenCount(readLong(json, Content.CHILDREN_COUNT));
+    }
+    // content.readFrom(root);
+    content.setNativeData(json);
+    return content;
+  }
+
   public static String readString(JSONObject json, String field) {
     JSONValue value = json.get(field);
     if (value != null) {
@@ -208,25 +247,55 @@ public class CoreClientModule extends AbstractGinModule {
     return null;
   }
 
-  public static void renderContent(Content content, AcceptsOneWidget panel) {
-    renderContent(content, panel, null);
+  public static void render(Resource resource, AcceptsOneWidget panel) {
+    renderResources(resource, panel, null);
   }
 
-  public static void renderContent(final Content content, final AcceptsOneWidget panel,
+  public static void renderResource(final Resource resource, final AcceptsOneWidget panel,
       final AsyncCallback<IsWidget> callback) {
-    Content parent = content.getParent();
+    Object widget = resource.getWidget();
+    if (widget instanceof IsWidget) {
+      appendWidget(resource, (IsWidget) widget, panel, callback);
+    } else if (widget instanceof Provider) {
+      appendWidget(resource, ((Provider<IsWidget>) widget).get(), panel, callback);
+    } else if (widget instanceof AsyncProvider) {
+      AsyncProvider<IsWidget> provider = (AsyncProvider<IsWidget>) widget;
+      provider.get(new AsyncCallback<IsWidget>() {
+        @Override
+        public void onFailure(final Throwable caught) {
+          if (callback != null) {
+            callback.onFailure(caught);
+          }
+        }
+
+        @Override
+        public void onSuccess(final IsWidget result) {
+          appendWidget(resource, result, panel, callback);
+        }
+      });
+    } else {
+      logger.info("No widget for " + resource.getUri() + ". Skip to child content");
+      if (panel instanceof IsWidget && callback != null) {
+        callback.onSuccess((IsWidget) panel);
+      }
+    }
+  }
+
+  public static void renderResources(final Resource resource, final AcceptsOneWidget panel,
+      final AsyncCallback<IsWidget> callback) {
+    Resource parent = resource.getParent();
     if (parent != null) {
-      renderContent(parent, panel, new AsyncCallback<IsWidget>() {
+      renderResources(parent, panel, new AsyncCallback<IsWidget>() {
         @Override
         public void onFailure(final Throwable caught) {
           logger.info("Failured to load parent widget. Show " + this + " directly.");
-          renderCurrent(content, panel, callback);
+          renderResource(resource, panel, callback);
         }
 
         @Override
         public void onSuccess(final IsWidget result) {
           if (result instanceof AcceptsOneWidget) {
-            renderCurrent(content, (AcceptsOneWidget) result, callback);
+            renderResource(resource, (AcceptsOneWidget) result, callback);
           } else {
             logger.info(result.getClass().getName()
                 + " must implement AcceptsOneWidget to render child widget.");
@@ -234,116 +303,33 @@ public class CoreClientModule extends AbstractGinModule {
         }
       });
     } else {
-      renderCurrent(content, panel, callback);
+      renderResource(resource, panel, callback);
     }
   }
 
-  public static void renderCurrent(final Content content, final AcceptsOneWidget panel,
-      final AsyncCallback<IsWidget> callback) {
-    if (content instanceof ContentProxy) {
-      final ContentProxy proxy = (ContentProxy) content;
-      if (proxy.isLoaded()) {
-        if (proxy.getRealContent() != null) {
-          renderCurrent(proxy.getRealContent(), panel, callback);
-        } else {
-          // TODO show item not found
-        }
-      } else {
-        String data = null;
-        final StringBuilder url = proxy.getUriBuilder();
-        url.insert(0, "api");
-        RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url.toString());
-        builder.setHeader("Accept", "application/json");
-        try {
-          builder.sendRequest(data, new RequestCallback() {
-            @Override
-            public void onError(Request request, Throwable exception) {
-              // TODO handle error
-            }
-
-            @Override
-            public void onResponseReceived(Request request, Response response) {
-              if (response.getStatusCode() != Response.SC_OK) {
-                // TODO handle bad request
-                return;
-              }
-
-              JSONObject dg = JSONParser.parseLenient(response.getText()).isObject();
-              JSONObject root = dg.get("dataGraph").isObject().get("root").isObject();
-              Content content = readContent(root);
-              content.setParent(proxy.getParent());// TODO read parent?
-              proxy.setLoaded(true);
-              proxy.setRealContent(content);
-              renderCurrent(content, panel, callback);
-            }
-
-          });
-        } catch (RequestException e) {
-
-        }
-      }
-      return;
-    }
-    Object widget = content.getWidget();
-    if (widget != null) {
-      appendWidget(content, (IsWidget) widget, panel, callback);
-    } else {
-      ObjectType contentType = content.getObjectType();
-      String widgetId = content instanceof View ? content.getPath() : View.FOLDER;
-      contentType =
-          content instanceof View ? content.getParent().getObjectType() : content.getObjectType();
-      widget = contentType.getWidget(widgetId);
-      if (widget instanceof IsWidget) {
-        appendWidget(content, (IsWidget) widget, panel, callback);
-      } else if (widget instanceof Provider) {
-        appendWidget(content, ((Provider<IsWidget>) widget).get(), panel, callback);
-      } else if (widget instanceof AsyncProvider) {
-        AsyncProvider<IsWidget> provider = (AsyncProvider<IsWidget>) widget;
-        provider.get(new AsyncCallback<IsWidget>() {
-          @Override
-          public void onFailure(final Throwable caught) {
-            if (callback != null) {
-              callback.onFailure(caught);
-            }
-          }
-
-          @Override
-          public void onSuccess(final IsWidget result) {
-            appendWidget(content, result, panel, callback);
-          }
-        });
-      } else {
-        logger.info("No widget for " + content.getUri() + ". Skip to child content");
-        if (panel instanceof IsWidget && callback != null) {
-          callback.onSuccess((IsWidget) panel);
-        }
-      }
-    }
-  }
-
-  private static void appendWidget(Content content, IsWidget widget, final AcceptsOneWidget panel,
-      final AsyncCallback<IsWidget> callback) {
-    content.setWidget(widget);
+  private static void appendWidget(Resource resource, IsWidget widget,
+      final AcceptsOneWidget panel, final AsyncCallback<IsWidget> callback) {
+    resource.setWidget(widget);
     panel.setWidget(widget);
     if (widget instanceof WebView) {
-      ((WebView) widget).setPlace(content);
+      ((WebView) widget).setPlace(resource);
     }
     if (callback != null) {
       callback.onSuccess(widget);
     }
   }
 
-  @HomePlace
+  @RootResource
   @Provides
   @Singleton
-  public Content getHomePage(final ContentProxy homePlace) {
-    return homePlace;
+  public Entry getHomePage(final Repository repo) {
+    return repo;
   }
 
   @Override
   protected void configure() {
     logger.finest("configure");
-    bind(PlaceHistoryMapper.class).to(WebPlaceManager.class).in(Singleton.class);
+    bind(PlaceHistoryMapper.class).to(ResourceManager.class).in(Singleton.class);
     bind(Launcher.class).asEagerSingleton();
     bind(WebPlatform.class).to(ClientWebPlatform.class).asEagerSingleton();
     bind(CorePackage.class).asEagerSingleton();
@@ -360,7 +346,7 @@ public class CoreClientModule extends AbstractGinModule {
   @Singleton
   PlaceHistoryHandler placeHistoryHandlerProvider(final PlaceHistoryMapper historyMapper,
       final PlaceController placeController, final EventBus eventBus,
-      @HomePlace final Content homePlace) {
+      @RootResource final Entry homePlace) {
     PlaceHistoryHandler placeHistoryHandler = new PlaceHistoryHandler(historyMapper);
     placeHistoryHandler.register(placeController, eventBus, homePlace);
     return placeHistoryHandler;

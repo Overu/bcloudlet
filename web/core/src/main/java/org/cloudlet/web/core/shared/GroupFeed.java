@@ -25,7 +25,7 @@ public class GroupFeed extends PagingFeed<Group> {
   }
 
   @Override
-  public FeedType<GroupFeed, Group> getObjectType() {
+  public FeedType<GroupFeed, Group> getResourceType() {
     return TYPE;
   }
 }

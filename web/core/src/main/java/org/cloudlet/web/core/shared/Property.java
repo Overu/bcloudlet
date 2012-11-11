@@ -5,11 +5,11 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType
 public class Property extends TypedElement {
 
-  private ObjectType declaringType;
+  private ResourceType declaringType;
 
   private boolean containment; // TODO set containment
 
-  public ObjectType getDeclaringType() {
+  public ResourceType getDeclaringType() {
     return declaringType;
   }
 
@@ -21,7 +21,7 @@ public class Property extends TypedElement {
     this.containment = containment;
   }
 
-  public void setDeclaringType(final ObjectType declaringType) {
+  public void setDeclaringType(final ResourceType declaringType) {
     this.declaringType = declaringType;
   }
 

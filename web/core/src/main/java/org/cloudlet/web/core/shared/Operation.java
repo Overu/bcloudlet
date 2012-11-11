@@ -14,11 +14,11 @@ public class Operation extends TypedElement {
 
   private transient Map<String, Parameter> parameters = new LinkedHashMap<String, Parameter>();
 
-  private ObjectType declaringType;
+  private ResourceType declaringType;
 
   private transient String qualifiedName;
 
-  public ObjectType getDeclaringType() {
+  public ResourceType getDeclaringType() {
     return declaringType;
   }
 
@@ -44,13 +44,13 @@ public class Operation extends TypedElement {
 
   public String getQualifiedName() {
     if (qualifiedName == null) {
-      ObjectType type = getDeclaringType();
+      ResourceType type = getDeclaringType();
       qualifiedName = type.getQualifiedName() + "." + getName();
     }
     return qualifiedName;
   }
 
-  public void setDeclaringType(ObjectType containingType) {
+  public void setDeclaringType(ResourceType containingType) {
     this.declaringType = containingType;
   }
 

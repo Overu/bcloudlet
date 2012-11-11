@@ -6,7 +6,7 @@ import com.google.inject.Singleton;
 public class CorePackage extends Package {
 
   public CorePackage() {
-    addContentTypes(Content.TYPE, Entry.TYPE, User.TYPE, Group.TYPE, Member.TYPE, Repository.TYPE,
+    addContentTypes(Resource.TYPE, Entry.TYPE, User.TYPE, Group.TYPE, Member.TYPE, Repository.TYPE,
         CoreRepository.TYPE, UserFeed.TYPE, GroupFeed.TYPE);
   }
 

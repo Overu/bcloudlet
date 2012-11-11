@@ -22,7 +22,7 @@ public abstract class PagingFeed<E extends Entry> extends Feed<E> {
   protected int limit;
 
   @Override
-  public FeedType getObjectType() {
+  public FeedType getResourceType() {
     return TYPE;
   }
 

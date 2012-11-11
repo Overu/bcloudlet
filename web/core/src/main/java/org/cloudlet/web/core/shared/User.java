@@ -1,6 +1,5 @@
 package org.cloudlet.web.core.shared;
 
-
 import java.security.Principal;
 
 import javax.persistence.Entity;
@@ -39,13 +38,13 @@ public class User extends Entry implements Principal {
     return name;
   }
 
-  @Override
-  public EntryType getObjectType() {
-    return TYPE;
-  }
-
   public String getPhone() {
     return phone;
+  }
+
+  @Override
+  public EntryType getResourceType() {
+    return TYPE;
   }
 
   public String getState() {
@@ -57,7 +56,7 @@ public class User extends Entry implements Principal {
   }
 
   @Override
-  public void readFrom(Content delta) {
+  public void readFrom(Resource delta) {
     super.readFrom(delta);
     readFrom((User) delta);
   }
