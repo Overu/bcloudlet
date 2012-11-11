@@ -28,6 +28,10 @@ public abstract class Feed<E extends Entry> extends Content {
   @Transient
   protected Long queryCount;
 
+  public static final String POST_WIDGET = "?post";
+
+  public static final String LIST_WIDGET = "?list";
+
   @POST
   @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
   @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})

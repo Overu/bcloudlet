@@ -6,7 +6,7 @@ import com.google.web.bindery.requestfactory.shared.RequestFactory;
 
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
-import org.cloudlet.web.core.shared.View;
+import org.cloudlet.web.core.shared.Feed;
 
 public class UserModify extends AbstractUserFieldView {
 
@@ -35,7 +35,7 @@ public class UserModify extends AbstractUserFieldView {
         "Content-Type", RequestFactory.JSON_CONTENT_TYPE_UTF8, new Responsecallback() {
           @Override
           public void completed(final String text) {
-            placeManager.goTo(place.getParent().getParent(), View.HOME);
+            placeManager.goTo(place.getParent().getParent(), Feed.LIST_WIDGET);
           }
         });
   }

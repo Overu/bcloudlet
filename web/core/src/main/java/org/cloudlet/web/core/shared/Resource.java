@@ -68,7 +68,7 @@ public abstract class Resource extends Place {
 
   @Type(type = "content")
   @Columns(columns = {@Column(name = "parentType"), @Column(name = "parentId")})
-  private Content parent;
+  protected Content parent;
 
   @Transient
   private transient Object nativeData;
@@ -132,7 +132,10 @@ public abstract class Resource extends Place {
       return new StringBuilder("/");
     }
     StringBuilder builder = parent.getUriBuilder();
-    builder.append(path).append("/");
+    if (builder.length() > 1) {
+      builder.append("/");
+    }
+    builder.append(path);
     return builder;
   }
 

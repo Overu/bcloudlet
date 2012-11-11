@@ -26,7 +26,6 @@ import org.cloudlet.web.core.shared.RootResource;
 import org.cloudlet.web.core.shared.View;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class PlaceTree extends BorderLayoutContainer {
@@ -51,10 +50,8 @@ public class PlaceTree extends BorderLayoutContainer {
           content.getCache().put(child.getPath(), child);
           result.add(child);
         }
-        return result;
-      } else {
-        return Collections.EMPTY_LIST;
       }
+      return result;
     }
   }
 

@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType
 public class ContentType<T extends Content> extends ResourceType<T> {
 
-  private transient Map<String, Object> widgets = new HashMap<String, Object>();
+  private Map<String, Object> widgets = new HashMap<String, Object>();
 
   public ContentType(ResourceType superType, String name) {
     super(superType, name);
@@ -36,4 +36,5 @@ public class ContentType<T extends Content> extends ResourceType<T> {
   public void setWidget(String key, Object widget) {
     widgets.put(key, widget);
   }
+
 }

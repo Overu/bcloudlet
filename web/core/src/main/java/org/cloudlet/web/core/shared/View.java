@@ -10,9 +10,6 @@ import javax.xml.bind.annotation.XmlType;
 public class View extends Resource {
 
   public static final ResourceType TYPE = new ResourceType(Resource.TYPE, "view");
-  public static final String CONTENT = "/";
-  public static final String HOME = "?";
-  public static final String POST = "?post";
 
   @Override
   public ResourceType getResourceType() {
@@ -22,7 +19,7 @@ public class View extends Resource {
   @Override
   public StringBuilder getUriBuilder() {
     StringBuilder result = getParent().getUriBuilder();
-    result.append(path);
+    result.append(getWidgetKey());
     return result;
   }
 

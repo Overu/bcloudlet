@@ -42,11 +42,15 @@ public abstract class Content extends Resource {
   @Transient
   private List<View> remoteViews;
 
+  public static final String HOME_WIDGET = "/";
+
   public Resource findChild(final String uriWithQueryString) {
     int index = uriWithQueryString.indexOf("?");
-    String uri = index > 0 ? uriWithQueryString.substring(0, index) : uriWithQueryString;
+    String uri = index >= 0 ? uriWithQueryString.substring(0, index) : uriWithQueryString;
     String[] segments = uri.split("/");
-    String queryStr = index >= 0 ? uriWithQueryString.substring(index) : null;
+    String queryStr =
+        index >= 0 ? uriWithQueryString.substring(index) : uriWithQueryString.endsWith("/") ? "/"
+            : null;
 
     Resource result = null;
     Content parent = this;
@@ -105,20 +109,19 @@ public abstract class Content extends Resource {
   }
 
   @XmlTransient
-  public View getHomeView() {
-    return getView(View.HOME);
-  }
-
-  @XmlTransient
   public Map<String, View> getLocalViews() {
     if (localViews == null) {
       localViews = new HashMap<String, View>();
       for (String key : getResourceType().getWidgetKeys()) {
+        if (key.endsWith(Content.HOME_WIDGET)) {
+          continue;
+        }
         Object widget = getResourceType().getWidget(key);
         if (widget != null) {
           View view = new View();
           view.setParent(this);
           view.setWidgetKey(key);
+          view.setTitle(key);
           localViews.put(key, view);
         }
       }
@@ -150,7 +153,7 @@ public abstract class Content extends Resource {
 
   @Override
   public String getWidgetKey() {
-    return View.CONTENT;
+    return HOME_WIDGET;
   }
 
   public void setChildrenCount(long totalResults) {

@@ -30,6 +30,7 @@ import org.cloudlet.web.core.client.style.BaseResources;
 import org.cloudlet.web.core.shared.Content;
 import org.cloudlet.web.core.shared.CorePackage;
 import org.cloudlet.web.core.shared.Entry;
+import org.cloudlet.web.core.shared.Feed;
 import org.cloudlet.web.core.shared.Repository;
 import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.ResourceManager;
@@ -38,7 +39,6 @@ import org.cloudlet.web.core.shared.ResourceType;
 import org.cloudlet.web.core.shared.RootResource;
 import org.cloudlet.web.core.shared.User;
 import org.cloudlet.web.core.shared.UserFeed;
-import org.cloudlet.web.core.shared.View;
 import org.cloudlet.web.core.shared.WebPlatform;
 import org.cloudlet.web.core.shared.WebView;
 
@@ -137,11 +137,11 @@ public class CoreClientModule extends AbstractGinModule {
     }
 
     private void start() {
-      Repository.TYPE.setWidget(View.CONTENT, repositoryExplorer);
+      Repository.TYPE.setWidget(Content.HOME_WIDGET, repositoryExplorer);
 
-      UserFeed.TYPE.setWidget(View.HOME, userGrid);
-      UserFeed.TYPE.setWidget(View.POST, userForm);
-      User.TYPE.setWidget(View.HOME, userModify);
+      UserFeed.TYPE.setWidget(Feed.LIST_WIDGET, userGrid);
+      UserFeed.TYPE.setWidget(Feed.POST_WIDGET, userForm);
+      User.TYPE.setWidget(Content.HOME_WIDGET, userModify);
 
       BaseResources.INSTANCE();
       main = new SimplePanel();

@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlType(name = "coreRepository")
-@Path("/")
+@Path("")
 @Entity
 @Handler(RepositoryService.class)
 public class CoreRepository extends Repository {
