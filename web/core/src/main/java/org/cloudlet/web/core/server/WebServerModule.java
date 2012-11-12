@@ -9,6 +9,7 @@ import com.google.inject.persist.finder.Finder;
 import com.google.inject.persist.jpa.JpaPersistModule;
 
 import org.aopalliance.intercept.MethodInterceptor;
+import org.cloudlet.web.core.shared.BookFeed;
 import org.cloudlet.web.core.shared.CorePackage;
 import org.cloudlet.web.core.shared.GroupFeed;
 import org.cloudlet.web.core.shared.Repository;
@@ -33,6 +34,7 @@ public class WebServerModule extends AbstractModule {
     bind(Repository.class).toProvider(RepositoryServiceImpl.class);
     bind(UserFeed.class).toProvider(UserFeedServiceImpl.class);
     bind(GroupFeed.class).toProvider(GroupFeedServiceImpl.class);
+    bind(BookFeed.class).toProvider(BookFeedServiceImpl.class);
 
     MethodInterceptor finderInterceptor = new JpaFinderProxy();
     requestInjection(finderInterceptor);
