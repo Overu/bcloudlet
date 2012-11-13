@@ -1,6 +1,5 @@
 package org.cloudlet.web.core.shared;
 
-
 import java.util.logging.Logger;
 
 import javax.persistence.Entity;
@@ -9,13 +8,17 @@ import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement
+@XmlRootElement(name = Member.TYPE_NAME)
+@XmlType(name = Member.TYPE_NAME)
 @Entity
 @Table(name = "t_member")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Handler(MemberService.class)
 public class Member extends Entry {
+
+  public static final String TYPE_NAME = "Member";
 
   public static EntryType<Member> TYPE = new EntryType<Member>(Entry.TYPE, "member") {
     @Override

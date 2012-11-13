@@ -2,19 +2,6 @@ package org.cloudlet.web.core.shared;
 
 import com.google.inject.Inject;
 
-import org.cloudlet.web.core.server.CoreResourceConfig;
-import org.cloudlet.web.core.shared.Group;
-import org.cloudlet.web.core.shared.GroupFeed;
-import org.cloudlet.web.core.shared.GroupRole;
-import org.cloudlet.web.core.shared.Member;
-import org.cloudlet.web.core.shared.MemberFeed;
-import org.cloudlet.web.core.shared.Repository;
-import org.cloudlet.web.core.shared.User;
-import org.cloudlet.web.core.shared.UserFeed;
-import org.cloudlet.web.core.shared.UserMember;
-import org.cloudlet.web.test.WebTest;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.TestProperties;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -25,10 +12,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-public class JAXBTest extends WebTest {
-
-  @Inject
-  CoreResourceConfig config;
+public class JAXBTest extends CoreTest {
 
   @Inject
   Repository repo;
@@ -83,12 +67,6 @@ public class JAXBTest extends WebTest {
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     marshaller.marshal(members, os);
     System.out.println(os.toString());
-  }
-
-  @Override
-  protected ResourceConfig configure() {
-    enable(TestProperties.LOG_TRAFFIC);
-    return config;
   }
 
 }

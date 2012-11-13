@@ -12,6 +12,7 @@ public class CorePackage extends Package {
     addResourceType(Resource.TYPE, Entry.TYPE, Content.TYPE, Repository.TYPE);
     addResourceType(User.TYPE, Group.TYPE, Member.TYPE, UserFeed.TYPE, GroupFeed.TYPE,
         MemberFeed.TYPE);
+    addResourceType(Book.TYPE, BookFeed.TYPE, Section.TYPE);
     init();
   }
 

@@ -40,7 +40,7 @@ public class PlaceTree extends BorderLayoutContainer {
       List<Resource> result = new ArrayList<Resource>();
       Content content = (Content) parent;
       result.addAll(content.getAllViews().values());
-      JSONValue c = root.get(Entry.RELATIONSHIPS);
+      JSONValue c = root.get(Entry.CHILDREN);
       if (c != null) {
         JSONArray children = c.isArray();
         for (int i = 0; i < children.size(); i++) {

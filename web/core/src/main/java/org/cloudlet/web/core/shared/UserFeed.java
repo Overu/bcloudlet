@@ -2,8 +2,10 @@ package org.cloudlet.web.core.shared;
 
 import javax.persistence.Entity;
 import javax.ws.rs.Path;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+@XmlRootElement(name = UserFeed.TYPE_NAME)
 @XmlType(name = UserFeed.TYPE_NAME)
 @Entity
 @Handler(UserFeedService.class)

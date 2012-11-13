@@ -2,8 +2,10 @@ package org.cloudlet.web.core.shared;
 
 import javax.persistence.Entity;
 import javax.ws.rs.Path;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+@XmlRootElement(name = BookFeed.TYPE_NAME)
 @XmlType(name = BookFeed.TYPE_NAME)
 @Entity
 @Handler(GroupFeedService.class)
@@ -13,8 +15,9 @@ public class BookFeed extends PagingFeed<Book> {
 
   public static final String TYPE_NAME = "BookFeed";
 
-  public static FeedType<BookFeed, Book> TYPE = new FeedType<BookFeed, Book>(PagingFeed.TYPE,
+  public static FeedType<BookFeed, Book> TYPE = new FeedType<BookFeed, Book>(BookFeed.TYPE,
       TYPE_NAME, Book.TYPE) {
+
     @Override
     public BookFeed createInstance() {
       return new BookFeed();

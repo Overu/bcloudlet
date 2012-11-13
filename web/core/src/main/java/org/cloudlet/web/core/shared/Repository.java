@@ -4,10 +4,10 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.ws.rs.Path;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
 
-@XmlType(name = Repository.TYPE_NAME)
+@XmlRootElement(name = Repository.TYPE_NAME)
 @Path("/")
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)

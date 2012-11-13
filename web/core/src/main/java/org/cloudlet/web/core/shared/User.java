@@ -4,8 +4,10 @@ import java.security.Principal;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+@XmlRootElement(name = User.TYPE_NAME)
 @XmlType(name = User.TYPE_NAME)
 @Entity
 @Table(name = "t_user")

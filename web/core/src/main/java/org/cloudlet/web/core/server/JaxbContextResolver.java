@@ -1,5 +1,8 @@
 package org.cloudlet.web.core.server;
 
+import org.apache.shiro.config.Ini.Section;
+import org.cloudlet.web.core.shared.Book;
+import org.cloudlet.web.core.shared.BookFeed;
 import org.cloudlet.web.core.shared.DataGraph;
 import org.cloudlet.web.core.shared.Feed;
 import org.cloudlet.web.core.shared.Group;
@@ -32,7 +35,8 @@ public final class JaxbContextResolver implements ContextResolver<JAXBContext> {
     this.context =
         new JettisonJaxbContext(JettisonConfiguration.mappedJettison().xml2JsonNs(jsonXml2JsonNs)
             .build(), Feed.class, UserFeed.class, GroupFeed.class, User.class, Group.class,
-            MemberFeed.class, UserMember.class, GroupMember.class, Repository.class, DataGraph.class);
+            MemberFeed.class, UserMember.class, GroupMember.class, Repository.class,
+            DataGraph.class, BookFeed.class, Book.class, Section.class);
   }
 
   @Override

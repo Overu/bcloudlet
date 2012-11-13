@@ -46,6 +46,8 @@ public abstract class Resource extends Place {
 
   public static final String PATH = "path";
 
+  public static final String URI = "uri";
+
   public static final String VERSION = "version";
 
   protected String title;
@@ -156,7 +158,7 @@ public abstract class Resource extends Place {
   public abstract String getWidgetKey();
 
   @GET
-  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml"})
   public DataGraph<Resource> load() {
     doLoad();
     DataGraph<Resource> data = new DataGraph<Resource>();

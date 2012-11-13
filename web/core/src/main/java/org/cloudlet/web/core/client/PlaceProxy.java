@@ -32,7 +32,7 @@ public class PlaceProxy implements DataProxy<Resource, String> {
       String data = null;
       final StringBuilder url =
           loadConfig == null ? place.getUriBuilder() : loadConfig.getUriBuilder();
-      url.append("?" + Entry.RELATIONSHIPS + "=true");
+      url.append("?" + Entry.CHILDREN + "=true");
       url.insert(0, "api");
       RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url.toString());
       builder.setHeader("Accept", "application/json");

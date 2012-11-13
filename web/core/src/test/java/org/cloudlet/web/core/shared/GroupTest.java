@@ -4,17 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import com.google.inject.Inject;
 
-import org.cloudlet.web.core.server.CoreResourceConfig;
-import org.cloudlet.web.core.shared.DataGraph;
-import org.cloudlet.web.core.shared.Group;
-import org.cloudlet.web.core.shared.GroupFeed;
-import org.cloudlet.web.core.shared.Repository;
-import org.cloudlet.web.core.shared.User;
-import org.cloudlet.web.core.shared.UserFeed;
-import org.cloudlet.web.core.shared.View;
-import org.cloudlet.web.test.WebTest;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.TestProperties;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -24,10 +13,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-public class GroupServiceTest extends WebTest {
-
-  @Inject
-  CoreResourceConfig config;
+public class GroupTest extends CoreTest {
 
   @Inject
   Repository repo;
@@ -60,22 +46,16 @@ public class GroupServiceTest extends WebTest {
     users.load();
     assertEquals(total + 1, users.getChildrenCount());
 
-    repo.loadRelationships();
-    DataGraph dg = repo.load();
+    repo.laodChildren();
+    repo.load();
 
     JAXBContext jc =
         JAXBContext.newInstance(Repository.class, DataGraph.class, GroupFeed.class, UserFeed.class,
             User.class, View.class);
     Marshaller marshaller = jc.createMarshaller();
     ByteArrayOutputStream os = new ByteArrayOutputStream();
-    marshaller.marshal(dg, os);
+    marshaller.marshal(repo, os);
     System.out.println(os.toString());
-  }
-
-  @Override
-  protected ResourceConfig configure() {
-    enable(TestProperties.LOG_TRAFFIC);
-    return config;
   }
 
 }

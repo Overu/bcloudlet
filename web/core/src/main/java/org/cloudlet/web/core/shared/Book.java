@@ -1,19 +1,29 @@
 package org.cloudlet.web.core.shared;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.ws.rs.Path;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+@XmlRootElement(name = Book.TYPE_NAME)
 @XmlType(name = Book.TYPE_NAME)
 @Entity
 @Table(name = "book")
-@Handler(GroupService.class)
+@Handler(BookService.class)
 @Path("book")
-@DefaultField(key = "title", value = "用户组")
+@DefaultField(key = "title", value = "图书")
 public class Book extends Entry {
+
   public static final String TYPE_NAME = "Book";
+
+  public static final String SECTIONS = "sections";
+
+  @Transient
+  private List<Section> sections;
 
   public static EntryType TYPE = new EntryType(Entry.TYPE, TYPE_NAME) {
     @Override
@@ -27,11 +37,11 @@ public class Book extends Entry {
     return TYPE;
   }
 
-  @Path("sections")
-  @DefaultField(key = "title", value = "用户组")
-  @XmlTransient
-  public SectionFeed getSections() {
-    return (SectionFeed) getRelationship("sections");
+  public List<Section> getSections() {
+    if (sections == null) {
+      sections = getChildren(Section.class);
+    }
+    return sections;
   }
 
 }

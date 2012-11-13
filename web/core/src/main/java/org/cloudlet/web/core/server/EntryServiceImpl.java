@@ -23,7 +23,7 @@ import javax.ws.rs.Path;
 public class EntryServiceImpl<E extends Entry> extends ServiceImpl<E> implements EntryService<E> {
 
   @Override
-  public long countRelationships(E entry) {
+  public long countChildren(E entry) {
     TypedQuery<Long> query =
         em().createQuery(
             "select count(o) from " + Relationship.class.getName() + " as o where o.source=:source",
@@ -34,9 +34,9 @@ public class EntryServiceImpl<E extends Entry> extends ServiceImpl<E> implements
 
   @Override
   @Transactional
-  public <C extends Resource> C createRelationship(E entry, C child) {
+  public <C extends Resource> C createChild(E entry, C child) {
     // check if child path conflicts
-    if (child.getPath() != null && getRelationship(entry, child.getPath()) != null) {
+    if (child.getPath() != null && getChild(entry, child.getPath()) != null) {
       throw new EntityExistsException("A child of " + entry + " with path=" + child.getPath()
           + " already exists");
     }
@@ -58,7 +58,7 @@ public class EntryServiceImpl<E extends Entry> extends ServiceImpl<E> implements
   }
 
   @Override
-  public <C extends Resource> C findRelationship(E entry, String path, Class<C> childType) {
+  public <C extends Resource> C findChild(E entry, String path, Class<C> childType) {
     try {
       TypedQuery<C> query =
           em().createQuery(
@@ -73,7 +73,7 @@ public class EntryServiceImpl<E extends Entry> extends ServiceImpl<E> implements
   }
 
   @Override
-  public java.util.List<Resource> findRelationships(E entry) {
+  public java.util.List<Resource> findChildren(E entry) {
     TypedQuery<Relationship> query =
         em().createQuery("from " + Relationship.class.getName() + " rel where rel.source=:source",
             Relationship.class);
@@ -87,7 +87,15 @@ public class EntryServiceImpl<E extends Entry> extends ServiceImpl<E> implements
   }
 
   @Override
-  public Resource getRelationship(E entry, String path) {
+  public <C extends Resource> List<C> findChildren(E entry, Class<C> childType) {
+    TypedQuery<C> query =
+        em().createQuery("from " + childType.getName() + " c where c.parent=:parent", childType);
+    query.setParameter("parent", entry);
+    return query.getResultList();
+  }
+
+  @Override
+  public Resource getChild(E entry, String path) {
     try {
       TypedQuery<Relationship> query =
           em().createQuery(
@@ -126,7 +134,7 @@ public class EntryServiceImpl<E extends Entry> extends ServiceImpl<E> implements
             result.setProperty(field.key(), field.value());
           }
         }
-        entry.createRelationship(result);
+        entry.createChild(result);
       }
     }
     return entry;

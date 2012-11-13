@@ -24,32 +24,46 @@ public abstract class Entry extends Content {
 
   public static EntryType<Entry> TYPE = new EntryType<Entry>(Content.TYPE, TYPE_NAME);
 
-  public static final String RELATIONSHIPS = "relationships";
+  public static final String CHILDREN = "children";
 
   @Transient
-  private List<Resource> relationships;
+  private List<Resource> children;
 
   @Transient
-  @QueryParam(RELATIONSHIPS)
-  protected boolean loadRelationships;
+  @QueryParam(CHILDREN)
+  protected boolean loadChildren;
 
   @POST
   @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
   @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
   public DataGraph<Resource> create(DataGraph<Resource> data) {
-    data.root = createRelationship(data.root);
+    data.root = createChild(data.root);
     return data;
   }
 
-  public Resource createRelationship(Resource child) {
-    return getService().createRelationship(this, child);
+  public Resource createChild(Resource child) {
+    return getService().createChild(this, child);
   }
 
   @Path("{path}")
-  public <T extends Resource> T getRelationship(@PathParam("path") String path) {
+  public <T extends Resource> T getChild(@PathParam("path") String path) {
     Resource result = getCache().get(path);
     if (result == null && !GWT.isClient()) {
-      result = getService().getRelationship(this, path);
+      result = getService().getChild(this, path);
+      if (result != null) {
+        getCache().put(path, result);
+      }
+    }
+    if (result != null && resourceContext != null) {
+      resourceContext.initResource(result);
+    }
+    return (T) result;
+  }
+
+  public <T extends Resource> T getChild(String path, Class<T> childType) {
+    Resource result = getCache().get(path);
+    if (result == null && !GWT.isClient()) {
+      result = getService().findChild(this, path, childType);
       if (result != null) {
         getCache().put(path, result);
       }
@@ -61,8 +75,12 @@ public abstract class Entry extends Content {
   }
 
   @XmlElement
-  public List<Resource> getRelationships() {
-    return relationships;
+  public List<Resource> getChildren() {
+    return children;
+  }
+
+  public <T extends Resource> List<T> getChildren(Class<T> childType) {
+    return getService().findChildren(this, childType);
   }
 
   @Override
@@ -75,15 +93,15 @@ public abstract class Entry extends Content {
     return (EntryService) super.getService();
   }
 
-  public void loadRelationships() {
-    relationships = getService().findRelationships(this);
+  public void laodChildren() {
+    children = getService().findChildren(this);
   }
 
   @Override
   protected void doLoad() {
     super.doLoad();
-    if (loadRelationships) {
-      loadRelationships();
+    if (loadChildren) {
+      laodChildren();
     }
   }
 }

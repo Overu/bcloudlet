@@ -1,18 +1,19 @@
 package org.cloudlet.web.core.shared;
 
-
 import java.util.List;
 
 public interface EntryService<E extends Entry> extends Service<E> {
 
-  long countRelationships(E entry);
+  long countChildren(E entry);
 
-  <C extends Resource> C createRelationship(E entry, C child);
+  <C extends Resource> C createChild(E entry, C child);
 
-  Resource getRelationship(E content, String path);
+  <C extends Resource> C findChild(E entry, String path, Class<C> childType);
 
-  <C extends Resource> C findRelationship(E entry, String path, Class<C> childType);
+  List<Resource> findChildren(E entry);
 
-  List<Resource> findRelationships(E entry);
+  <C extends Resource> List<C> findChildren(E entry, Class<C> childType);
+
+  Resource getChild(E content, String path);
 
 }

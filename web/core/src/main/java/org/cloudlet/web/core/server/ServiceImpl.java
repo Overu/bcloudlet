@@ -51,7 +51,7 @@ public class ServiceImpl<T extends Resource> implements Service<T> {
     Repository repo = WebPlatform.getInstance().getRepository();
     Path p = resourceClass.getAnnotation(Path.class);
     String path = p.value();
-    T result = repo.getRelationship(path);
+    T result = repo.getChild(path);
     if (result == null) {
       result = ClassUtil.newInstance(resourceClass);
       result.setPath(path);
@@ -62,7 +62,7 @@ public class ServiceImpl<T extends Resource> implements Service<T> {
       if (result.getTitle() == null) {
         result.setTitle(path);
       }
-      repo.createRelationship(result);
+      repo.createChild(result);
     }
     return result;
   }

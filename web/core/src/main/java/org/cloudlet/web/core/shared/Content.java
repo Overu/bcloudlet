@@ -22,6 +22,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = Content.TYPE_NAME)
 public abstract class Content extends Resource {
 
+  @SuppressWarnings("hiding")
   public static final String TYPE_NAME = "Content";
 
   private static final Logger logger = Logger.getLogger(Content.class.getName());
@@ -46,6 +47,10 @@ public abstract class Content extends Resource {
 
   public static final String HOME_WIDGET = "/";
 
+  private String html;
+
+  public static final String HTML = "html";
+
   public Resource findChild(final String uriWithQueryString) {
     int index = uriWithQueryString.indexOf("?");
     String uri = index >= 0 ? uriWithQueryString.substring(0, index) : uriWithQueryString;
@@ -62,7 +67,7 @@ public abstract class Content extends Resource {
       }
       Content child = null;
       if (parent instanceof Entry) {
-        child = ((Entry) parent).getRelationship(path);
+        child = ((Entry) parent).getChild(path);
       } else if (parent instanceof Feed) {
         child = ((Feed) parent).getEntry(path);
       }
@@ -108,6 +113,10 @@ public abstract class Content extends Resource {
 
   public long getChildrenCount() {
     return childrenCount;
+  }
+
+  public String getHtml() {
+    return html;
   }
 
   @XmlTransient
@@ -160,6 +169,10 @@ public abstract class Content extends Resource {
 
   public void setChildrenCount(long totalResults) {
     this.childrenCount = totalResults;
+  }
+
+  public void setHtml(String html) {
+    this.html = html;
   }
 
   @Override
