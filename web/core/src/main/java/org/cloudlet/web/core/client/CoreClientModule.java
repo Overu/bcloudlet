@@ -26,6 +26,7 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import org.cloudlet.web.core.client.ExtendsRequestBuilder.Callback;
 import org.cloudlet.web.core.client.style.BaseResources;
 import org.cloudlet.web.core.shared.Content;
 import org.cloudlet.web.core.shared.CorePackage;
@@ -92,16 +93,28 @@ public class CoreClientModule extends AbstractGinModule {
     public void onPlaceChange(final PlaceChangeEvent event) {
       Resource resource = (Resource) event.getNewPlace();
       if (resource instanceof ResourceProxy) {
-        loadResource((ResourceProxy) resource, new AsyncCallback<Resource>() {
-          @Override
-          public void onFailure(Throwable caught) {
-          }
-
-          @Override
-          public void onSuccess(Resource result) {
-            render(result, main);
-          }
-        });
+        final StringBuilder url = new StringBuilder("api").append(resource.getUri());
+        try {
+          ExtendsRequestBuilder.get(RequestBuilder.GET, resource, url.toString()).bindHeader(
+              "Accept", "application/json").bindCallback(new Callback<Resource>() {
+            @Override
+            public void onSuccess(Resource resource) {
+              render(resource, main);
+            }
+          }).send();
+        } catch (RequestException e) {
+          e.printStackTrace();
+        }
+        // loadResource((ResourceProxy) resource, new AsyncCallback<Resource>() {
+        // @Override
+        // public void onFailure(Throwable caught) {
+        // }
+        //
+        // @Override
+        // public void onSuccess(Resource result) {
+        // render(result, main);
+        // }
+        // });
       } else {
         render(resource, main);
       }
@@ -345,8 +358,7 @@ public class CoreClientModule extends AbstractGinModule {
   @Provides
   @Singleton
   PlaceHistoryHandler placeHistoryHandlerProvider(final PlaceHistoryMapper historyMapper,
-      final PlaceController placeController, final EventBus eventBus,
-      @Root final Entry homePlace) {
+      final PlaceController placeController, final EventBus eventBus, @Root final Entry homePlace) {
     PlaceHistoryHandler placeHistoryHandler = new PlaceHistoryHandler(historyMapper);
     placeHistoryHandler.register(placeController, eventBus, homePlace);
     return placeHistoryHandler;
