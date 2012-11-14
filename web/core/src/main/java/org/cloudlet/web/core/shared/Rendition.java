@@ -16,11 +16,6 @@ public class Rendition extends Resource {
   public static final ResourceType TYPE = new ResourceType(Resource.TYPE, TYPE_NAME);
 
   @Override
-  public String getRenditionKind() {
-    return path;
-  }
-
-  @Override
   public ResourceType getResourceType() {
     return TYPE;
   }
@@ -28,7 +23,7 @@ public class Rendition extends Resource {
   @Override
   public Object getWidget() {
     if (widget == null) {
-      widget = getParent().getResourceType().getWidget(getRenditionKind());
+      widget = getParent().getResourceType().getWidget(getPath());
     }
     return widget;
   }

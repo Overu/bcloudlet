@@ -86,7 +86,7 @@ public abstract class Content extends Resource {
       allRenditions.putAll(getLocalRenditions());
       if (remoteRenditions != null) {
         for (Rendition v : remoteRenditions) {
-          allRenditions.put(v.getRenditionKind(), v);
+          allRenditions.put(v.getPath(), v);
         }
       }
     }
@@ -139,11 +139,6 @@ public abstract class Content extends Resource {
   }
 
   @Override
-  public String getRenditionKind() {
-    return HOME_WIDGET;
-  }
-
-  @Override
   public ContentType<?> getResourceType() {
     return TYPE;
   }
@@ -151,7 +146,7 @@ public abstract class Content extends Resource {
   @Override
   public Object getWidget() {
     if (widget == null) {
-      widget = getResourceType().getWidget(getRenditionKind());
+      widget = getResourceType().getWidget(HOME_WIDGET);
     }
     return widget;
   }

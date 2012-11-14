@@ -29,26 +29,11 @@ public class ResourceProxy extends Resource {
     return realResource;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.cloudlet.web.core.shared.Resource#getUriBuilder()
-   */
   @Override
   public StringBuilder getUriBuilder() {
     StringBuilder builder = getParent().getUriBuilder();
     builder.append(path);
     return builder;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.cloudlet.web.core.shared.Resource#getWidgetId()
-   */
-  @Override
-  public String getRenditionKind() {
-    return realResource.getRenditionKind();
   }
 
   /**
