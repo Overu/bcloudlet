@@ -47,8 +47,8 @@ public class ResourceProxy extends Resource {
    * @see org.cloudlet.web.core.shared.Resource#getWidgetId()
    */
   @Override
-  public String getWidgetKey() {
-    return realResource.getWidgetKey();
+  public String getRenditionKind() {
+    return realResource.getRenditionKind();
   }
 
   /**

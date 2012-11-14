@@ -23,7 +23,7 @@ import org.cloudlet.web.core.shared.Entry;
 import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.ResourceManager;
 import org.cloudlet.web.core.shared.Root;
-import org.cloudlet.web.core.shared.View;
+import org.cloudlet.web.core.shared.Rendition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public class PlaceTree extends BorderLayoutContainer {
       JSONObject root = dg.get("dataGraph").isObject().get("root").isObject();
       List<Resource> result = new ArrayList<Resource>();
       Content content = (Content) parent;
-      result.addAll(content.getAllViews().values());
+      result.addAll(content.getAllRenditions().values());
       JSONValue c = root.get(Entry.CHILDREN);
       if (c != null) {
         JSONArray children = c.isArray();
@@ -78,11 +78,11 @@ public class PlaceTree extends BorderLayoutContainer {
     final TreeLoader<Resource> loader = new TreeLoader<Resource>(jsonProxy, reader) {
       @Override
       public boolean hasChildren(final Resource parent) {
-        if (parent instanceof View) {
+        if (parent instanceof Rendition) {
           return false;
         }
         Content content = (Content) parent;
-        if (!content.getAllViews().isEmpty()) { // show view links on navigation menu
+        if (!content.getAllRenditions().isEmpty()) { // show view links on navigation menu
           return true;
         }
         if (content instanceof Entry) {

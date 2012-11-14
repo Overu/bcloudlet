@@ -1,3 +1,3 @@
-//@XmlSchema(namespace = "http://cloudlet.org")
+// @XmlSchema(namespace = "http://cloudlet.org")
 package org.cloudlet.web.core.shared;
 

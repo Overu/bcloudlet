@@ -8,10 +8,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement(name = Repository.TYPE_NAME)
-@Path("/")
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Handler(RepositoryService.class)
+@Path("/")
 public final class Repository extends Entry {
 
   public static final String TYPE_NAME = "Repository";

@@ -155,7 +155,7 @@ public abstract class Resource extends Place {
   }
 
   @XmlTransient
-  public abstract String getWidgetKey();
+  public abstract String getRenditionKind();
 
   @GET
   @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml"})
