@@ -7,6 +7,8 @@ public class CorePackage extends Package {
 
   public static final String NAME = "org.cloudlet.web.core.shared";
 
+  public static final String PREFIX = "core";
+
   public CorePackage() {
     setName(NAME);
     addResourceType(Resource.TYPE, Entry.TYPE, Content.TYPE, Repository.TYPE);

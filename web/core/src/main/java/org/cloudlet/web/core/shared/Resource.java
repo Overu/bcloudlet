@@ -154,9 +154,6 @@ public abstract class Resource extends Place {
     return widget;
   }
 
-  @XmlTransient
-  public abstract String getWidgetKey();
-
   @GET
   @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml"})
   public DataGraph<Resource> load() {

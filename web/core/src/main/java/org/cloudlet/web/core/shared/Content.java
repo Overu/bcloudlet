@@ -37,71 +37,60 @@ public abstract class Content extends Resource {
   private Map<String, Resource> cache;
 
   @Transient
-  private Map<String, View> allViews;
+  private Map<String, Rendition> allRenditions;
 
   @Transient
-  private Map<String, View> localViews;
+  private Map<String, Rendition> localRenditions;
 
   @Transient
-  private List<View> remoteViews;
+  private List<Rendition> remoteRenditions;
 
-  public static final String HOME_WIDGET = "/";
+  public static final String HOME_WIDGET = "";
 
   private String html;
 
   public static final String HTML = "html";
 
-  public Resource findChild(final String uriWithQueryString) {
-    int index = uriWithQueryString.indexOf("?");
-    String uri = index >= 0 ? uriWithQueryString.substring(0, index) : uriWithQueryString;
+  public Resource findChild(final String uri) {
     String[] segments = uri.split("/");
-    String queryStr =
-        index >= 0 ? uriWithQueryString.substring(index) : uriWithQueryString.endsWith("/") ? "/"
-            : null;
-
-    Resource result = null;
-    Content parent = this;
+    Resource child = this;
     for (String path : segments) {
       if (path.length() == 0) {
         continue;
       }
-      Content child = null;
-      if (parent instanceof Entry) {
+      Content parent = (Content) child;
+      child = parent.getRendition(path);
+      if (child != null) {
+        return child;
+      } else if (parent instanceof Entry) {
         child = ((Entry) parent).getChild(path);
       } else if (parent instanceof Feed) {
         child = ((Feed) parent).getEntry(path);
       }
-      if (child != null) {
-        parent = child;
-      } else if (GWT.isClient()) {
-        result = new ResourceProxy();
-        result.setParent(parent);
-      }
-    }
-    if (result != null) {
-      result.setPath(uriWithQueryString.substring(parent.getUri().length()));
-    } else if (parent != null) {
-      if (queryStr != null) {
-        result = parent.getView(queryStr);
-      } else {
-        result = parent;
-      }
-    }
-    return result;
-  }
-
-  @XmlTransient
-  public Map<String, View> getAllViews() {
-    if (allViews == null) {
-      allViews = new HashMap<String, View>();
-      allViews.putAll(getLocalViews());
-      if (remoteViews != null) {
-        for (View v : remoteViews) {
-          allViews.put(v.getWidgetKey(), v);
+      if (child == null) {
+        if (GWT.isClient()) {
+          child = new ResourceProxy();
+          child.setParent(parent);
+        } else {
+          break;
         }
       }
     }
-    return allViews;
+    return child;
+  }
+
+  @XmlTransient
+  public Map<String, Rendition> getAllRenditions() {
+    if (allRenditions == null) {
+      allRenditions = new HashMap<String, Rendition>();
+      allRenditions.putAll(getLocalRenditions());
+      if (remoteRenditions != null) {
+        for (Rendition v : remoteRenditions) {
+          allRenditions.put(v.getPath(), v);
+        }
+      }
+    }
+    return allRenditions;
   }
 
   public Map<String, Resource> getCache() {
@@ -120,29 +109,33 @@ public abstract class Content extends Resource {
   }
 
   @XmlTransient
-  public Map<String, View> getLocalViews() {
-    if (localViews == null) {
-      localViews = new HashMap<String, View>();
+  public Map<String, Rendition> getLocalRenditions() {
+    if (localRenditions == null) {
+      localRenditions = new HashMap<String, Rendition>();
       for (String key : getResourceType().getWidgetKeys()) {
-        if (key.endsWith(Content.HOME_WIDGET)) {
+        if (key.equals(Content.HOME_WIDGET)) {
           continue;
         }
         Object widget = getResourceType().getWidget(key);
         if (widget != null) {
-          View view = new View();
+          Rendition view = new Rendition();
           view.setParent(this);
-          view.setWidgetKey(key);
+          view.setPath(key);
           view.setTitle(key);
-          localViews.put(key, view);
+          localRenditions.put(key, view);
         }
       }
     }
-    return localViews;
+    return localRenditions;
   }
 
   @XmlTransient
-  public List<View> getRemoteViews() {
-    return remoteViews;
+  public List<Rendition> getRemoteRenditions() {
+    return remoteRenditions;
+  }
+
+  public Rendition getRendition(String kind) {
+    return getAllRenditions().get(kind);
   }
 
   @Override
@@ -150,21 +143,12 @@ public abstract class Content extends Resource {
     return TYPE;
   }
 
-  public View getView(String widgetId) {
-    return getAllViews().get(widgetId);
-  }
-
   @Override
   public Object getWidget() {
     if (widget == null) {
-      widget = getResourceType().getWidget(getWidgetKey());
+      widget = getResourceType().getWidget(HOME_WIDGET);
     }
     return widget;
-  }
-
-  @Override
-  public String getWidgetKey() {
-    return HOME_WIDGET;
   }
 
   public void setChildrenCount(long totalResults) {
@@ -184,7 +168,7 @@ public abstract class Content extends Resource {
     }
   }
 
-  public void setRemoteViews(List<View> remoteViews) {
-    this.remoteViews = remoteViews;
+  public void setRemoteRenditions(List<Rendition> remoteViews) {
+    this.remoteRenditions = remoteViews;
   }
 }
