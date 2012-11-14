@@ -44,37 +44,31 @@ public abstract class AbstractUserFieldView extends WebView implements IsWidget,
 
   protected Map<String, TextField> textFieldMap;
 
-  protected TextField name;
-  protected TextField email;
-  protected TextField phone;
-  protected TextField state;
-  protected TextField zip;
-
   public AbstractUserFieldView(final String viewName) {
     textFieldMap = new HashMap<String, TextField>();
 
     VerticalLayoutContainer p = new VerticalLayoutContainer();
     p.setLayoutData(new MarginData(8));
 
-    name = new TextField();
+    final TextField name = new TextField();
     name.setAllowBlank(false);
     p.add(new FieldLabel(name, "Name"), new VerticalLayoutData(1, -1));
     textFieldMap.put("name", name);
 
-    email = new TextField();
+    final TextField email = new TextField();
     email.setAllowBlank(false);
     p.add(new FieldLabel(email, "Email"), new VerticalLayoutData(1, -1));
     textFieldMap.put("email", email);
 
-    phone = new TextField();
+    TextField phone = new TextField();
     p.add(new FieldLabel(phone, "Phone"), new VerticalLayoutData(1, -1));
     textFieldMap.put("phone", phone);
 
-    state = new TextField();
+    TextField state = new TextField();
     p.add(new FieldLabel(state, "State"), new VerticalLayoutData(1, -1));
     textFieldMap.put("state", state);
 
-    zip = new TextField();
+    TextField zip = new TextField();
     p.add(new FieldLabel(zip, "Zip"), new VerticalLayoutData(1, -1));
     textFieldMap.put("zip", zip);
 

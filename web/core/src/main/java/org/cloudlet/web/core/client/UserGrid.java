@@ -4,7 +4,6 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
@@ -193,8 +192,7 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
     // RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, path);
     // builder.setHeader("Accept", "application/json");
     HttpProxy<ListLoadConfig> proxy =
-        new HttpProxy<ListLoadConfig>(ExtendsRequestBuilder.get(RequestBuilder.GET, path)
-            .bindHeader("Accept", "application/json"));
+        new HttpProxy<ListLoadConfig>(RequestBuilderBase.GET(path).Accept("application/json"));
 
     final ListLoader<ListLoadConfig, ListLoadResult<JSONObject>> loader =
         new ListLoader<ListLoadConfig, ListLoadResult<JSONObject>>(proxy, reader);
