@@ -75,9 +75,7 @@ public class XmlResourceProvider extends AbstractMessageReaderWriterProvider<Dat
 
   private void writeEntry(XMLStreamWriter writer, Entry entry) throws XMLStreamException {
     writer.writeStartElement(entry.getResourceType().getName());
-    writer.writeAttribute(Resource.TITLE, entry.getTitle());
-    writer.writeAttribute(Resource.PATH, entry.getPath());
-    writer.writeAttribute(Resource.URI, entry.getUri());
+    writeResourceElements(writer, entry);
     if (entry.getHtml() != null) {
       writer.writeCharacters(entry.getHtml());
     }
@@ -92,9 +90,7 @@ public class XmlResourceProvider extends AbstractMessageReaderWriterProvider<Dat
 
   private void writeFeed(XMLStreamWriter writer, Feed<Entry> feed) throws XMLStreamException {
     writer.writeStartElement(feed.getResourceType().getName());
-    writer.writeAttribute(Resource.TITLE, feed.getTitle());
-    writer.writeAttribute(Resource.PATH, feed.getPath());
-    writer.writeAttribute(Resource.URI, feed.getUri());
+    writeResourceElements(writer, feed);
     if (feed.getHtml() != null) {
       writer.writeCharacters(feed.getHtml());
     }
@@ -111,5 +107,14 @@ public class XmlResourceProvider extends AbstractMessageReaderWriterProvider<Dat
     if (resource instanceof Content) {
       writeContent(writer, (Content) resource);
     }
+  }
+
+  private void writeResourceElements(XMLStreamWriter writer, Resource resource)
+      throws XMLStreamException {
+    if (resource.getTitle() != null) {
+      writer.writeAttribute(Resource.TITLE, resource.getTitle());
+    }
+    writer.writeAttribute(Resource.PATH, resource.getPath());
+    writer.writeAttribute(Resource.URI, resource.getUri());
   }
 }
