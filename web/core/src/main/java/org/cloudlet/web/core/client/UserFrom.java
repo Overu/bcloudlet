@@ -18,13 +18,13 @@ public class UserFrom extends AbstractUserFieldView {
   @Override
   protected void selectHandler(final SelectEvent event) {
     try {
-      RequestBuilderBase.POST("api/users").ContentType(RequestFactory.JSON_CONTENT_TYPE_UTF8)
-          .bindRequestData(initJSON(null), User.TYPE_NAME).bindCallback(new Callback<User>() {
-            @Override
-            public void onSuccess(JSONObject json) {
-              placeManager.goTo(place);
-            }
-          }).send();
+      RequestBuilderBase.POST("api/users").requestData(initJSON(null), User.TYPE_NAME).contentType(
+          RequestFactory.JSON_CONTENT_TYPE_UTF8).callback(new Callback<User>() {
+        @Override
+        public void onSuccess(JSONObject json) {
+          placeManager.goTo(place);
+        }
+      }).send();
     } catch (RequestException e) {
       e.printStackTrace();
     }

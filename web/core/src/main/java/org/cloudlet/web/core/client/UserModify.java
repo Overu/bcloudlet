@@ -20,8 +20,8 @@ public class UserModify extends AbstractUserFieldView {
   @Override
   protected void onAttach(final AttachEvent event) {
     try {
-      RequestBuilderBase.GET("api" + placeManager.getWhere().getUri()).Accept(
-          RequestFactory.JSON_CONTENT_TYPE_UTF8).bindCallback(new Callback<User>() {
+      RequestBuilderBase.GET("api" + placeManager.getWhere().getUri()).accept(
+          RequestFactory.JSON_CONTENT_TYPE_UTF8).callback(new Callback<User>() {
         @Override
         public void onSuccess(JSONObject json) {
           initJSON(json);
@@ -35,9 +35,9 @@ public class UserModify extends AbstractUserFieldView {
   @Override
   protected void selectHandler(final SelectEvent event) {
     try {
-      RequestBuilderBase.PUT("api" + placeManager.getWhere().getUri()).ContentType(
-          RequestFactory.JSON_CONTENT_TYPE_UTF8).bindRequestData(initJSON(null), User.TYPE_NAME)
-          .bindCallback(new Callback<User>() {
+      RequestBuilderBase.PUT("api" + placeManager.getWhere().getUri()).requestData(initJSON(null),
+          User.TYPE_NAME).contentType(RequestFactory.JSON_CONTENT_TYPE_UTF8).callback(
+          new Callback<User>() {
             @Override
             public void onSuccess(JSONObject json) {
               placeManager.goTo(place.getParent().getParent(), Feed.LIST_WIDGET);

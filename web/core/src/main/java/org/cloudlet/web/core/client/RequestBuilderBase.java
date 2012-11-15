@@ -55,18 +55,14 @@ public class RequestBuilderBase extends RequestBuilder {
       super(httpMethod, url);
     }
 
-    public RequestMethod bindRequestData(JSONObject json, String objectType) {
+    public RequestMethod requestData(JSONObject json, String objectType) {
       json.put("@xsi.type", new JSONString(objectType));
-      return bindRequestData("{\"dataGraph\":{\"root\":" + json.toString() + "}}");
+      return requestData("{\"dataGraph\":{\"root\":" + json.toString() + "}}");
     }
 
-    public RequestMethod bindRequestData(String requestData) {
+    public RequestMethod requestData(String requestData) {
       super.setRequestData(requestData);
       return this;
-    }
-
-    public RequestMethod ContentType(String value) {
-      return (RequestMethod) super.bindHeader("Content-Type", value);
     }
   }
 
@@ -75,9 +71,6 @@ public class RequestBuilderBase extends RequestBuilder {
       super(httpMethod, url);
     }
 
-    public ResponseMethod Accept(String value) {
-      return (ResponseMethod) super.bindHeader("Accept", value);
-    }
   }
 
   private static Resource place;
@@ -104,7 +97,11 @@ public class RequestBuilderBase extends RequestBuilder {
     super(httpMethod, url);
   }
 
-  public <T extends Resource> RequestBuilderBase bindCallback(final Callback<T> callback) {
+  public RequestBuilderBase accept(String value) {
+    return header("Accept", value);
+  }
+
+  public <T extends Resource> RequestBuilderBase callback(final Callback<T> callback) {
     super.setCallback(new RequestCallback() {
 
       @Override
@@ -135,7 +132,11 @@ public class RequestBuilderBase extends RequestBuilder {
     return this;
   }
 
-  public RequestBuilderBase bindPlace(Resource place) {
+  public RequestBuilderBase contentType(String value) {
+    return header("Content-Type", value);
+  }
+
+  public RequestBuilderBase place(Resource place) {
     this.place = place;
     if (place != null || place instanceof ResourceProxy) {
       placeProxy = (ResourceProxy) place;
@@ -143,7 +144,7 @@ public class RequestBuilderBase extends RequestBuilder {
     return this;
   }
 
-  private RequestBuilderBase bindHeader(String header, String value) {
+  private RequestBuilderBase header(String header, String value) {
     super.setHeader(header, value);
     return this;
   }

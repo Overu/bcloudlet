@@ -95,8 +95,8 @@ public class CoreClientModule extends AbstractGinModule {
       if (resource instanceof ResourceProxy) {
         final StringBuilder url = new StringBuilder("api").append(resource.getUri());
         try {
-          RequestBuilderBase.GET(url.toString()).Accept("application/json").bindPlace(resource)
-              .bindCallback(new Callback<Resource>() {
+          RequestBuilderBase.GET(url.toString()).accept("application/json").place(resource)
+              .callback(new Callback<Resource>() {
                 @Override
                 public void onSuccess(Resource resource) {
                   render(resource, main);
