@@ -6,9 +6,13 @@ import java.util.List;
 
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -29,9 +33,9 @@ public abstract class Entry extends Content {
   @QueryParam(CHILDREN)
   protected boolean loadChildren;
 
-  // @POST
-  // @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  // @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  @POST
+  @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
   public DataGraph<Resource> create(DataGraph<Resource> data) {
     data.root = createChild(data.root);
     return data;

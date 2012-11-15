@@ -19,8 +19,10 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
@@ -61,11 +63,12 @@ public abstract class Content extends Resource {
   @POST
   @Consumes({MediaType.MULTIPART_FORM_DATA})
   @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  public DataGraph<Resource> create(@QueryParam("path") String childPath,
-      @QueryParam("title") String name, @HeaderParam("Content-Length") Integer length,
+  public DataGraph<Resource> create(@Context UriInfo uriInfo,
+      @HeaderParam("Content-Length") Integer length,
       @HeaderParam("Content-Type") String contentType, InputStream inputStream) {
     DataGraph data = new DataGraph();
-    data.root = getService().createChild(this, childPath, name, contentType, length, inputStream);
+    MultivaluedMap<String, String> params = uriInfo.getQueryParameters();
+    data.root = getService().createChild(this, params, contentType, length, inputStream);
     return data;
   }
 

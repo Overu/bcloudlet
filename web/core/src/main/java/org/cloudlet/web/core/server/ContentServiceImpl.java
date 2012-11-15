@@ -16,13 +16,14 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MultivaluedMap;
 
 public class ContentServiceImpl<T extends Content> extends ServiceImpl<T> implements
     ContentService<T> {
 
   @Override
-  public Resource createChild(T parent, String path, String title, final String contentType,
-      final Integer length, final InputStream inputStream) {
+  public Resource createChild(T parent, MultivaluedMap<String, String> params,
+      final String contentType, final Integer length, final InputStream inputStream) {
     try {
       FileUpload fileUpload = new FileUpload();
       FileItemIterator iter = fileUpload.getItemIterator(new RequestContext() {
@@ -56,11 +57,7 @@ public class ContentServiceImpl<T extends Content> extends ServiceImpl<T> implem
         try {
           if (value.isFormField()) {
             String strValue = Streams.asString(in, "UTF-8");
-            if (key.equals(Resource.PATH)) {
-              path = strValue;
-            } else if (key.equals(Resource.TITLE)) {
-              title = strValue;
-            }
+            params.add(key, strValue);
           } else {
             res = new Rendition();
             res.setInputStream(in);
@@ -74,6 +71,8 @@ public class ContentServiceImpl<T extends Content> extends ServiceImpl<T> implem
 
       }
       if (res != null) {
+        String path = params.getFirst(Resource.PATH);
+        String title = params.getFirst(Resource.TITLE);
         if (path != null) {
           res.setPath(path);
         }
@@ -81,6 +80,7 @@ public class ContentServiceImpl<T extends Content> extends ServiceImpl<T> implem
           res.setTitle(title);
         }
         res.save();
+        return res;
       }
     } catch (Exception e) {
       // VirusFoundException, VirusFoundException will be handled by ServiceEndPointUtil centrally
