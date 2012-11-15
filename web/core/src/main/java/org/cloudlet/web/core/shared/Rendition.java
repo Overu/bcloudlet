@@ -9,11 +9,18 @@ import javax.xml.bind.annotation.XmlType;
 @Entity(name = Rendition.TYPE_NAME)
 @Table(name = CorePackage.PREFIX + Rendition.TYPE_NAME)
 @Path("rendition")
+@Handler(RenditionService.class)
 public class Rendition extends Resource {
 
   public static final String TYPE_NAME = "Rendition";
 
   public static final ResourceType TYPE = new ResourceType(Resource.TYPE, TYPE_NAME);
+
+  private String mimeType;
+
+  public String getMimeType() {
+    return mimeType;
+  }
 
   @Override
   public ResourceType getResourceType() {
@@ -26,6 +33,10 @@ public class Rendition extends Resource {
       widget = getParent().getResourceType().getWidget(getPath());
     }
     return widget;
+  }
+
+  public void setMimeType(String mimeType) {
+    this.mimeType = mimeType;
   }
 
 }

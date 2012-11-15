@@ -20,7 +20,8 @@ import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.Path;
 
-public class EntryServiceImpl<E extends Entry> extends ServiceImpl<E> implements EntryService<E> {
+public class EntryServiceImpl<E extends Entry> extends ContentServiceImpl<E> implements
+    EntryService<E> {
 
   @Override
   public long countChildren(E entry) {

@@ -1,9 +1,8 @@
 package org.cloudlet.web.core.shared;
 
-
 import java.util.List;
 
-public interface FeedService<F extends Feed<E>, E extends Entry> extends Service<F> {
+public interface FeedService<F extends Feed<E>, E extends Entry> extends ContentService<F> {
 
   long countEntries(F feed);
 

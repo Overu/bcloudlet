@@ -7,6 +7,7 @@ import com.google.gwt.core.shared.GWT;
 import org.cloudlet.web.core.server.ResourceEntity;
 import org.hibernate.annotations.TypeDef;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,12 @@ import java.util.logging.Logger;
 
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
@@ -50,6 +57,23 @@ public abstract class Content extends Resource {
   private String html;
 
   public static final String HTML = "html";
+
+  @POST
+  @Consumes({MediaType.MULTIPART_FORM_DATA})
+  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  public DataGraph<Resource> create(@QueryParam("path") String childPath,
+      @QueryParam("title") String name, @HeaderParam("Content-Length") Integer length,
+      @HeaderParam("Content-Type") String contentType, InputStream inputStream) {
+    DataGraph data = new DataGraph();
+    data.root = getService().createChild(this, childPath, name, contentType, length, inputStream);
+    return data;
+  }
+
+  public Rendition createRendition(Rendition rendition) {
+    rendition.setParent(this);
+    rendition.save();
+    return rendition;
+  }
 
   public Resource findChild(final String uri) {
     String[] segments = uri.split("/");
@@ -134,13 +158,18 @@ public abstract class Content extends Resource {
     return remoteRenditions;
   }
 
-  public Rendition getRendition(String kind) {
-    return getAllRenditions().get(kind);
+  public Rendition getRendition(String path) {
+    return getAllRenditions().get(path);
   }
 
   @Override
   public ContentType<?> getResourceType() {
     return TYPE;
+  }
+
+  @Override
+  public ContentService getService() {
+    return (ContentService) super.getService();
   }
 
   @Override

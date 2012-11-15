@@ -3,6 +3,7 @@ package org.cloudlet.web.core.shared;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.ws.rs.Path;
@@ -22,6 +23,9 @@ public class Book extends Entry {
 
   public static final String SECTIONS = "sections";
 
+  @OneToOne
+  private Rendition cover;
+
   @Transient
   private List<Section> sections;
 
@@ -31,6 +35,10 @@ public class Book extends Entry {
       return new Book();
     }
   };
+
+  public Rendition getCover() {
+    return cover;
+  }
 
   @Override
   public EntryType getResourceType() {
@@ -42,6 +50,10 @@ public class Book extends Entry {
       sections = getChildren(Section.class);
     }
     return sections;
+  }
+
+  public void setCover(Rendition cover) {
+    this.cover = cover;
   }
 
 }

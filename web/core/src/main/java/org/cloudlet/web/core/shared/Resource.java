@@ -1,7 +1,5 @@
 package org.cloudlet.web.core.shared;
 
-// import com.google.gwt.json.client.JSONObject;
-// import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.place.shared.Place;
 
 import org.cloudlet.web.core.server.ResourceEntity;
@@ -9,6 +7,7 @@ import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
+import java.io.InputStream;
 import java.util.logging.Logger;
 
 import javax.persistence.Column;
@@ -77,6 +76,9 @@ public abstract class Resource extends Place {
   @Transient
   private transient Object nativeData;
 
+  @Transient
+  private transient InputStream inputStream;
+
   @DELETE
   public void delete() {
     getService().delete(this);
@@ -84,6 +86,10 @@ public abstract class Resource extends Place {
 
   public String getId() {
     return id;
+  }
+
+  public InputStream getInputStream() {
+    return inputStream;
   }
 
   public Object getNativeData() {
@@ -147,12 +153,12 @@ public abstract class Resource extends Place {
     return version;
   }
 
-  // public abstract boolean isLoaded();
-
   @XmlTransient
   public Object getWidget() {
     return widget;
   }
+
+  // public abstract boolean isLoaded();
 
   @GET
   @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml"})
@@ -178,6 +184,10 @@ public abstract class Resource extends Place {
 
   public void setId(final String id) {
     this.id = id;
+  }
+
+  public void setInputStream(InputStream inputStream) {
+    this.inputStream = inputStream;
   }
 
   public void setNativeData(Object nativeData) {
