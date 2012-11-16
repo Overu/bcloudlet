@@ -77,7 +77,9 @@ public abstract class Resource extends Place {
   private transient Object nativeData;
 
   @Transient
-  private transient InputStream inputStream;
+  private transient InputStream contentStream;
+
+  private String mimeType;
 
   @DELETE
   public void delete() {
@@ -88,8 +90,12 @@ public abstract class Resource extends Place {
     return id;
   }
 
-  public InputStream getInputStream() {
-    return inputStream;
+  public InputStream getContentStream() {
+    return contentStream;
+  }
+
+  public String getMimeType() {
+    return mimeType;
   }
 
   public Object getNativeData() {
@@ -158,8 +164,6 @@ public abstract class Resource extends Place {
     return widget;
   }
 
-  // public abstract boolean isLoaded();
-
   @GET
   @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml"})
   public DataGraph<Resource> load() {
@@ -168,6 +172,8 @@ public abstract class Resource extends Place {
     data.root = this;
     return data;
   }
+
+  // public abstract boolean isLoaded();
 
   public void readFrom(Resource delta) {
     if (delta.title != null) {
@@ -186,8 +192,12 @@ public abstract class Resource extends Place {
     this.id = id;
   }
 
-  public void setInputStream(InputStream inputStream) {
-    this.inputStream = inputStream;
+  public void setContentStream(InputStream inputStream) {
+    this.contentStream = inputStream;
+  }
+
+  public void setMimeType(String mimeType) {
+    this.mimeType = mimeType;
   }
 
   public void setNativeData(Object nativeData) {

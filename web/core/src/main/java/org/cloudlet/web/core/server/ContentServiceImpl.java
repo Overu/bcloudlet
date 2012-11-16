@@ -60,7 +60,7 @@ public class ContentServiceImpl<T extends Content> extends ServiceImpl<T> implem
             params.add(key, strValue);
           } else {
             res = new Rendition();
-            res.setInputStream(in);
+            res.setContentStream(in);
             res.setPath(value.getName());
             res.setMimeType(value.getContentType());
             res.setParent(parent);

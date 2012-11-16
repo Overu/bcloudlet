@@ -16,12 +16,6 @@ public class Rendition extends Resource {
 
   public static final ResourceType TYPE = new ResourceType(Resource.TYPE, TYPE_NAME);
 
-  private String mimeType;
-
-  public String getMimeType() {
-    return mimeType;
-  }
-
   @Override
   public ResourceType getResourceType() {
     return TYPE;
@@ -34,9 +28,4 @@ public class Rendition extends Resource {
     }
     return widget;
   }
-
-  public void setMimeType(String mimeType) {
-    this.mimeType = mimeType;
-  }
-
 }

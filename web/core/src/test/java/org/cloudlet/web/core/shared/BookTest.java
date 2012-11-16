@@ -6,7 +6,9 @@ import com.google.inject.Inject;
 
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.UUID;
 
 import javax.xml.bind.JAXBContext;
@@ -30,7 +32,18 @@ public class BookTest extends CoreTest {
     total = total + 1;
     book.setPath("book" + total);
     book.setTitle("娱乐 " + total);
+    book.setContentStream(new ByteArrayInputStream("Good work".getBytes()));
     books.createEntry(book);
+
+    Rendition rendition = new Rendition();
+
+    InputStream stream = getClass().getResourceAsStream("covers/sanguo.jpg");
+    rendition.setContentStream(stream);
+    rendition.setPath("cover");
+    rendition.setTitle("Cover");
+    book.createChild(rendition);
+    book.setCover(rendition);
+    book.update();
     books.load();
     assertEquals(total, books.getChildrenCount());
     for (int i = 0; i < 10; i++) {
