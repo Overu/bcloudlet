@@ -2,7 +2,7 @@ package org.cloudlet.web.core.shared;
 
 import java.util.List;
 
-public interface EntryService<E extends Entry> extends ContentService<E> {
+public interface EntryService<E extends Entry> extends Service<E> {
 
   long countChildren(E entry);
 

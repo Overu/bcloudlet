@@ -19,11 +19,11 @@ import javax.xml.bind.annotation.XmlType;
 
 @MappedSuperclass
 @XmlType(name = Feed.TYPE_NAME)
-public abstract class Feed<E extends Entry> extends Content {
+public abstract class Feed<E extends Entry> extends Resource {
 
   public static final String TYPE_NAME = "Feed";
 
-  public static FeedType TYPE = new FeedType(Content.TYPE, TYPE_NAME, Entry.TYPE);
+  public static FeedType TYPE = new FeedType(Resource.TYPE, TYPE_NAME, Entry.TYPE);
 
   @Transient
   protected List<E> entries;

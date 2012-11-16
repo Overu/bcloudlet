@@ -18,12 +18,11 @@ import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 
-import org.cloudlet.web.core.shared.Content;
 import org.cloudlet.web.core.shared.Entry;
+import org.cloudlet.web.core.shared.Rendition;
 import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.ResourceManager;
 import org.cloudlet.web.core.shared.Root;
-import org.cloudlet.web.core.shared.Rendition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,16 +37,15 @@ public class PlaceTree extends BorderLayoutContainer {
       JSONObject dg = JSONParser.parseLenient(data).isObject();
       JSONObject root = dg.get("dataGraph").isObject().get("root").isObject();
       List<Resource> result = new ArrayList<Resource>();
-      Content content = (Content) parent;
-      result.addAll(content.getAllRenditions().values());
+      result.addAll(parent.getAllRenditions().values());
       JSONValue c = root.get(Entry.CHILDREN);
       if (c != null) {
         JSONArray children = c.isArray();
         for (int i = 0; i < children.size(); i++) {
           JSONObject object = children.get(i).isObject();
           Resource child = CoreClientModule.readResource(object);
-          child.setParent(content);
-          content.getCache().put(child.getPath(), child);
+          child.setParent(parent);
+          parent.getCache().put(child.getPath(), child);
           result.add(child);
         }
       }
@@ -81,12 +79,11 @@ public class PlaceTree extends BorderLayoutContainer {
         if (parent instanceof Rendition) {
           return false;
         }
-        Content content = (Content) parent;
-        if (!content.getAllRenditions().isEmpty()) { // show view links on navigation menu
+        if (!parent.getAllRenditions().isEmpty()) { // show view links on navigation menu
           return true;
         }
-        if (content instanceof Entry) {
-          return content.getChildrenCount() > 0;// show relationship on navigation menu
+        if (parent instanceof Entry) {
+          return parent.getChildrenCount() > 0;// show relationship on navigation menu
         }
         return false;
       }

@@ -1,6 +1,6 @@
 package org.cloudlet.web.core.shared;
 
-public class FeedType<F extends Feed<E>, E extends Entry> extends ContentType<F> {
+public class FeedType<F extends Feed<E>, E extends Entry> extends ResourceType<F> {
 
   private EntryType<E> entryType;
 

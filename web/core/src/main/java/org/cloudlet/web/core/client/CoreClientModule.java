@@ -28,7 +28,6 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import org.cloudlet.web.core.client.RequestBuilderBase.Callback;
 import org.cloudlet.web.core.client.style.BaseResources;
-import org.cloudlet.web.core.shared.Content;
 import org.cloudlet.web.core.shared.CorePackage;
 import org.cloudlet.web.core.shared.Entry;
 import org.cloudlet.web.core.shared.Feed;
@@ -150,11 +149,11 @@ public class CoreClientModule extends AbstractGinModule {
     }
 
     private void start() {
-      Repository.TYPE.setWidget(Content.HOME_WIDGET, explorer);
+      Repository.TYPE.setWidget(Resource.HOME_WIDGET, explorer);
 
       UserFeed.TYPE.setWidget(Feed.LIST_WIDGET, userGrid);
       UserFeed.TYPE.setWidget(Feed.POST_WIDGET, userForm);
-      User.TYPE.setWidget(Content.HOME_WIDGET, userModify);
+      User.TYPE.setWidget(Resource.HOME_WIDGET, userModify);
 
       BaseResources.INSTANCE();
       main = new SimplePanel();
@@ -241,15 +240,13 @@ public class CoreClientModule extends AbstractGinModule {
   public static Resource readResource(JSONObject json) {
     String type = json.get("@xsi.type").isString().stringValue();
     ResourceType objectType = WebPlatform.getInstance().getResourceType(type);
-    Resource content = objectType.createInstance();
-    content.setPath(readString(json, Resource.PATH));
-    content.setTitle(readString(json, Resource.TITLE));
-    if (content instanceof Content) {
-      ((Content) content).setChildrenCount(readLong(json, Content.CHILDREN_COUNT));
-    }
+    Resource resource = objectType.createInstance();
+    resource.setPath(readString(json, Resource.PATH));
+    resource.setTitle(readString(json, Resource.TITLE));
+    resource.setChildrenCount(readLong(json, Resource.CHILDREN_COUNT));
     // content.readFrom(root);
-    content.setNativeData(json);
-    return content;
+    resource.setNativeData(json);
+    return resource;
   }
 
   public static String readString(JSONObject json, String field) {

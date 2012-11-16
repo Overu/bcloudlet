@@ -1,6 +1,5 @@
 package org.cloudlet.web.core.provider;
 
-import org.cloudlet.web.core.shared.Content;
 import org.cloudlet.web.core.shared.DataGraph;
 import org.cloudlet.web.core.shared.Entry;
 import org.cloudlet.web.core.shared.Feed;
@@ -65,19 +64,11 @@ public class XmlResourceProvider extends AbstractMessageReaderWriterProvider<Dat
     }
   }
 
-  private void writeContent(XMLStreamWriter writer, Content content) throws XMLStreamException {
-    if (content instanceof Entry) {
-      writeEntry(writer, (Entry) content);
-    } else if (content instanceof Feed) {
-      writeFeed(writer, (Feed<Entry>) content);
-    }
-  }
-
   private void writeEntry(XMLStreamWriter writer, Entry entry) throws XMLStreamException {
     writer.writeStartElement(entry.getResourceType().getName());
     writeResourceElements(writer, entry);
-    if (entry.getHtml() != null) {
-      writer.writeCharacters(entry.getHtml());
+    if (entry.getContent() != null) {
+      writer.writeCharacters(entry.getContent());
     }
     List<Resource> rels = entry.getChildren();
     if (rels != null && !rels.isEmpty()) {
@@ -91,8 +82,8 @@ public class XmlResourceProvider extends AbstractMessageReaderWriterProvider<Dat
   private void writeFeed(XMLStreamWriter writer, Feed<Entry> feed) throws XMLStreamException {
     writer.writeStartElement(feed.getResourceType().getName());
     writeResourceElements(writer, feed);
-    if (feed.getHtml() != null) {
-      writer.writeCharacters(feed.getHtml());
+    if (feed.getContent() != null) {
+      writer.writeCharacters(feed.getContent());
     }
     List<Entry> entries = feed.getEntries();
     if (entries != null && !entries.isEmpty()) {
@@ -104,8 +95,10 @@ public class XmlResourceProvider extends AbstractMessageReaderWriterProvider<Dat
   }
 
   private void writeResource(XMLStreamWriter writer, Resource resource) throws XMLStreamException {
-    if (resource instanceof Content) {
-      writeContent(writer, (Content) resource);
+    if (resource instanceof Entry) {
+      writeEntry(writer, (Entry) resource);
+    } else if (resource instanceof Feed) {
+      writeFeed(writer, (Feed<Entry>) resource);
     }
   }
 

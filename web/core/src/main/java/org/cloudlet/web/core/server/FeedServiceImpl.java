@@ -12,8 +12,8 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
-public class FeedServiceImpl<F extends Feed<E>, E extends Entry> extends ContentServiceImpl<F>
-    implements FeedService<F, E> {
+public class FeedServiceImpl<F extends Feed<E>, E extends Entry> extends ServiceImpl<F> implements
+    FeedService<F, E> {
 
   @Override
   public long countEntries(F feed) {

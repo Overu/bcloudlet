@@ -1,5 +1,6 @@
 package org.cloudlet.web.core.shared;
 
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.place.shared.Place;
 
 import org.cloudlet.web.core.server.ResourceEntity;
@@ -8,6 +9,9 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.persistence.Column;
@@ -19,11 +23,15 @@ import javax.persistence.Version;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Produces;
 import javax.ws.rs.container.ResourceContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
@@ -37,17 +45,17 @@ public abstract class Resource extends Place {
 
   private static final Logger logger = Logger.getLogger(Resource.class.getName());
 
-  public static ResourceType TYPE = new ResourceType(TYPE_NAME);
+  public static final ResourceType TYPE = new ResourceType(TYPE_NAME);
 
-  public static final String ID = "id";
+  public static String ID = "id";
 
-  public static final String TITLE = "title";
+  public static String TITLE = "title";
 
-  public static final String PATH = "path";
+  public static String PATH = "path";
 
-  public static final String URI = "uri";
+  public static String URI = "uri";
 
-  public static final String VERSION = "version";
+  public static String VERSION = "version";
 
   protected String title;
 
@@ -71,7 +79,7 @@ public abstract class Resource extends Place {
 
   @Type(type = "content")
   @Columns(columns = {@Column(name = "parentType"), @Column(name = "parentId")})
-  private Content parent;
+  private Resource parent;
 
   @Transient
   private transient Object nativeData;
@@ -81,17 +89,135 @@ public abstract class Resource extends Place {
 
   private String mimeType;
 
+  public static final String CHILDREN_COUNT = "childrenCount";
+
+  protected long childrenCount;
+
+  @Transient
+  private Map<String, Resource> cache;
+
+  @Transient
+  private Map<String, Rendition> allRenditions;
+
+  @Transient
+  private Map<String, Rendition> localRenditions;
+
+  @Transient
+  private List<Rendition> remoteRenditions;
+
+  public static final String HOME_WIDGET = "";
+
+  protected String content;
+
+  public static final String CONTENT = "content";
+
+  @POST
+  @Consumes({MediaType.MULTIPART_FORM_DATA})
+  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  public DataGraph<Resource> createFromMultipart(@Context UriInfo uriInfo,
+      @HeaderParam("Content-Length") Integer length,
+      @HeaderParam("Content-Type") String contentType, InputStream inputStream) {
+    DataGraph data = new DataGraph();
+    MultivaluedMap<String, String> params = uriInfo.getQueryParameters();
+    data.root = getService().createFromMultipart(this, params, contentType, length, inputStream);
+    return data;
+  }
+
+  public Rendition createRendition(Rendition rendition) {
+    rendition.setParent(this);
+    rendition.save();
+    return rendition;
+  }
+
   @DELETE
   public void delete() {
     getService().delete(this);
+  }
+
+  public Resource findChild(final String uri) {
+    String[] segments = uri.split("/");
+    Resource child = this;
+    for (String path : segments) {
+      if (path.length() == 0) {
+        continue;
+      }
+      Resource parent = child;
+      child = parent.getRendition(path);
+      if (child != null) {
+        return child;
+      } else if (parent instanceof Entry) {
+        child = ((Entry) parent).getChild(path);
+      } else if (parent instanceof Feed) {
+        child = ((Feed) parent).getEntry(path);
+      }
+      if (child == null) {
+        if (GWT.isClient()) {
+          child = new ResourceProxy();
+          child.setParent(parent);
+        } else {
+          break;
+        }
+      }
+    }
+    return child;
+  }
+
+  @XmlTransient
+  public Map<String, Rendition> getAllRenditions() {
+    if (allRenditions == null) {
+      allRenditions = new HashMap<String, Rendition>();
+      allRenditions.putAll(getLocalRenditions());
+      if (remoteRenditions != null) {
+        for (Rendition v : remoteRenditions) {
+          allRenditions.put(v.getPath(), v);
+        }
+      }
+    }
+    return allRenditions;
+  }
+
+  public Map<String, Resource> getCache() {
+    if (cache == null) {
+      cache = new HashMap<String, Resource>();
+    }
+    return cache;
+  }
+
+  public long getChildrenCount() {
+    return childrenCount;
+  }
+
+  public String getContent() {
+    return content;
+  }
+
+  public InputStream getContentStream() {
+    return contentStream;
   }
 
   public String getId() {
     return id;
   }
 
-  public InputStream getContentStream() {
-    return contentStream;
+  @XmlTransient
+  public Map<String, Rendition> getLocalRenditions() {
+    if (localRenditions == null) {
+      localRenditions = new HashMap<String, Rendition>();
+      for (String key : getResourceType().getWidgetKeys()) {
+        if (key.equals(Resource.HOME_WIDGET)) {
+          continue;
+        }
+        Object widget = getResourceType().getWidget(key);
+        if (widget != null) {
+          Rendition view = new Rendition();
+          view.setParent(this);
+          view.setPath(key);
+          view.setTitle(key);
+          localRenditions.put(key, view);
+        }
+      }
+    }
+    return localRenditions;
   }
 
   public String getMimeType() {
@@ -107,7 +233,7 @@ public abstract class Resource extends Place {
   }
 
   @XmlTransient
-  public Content getParent() {
+  public Resource getParent() {
     return parent;
   }
 
@@ -123,6 +249,15 @@ public abstract class Resource extends Place {
       return path;
     }
     return null;
+  }
+
+  @XmlTransient
+  public List<Rendition> getRemoteRenditions() {
+    return remoteRenditions;
+  }
+
+  public Rendition getRendition(String path) {
+    return getAllRenditions().get(path);
   }
 
   @XmlTransient
@@ -161,6 +296,9 @@ public abstract class Resource extends Place {
 
   @XmlTransient
   public Object getWidget() {
+    if (widget == null) {
+      widget = getResourceType().getWidget(HOME_WIDGET);
+    }
     return widget;
   }
 
@@ -172,8 +310,6 @@ public abstract class Resource extends Place {
     data.root = this;
     return data;
   }
-
-  // public abstract boolean isLoaded();
 
   public void readFrom(Resource delta) {
     if (delta.title != null) {
@@ -188,12 +324,20 @@ public abstract class Resource extends Place {
     return getService().save(this);
   }
 
-  public void setId(final String id) {
-    this.id = id;
+  public void setChildrenCount(long totalResults) {
+    this.childrenCount = totalResults;
+  }
+
+  public void setContent(String content) {
+    this.content = content;
   }
 
   public void setContentStream(InputStream inputStream) {
     this.contentStream = inputStream;
+  }
+
+  public void setId(String id) {
+    this.id = id;
   }
 
   public void setMimeType(String mimeType) {
@@ -204,15 +348,15 @@ public abstract class Resource extends Place {
     this.nativeData = nativeData;
   }
 
-  public void setOwner(final User owner) {
+  public void setOwner(User owner) {
     this.owner = owner;
   }
 
-  public void setParent(final Content parent) {
+  public void setParent(Resource parent) {
     this.parent = parent;
   }
 
-  public void setPath(final String path) {
+  public void setPath(String path) {
     this.path = path;
   }
 
@@ -221,7 +365,13 @@ public abstract class Resource extends Place {
       title = value;
     } else if (PATH.equals(name)) {
       path = value;
+    } else if (CHILDREN_COUNT.equals(name)) {
+      childrenCount = value == null ? 0 : Long.valueOf(value);
     }
+  }
+
+  public void setRemoteRenditions(List<Rendition> remoteViews) {
+    this.remoteRenditions = remoteViews;
   }
 
   public void setTitle(String title) {

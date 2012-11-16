@@ -1,12 +1,15 @@
 package org.cloudlet.web.core.shared;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlType;
 
 @XmlType
 public class ResourceType<T extends Resource> extends WebType<T> {
+  private Map<String, Object> widgets = new HashMap<String, Object>();
 
   public static final String OPERATIONS = "operations";
 
@@ -85,6 +88,23 @@ public class ResourceType<T extends Resource> extends WebType<T> {
     return superType;
   }
 
+  public Object getWidget(String key) {
+    Object result = widgets.get(key);
+    if (result == null && superType != null) {
+      result = superType.getWidget(key);
+    }
+    return result;
+  }
+
+  public Set<String> getWidgetKeys() {
+    Set<String> result = new HashSet<String>();
+    result.addAll(widgets.keySet());
+    if (superType != null) {
+      result.addAll(superType.getWidgetKeys());
+    }
+    return result;
+  }
+
   public boolean hasSuperType(ResourceType type) {
     if (type == this) {
       return true;
@@ -112,6 +132,10 @@ public class ResourceType<T extends Resource> extends WebType<T> {
 
   public void setSuperType(final ResourceType superType) {
     this.superType = superType;
+  }
+
+  public void setWidget(String key, Object widget) {
+    widgets.put(key, widget);
   }
 
 }

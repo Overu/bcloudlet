@@ -33,15 +33,15 @@ public class ResourceManager implements PlaceHistoryMapper {
     return (Resource) placeController.getWhere();
   }
 
-  public void goTo(Content place, String uri) {
+  public void goTo(Resource newPlace) {
+    placeController.goTo(newPlace);
+  }
+
+  public void goTo(Resource place, String uri) {
     Resource newPlace = place.findChild(uri);
     if (newPlace != null) {
       goTo(newPlace);
     }
-  }
-
-  public void goTo(Resource newPlace) {
-    placeController.goTo(newPlace);
   }
 
   public void goTo(String uri) {

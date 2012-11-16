@@ -18,11 +18,11 @@ import javax.xml.bind.annotation.XmlType;
 
 @MappedSuperclass
 @XmlType(name = Entry.TYPE_NAME)
-public abstract class Entry extends Content {
+public abstract class Entry extends Resource {
 
   public static final String TYPE_NAME = "Entry";
 
-  public static EntryType<Entry> TYPE = new EntryType<Entry>(Content.TYPE, TYPE_NAME);
+  public static EntryType<Entry> TYPE = new EntryType<Entry>(Resource.TYPE, TYPE_NAME);
 
   public static final String CHILDREN = "children";
 
