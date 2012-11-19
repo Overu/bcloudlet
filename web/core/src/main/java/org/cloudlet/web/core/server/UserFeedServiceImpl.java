@@ -1,8 +1,8 @@
 package org.cloudlet.web.core.server;
 
-import org.cloudlet.web.core.User;
-import org.cloudlet.web.core.UserFeed;
-import org.cloudlet.web.core.service.UserFeedService;
+import org.cloudlet.web.core.shared.User;
+import org.cloudlet.web.core.shared.UserFeed;
+import org.cloudlet.web.core.shared.UserFeedService;
 
 import com.google.inject.Singleton;
 

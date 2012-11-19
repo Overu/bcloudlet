@@ -4,7 +4,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.web.bindery.requestfactory.shared.RequestFactory;
 
 import com.sencha.gxt.cell.core.client.SimpleSafeHtmlCell;
 import com.sencha.gxt.cell.core.client.form.ComboBoxCell.TriggerAction;
@@ -60,8 +61,10 @@ import com.sencha.gxt.widget.core.client.grid.Grid;
 import com.sencha.gxt.widget.core.client.toolbar.LabelToolItem;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
-import org.cloudlet.web.core.shared.WebPlace;
-import org.cloudlet.web.core.shared.WebPlaceManager;
+import org.cloudlet.web.core.client.RequestBuilderBase.Callback;
+import org.cloudlet.web.core.shared.Feed;
+import org.cloudlet.web.core.shared.ResourceManager;
+import org.cloudlet.web.core.shared.User;
 import org.cloudlet.web.core.shared.WebView;
 
 import java.util.ArrayList;
@@ -166,7 +169,7 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
   };
 
   @Inject
-  WebPlaceManager placeController;
+  ResourceManager placeController;
 
   private ContentPanel cp;
 
@@ -190,9 +193,10 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
     JSONFeedReader reader = new JSONFeedReader();
 
     String path = "api/users";
-    RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, path);
-    builder.setHeader("Accept", "application/json");
-    HttpProxy<ListLoadConfig> proxy = new HttpProxy<ListLoadConfig>(builder);
+    // RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, path);
+    // builder.setHeader("Accept", "application/json");
+    HttpProxy<ListLoadConfig> proxy =
+        new HttpProxy<ListLoadConfig>(RequestBuilderBase.GET(path).accept("application/json"));
 
     final ListLoader<ListLoadConfig, ListLoadResult<JSONObject>> loader =
         new ListLoader<ListLoadConfig, ListLoadResult<JSONObject>>(proxy, reader);
@@ -320,7 +324,7 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
 
       @Override
       public void onSelect(final SelectEvent event) {
-        placeController.goTo(place, WebPlace.POST);
+        placeController.goTo(place.getParent(), Feed.POST_WIDGET);
       }
     }));
     cp.addButton(new TextButton("Load Json", new SelectHandler() {
@@ -337,7 +341,27 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
         if (userPath == null || userPath.equals("")) {
           return;
         }
-        placeController.goTo(place, userPath);
+        placeController.goTo(place.getParent(), userPath);
+      }
+    }));
+    cp.addButton(new TextButton("Delete User", new SelectHandler() {
+
+      @Override
+      public void onSelect(final SelectEvent event) {
+        if (userPath == null || userPath.equals("")) {
+          return;
+        }
+        try {
+          RequestBuilderBase.DELETE("api/users/" + userPath).contentType(
+              RequestFactory.JSON_CONTENT_TYPE_UTF8).callback(new Callback<User>() {
+            @Override
+            public void onSuccess(User resource) {
+            }
+          }).send();
+          loader.load();
+        } catch (RequestException e) {
+          e.printStackTrace();
+        }
       }
     }));
   }

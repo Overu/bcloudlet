@@ -1,20 +1,19 @@
 package org.cloudlet.web.core.shared;
 
-public class FeedType extends PlaceType {
+public class FeedType<F extends Feed<E>, E extends Entry> extends ResourceType<F> {
 
-  private EntryType entryType;
+  private EntryType<E> entryType;
 
-  public FeedType(PlaceType parent, String name, EntryType entryType) {
+  public FeedType(ResourceType parent, String name, EntryType<E> entryType) {
     super(parent, name);
     this.entryType = entryType;
   }
 
-  @Override
-  public PlaceType getTargetType(String path) {
-    PlaceType type = super.getTargetType(path);
-    if (type != null) {
-      return type;
-    }
+  public EntryType<E> getEntryType() {
+    return entryType;
+  }
+
+  public ResourceType getTargetType(String path) {
     return entryType;
   }
 }

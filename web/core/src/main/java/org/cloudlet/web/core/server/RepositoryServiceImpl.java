@@ -1,31 +1,19 @@
 package org.cloudlet.web.core.server;
 
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.google.inject.persist.Transactional;
 
-import org.cloudlet.web.core.Repository;
-import org.cloudlet.web.core.service.RepositoryService;
-
-import java.util.logging.Logger;
+import org.cloudlet.web.core.shared.Repository;
+import org.cloudlet.web.core.shared.RepositoryService;
 
 import javax.persistence.NoResultException;
 
 @Singleton
-public class RepositoryServiceImpl extends ServiceImpl<Repository> implements RepositoryService,
-    Provider<Repository> {
-
-  private static final Logger logger = Logger.getLogger(RepositoryServiceImpl.class.getName());
-
-  @Override
-  @Transactional
-  public <CHILD extends org.cloudlet.web.core.Content> CHILD create(Repository parent, CHILD child) {
-    return super.create(parent, child);
-  }
+public class RepositoryServiceImpl extends EntryServiceImpl<Repository> implements
+    RepositoryService {
 
   @Override
   public Repository get() {
-    Repository repo;
+    Repository repo = null;
     try {
       repo =
           em().createQuery("from " + Repository.class.getName(), Repository.class)
@@ -36,4 +24,5 @@ public class RepositoryServiceImpl extends ServiceImpl<Repository> implements Re
     }
     return repo;
   }
+
 }

@@ -6,7 +6,8 @@ import com.google.inject.Injector;
 import com.google.inject.persist.PersistService;
 
 import org.cloudlet.web.boot.server.BootModule;
-import org.cloudlet.web.core.Repository;
+import org.cloudlet.web.core.provider.XmlResourceBinder;
+import org.cloudlet.web.core.shared.Repository;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.jettison.JettisonBinder;
@@ -43,7 +44,7 @@ public class CoreResourceConfig extends ResourceConfig {
   @Inject
   public CoreResourceConfig() {
     super(JaxbContextResolver.class);
-    addBinders(new JettisonBinder());
+    addBinders(new JettisonBinder(), new XmlResourceBinder());
     addClasses(Repository.class);
   }
 
