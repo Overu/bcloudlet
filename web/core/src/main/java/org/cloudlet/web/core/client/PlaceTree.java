@@ -6,6 +6,8 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.ValueProvider;
@@ -25,17 +27,18 @@ import org.cloudlet.web.core.shared.ResourceManager;
 import org.cloudlet.web.core.shared.ResourceProxy;
 import org.cloudlet.web.core.shared.ResourceType;
 import org.cloudlet.web.core.shared.Root;
+import org.cloudlet.web.core.shared.WebView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlaceTree extends BorderLayoutContainer {
+public class PlaceTree extends WebView implements IsWidget {
 
   class JSONFeedReader implements DataReader<List<Resource>, String> {
 
     @Override
     public List<Resource> read(final Object loadConfig, final String data) {
-      Resource parent = loadConfig == null ? root : (Resource) loadConfig;
+      Resource parent = (Resource) loadConfig;
       JSONObject dg = JSONParser.parseLenient(data).isObject();
       JSONObject root = dg.get("dataGraph").isObject().get("root").isObject();
       List<Resource> result = new ArrayList<Resource>();
@@ -76,14 +79,20 @@ public class PlaceTree extends BorderLayoutContainer {
 
   }
 
-  private final Resource root;
+  BorderLayoutContainer con;
 
   @Inject
   ResourceManager resourceManager;
 
+  TreeLoader<Resource> loader;
+
+  Tree<Resource, String> tree;
+
+  TreeStore<Resource> store;
+
   @Inject
-  public PlaceTree(@Root final Resource root) {
-    this.root = root;
+  public PlaceTree(@Root Resource root) {
+    con = new BorderLayoutContainer();
     ModelKeyProvider<Resource> keyProvider = new ModelKeyProvider<Resource>() {
       @Override
       public String getKey(final Resource item) {
@@ -91,37 +100,36 @@ public class PlaceTree extends BorderLayoutContainer {
       }
     };
 
-    TreeStore<Resource> store = new TreeStore<Resource>(keyProvider);
-
+    store = new TreeStore<Resource>(keyProvider);
+    store.add(root);
     JSONFeedReader reader = new JSONFeedReader();
 
-    PlaceProxy jsonProxy = new PlaceProxy(root);
-    final TreeLoader<Resource> loader = new TreeLoader<Resource>(jsonProxy, reader) {
+    PlaceProxy<Resource> jsonProxy = new PlaceProxy<Resource>();
+    loader = new TreeLoader<Resource>(jsonProxy, reader) {
       @Override
       public boolean hasChildren(final Resource parent) {
         return parent.hasChildren();// show relationship on navigation menu
       }
     };
     loader.addLoadHandler(new ChildTreeStoreBinding<Resource>(store));
+    tree = new Tree<Resource, String>(store, new ValueProvider<Resource, String>() {
 
-    final Tree<Resource, String> tree =
-        new Tree<Resource, String>(store, new ValueProvider<Resource, String>() {
+      @Override
+      public String getPath() {
+        return "title";
+      }
 
-          @Override
-          public String getPath() {
-            return "title";
-          }
+      @Override
+      public String getValue(final Resource object) {
+        return object.getTitle();
+      }
 
-          @Override
-          public String getValue(final Resource object) {
-            return object.getTitle();
-          }
+      @Override
+      public void setValue(final Resource object, final String value) {
+        object.setTitle(value);
+      }
+    }, new GrayTreeAppearance());
 
-          @Override
-          public void setValue(final Resource object, final String value) {
-            object.setTitle(value);
-          }
-        }, new GrayTreeAppearance());
     tree.setLoader(loader);
     // tree.getStyle().setLeafIcon(ExampleImages.INSTANCE.music());
     tree.getSelectionModel().addSelectionHandler(new SelectionHandler<Resource>() {
@@ -132,6 +140,21 @@ public class PlaceTree extends BorderLayoutContainer {
       }
     });
 
-    add(tree, new VerticalLayoutData(1, 1));
+    con.add(tree, new VerticalLayoutData(1, 1));
+  }
+
+  @Override
+  public Widget asWidget() {
+    return con;
+  }
+
+  @Override
+  public void setValue(Resource resource) {
+    // if (resource != this.resource) {
+    // store.clear();
+    // store.add(resource);
+    // loader.load(resource);
+    // }
+    super.setValue(resource);
   }
 }

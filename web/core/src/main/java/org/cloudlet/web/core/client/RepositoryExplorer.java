@@ -34,6 +34,7 @@ import com.sencha.gxt.widget.core.client.container.MarginData;
 import com.sencha.gxt.widget.core.client.container.ResizeContainer;
 import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 
+import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.WebView;
 
 public class RepositoryExplorer extends WebView implements IsWidget, AcceptsOneWidget, EntryPoint {
@@ -44,8 +45,11 @@ public class RepositoryExplorer extends WebView implements IsWidget, AcceptsOneW
 
   SimpleContainer center;
 
+  private final PlaceTree placeTree;
+
   @Inject
   public RepositoryExplorer(final PlaceTree placeTree) {
+    this.placeTree = placeTree;
     con = new BorderLayoutContainer();
 
     if (windowResizeTask == null) {
@@ -100,6 +104,17 @@ public class RepositoryExplorer extends WebView implements IsWidget, AcceptsOneW
   @Override
   public void onModuleLoad() {
     RootPanel.get().add(con);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.cloudlet.web.core.shared.WebView#setValue(org.cloudlet.web.core.shared.Resource)
+   */
+  @Override
+  public void setValue(Resource resource) {
+    super.setValue(resource);
+    placeTree.setValue(resource);
   }
 
   @Override

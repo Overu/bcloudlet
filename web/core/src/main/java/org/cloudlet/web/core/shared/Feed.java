@@ -2,6 +2,8 @@ package org.cloudlet.web.core.shared;
 
 import com.google.gwt.core.shared.GWT;
 
+import com.sencha.gxt.data.shared.SortInfo;
+
 import java.util.List;
 
 import javax.persistence.MappedSuperclass;
@@ -23,8 +25,13 @@ public abstract class Feed<E extends Resource> extends Resource {
 
   public static FeedType TYPE = new FeedType(Resource.TYPE, TYPE_NAME, Resource.TYPE);
 
+  public static final String SORT = "sort";
+
   @Transient
   protected List<E> entries;
+
+  @Transient
+  protected List<? extends SortInfo> sortInfo;
 
   @Transient
   protected Long queryCount;
@@ -52,6 +59,11 @@ public abstract class Feed<E extends Resource> extends Resource {
     return (E) getService().createEntry(this, entry);
   }
 
+  @XmlElement
+  public List<E> getEntries() {
+    return entries;
+  }
+
   public E getEntry(String path) {
     E result = null;
     if (GWT.isClient()) {
@@ -72,11 +84,6 @@ public abstract class Feed<E extends Resource> extends Resource {
   }
 
   public abstract Class<E> getEntryType();
-
-  @XmlElement
-  public List<E> getEntries() {
-    return entries;
-  }
 
   @Override
   public Object getPropertyValue(String path) {

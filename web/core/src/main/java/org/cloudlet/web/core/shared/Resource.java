@@ -44,7 +44,7 @@ import javax.xml.bind.annotation.XmlType;
 @TypeDef(name = "content", typeClass = ResourceEntity.class)
 @MappedSuperclass
 @XmlType(name = Resource.TYPE_NAME)
-public abstract class Resource extends Place {
+public abstract class Resource extends Place implements IsResource {
 
   public static final String TYPE_NAME = "Resource";
 
@@ -105,7 +105,7 @@ public abstract class Resource extends Place {
   @Transient
   private List<Resource> children;
 
-  public static final String HOME_WIDGET = "";
+  public static final String HOME = "";
 
   protected String content;
 
@@ -134,6 +134,11 @@ public abstract class Resource extends Place {
     }
     children.add(resource);
     resource.setParent(this);
+  }
+
+  @Override
+  public Resource asResource() {
+    return this;
   }
 
   @POST
@@ -270,8 +275,8 @@ public abstract class Resource extends Place {
     return mimeType;
   }
 
-  public Object getNativeData() {
-    return nativeData;
+  public <T> T getNativeData() {
+    return (T) nativeData;
   }
 
   public User getOwner() {
@@ -323,6 +328,9 @@ public abstract class Resource extends Place {
     if (renditions == null) {
       renditions = new HashMap<String, Rendition>();
       for (String kind : getResourceType().getRenditionKinds()) {
+        if (HOME.equals(kind)) {
+          continue;
+        }
         Rendition rendition = new Rendition();
         rendition.setParent(this);
         rendition.setPath(kind);
@@ -374,7 +382,7 @@ public abstract class Resource extends Place {
         widget = parent.getResourceType().getWidget(getPath());
       }
       if (widget == null) {
-        widget = getResourceType().getWidget(HOME_WIDGET);
+        widget = getResourceType().getWidget(HOME);
       }
     }
     return widget;
@@ -512,5 +520,4 @@ public abstract class Resource extends Place {
       loadChildren();
     }
   }
-
 }

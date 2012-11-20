@@ -116,11 +116,11 @@ public class CoreClientModule extends AbstractGinModule {
     }
 
     private void start() {
-      Repository.TYPE.setWidget(Resource.HOME_WIDGET, explorer);
+      Repository.TYPE.setWidget(Resource.HOME, explorer);
 
       UserFeed.TYPE.setWidget(UserFeed.LIST, userGrid);
       UserFeed.TYPE.setWidget(UserFeed.NEW, userForm);
-      User.TYPE.setWidget(Resource.HOME_WIDGET, userModify);
+      User.TYPE.setWidget(Resource.HOME, userModify);
 
       BaseResources.INSTANCE();
       main = new SimplePanel();
@@ -336,7 +336,7 @@ public class CoreClientModule extends AbstractGinModule {
     resource.setWidget(widget);
     panel.setWidget(widget);
     if (widget instanceof WebView) {
-      ((WebView) widget).setResource(resource);
+      ((WebView) widget).setValue(resource);
     }
     if (callback != null) {
       callback.onSuccess(widget);

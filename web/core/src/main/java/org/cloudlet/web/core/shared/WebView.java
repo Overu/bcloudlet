@@ -1,15 +1,19 @@
 package org.cloudlet.web.core.shared;
 
-public class WebView {
+import com.google.gwt.user.client.TakesValue;
+
+public class WebView implements TakesValue<Resource> {
 
   protected Resource resource;
 
-  public Resource getResource() {
+  @Override
+  public Resource getValue() {
     return resource;
   }
 
-  public void setResource(Resource place) {
-    this.resource = place;
+  @Override
+  public void setValue(Resource resource) {
+    this.resource = resource;
   }
 
 }

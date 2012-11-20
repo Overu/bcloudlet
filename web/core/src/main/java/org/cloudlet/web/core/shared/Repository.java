@@ -40,4 +40,14 @@ public final class Repository extends Resource {
     return (RepositoryService) super.getService();
   }
 
+  @Override
+  public String getTitle() {
+    return "Repository";
+  }
+
+  @Override
+  public boolean hasChildren() {
+    return true;
+  }
+
 }
