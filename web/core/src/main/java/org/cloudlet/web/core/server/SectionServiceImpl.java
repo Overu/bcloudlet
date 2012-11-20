@@ -6,5 +6,5 @@ import org.cloudlet.web.core.shared.Section;
 import org.cloudlet.web.core.shared.SectionService;
 
 @Singleton
-public class SectionServiceImpl extends EntryServiceImpl<Section> implements SectionService {
+public class SectionServiceImpl extends ResourceServiceImpl<Section> implements SectionService {
 }

@@ -11,14 +11,14 @@ public class ResourceManager implements PlaceHistoryMapper {
 
   @Root
   @Inject
-  Entry root;
+  Resource root;
 
   @Inject
   PlaceController placeController;
 
   @Override
   public Resource getPlace(String token) {
-    Resource place = root.findChild(token);
+    Resource place = root.getByUri(token);
     return place;
   }
 
@@ -33,12 +33,12 @@ public class ResourceManager implements PlaceHistoryMapper {
     return (Resource) placeController.getWhere();
   }
 
-  public void goTo(Resource newPlace) {
-    placeController.goTo(newPlace);
+  public void goTo(Resource resource) {
+    placeController.goTo(resource);
   }
 
   public void goTo(Resource place, String uri) {
-    Resource newPlace = place.findChild(uri);
+    Resource newPlace = place.getByUri(uri);
     if (newPlace != null) {
       goTo(newPlace);
     }

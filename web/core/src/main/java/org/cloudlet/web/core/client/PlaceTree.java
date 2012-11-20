@@ -19,10 +19,11 @@ import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 
-import org.cloudlet.web.core.shared.Entry;
-import org.cloudlet.web.core.shared.Rendition;
+import org.cloudlet.web.core.shared.Property;
 import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.ResourceManager;
+import org.cloudlet.web.core.shared.ResourceProxy;
+import org.cloudlet.web.core.shared.ResourceType;
 import org.cloudlet.web.core.shared.Root;
 
 import java.util.ArrayList;
@@ -38,29 +39,50 @@ public class PlaceTree extends BorderLayoutContainer {
       JSONObject dg = JSONParser.parseLenient(data).isObject();
       JSONObject root = dg.get("dataGraph").isObject().get("root").isObject();
       List<Resource> result = new ArrayList<Resource>();
-      result.addAll(parent.getAllRenditions().values());
-      JSONValue c = root.get(Entry.CHILDREN);
+      result.addAll(parent.getRenditions().values());
+      for (Property prop : parent.getResourceType().getAllProperties().values()) {
+        if (prop.getType() instanceof ResourceType) {
+          Resource res = parent.getRelationship(prop);
+          if (res != null) {
+            result.add(res);
+          } else {
+            ResourceProxy proxy = new ResourceProxy((ResourceType) prop.getType());
+            proxy.setPath(prop.getPath());
+            proxy.setParent(parent);
+            proxy.setTitle(prop.getTitle());
+            result.add(proxy);
+          }
+        }
+      }
+      JSONValue c = root.get(Resource.CHILDREN);
       if (c != null) {
         JSONArray children = c.isArray();
-        for (int i = 0; i < children.size(); i++) {
-          JSONObject object = children.get(i).isObject();
+        if (children != null) {
+          for (int i = 0; i < children.size(); i++) {
+            JSONObject object = children.get(i).isObject();
+            Resource child = CoreClientModule.readResource(object);
+            parent.addChild(child);
+            result.add(child);
+          }
+        } else {
+          JSONObject object = c.isObject();
           Resource child = CoreClientModule.readResource(object);
-          child.setParent(parent);
-          parent.getCache().put(child.getPath(), child);
+          parent.addChild(child);
           result.add(child);
         }
       }
       return result;
     }
+
   }
 
   private final Resource root;
 
   @Inject
-  ResourceManager placeManager;
+  ResourceManager resourceManager;
 
   @Inject
-  public PlaceTree(@Root final Entry root) {
+  public PlaceTree(@Root final Resource root) {
     this.root = root;
     ModelKeyProvider<Resource> keyProvider = new ModelKeyProvider<Resource>() {
       @Override
@@ -77,16 +99,7 @@ public class PlaceTree extends BorderLayoutContainer {
     final TreeLoader<Resource> loader = new TreeLoader<Resource>(jsonProxy, reader) {
       @Override
       public boolean hasChildren(final Resource parent) {
-        if (parent instanceof Rendition) {
-          return false;
-        }
-        if (!parent.getAllRenditions().isEmpty()) { // show view links on navigation menu
-          return true;
-        }
-        if (parent instanceof Entry) {
-          return parent.getChildrenCount() > 0;// show relationship on navigation menu
-        }
-        return false;
+        return parent.hasChildren();// show relationship on navigation menu
       }
     };
     loader.addLoadHandler(new ChildTreeStoreBinding<Resource>(store));
@@ -114,7 +127,7 @@ public class PlaceTree extends BorderLayoutContainer {
     tree.getSelectionModel().addSelectionHandler(new SelectionHandler<Resource>() {
       @Override
       public void onSelection(final SelectionEvent<Resource> event) {
-        placeManager.goTo(event.getSelectedItem());
+        resourceManager.goTo(event.getSelectedItem());
         tree.getSelectionModel().deselectAll();
       }
     });

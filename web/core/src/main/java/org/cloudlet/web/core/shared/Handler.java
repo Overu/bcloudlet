@@ -9,5 +9,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Handler {
-  Class<? extends Service> value();
+  Class<? extends ResourceService> value();
 }

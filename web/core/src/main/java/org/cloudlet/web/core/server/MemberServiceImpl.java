@@ -6,6 +6,6 @@ import org.cloudlet.web.core.shared.Member;
 import org.cloudlet.web.core.shared.MemberService;
 
 @Singleton
-public class MemberServiceImpl extends EntryServiceImpl<Member> implements MemberService {
+public class MemberServiceImpl extends ResourceServiceImpl<Member> implements MemberService {
 
 }

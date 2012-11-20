@@ -13,8 +13,16 @@ import javax.xml.bind.annotation.XmlType;
 @DefaultField(key = "title", value = "图书")
 public class BookFeed extends PagingFeed<Book> {
 
+  @SuppressWarnings("hiding")
   public static final String TYPE_NAME = "BookFeed";
 
+  public static final String MY_BOOKS = "myBooks";
+
+  public static final String STARRED = "starred";
+
+  public static final String RECOMMENDED = "recommended";
+
+  @SuppressWarnings("hiding")
   public static FeedType<BookFeed, Book> TYPE = new FeedType<BookFeed, Book>(BookFeed.TYPE,
       TYPE_NAME, Book.TYPE) {
 
@@ -33,4 +41,15 @@ public class BookFeed extends PagingFeed<Book> {
   public FeedType<BookFeed, Book> getResourceType() {
     return TYPE;
   }
+
+  @Override
+  protected void doLoadEntries() {
+    if (STARRED.equals(renditionKind)) {
+    } else if (RECOMMENDED.equals(renditionKind)) {
+    } else if (MY_BOOKS.equals(renditionKind)) {
+    } else {
+      super.doLoadEntries();
+    }
+  }
+
 }

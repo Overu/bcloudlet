@@ -3,6 +3,7 @@ package org.cloudlet.web.core.shared;
 import java.security.Principal;
 
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.ws.rs.Path;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -16,29 +17,37 @@ import javax.xml.bind.annotation.XmlType;
 @Handler(GroupService.class)
 @Path("group")
 @DefaultField(key = "title", value = "用户组")
-public class Group extends Entry implements Principal {
+public class Group extends Resource implements Principal {
 
   public static final String TYPE_NAME = "Group";
 
-  public static EntryType TYPE = new EntryType(Entry.TYPE, TYPE_NAME) {
+  public static ResourceType TYPE = new ResourceType(Resource.TYPE, TYPE_NAME) {
     @Override
-    public Entry createInstance() {
+    public Group createInstance() {
       return new Group();
     }
   };
 
   protected String name;
 
+  @OneToOne
+  protected GroupFeed groups;
+
+  @OneToOne
+  protected MemberFeed members;
+
   @Path("groups")
   @DefaultField(key = "title", value = "用户组")
   @XmlTransient
   public GroupFeed getGroups() {
-    return (GroupFeed) getChild("groups");
+    return groups;
   }
 
   @Path("members")
+  @DefaultField(key = "title", value = "成员")
+  @XmlTransient
   public MemberFeed getMembers() {
-    return (MemberFeed) getChild("members");
+    return members;
   }
 
   @Override
@@ -47,7 +56,7 @@ public class Group extends Entry implements Principal {
   }
 
   @Override
-  public EntryType getResourceType() {
+  public ResourceType getResourceType() {
     return TYPE;
   }
 

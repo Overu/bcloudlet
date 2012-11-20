@@ -14,11 +14,11 @@ import org.apache.commons.fileupload.util.Streams;
 import org.apache.commons.io.IOUtils;
 import org.cloudlet.web.core.shared.ClassUtil;
 import org.cloudlet.web.core.shared.DefaultField;
-import org.cloudlet.web.core.shared.Rendition;
+import org.cloudlet.web.core.shared.Relationship;
 import org.cloudlet.web.core.shared.Repository;
 import org.cloudlet.web.core.shared.Resource;
+import org.cloudlet.web.core.shared.ResourceService;
 import org.cloudlet.web.core.shared.ResourceType;
-import org.cloudlet.web.core.shared.Service;
 import org.cloudlet.web.core.shared.WebPlatform;
 
 import java.io.BufferedInputStream;
@@ -29,18 +29,24 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 
-public class ServiceImpl<T extends Resource> implements Service<T> {
+public class ResourceServiceImpl<T extends Resource> implements ResourceService<T> {
 
-  private static final Logger logger = Logger.getLogger(ServiceImpl.class.getName());
+  private static final Logger logger = Logger.getLogger(ResourceServiceImpl.class.getName());
 
   public static File getFile(final Resource res) {
     String filePath = "D:/DevData/resource/" + res.getId();
@@ -93,17 +99,53 @@ public class ServiceImpl<T extends Resource> implements Service<T> {
   protected ResourceType<T> resourceType;
 
   @SuppressWarnings("unchecked")
-  protected ServiceImpl() {
+  protected ResourceServiceImpl() {
     Type genericSuperClass = getClass().getGenericSuperclass();
     resourceClass =
-        (Class<T>) TypeUtils.ensureBaseType(TypeUtils.getSingleParameterization(Service.class,
-            genericSuperClass));
+        (Class<T>) TypeUtils.ensureBaseType(TypeUtils.getSingleParameterization(
+            ResourceService.class, genericSuperClass));
     resourceType = WebPlatform.getInstance().getResourceType(resourceClass);
   }
 
   @Override
-  public Resource createFromMultipart(T parent, MultivaluedMap<String, String> params,
-      final String contentType, final Integer length, final InputStream inputStream) {
+  public long countChildren(T entry) {
+    TypedQuery<Long> query =
+        em().createQuery(
+            "select count(o) from " + Relationship.class.getName() + " as o where o.source=:source",
+            Long.class);
+    query.setParameter("source", entry);
+    return query.getSingleResult().longValue();
+  }
+
+  @Override
+  @Transactional
+  public <C extends Resource> C createChild(T entry, C child) {
+    // check if child path conflicts
+    if (child.getPath() != null && getChild(entry, child.getPath()) != null) {
+      throw new EntityExistsException("A child of " + entry + " with path=" + child.getPath()
+          + " already exists");
+    }
+
+    child.setParent(entry);
+    child.save();
+
+    Relationship rel = new Relationship();
+    rel.setId(UUID.randomUUID().toString());
+    rel.setSource(entry);
+    rel.setTarget(child);
+    rel.setPath(child.getPath());
+    em().persist(rel);
+
+    entry.setChildrenCount(entry.getChildrenCount() + 1);
+    update(entry);
+
+    return child;
+  }
+
+  @Override
+  public Resource createFromMultipart(T parent, UriInfo uriInfo, final InputStream inputStream,
+      final String contentType, final Integer contentLength) {
+    MultivaluedMap<String, String> params = uriInfo.getQueryParameters();
     try {
       FileUpload fileUpload = new FileUpload();
       FileItemIterator iter = fileUpload.getItemIterator(new RequestContext() {
@@ -115,7 +157,7 @@ public class ServiceImpl<T extends Resource> implements Service<T> {
 
         @Override
         public int getContentLength() {
-          return length;
+          return contentLength;
         }
 
         @Override
@@ -129,7 +171,8 @@ public class ServiceImpl<T extends Resource> implements Service<T> {
         }
       });
 
-      Rendition res = null;
+      Resource res = null;
+      FileItemStream item = null;
       while (iter.hasNext()) {
         FileItemStream value = iter.next();
         String key = value.getFieldName();
@@ -139,28 +182,22 @@ public class ServiceImpl<T extends Resource> implements Service<T> {
             String strValue = Streams.asString(in, "UTF-8");
             params.add(key, strValue);
           } else {
-            res = new Rendition();
-            res.setContentStream(in);
-            res.setPath(value.getName());
-            res.setMimeType(value.getContentType());
-            res.setParent(parent);
+            item = value;
           }
         } finally {
           IOUtils.closeQuietly(in);
         }
-
       }
-      if (res != null) {
-        String path = params.getFirst(Resource.PATH);
-        String title = params.getFirst(Resource.TITLE);
-        if (path != null) {
-          res.setPath(path);
-        }
-        if (title != null) {
-          res.setTitle(title);
-        }
+      if (item != null) {
+        String rt = params.getFirst(Resource.RESOURCE_TYPE);
+        ResourceType<Resource> resourceType = WebPlatform.getInstance().getResourceType(rt);
+        res = resourceType.createInstance();
+        res.setContentStream(item.openStream());
+        res.setPath(item.getFieldName());
+        res.setMimeType(item.getContentType());
+        res.setParent(parent);
+        res.readFrom(params);
         res.save();
-        return res;
       }
     } catch (Exception e) {
       // VirusFoundException, VirusFoundException will be handled by ServiceEndPointUtil centrally
@@ -184,17 +221,54 @@ public class ServiceImpl<T extends Resource> implements Service<T> {
   }
 
   @Override
+  public <C extends Resource> C findChild(T entry, String path, Class<C> childType) {
+    try {
+      TypedQuery<C> query =
+          em().createQuery(
+              "from " + childType.getName() + " c where c.parent=:parent and c.path=:path",
+              childType);
+      query.setParameter("parent", entry);
+      query.setParameter("path", path);
+      return query.getSingleResult();
+    } catch (NoResultException e) {
+      return null;
+    }
+  }
+
+  @Override
+  public java.util.List<Resource> findChildren(T entry) {
+    TypedQuery<Relationship> query =
+        em().createQuery("from " + Relationship.class.getName() + " rel where rel.source=:source",
+            Relationship.class);
+    query.setParameter("source", entry);
+    List<Relationship> rels = query.getResultList();
+    List<Resource> children = new ArrayList<Resource>(rels.size());
+    for (Relationship rel : rels) {
+      children.add(rel.getTarget());
+    }
+    return children;
+  }
+
+  @Override
+  public <C extends Resource> List<C> findChildren(T entry, Class<C> childType) {
+    TypedQuery<C> query =
+        em().createQuery("from " + childType.getName() + " c where c.parent=:parent", childType);
+    query.setParameter("parent", entry);
+    return query.getResultList();
+  }
+
+  @Override
   public T get() {
     Repository repo = WebPlatform.getInstance().getRepository();
     Path p = resourceClass.getAnnotation(Path.class);
     String path = p.value();
-    T result = repo.getChild(path);
+    T result = (T) repo.getChild(path);
     if (result == null) {
       result = ClassUtil.newInstance(resourceClass);
       result.setPath(path);
       DefaultField field = resourceClass.getAnnotation(DefaultField.class);
       if (field != null) {
-        result.setProperty(field.key(), field.value());
+        result.setPropertyValue(field.key(), field.value());
       }
       if (result.getTitle() == null) {
         result.setTitle(path);
@@ -207,6 +281,21 @@ public class ServiceImpl<T extends Resource> implements Service<T> {
   @Override
   public T getById(String id, Class<T> type) {
     return em().find(type, id);
+  }
+
+  @Override
+  public Resource getChild(T entry, String path) {
+    try {
+      TypedQuery<Relationship> query =
+          em().createQuery(
+              "from " + Relationship.class.getName()
+                  + " rel where rel.source=:source and rel.path=:path", Relationship.class);
+      query.setParameter("source", entry);
+      query.setParameter("path", path);
+      return query.getSingleResult().getTarget();
+    } catch (NoResultException e) {
+      return null;
+    }
   }
 
   @Override
@@ -223,6 +312,30 @@ public class ServiceImpl<T extends Resource> implements Service<T> {
     if (stream != null) {
       saveResource(resource, stream);
     }
+    // for (Method m : resource.getClass().getMethods()) {
+    // if (m.getParameterTypes().length > 0) {
+    // continue;
+    // }
+    // Path p = m.getAnnotation(Path.class);
+    // Class<?> rt = m.getReturnType();
+    // if (p != null && Resource.class.isAssignableFrom(rt)) {
+    // Class<Resource> childType = (Class<Resource>) rt;
+    // Resource result = ClassUtil.newInstance(childType);
+    // result.setPath(p.value());
+    // DefaultFields fields = m.getAnnotation(DefaultFields.class);
+    // if (fields != null) {
+    // for (DefaultField field : fields.value()) {
+    // result.setPropertyValue(field.key(), field.value());
+    // }
+    // } else {
+    // DefaultField field = m.getAnnotation(DefaultField.class);
+    // if (field != null) {
+    // result.setPropertyValue(field.key(), field.value());
+    // }
+    // }
+    // resource.createChild(result);
+    // }
+    // }
     return resource;
   }
 
@@ -236,5 +349,4 @@ public class ServiceImpl<T extends Resource> implements Service<T> {
   protected EntityManager em() {
     return entityManagerProvider.get();
   }
-
 }

@@ -2,9 +2,9 @@ package org.cloudlet.web.core.server;
 
 import com.google.inject.persist.Transactional;
 
-import org.cloudlet.web.core.shared.Entry;
 import org.cloudlet.web.core.shared.Feed;
 import org.cloudlet.web.core.shared.FeedService;
+import org.cloudlet.web.core.shared.Resource;
 
 import java.util.List;
 
@@ -12,8 +12,8 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
-public class FeedServiceImpl<F extends Feed<E>, E extends Entry> extends ServiceImpl<F> implements
-    FeedService<F, E> {
+public class FeedServiceImpl<F extends Feed<E>, E extends Resource> extends ResourceServiceImpl<F>
+    implements FeedService<F, E> {
 
   @Override
   public long countEntries(F feed) {

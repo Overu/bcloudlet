@@ -6,5 +6,5 @@ import org.cloudlet.web.core.shared.Group;
 import org.cloudlet.web.core.shared.GroupService;
 
 @Singleton
-public class GroupServiceImpl extends EntryServiceImpl<Group> implements GroupService {
+public class GroupServiceImpl extends ResourceServiceImpl<Group> implements GroupService {
 }

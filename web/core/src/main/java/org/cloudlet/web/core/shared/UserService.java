@@ -5,7 +5,7 @@ import com.google.inject.ImplementedBy;
 import org.cloudlet.web.core.server.UserServiceImpl;
 
 @ImplementedBy(UserServiceImpl.class)
-public interface UserService extends EntryService<User> {
+public interface UserService extends ResourceService<User> {
 
   User findUserByUsername(final String userName);
 

@@ -8,7 +8,7 @@ import com.google.inject.Singleton;
 import org.cloudlet.web.core.shared.Handler;
 import org.cloudlet.web.core.shared.Repository;
 import org.cloudlet.web.core.shared.Resource;
-import org.cloudlet.web.core.shared.Service;
+import org.cloudlet.web.core.shared.ResourceService;
 import org.cloudlet.web.core.shared.WebPlatform;
 
 import java.util.logging.Logger;
@@ -32,7 +32,7 @@ public class WebServerPlatform extends WebPlatform {
         Class<? extends Enum> enumClass = (Class<? extends Enum>) cls;
         return Enum.valueOf(enumClass, id);
       } else if (Resource.class.isAssignableFrom(cls)) {
-        Service service = getService((Class<? extends Resource>) cls);
+        ResourceService service = getService((Class<? extends Resource>) cls);
         return service.getById(id, (Class<? extends Resource>) cls);
       }
     } catch (ClassNotFoundException e) {
@@ -52,13 +52,13 @@ public class WebServerPlatform extends WebPlatform {
   }
 
   @Override
-  public <S extends Service> S getService(Class<? extends Resource> contentType) {
+  public <S extends ResourceService> S getService(Class<? extends Resource> contentType) {
     Class<S> serviceType = (Class<S>) getServiceType(contentType);
     // TODO proxy-based creation
     return injector.getInstance(serviceType);
   }
 
-  public <T extends Service> Class<T> getServiceType(Class<? extends Resource> contentClass) {
+  public <T extends ResourceService> Class<T> getServiceType(Class<? extends Resource> contentClass) {
     Handler handler = contentClass.getAnnotation(Handler.class);
     if (handler != null) {
       return (Class<T>) handler.value();

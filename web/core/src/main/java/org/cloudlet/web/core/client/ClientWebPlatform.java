@@ -4,7 +4,7 @@ import com.google.inject.Singleton;
 
 import org.cloudlet.web.core.shared.Repository;
 import org.cloudlet.web.core.shared.Resource;
-import org.cloudlet.web.core.shared.Service;
+import org.cloudlet.web.core.shared.ResourceService;
 import org.cloudlet.web.core.shared.WebPlatform;
 
 @Singleton
@@ -31,7 +31,7 @@ public class ClientWebPlatform extends WebPlatform {
   }
 
   @Override
-  public <S extends Service> S getService(Class<? extends Resource> contentType) {
+  public <S extends ResourceService> S getService(Class<? extends Resource> contentType) {
     return null;
   }
 

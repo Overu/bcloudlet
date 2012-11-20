@@ -7,9 +7,9 @@ import com.google.web.bindery.requestfactory.shared.RequestFactory;
 
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
-import org.cloudlet.web.core.client.RequestProvider.Callback;
-import org.cloudlet.web.core.shared.Feed;
+import org.cloudlet.web.core.client.RequestBuilderBase.Callback;
 import org.cloudlet.web.core.shared.User;
+import org.cloudlet.web.core.shared.UserFeed;
 
 public class UserModify extends AbstractUserFieldView {
 
@@ -20,7 +20,7 @@ public class UserModify extends AbstractUserFieldView {
   @Override
   protected void onAttach(final AttachEvent event) {
     try {
-      RequestProvider.GET("api" + placeManager.getWhere().getUri()).accept(
+      RequestBuilderBase.GET("api" + placeManager.getWhere().getUri()).accept(
           RequestFactory.JSON_CONTENT_TYPE_UTF8).callback(new Callback<User>() {
         @Override
         public void onSuccess(JSONObject json) {
@@ -35,12 +35,12 @@ public class UserModify extends AbstractUserFieldView {
   @Override
   protected void selectHandler(final SelectEvent event) {
     try {
-      RequestProvider.PUT("api" + placeManager.getWhere().getUri()).requestData(initJSON(null),
+      RequestBuilderBase.PUT("api" + placeManager.getWhere().getUri()).requestData(initJSON(null),
           User.TYPE_NAME).contentType(RequestFactory.JSON_CONTENT_TYPE_UTF8).callback(
           new Callback<User>() {
             @Override
             public void onSuccess(JSONObject json) {
-              placeManager.goTo(place.getParent().getParent(), Feed.LIST_WIDGET);
+              placeManager.goTo(place.getParent().getParent(), UserFeed.LIST);
             }
           }).send();
     } catch (RequestException e) {

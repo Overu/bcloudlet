@@ -16,11 +16,11 @@ import javax.xml.bind.annotation.XmlType;
 @Table(name = "t_member")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Handler(MemberService.class)
-public class Member extends Entry {
+public class Member extends Resource {
 
   public static final String TYPE_NAME = "Member";
 
-  public static EntryType<Member> TYPE = new EntryType<Member>(Entry.TYPE, "member") {
+  public static ResourceType<Member> TYPE = new ResourceType<Member>(Resource.TYPE, "member") {
     @Override
     public Member createInstance() {
       return new Member();
