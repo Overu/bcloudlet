@@ -18,11 +18,8 @@ public class ResourceManager implements PlaceHistoryMapper {
 
   @Override
   public Resource getPlace(String token) {
-    Resource place = root.getByUri(token);
-    if (place == null) {
-      place = new ResourceProxy(root, token);
-    }
-    return place;
+    Resource resource = root.getByUri(token);
+    return resource;
   }
 
   @Override
@@ -40,14 +37,4 @@ public class ResourceManager implements PlaceHistoryMapper {
     placeController.goTo(resource);
   }
 
-  public void goTo(Resource place, String uri) {
-    Resource newPlace = place.getByUri(uri);
-    if (newPlace != null) {
-      goTo(newPlace);
-    }
-  }
-
-  public void goTo(String uri) {
-    goTo(root, uri);
-  }
 }

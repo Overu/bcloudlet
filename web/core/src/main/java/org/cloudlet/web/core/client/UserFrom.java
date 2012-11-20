@@ -23,7 +23,7 @@ public class UserFrom extends AbstractUserFieldView {
           RequestFactory.JSON_CONTENT_TYPE_UTF8).callback(new Callback<User>() {
         @Override
         public void onSuccess(final JSONObject json) {
-          placeManager.goTo(place.getParent(), UserFeed.LIST);
+          placeManager.goTo(place.getParent().getRendition(UserFeed.LIST));
         }
       }).send();
     } catch (RequestException e) {

@@ -124,6 +124,10 @@ public abstract class Resource extends Place {
   @Transient
   public Map<String, Rendition> renditions;
 
+  @XmlTransient
+  @Transient
+  private MultivaluedMap<String, String> queryParameters;
+
   public void addChild(Resource resource) {
     if (children == null) {
       children = new ArrayList<Resource>();
@@ -181,18 +185,26 @@ public abstract class Resource extends Place {
   public Resource getByUri(String uri) {
     String[] parts = uri.split("\\?");
     String[] segments = parts[0].split("/");
-    Resource result = this;
+    Resource parent = this;
+    Resource result = null;
     for (String path : segments) {
       if (path.length() == 0) {
         continue;
       }
-      result = result.getByPath(path);
+      result = parent.getByPath(path);
       if (result == null) {
-        break;
+        if (GWT.isClient()) {
+          result = new ResourceProxy();
+          result.setParent(parent);
+          result.setPath(path);
+        } else {
+          break;
+        }
       }
+      parent = result;
     }
     if (result != null && parts.length > 1) {
-      Rendition rendition = null;
+
       String queryString = parts[1];
       String[] params = queryString.split("&");
       MultivaluedMap<String, String> paramMap = new MultivaluedHashMap<String, String>();
@@ -200,15 +212,18 @@ public abstract class Resource extends Place {
         int index = param.indexOf("=");
         String paramName = index >= 0 ? param.substring(0, index) : param;
         String paramValue = index >= 0 ? param.substring(index + 1) : "";
-        if (Resource.RENDITION.equals(paramName)) {
-          rendition = result.getRendition(paramValue);
-        } else {
-          paramMap.add(paramName, paramValue);
-        }
+        paramMap.add(paramName, paramValue);
       }
-      if (rendition != null) {
-        rendition.setQueryParameters(paramMap);
-        result = rendition;
+
+      if (result instanceof ResourceProxy) {
+        result.setQueryParameters(paramMap);
+      } else {
+        String renditionKind = paramMap.getFirst(Resource.RENDITION);
+        Rendition rendition = renditionKind != null ? result.getRendition(renditionKind) : null;
+        if (rendition != null) {
+          rendition.setQueryParameters(paramMap);
+          result = rendition;
+        }
       }
     }
     return result;
@@ -280,6 +295,14 @@ public abstract class Resource extends Place {
       return path;
     }
     return null;
+  }
+
+  @XmlTransient
+  public MultivaluedMap<String, String> getQueryParameters() {
+    if (queryParameters == null) {
+      queryParameters = new MultivaluedHashMap<String, String>();
+    }
+    return queryParameters;
   }
 
   public Resource getRelationship(Property prop) {
@@ -452,6 +475,10 @@ public abstract class Resource extends Place {
     } else if (CHILDREN_COUNT.equals(name)) {
       childrenCount = value == null ? 0 : Long.valueOf(value);
     }
+  }
+
+  public void setQueryParameters(MultivaluedMap<String, String> queryParameters) {
+    this.queryParameters = queryParameters;
   }
 
   public void setTitle(String title) {

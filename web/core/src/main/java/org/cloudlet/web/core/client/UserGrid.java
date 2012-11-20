@@ -336,7 +336,7 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
         if (userPath == null || userPath.equals("")) {
           return;
         }
-        placeController.goTo(place.getParent(), userPath);
+        placeController.goTo(place.getParent().getByPath(userPath));
       }
     }));
     cp.addButton(new TextButton("Delete User", new SelectHandler() {

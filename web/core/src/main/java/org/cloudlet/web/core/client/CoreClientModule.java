@@ -26,9 +26,9 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-import org.cloudlet.web.core.client.RequestProvider.Callback;
 import org.cloudlet.web.core.client.style.BaseResources;
 import org.cloudlet.web.core.shared.CorePackage;
+import org.cloudlet.web.core.shared.Rendition;
 import org.cloudlet.web.core.shared.Repository;
 import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.ResourceManager;
@@ -43,6 +43,8 @@ import org.cloudlet.web.core.shared.WebView;
 import java.util.Date;
 import java.util.logging.Logger;
 
+import javax.ws.rs.core.MultivaluedMap;
+
 public class CoreClientModule extends AbstractGinModule {
 
   @Singleton
@@ -52,7 +54,7 @@ public class CoreClientModule extends AbstractGinModule {
     EventBus eventBus;
 
     @Inject
-    PlaceController placeController;
+    ResourceManager resourceManager;
 
     @Inject
     PlaceHistoryHandler historyHandler;
@@ -88,61 +90,28 @@ public class CoreClientModule extends AbstractGinModule {
 
     @Override
     public void onPlaceChange(final PlaceChangeEvent event) {
-      Resource resource = (Resource) event.getNewPlace();
+      final Resource resource = (Resource) event.getNewPlace();
       if (resource instanceof ResourceProxy) {
-        final StringBuilder url = new StringBuilder("api").append(resource.getUri());
-        try {
-          RequestProvider.GET(url.toString()).accept("application/json").place(resource)
-              .callback(new Callback<Resource>() {
-                @Override
-                public void onSuccess(Resource resource) {
-                  render(resource, main);
-                }
-              }).send();
-        } catch (RequestException e) {
-          e.printStackTrace();
-        }
-        // loadResource((ResourceProxy) resource, new AsyncCallback<Resource>() {
-        // @Override
-        // public void onFailure(Throwable caught) {
-        // }
-        //
-        // @Override
-        // public void onSuccess(Resource result) {
-        // render(result, main);
-        // }
-        // });
-      } else {
-        render(resource, main);
-      }
-    }
-
-    protected void loadResource(final ResourceProxy proxy, final AsyncCallback<Resource> callback) {
-      final StringBuilder url = new StringBuilder("api").append(proxy.getUri());
-      RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url.toString());
-      builder.setHeader("Accept", "application/json");
-      try {
-        builder.sendRequest(url.toString(), new RequestCallback() {
+        loadResource(resource, new AsyncCallback<Resource>() {
           @Override
-          public void onError(Request request, Throwable exception) {
-            // TODO handle error
+          public void onFailure(Throwable caught) {
           }
 
           @Override
-          public void onResponseReceived(Request request, Response response) {
-            if (response.getStatusCode() != Response.SC_OK) {
-              // TODO handle bad request
-              return;
+          public void onSuccess(Resource result) {
+            MultivaluedMap<String, String> paramMap = resource.getQueryParameters();
+            String renditionKind = paramMap.getFirst(Resource.RENDITION);
+            Rendition rendition = renditionKind != null ? result.getRendition(renditionKind) : null;
+            if (rendition != null) {
+              rendition.setQueryParameters(paramMap);
+              render(rendition, main);
+            } else {
+              render(result, main);
             }
-
-            JSONObject dg = JSONParser.parseLenient(response.getText()).isObject();
-            JSONObject root = dg.get("dataGraph").isObject().get("root").isObject();
-            Resource resource = readResource(root);
-            resource.setParent(proxy.getParent()); // TODO load recursively
-            callback.onSuccess(resource);
           }
         });
-      } catch (RequestException e) {
+      } else {
+        render(resource, main);
       }
     }
 
@@ -165,6 +134,40 @@ public class CoreClientModule extends AbstractGinModule {
   }
 
   private static final Logger logger = Logger.getLogger(CoreClientModule.class.getName());
+
+  public static void loadResource(final Resource proxy, final AsyncCallback<Resource> callback) {
+    final StringBuilder url = new StringBuilder("api").append(proxy.getUri());
+    RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url.toString());
+    builder.setHeader("Accept", "application/json");
+    try {
+      builder.sendRequest(url.toString(), new RequestCallback() {
+        @Override
+        public void onError(Request request, Throwable exception) {
+          // TODO handle error
+        }
+
+        @Override
+        public void onResponseReceived(Request request, Response response) {
+          if (response.getStatusCode() != Response.SC_OK) {
+            // TODO handle bad request
+            return;
+          }
+
+          JSONObject dg = JSONParser.parseLenient(response.getText()).isObject();
+          JSONObject data = dg.get("dataGraph").isObject().get("root").isObject();
+          Resource resource = readResource(data);
+          if (proxy instanceof ResourceProxy) {
+            resource.setParent(proxy.getParent()); // TODO load recursively
+          } else {
+            proxy.readFrom(resource);
+            resource = proxy;
+          }
+          callback.onSuccess(resource);
+        }
+      });
+    } catch (RequestException e) {
+    }
+  }
 
   public static boolean readBoolean(JSONObject json, String field) {
     Boolean b = readBooleanObject(json, field);
@@ -261,30 +264,43 @@ public class CoreClientModule extends AbstractGinModule {
 
   public static void renderResource(final Resource resource, final AcceptsOneWidget panel,
       final AsyncCallback<IsWidget> callback) {
-    Object widget = resource.getWidget();
-    if (widget instanceof IsWidget) {
-      appendWidget(resource, (IsWidget) widget, panel, callback);
-    } else if (widget instanceof Provider) {
-      appendWidget(resource, ((Provider<IsWidget>) widget).get(), panel, callback);
-    } else if (widget instanceof AsyncProvider) {
-      AsyncProvider<IsWidget> provider = (AsyncProvider<IsWidget>) widget;
-      provider.get(new AsyncCallback<IsWidget>() {
+    if (resource instanceof ResourceProxy) {
+      loadResource(resource, new AsyncCallback<Resource>() {
         @Override
-        public void onFailure(final Throwable caught) {
-          if (callback != null) {
-            callback.onFailure(caught);
-          }
+        public void onFailure(Throwable caught) {
         }
 
         @Override
-        public void onSuccess(final IsWidget result) {
-          appendWidget(resource, result, panel, callback);
+        public void onSuccess(Resource result) {
+          renderResource(result, panel, callback);
         }
       });
     } else {
-      logger.info("No widget for " + resource.getUri() + ". Skip to child content");
-      if (panel instanceof IsWidget && callback != null) {
-        callback.onSuccess((IsWidget) panel);
+      Object widget = resource.getWidget();
+      if (widget instanceof IsWidget) {
+        appendWidget(resource, (IsWidget) widget, panel, callback);
+      } else if (widget instanceof Provider) {
+        appendWidget(resource, ((Provider<IsWidget>) widget).get(), panel, callback);
+      } else if (widget instanceof AsyncProvider) {
+        AsyncProvider<IsWidget> provider = (AsyncProvider<IsWidget>) widget;
+        provider.get(new AsyncCallback<IsWidget>() {
+          @Override
+          public void onFailure(final Throwable caught) {
+            if (callback != null) {
+              callback.onFailure(caught);
+            }
+          }
+
+          @Override
+          public void onSuccess(final IsWidget result) {
+            appendWidget(resource, result, panel, callback);
+          }
+        });
+      } else {
+        logger.info("No widget for " + resource.getUri() + ". Skip to child content");
+        if (panel instanceof IsWidget && callback != null) {
+          callback.onSuccess((IsWidget) panel);
+        }
       }
     }
   }
