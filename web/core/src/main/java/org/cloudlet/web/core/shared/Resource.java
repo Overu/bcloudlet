@@ -88,7 +88,7 @@ public abstract class Resource extends Place {
 
   @Type(type = "content")
   @Columns(columns = {@Column(name = "parentType"), @Column(name = "parentId")})
-  private Resource parent;
+  protected Resource parent;
 
   @Transient
   private transient Object nativeData;

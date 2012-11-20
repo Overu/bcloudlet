@@ -7,9 +7,7 @@ import java.util.List;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
@@ -33,7 +31,9 @@ public abstract class Feed<E extends Resource> extends Resource {
 
   public static final String NEW = "new";
 
-  public static final String LIST = "all";
+  public static final String LIST = "list";
+
+  public static final String ENTRIES = "entries";
 
   @Override
   @POST
@@ -73,7 +73,8 @@ public abstract class Feed<E extends Resource> extends Resource {
 
   public abstract Class<E> getEntryType();
 
-  public List<E> getList() {
+  @XmlElement
+  public List<E> getEntries() {
     return entries;
   }
 
@@ -97,8 +98,6 @@ public abstract class Feed<E extends Resource> extends Resource {
     return (FeedService) super.getService();
   }
 
-  @GET
-  @Path(NEW)
   public E newEntry() {
     return getResourceType().getEntryType().createInstance();
   }

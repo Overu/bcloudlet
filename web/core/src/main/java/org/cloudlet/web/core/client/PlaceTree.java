@@ -46,7 +46,7 @@ public class PlaceTree extends BorderLayoutContainer {
           if (res != null) {
             result.add(res);
           } else {
-            ResourceProxy proxy = new ResourceProxy((ResourceType) prop.getType());
+            ResourceProxy proxy = new ResourceProxy(parent, prop.getPath());
             proxy.setPath(prop.getPath());
             proxy.setParent(parent);
             proxy.setTitle(prop.getTitle());

@@ -50,7 +50,7 @@ public class ResourceType<T extends Resource> extends WebType<T> {
   }
 
   public T createInstance() {
-    return (T) new ResourceProxy(this);
+    throw new UnsupportedOperationException();
   }
 
   public Map<String, Operation> getAllOperations() {
@@ -97,6 +97,15 @@ public class ResourceType<T extends Resource> extends WebType<T> {
     return getPackage().getName() + "." + getName();
   }
 
+  public Set<String> getRenditionKinds() {
+    Set<String> result = new HashSet<String>();
+    result.addAll(widgets.keySet());
+    if (superType != null) {
+      result.addAll(superType.getRenditionKinds());
+    }
+    return result;
+  }
+
   public ResourceType getSuperType() {
     return superType;
   }
@@ -105,15 +114,6 @@ public class ResourceType<T extends Resource> extends WebType<T> {
     Object result = widgets.get(key);
     if (result == null && superType != null) {
       result = superType.getWidget(key);
-    }
-    return result;
-  }
-
-  public Set<String> getRenditionKinds() {
-    Set<String> result = new HashSet<String>();
-    result.addAll(widgets.keySet());
-    if (superType != null) {
-      result.addAll(superType.getRenditionKinds());
     }
     return result;
   }

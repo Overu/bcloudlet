@@ -82,7 +82,7 @@ public class XmlResourceProvider extends AbstractMessageReaderWriterProvider<Dat
     }
     if (resource instanceof Feed) {
       Feed feed = (Feed) resource;
-      List<Resource> entries = feed.getList();
+      List<Resource> entries = feed.getEntries();
       if (entries != null && !entries.isEmpty()) {
         for (Resource entry : entries) {
           writeResource(writer, entry);

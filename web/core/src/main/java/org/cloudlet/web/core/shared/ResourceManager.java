@@ -19,6 +19,9 @@ public class ResourceManager implements PlaceHistoryMapper {
   @Override
   public Resource getPlace(String token) {
     Resource place = root.getByUri(token);
+    if (place == null) {
+      place = new ResourceProxy(root, token);
+    }
     return place;
   }
 
