@@ -10,7 +10,7 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 
 import org.cloudlet.web.core.shared.Resource;
-import org.cloudlet.web.core.shared.ResourceProxy;
+import org.cloudlet.web.core.shared.DynaResource;
 
 public abstract class RequestProvider extends RequestBuilder {
 
@@ -76,7 +76,7 @@ public abstract class RequestProvider extends RequestBuilder {
 
   private static Resource place;
 
-  private static ResourceProxy placeProxy;
+  private static DynaResource placeProxy;
 
   private static final Callback<Resource> DEFAULT = new Callback<Resource>();
 
@@ -141,8 +141,8 @@ public abstract class RequestProvider extends RequestBuilder {
 
   public RequestProvider place(final Resource place) {
     this.place = place;
-    if (place instanceof ResourceProxy) {
-      placeProxy = (ResourceProxy) place;
+    if (place instanceof DynaResource) {
+      placeProxy = (DynaResource) place;
     }
     return this;
   }

@@ -199,7 +199,7 @@ public abstract class Resource extends Place implements IsResource {
       result = parent.getByPath(path);
       if (result == null) {
         if (GWT.isClient()) {
-          result = new ResourceProxy();
+          result = new DynaResource();
           result.setParent(parent);
           result.setPath(path);
         } else {
@@ -220,7 +220,7 @@ public abstract class Resource extends Place implements IsResource {
         paramMap.add(paramName, paramValue);
       }
 
-      if (result instanceof ResourceProxy) {
+      if (result instanceof DynaResource) {
         result.setQueryParameters(paramMap);
       } else {
         String renditionKind = paramMap.getFirst(Resource.RENDITION);

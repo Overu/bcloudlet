@@ -45,10 +45,10 @@ public class RepositoryExplorer extends WebView implements IsWidget, AcceptsOneW
 
   SimpleContainer center;
 
-  private final PlaceTree placeTree;
+  private final ResourceTree placeTree;
 
   @Inject
-  public RepositoryExplorer(final PlaceTree placeTree) {
+  public RepositoryExplorer(final ResourceTree placeTree) {
     this.placeTree = placeTree;
     con = new BorderLayoutContainer();
 

@@ -2,7 +2,7 @@ package org.cloudlet.web.core.shared;
 
 import java.util.List;
 
-public class ResourceProxy extends Resource {
+public class DynaResource extends Resource {
 
   @Override
   public Resource getByPath(String path) {

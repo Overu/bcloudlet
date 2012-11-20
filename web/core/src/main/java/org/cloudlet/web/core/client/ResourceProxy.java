@@ -11,10 +11,7 @@ import com.sencha.gxt.data.shared.loader.DataProxy;
 import org.cloudlet.web.core.shared.IsResource;
 import org.cloudlet.web.core.shared.Resource;
 
-public class PlaceProxy<C extends IsResource> implements DataProxy<C, String> {
-
-  public PlaceProxy() {
-  }
+public class ResourceProxy<C extends IsResource> implements DataProxy<C, String> {
 
   @Override
   public void load(final C loadConfig, final Callback<String, Throwable> callback) {
@@ -40,7 +37,6 @@ public class PlaceProxy<C extends IsResource> implements DataProxy<C, String> {
             return;
           }
           callback.onSuccess(response.getText());
-
         }
       });
     } catch (Exception e) {

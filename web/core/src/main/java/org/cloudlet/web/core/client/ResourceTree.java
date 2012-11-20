@@ -21,10 +21,10 @@ import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 
+import org.cloudlet.web.core.shared.DynaResource;
 import org.cloudlet.web.core.shared.Property;
 import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.ResourceManager;
-import org.cloudlet.web.core.shared.ResourceProxy;
 import org.cloudlet.web.core.shared.ResourceType;
 import org.cloudlet.web.core.shared.Root;
 import org.cloudlet.web.core.shared.WebView;
@@ -32,15 +32,13 @@ import org.cloudlet.web.core.shared.WebView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlaceTree extends WebView implements IsWidget {
+public class ResourceTree extends WebView implements IsWidget {
 
   class JSONFeedReader implements DataReader<List<Resource>, String> {
 
     @Override
     public List<Resource> read(final Object loadConfig, final String data) {
       Resource parent = (Resource) loadConfig;
-      JSONObject dg = JSONParser.parseLenient(data).isObject();
-      JSONObject root = dg.get("dataGraph").isObject().get("root").isObject();
       List<Resource> result = new ArrayList<Resource>();
       result.addAll(parent.getRenditions().values());
       for (Property prop : parent.getResourceType().getAllProperties().values()) {
@@ -49,7 +47,7 @@ public class PlaceTree extends WebView implements IsWidget {
           if (res != null) {
             result.add(res);
           } else {
-            ResourceProxy proxy = new ResourceProxy();
+            DynaResource proxy = new DynaResource();
             proxy.setParent(parent);
             proxy.setPath(prop.getPath());
             proxy.setTitle(prop.getTitle());
@@ -57,6 +55,9 @@ public class PlaceTree extends WebView implements IsWidget {
           }
         }
       }
+
+      JSONObject dg = JSONParser.parseLenient(data).isObject();
+      JSONObject root = dg.get("dataGraph").isObject().get("root").isObject();
       JSONValue c = root.get(Resource.CHILDREN);
       if (c != null) {
         JSONArray children = c.isArray();
@@ -91,7 +92,7 @@ public class PlaceTree extends WebView implements IsWidget {
   TreeStore<Resource> store;
 
   @Inject
-  public PlaceTree(@Root Resource root) {
+  public ResourceTree(@Root Resource root) {
     con = new BorderLayoutContainer();
     ModelKeyProvider<Resource> keyProvider = new ModelKeyProvider<Resource>() {
       @Override
@@ -104,7 +105,7 @@ public class PlaceTree extends WebView implements IsWidget {
     store.add(root);
     JSONFeedReader reader = new JSONFeedReader();
 
-    PlaceProxy<Resource> jsonProxy = new PlaceProxy<Resource>();
+    ResourceProxy<Resource> jsonProxy = new ResourceProxy<Resource>();
     loader = new TreeLoader<Resource>(jsonProxy, reader) {
       @Override
       public boolean hasChildren(final Resource parent) {

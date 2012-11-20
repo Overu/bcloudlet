@@ -203,7 +203,7 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint, ListLoadC
 
     JSONFeedReader reader = new JSONFeedReader();
 
-    PlaceProxy<UserGrid> proxy = new PlaceProxy<UserGrid>();
+    ResourceProxy<UserGrid> proxy = new ResourceProxy<UserGrid>();
 
     loader = new ListLoader<UserGrid, ListLoadResult<User>>(proxy, reader);
 

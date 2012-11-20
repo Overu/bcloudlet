@@ -32,7 +32,7 @@ import org.cloudlet.web.core.shared.Rendition;
 import org.cloudlet.web.core.shared.Repository;
 import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.ResourceManager;
-import org.cloudlet.web.core.shared.ResourceProxy;
+import org.cloudlet.web.core.shared.DynaResource;
 import org.cloudlet.web.core.shared.ResourceType;
 import org.cloudlet.web.core.shared.Root;
 import org.cloudlet.web.core.shared.User;
@@ -91,7 +91,7 @@ public class CoreClientModule extends AbstractGinModule {
     @Override
     public void onPlaceChange(final PlaceChangeEvent event) {
       final Resource resource = (Resource) event.getNewPlace();
-      if (resource instanceof ResourceProxy) {
+      if (resource instanceof DynaResource) {
         loadResource(resource, new AsyncCallback<Resource>() {
           @Override
           public void onFailure(Throwable caught) {
@@ -156,7 +156,7 @@ public class CoreClientModule extends AbstractGinModule {
           JSONObject dg = JSONParser.parseLenient(response.getText()).isObject();
           JSONObject data = dg.get("dataGraph").isObject().get("root").isObject();
           Resource resource = readResource(data);
-          if (proxy instanceof ResourceProxy) {
+          if (proxy instanceof DynaResource) {
             resource.setParent(proxy.getParent()); // TODO load recursively
           } else {
             proxy.readFrom(resource);
@@ -242,6 +242,7 @@ public class CoreClientModule extends AbstractGinModule {
     String type = json.get("@xsi.type").isString().stringValue();
     ResourceType objectType = WebPlatform.getInstance().getResourceType(type);
     Resource resource = objectType.createInstance();
+    resource.setId(readString(json, Resource.ID));
     resource.setPath(readString(json, Resource.PATH));
     resource.setTitle(readString(json, Resource.TITLE));
     resource.setChildrenCount(readLong(json, Resource.CHILDREN_COUNT));
@@ -264,7 +265,7 @@ public class CoreClientModule extends AbstractGinModule {
 
   public static void renderResource(final Resource resource, final AcceptsOneWidget panel,
       final AsyncCallback<IsWidget> callback) {
-    if (resource instanceof ResourceProxy) {
+    if (resource instanceof DynaResource) {
       loadResource(resource, new AsyncCallback<Resource>() {
         @Override
         public void onFailure(Throwable caught) {
