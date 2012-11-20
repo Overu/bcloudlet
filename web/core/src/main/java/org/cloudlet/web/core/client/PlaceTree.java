@@ -14,6 +14,7 @@ import com.sencha.gxt.data.shared.TreeStore;
 import com.sencha.gxt.data.shared.loader.ChildTreeStoreBinding;
 import com.sencha.gxt.data.shared.loader.DataReader;
 import com.sencha.gxt.data.shared.loader.TreeLoader;
+import com.sencha.gxt.theme.gray.client.tree.GrayTreeAppearance;
 import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData;
 import com.sencha.gxt.widget.core.client.tree.Tree;
@@ -107,7 +108,7 @@ public class PlaceTree extends BorderLayoutContainer {
           public void setValue(final Resource object, final String value) {
             object.setTitle(value);
           }
-        });
+        }, new GrayTreeAppearance());
     tree.setLoader(loader);
     // tree.getStyle().setLeafIcon(ExampleImages.INSTANCE.music());
     tree.getSelectionModel().addSelectionHandler(new SelectionHandler<Resource>() {

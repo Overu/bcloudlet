@@ -6,7 +6,8 @@ import com.google.web.bindery.requestfactory.shared.RequestFactory;
 
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
-import org.cloudlet.web.core.client.RequestBuilderBase.Callback;
+import org.cloudlet.web.core.client.RequestProvider.Callback;
+import org.cloudlet.web.core.shared.Feed;
 import org.cloudlet.web.core.shared.User;
 
 public class UserFrom extends AbstractUserFieldView {
@@ -18,11 +19,11 @@ public class UserFrom extends AbstractUserFieldView {
   @Override
   protected void selectHandler(final SelectEvent event) {
     try {
-      RequestBuilderBase.POST("api/users").requestData(initJSON(null), User.TYPE_NAME).contentType(
+      RequestProvider.POST("api/users").requestData(initJSON(null), User.TYPE_NAME).contentType(
           RequestFactory.JSON_CONTENT_TYPE_UTF8).callback(new Callback<User>() {
         @Override
-        public void onSuccess(JSONObject json) {
-          placeManager.goTo(place);
+        public void onSuccess(final JSONObject json) {
+          placeManager.goTo(place.getParent(), Feed.LIST_WIDGET);
         }
       }).send();
     } catch (RequestException e) {

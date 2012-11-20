@@ -26,7 +26,7 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-import org.cloudlet.web.core.client.RequestBuilderBase.Callback;
+import org.cloudlet.web.core.client.RequestProvider.Callback;
 import org.cloudlet.web.core.client.style.BaseResources;
 import org.cloudlet.web.core.shared.CorePackage;
 import org.cloudlet.web.core.shared.Entry;
@@ -94,7 +94,7 @@ public class CoreClientModule extends AbstractGinModule {
       if (resource instanceof ResourceProxy) {
         final StringBuilder url = new StringBuilder("api").append(resource.getUri());
         try {
-          RequestBuilderBase.GET(url.toString()).accept("application/json").place(resource)
+          RequestProvider.GET(url.toString()).accept("application/json").place(resource)
               .callback(new Callback<Resource>() {
                 @Override
                 public void onSuccess(Resource resource) {

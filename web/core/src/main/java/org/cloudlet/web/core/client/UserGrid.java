@@ -49,7 +49,6 @@ import com.sencha.gxt.widget.core.client.ListView;
 import com.sencha.gxt.widget.core.client.ListViewCustomAppearance;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.BoxLayoutContainer.BoxLayoutPack;
-import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
@@ -61,10 +60,8 @@ import com.sencha.gxt.widget.core.client.grid.Grid;
 import com.sencha.gxt.widget.core.client.toolbar.LabelToolItem;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
-import org.cloudlet.web.core.client.RequestBuilderBase.Callback;
 import org.cloudlet.web.core.shared.Feed;
 import org.cloudlet.web.core.shared.ResourceManager;
-import org.cloudlet.web.core.shared.User;
 import org.cloudlet.web.core.shared.WebView;
 
 import java.util.ArrayList;
@@ -179,7 +176,7 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
   private String userPath;
   private Grid<JSONObject> grid;
   private ListView<JSONObject, JSONObject> listView;
-  private SimpleContainer viewContainer;
+  private VerticalLayoutContainer con;
 
   static {
     r = GWT.create(Renderer.class);
@@ -196,7 +193,7 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
     // RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, path);
     // builder.setHeader("Accept", "application/json");
     HttpProxy<ListLoadConfig> proxy =
-        new HttpProxy<ListLoadConfig>(RequestBuilderBase.GET(path).accept("application/json"));
+        new HttpProxy<ListLoadConfig>(RequestProvider.GET(path).accept("application/json"));
 
     final ListLoader<ListLoadConfig, ListLoadResult<JSONObject>> loader =
         new ListLoader<ListLoadConfig, ListLoadResult<JSONObject>>(proxy, reader);
@@ -291,8 +288,6 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
       }
     });
 
-    viewContainer = new SimpleContainer();
-
     SimpleComboBox<String> type = new SimpleComboBox<String>(new StringLabelProvider<String>());
     type.setTriggerAction(TriggerAction.ALL);
     type.setEditable(false);
@@ -300,7 +295,7 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
     type.add("Table");
     type.add("List");
     type.setValue("Table");
-    selectView(type.getValue());
+    // selectView(type.getValue());
     type.addSelectionHandler(new SelectionHandler<String>() {
       @Override
       public void onSelection(final SelectionEvent<String> event) {
@@ -312,9 +307,9 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
     toolBar.add(new LabelToolItem("View:"));
     toolBar.add(type);
 
-    VerticalLayoutContainer con = new VerticalLayoutContainer();
+    con = new VerticalLayoutContainer();
     con.add(toolBar, new VerticalLayoutData(1, -1));
-    con.add(viewContainer, new VerticalLayoutData(1, 1));
+    con.add(grid, new VerticalLayoutData(1, 1));
 
     cp = new ContentPanel();
     cp.setHeadingText("Json Grid Example");
@@ -352,12 +347,8 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
           return;
         }
         try {
-          RequestBuilderBase.DELETE("api/users/" + userPath).contentType(
-              RequestFactory.JSON_CONTENT_TYPE_UTF8).callback(new Callback<User>() {
-            @Override
-            public void onSuccess(User resource) {
-            }
-          }).send();
+          RequestProvider.DELETE("api/users/" + userPath).contentType(
+              RequestFactory.JSON_CONTENT_TYPE_UTF8).send();
           loader.load();
         } catch (RequestException e) {
           e.printStackTrace();
@@ -379,11 +370,14 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
   private void selectView(final String viewName) {
     boolean cell = viewName.equals("Table");
     if (cell) {
-      viewContainer.setWidget(grid);
+      con.remove(listView);
+      con.add(grid, new VerticalLayoutData(1, 1));
     } else {
-      viewContainer.setWidget(listView);
+      con.remove(grid);
+      con.add(listView, new VerticalLayoutData(1, 1));
+      listView.setSize("100%", "100%");
     }
-    viewContainer.onResize();
+    con.onResize();
   }
 
   private void setUserPath(final JSONObject object) {
