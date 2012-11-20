@@ -40,7 +40,7 @@ public class UserModify extends AbstractUserFieldView {
           new Callback<User>() {
             @Override
             public void onSuccess(final JSONObject json) {
-              placeManager.goTo(place.getParent().getParent().getRendition(UserFeed.LIST));
+              placeManager.goTo(resource.getParent().getParent().getRendition(UserFeed.LIST));
             }
           }).send();
     } catch (RequestException e) {

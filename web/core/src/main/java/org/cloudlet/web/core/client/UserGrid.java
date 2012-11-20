@@ -62,6 +62,8 @@ import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
 import org.cloudlet.web.core.shared.Feed;
 import org.cloudlet.web.core.shared.ResourceManager;
+import org.cloudlet.web.core.shared.User;
+import org.cloudlet.web.core.shared.UserFeed;
 import org.cloudlet.web.core.shared.WebView;
 
 import java.util.ArrayList;
@@ -173,7 +175,7 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
   private static Renderer r;
   private static Resources resources;
 
-  private String userPath;
+  private User userPath;
   private Grid<JSONObject> grid;
   private ListView<JSONObject, JSONObject> listView;
   private VerticalLayoutContainer con;
@@ -319,7 +321,7 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
 
       @Override
       public void onSelect(final SelectEvent event) {
-        placeController.goTo(place.getParent().getRendition(Feed.NEW));
+        placeController.goTo(resource.getParent().getRendition(Feed.NEW));
       }
     }));
     cp.addButton(new TextButton("Load Json", new SelectHandler() {
@@ -336,7 +338,7 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
         if (userPath == null || userPath.equals("")) {
           return;
         }
-        placeController.goTo(place.getParent().getByPath(userPath));
+        placeController.goTo(userPath);
       }
     }));
     cp.addButton(new TextButton("Delete User", new SelectHandler() {
@@ -381,10 +383,12 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
   }
 
   private void setUserPath(final JSONObject object) {
-    if (object == null || !object.containsKey("path")) {
-      userPath = "";
-      return;
+    if (object == null) {
+      userPath = null;
+    } else {
+      userPath = (User) CoreClientModule.readResource(object);
+      UserFeed feed = (UserFeed) getResource().getParent();
+      userPath.setParent(feed);
     }
-    userPath = object.get("path").isString().stringValue();
   }
 }

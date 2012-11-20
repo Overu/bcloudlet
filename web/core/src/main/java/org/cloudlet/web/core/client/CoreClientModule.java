@@ -336,7 +336,7 @@ public class CoreClientModule extends AbstractGinModule {
     resource.setWidget(widget);
     panel.setWidget(widget);
     if (widget instanceof WebView) {
-      ((WebView) widget).setPlace(resource);
+      ((WebView) widget).setResource(resource);
     }
     if (callback != null) {
       callback.onSuccess(widget);
