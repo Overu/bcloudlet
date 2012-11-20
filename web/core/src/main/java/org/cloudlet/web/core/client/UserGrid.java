@@ -175,7 +175,7 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
   private static Renderer r;
   private static Resources resources;
 
-  private User userPath;
+  private User selectedItem;
   private Grid<JSONObject> grid;
   private ListView<JSONObject, JSONObject> listView;
   private VerticalLayoutContainer con;
@@ -335,21 +335,21 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
 
       @Override
       public void onSelect(final SelectEvent event) {
-        if (userPath == null || userPath.equals("")) {
+        if (selectedItem == null || selectedItem.equals("")) {
           return;
         }
-        placeController.goTo(userPath);
+        placeController.goTo(selectedItem);
       }
     }));
     cp.addButton(new TextButton("Delete User", new SelectHandler() {
 
       @Override
       public void onSelect(final SelectEvent event) {
-        if (userPath == null || userPath.equals("")) {
+        if (selectedItem == null || selectedItem.equals("")) {
           return;
         }
         try {
-          RequestProvider.DELETE("api/users/" + userPath).contentType(
+          RequestProvider.DELETE("api/users/" + selectedItem).contentType(
               RequestFactory.JSON_CONTENT_TYPE_UTF8).send();
           loader.load();
         } catch (RequestException e) {
@@ -384,11 +384,11 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint {
 
   private void setUserPath(final JSONObject object) {
     if (object == null) {
-      userPath = null;
+      selectedItem = null;
     } else {
-      userPath = (User) CoreClientModule.readResource(object);
+      selectedItem = (User) CoreClientModule.readResource(object);
       UserFeed feed = (UserFeed) getResource().getParent();
-      userPath.setParent(feed);
+      selectedItem.setParent(feed);
     }
   }
 }
