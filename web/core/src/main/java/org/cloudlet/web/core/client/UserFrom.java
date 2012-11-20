@@ -7,8 +7,8 @@ import com.google.web.bindery.requestfactory.shared.RequestFactory;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
 import org.cloudlet.web.core.client.RequestProvider.Callback;
-import org.cloudlet.web.core.shared.Feed;
 import org.cloudlet.web.core.shared.User;
+import org.cloudlet.web.core.shared.UserFeed;
 
 public class UserFrom extends AbstractUserFieldView {
 
@@ -23,7 +23,7 @@ public class UserFrom extends AbstractUserFieldView {
           RequestFactory.JSON_CONTENT_TYPE_UTF8).callback(new Callback<User>() {
         @Override
         public void onSuccess(final JSONObject json) {
-          placeManager.goTo(place.getParent(), Feed.LIST_WIDGET);
+          placeManager.goTo(place.getParent(), UserFeed.LIST);
         }
       }).send();
     } catch (RequestException e) {
