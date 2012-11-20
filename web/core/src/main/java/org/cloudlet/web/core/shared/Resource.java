@@ -9,6 +9,7 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,10 +27,14 @@ import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.container.ResourceContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlElement;
@@ -45,7 +50,7 @@ public abstract class Resource extends Place {
 
   private static final Logger logger = Logger.getLogger(Resource.class.getName());
 
-  public static final ResourceType TYPE = new ResourceType(TYPE_NAME);
+  public static final ResourceType<Resource> TYPE = new ResourceType<Resource>(TYPE_NAME);
 
   public static String ID = "id";
 
@@ -56,6 +61,10 @@ public abstract class Resource extends Place {
   public static String URI = "uri";
 
   public static String VERSION = "version";
+
+  public static String RESOURCE_TYPE = "resourceType";
+
+  public static final String RENDITION = "rendition";
 
   protected String title;
 
@@ -94,16 +103,7 @@ public abstract class Resource extends Place {
   protected long childrenCount;
 
   @Transient
-  private Map<String, Resource> cache;
-
-  @Transient
-  private Map<String, Rendition> allRenditions;
-
-  @Transient
-  private Map<String, Rendition> localRenditions;
-
-  @Transient
-  private List<Rendition> remoteRenditions;
+  private List<Resource> children;
 
   public static final String HOME_WIDGET = "";
 
@@ -111,22 +111,49 @@ public abstract class Resource extends Place {
 
   public static final String CONTENT = "content";
 
+  public static final String CHILDREN = "children";
+
+  @Transient
+  @QueryParam(CHILDREN)
+  protected boolean loadChildren;
+
+  @QueryParam(RENDITION)
+  @Transient
+  protected String renditionKind;
+
+  @Transient
+  public Map<String, Rendition> renditions;
+
+  public void addChild(Resource resource) {
+    if (children == null) {
+      children = new ArrayList<Resource>();
+    }
+    children.add(resource);
+    resource.setParent(this);
+  }
+
+  @POST
+  @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  public DataGraph<Resource> create(DataGraph<Resource> data) {
+    data.root = createChild(data.root);
+    return data;
+  }
+
+  public Resource createChild(Resource child) {
+    return getService().createChild(this, child);
+  }
+
   @POST
   @Consumes({MediaType.MULTIPART_FORM_DATA})
   @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
   public DataGraph<Resource> createFromMultipart(@Context UriInfo uriInfo,
-      @HeaderParam("Content-Length") Integer length,
+      @HeaderParam("Content-Length") Integer contentLength,
       @HeaderParam("Content-Type") String contentType, InputStream inputStream) {
     DataGraph data = new DataGraph();
-    MultivaluedMap<String, String> params = uriInfo.getQueryParameters();
-    data.root = getService().createFromMultipart(this, params, contentType, length, inputStream);
+    data.root =
+        getService().createFromMultipart(this, uriInfo, inputStream, contentType, contentLength);
     return data;
-  }
-
-  public Rendition createRendition(Rendition rendition) {
-    rendition.setParent(this);
-    rendition.save();
-    return rendition;
   }
 
   @DELETE
@@ -134,53 +161,78 @@ public abstract class Resource extends Place {
     getService().delete(this);
   }
 
-  public Resource findChild(final String uri) {
-    String[] segments = uri.split("/");
-    Resource child = this;
+  @Path("{path}")
+  public Resource getByPath(@PathParam("path") String path) {
+    Property prop = getResourceType().getProperty(path);
+    Resource result;
+    if (prop != null) {
+      result = getRelationship(prop);
+    } else {
+      result = getChild(path);
+    }
+    if (result != null) {
+      if (resourceContext != null) {
+        resourceContext.initResource(result);
+      }
+    }
+    return result;
+  }
+
+  public Resource getByUri(String uri) {
+    String[] parts = uri.split("\\?");
+    String[] segments = parts[0].split("/");
+    Resource result = this;
     for (String path : segments) {
       if (path.length() == 0) {
         continue;
       }
-      Resource parent = child;
-      child = parent.getRendition(path);
-      if (child != null) {
-        return child;
-      } else if (parent instanceof Entry) {
-        child = ((Entry) parent).getChild(path);
-      } else if (parent instanceof Feed) {
-        child = ((Feed) parent).getEntry(path);
+      result = result.getByPath(path);
+      if (result == null) {
+        break;
       }
-      if (child == null) {
-        if (GWT.isClient()) {
-          child = new ResourceProxy();
-          child.setParent(parent);
+    }
+    if (result != null && parts.length > 1) {
+      Rendition rendition = null;
+      String queryString = parts[1];
+      String[] params = queryString.split("&");
+      MultivaluedMap<String, String> paramMap = new MultivaluedHashMap<String, String>();
+      for (String param : params) {
+        int index = param.indexOf("=");
+        String paramName = index >= 0 ? param.substring(0, index) : param;
+        String paramValue = index >= 0 ? param.substring(index + 1) : "";
+        if (Resource.RENDITION.equals(paramName)) {
+          rendition = result.getRendition(paramValue);
         } else {
-          break;
+          paramMap.add(paramName, paramValue);
         }
       }
-    }
-    return child;
-  }
-
-  @XmlTransient
-  public Map<String, Rendition> getAllRenditions() {
-    if (allRenditions == null) {
-      allRenditions = new HashMap<String, Rendition>();
-      allRenditions.putAll(getLocalRenditions());
-      if (remoteRenditions != null) {
-        for (Rendition v : remoteRenditions) {
-          allRenditions.put(v.getPath(), v);
-        }
+      if (rendition != null) {
+        rendition.setQueryParameters(paramMap);
+        result = rendition;
       }
     }
-    return allRenditions;
+    return result;
   }
 
-  public Map<String, Resource> getCache() {
-    if (cache == null) {
-      cache = new HashMap<String, Resource>();
+  public Resource getChild(String path) {
+    Resource result = null;
+    if (GWT.isClient()) {
+      if (children != null) {
+        for (Resource child : children) {
+          if (path.equals(child.getPath())) {
+            return child;
+          }
+        }
+      }
+    } else {
+      result = getService().getChild(this, path);
     }
-    return cache;
+    return result;
+  }
+
+  @XmlElement
+  public List<Resource> getChildren() {
+    return children;
   }
 
   public long getChildrenCount() {
@@ -197,27 +249,6 @@ public abstract class Resource extends Place {
 
   public String getId() {
     return id;
-  }
-
-  @XmlTransient
-  public Map<String, Rendition> getLocalRenditions() {
-    if (localRenditions == null) {
-      localRenditions = new HashMap<String, Rendition>();
-      for (String key : getResourceType().getWidgetKeys()) {
-        if (key.equals(Resource.HOME_WIDGET)) {
-          continue;
-        }
-        Object widget = getResourceType().getWidget(key);
-        if (widget != null) {
-          Rendition view = new Rendition();
-          view.setParent(this);
-          view.setPath(key);
-          view.setTitle(key);
-          localRenditions.put(key, view);
-        }
-      }
-    }
-    return localRenditions;
   }
 
   public String getMimeType() {
@@ -241,7 +272,7 @@ public abstract class Resource extends Place {
     return path;
   }
 
-  public Object getProperty(String name) {
+  public Object getPropertyValue(String name) {
     if (TITLE.equals(name)) {
       return title;
     }
@@ -251,13 +282,32 @@ public abstract class Resource extends Place {
     return null;
   }
 
-  @XmlTransient
-  public List<Rendition> getRemoteRenditions() {
-    return remoteRenditions;
+  public Resource getRelationship(Property prop) {
+    if (prop.getType() instanceof ResourceType) {
+      Resource result = (Resource) getPropertyValue(prop.getPath());
+      return result;
+    } else {
+      return null;
+    }
   }
 
-  public Rendition getRendition(String path) {
-    return getAllRenditions().get(path);
+  public Rendition getRendition(String kind) {
+    return getRenditions().get(kind);
+  }
+
+  @XmlTransient
+  public Map<String, Rendition> getRenditions() {
+    if (renditions == null) {
+      renditions = new HashMap<String, Rendition>();
+      for (String kind : getResourceType().getRenditionKinds()) {
+        Rendition rendition = new Rendition();
+        rendition.setParent(this);
+        rendition.setPath(kind);
+        rendition.setTitle(kind);
+        renditions.put(kind, rendition);
+      }
+    }
+    return renditions;
   }
 
   @XmlTransient
@@ -265,7 +315,7 @@ public abstract class Resource extends Place {
     return TYPE;
   }
 
-  public Service getService() {
+  public ResourceService getService() {
     return WebPlatform.getInstance().getService(getClass());
   }
 
@@ -297,9 +347,18 @@ public abstract class Resource extends Place {
   @XmlTransient
   public Object getWidget() {
     if (widget == null) {
-      widget = getResourceType().getWidget(HOME_WIDGET);
+      if (parent != null) {
+        widget = parent.getResourceType().getWidget(getPath());
+      }
+      if (widget == null) {
+        widget = getResourceType().getWidget(HOME_WIDGET);
+      }
     }
     return widget;
+  }
+
+  public boolean hasChildren() {
+    return childrenCount > 0;
   }
 
   @GET
@@ -311,6 +370,24 @@ public abstract class Resource extends Place {
     return data;
   }
 
+  public void loadChildren() {
+    List<Resource> list = getService().findChildren(this);
+    for (Resource res : list) {
+      addChild(res);
+    }
+  }
+
+  public void readFrom(MultivaluedMap<String, String> params) {
+    String path = params.getFirst(Resource.PATH);
+    String title = params.getFirst(Resource.TITLE);
+    if (path != null) {
+      this.path = path;
+    }
+    if (title != null) {
+      this.title = title;
+    }
+  }
+
   public void readFrom(Resource delta) {
     if (delta.title != null) {
       this.title = delta.title;
@@ -318,6 +395,13 @@ public abstract class Resource extends Place {
     if (delta.path != null) {
       this.path = delta.path;
     }
+  }
+
+  public void removeChild(Resource resource) {
+    if (children == null) {
+      return;
+    }
+    children.remove(path);
   }
 
   public Resource save() {
@@ -360,7 +444,7 @@ public abstract class Resource extends Place {
     this.path = path;
   }
 
-  public void setProperty(String name, String value) {
+  public void setPropertyValue(String name, String value) {
     if (TITLE.equals(name)) {
       title = value;
     } else if (PATH.equals(name)) {
@@ -368,10 +452,6 @@ public abstract class Resource extends Place {
     } else if (CHILDREN_COUNT.equals(name)) {
       childrenCount = value == null ? 0 : Long.valueOf(value);
     }
-  }
-
-  public void setRemoteRenditions(List<Rendition> remoteViews) {
-    this.remoteRenditions = remoteViews;
   }
 
   public void setTitle(String title) {
@@ -401,6 +481,9 @@ public abstract class Resource extends Place {
   }
 
   protected void doLoad() {
+    if (loadChildren) {
+      loadChildren();
+    }
   }
 
 }

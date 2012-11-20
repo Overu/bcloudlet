@@ -1,31 +1,44 @@
 package org.cloudlet.web.core.shared;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.ws.rs.Path;
-import javax.xml.bind.annotation.XmlType;
+import java.util.List;
 
-@XmlType
-@Entity(name = Rendition.TYPE_NAME)
-@Table(name = CorePackage.PREFIX + Rendition.TYPE_NAME)
-@Path("rendition")
-@Handler(RenditionService.class)
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.xml.bind.annotation.XmlTransient;
+
 public class Rendition extends Resource {
 
-  public static final String TYPE_NAME = "Rendition";
+  @XmlTransient
+  private MultivaluedMap<String, String> queryParameters;
 
-  public static final ResourceType TYPE = new ResourceType(Resource.TYPE, TYPE_NAME);
-
-  @Override
-  public ResourceType getResourceType() {
-    return TYPE;
-  }
-
-  @Override
-  public Object getWidget() {
-    if (widget == null) {
-      widget = getParent().getResourceType().getWidget(getPath());
+  @XmlTransient
+  public MultivaluedMap<String, String> getQueryParameters() {
+    if (queryParameters == null) {
+      queryParameters = new MultivaluedHashMap<String, String>();
     }
-    return widget;
+    return queryParameters;
   }
+
+  @Override
+  public Rendition getRendition(String kind) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public StringBuilder getUriBuilder() {
+    StringBuilder builder = getParent().getUriBuilder();
+    builder.append("?").append(Resource.RENDITION).append("=").append(getPath());
+    for (String key : getQueryParameters().keySet()) {
+      List<String> values = getQueryParameters().get(key);
+      for (String value : values) {
+        builder.append("&").append(key).append("=").append(value);
+      }
+    }
+    return builder;
+  }
+
+  public void setQueryParameters(MultivaluedMap<String, String> queryParameters) {
+    this.queryParameters = queryParameters;
+  }
+
 }

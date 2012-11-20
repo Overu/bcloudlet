@@ -3,22 +3,20 @@ package org.cloudlet.web.core.shared;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlType
-public abstract class NamedElement extends Entry {
+public abstract class NamedElement extends Resource {
 
   public static final String NAME = "name";
 
-  protected String name;
-
   public String getName() {
-    return name;
+    return getPath();
   }
 
   public void setName(final String value) {
-    this.name = value;
+    setPath(value);
   }
 
   @Override
   public String toString() {
-    return name;
+    return getPath();
   }
 }

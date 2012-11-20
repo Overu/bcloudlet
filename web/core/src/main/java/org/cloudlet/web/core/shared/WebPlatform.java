@@ -64,7 +64,7 @@ public abstract class WebPlatform {
     return resourceTypes.get(name);
   }
 
-  public abstract <S extends Service> S getService(Class<? extends Resource> contentType);
+  public abstract <S extends ResourceService> S getService(Class<? extends Resource> contentType);
 
   public WebType getType(final String fullName) {
     int index = fullName.lastIndexOf(".");

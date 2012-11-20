@@ -24,5 +24,4 @@ public class Property extends TypedElement {
   public void setDeclaringType(final ResourceType declaringType) {
     this.declaringType = declaringType;
   }
-
 }

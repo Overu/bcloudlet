@@ -29,8 +29,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import org.cloudlet.web.core.client.RequestBuilderBase.Callback;
 import org.cloudlet.web.core.client.style.BaseResources;
 import org.cloudlet.web.core.shared.CorePackage;
-import org.cloudlet.web.core.shared.Entry;
-import org.cloudlet.web.core.shared.Feed;
 import org.cloudlet.web.core.shared.Repository;
 import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.ResourceManager;
@@ -75,7 +73,7 @@ public class CoreClientModule extends AbstractGinModule {
 
     @Root
     @Inject
-    Entry rootEntry;
+    Resource rootEntry;
 
     @Inject
     public Launcher() {
@@ -151,8 +149,8 @@ public class CoreClientModule extends AbstractGinModule {
     private void start() {
       Repository.TYPE.setWidget(Resource.HOME_WIDGET, explorer);
 
-      UserFeed.TYPE.setWidget(Feed.LIST_WIDGET, userGrid);
-      UserFeed.TYPE.setWidget(Feed.POST_WIDGET, userForm);
+      UserFeed.TYPE.setWidget(UserFeed.LIST, userGrid);
+      UserFeed.TYPE.setWidget(UserFeed.NEW, userForm);
       User.TYPE.setWidget(Resource.HOME_WIDGET, userModify);
 
       BaseResources.INSTANCE();
@@ -332,7 +330,7 @@ public class CoreClientModule extends AbstractGinModule {
   @Root
   @Provides
   @Singleton
-  public Entry getHomePage(final Repository repo) {
+  public Resource getHomePage(final Repository repo) {
     return repo;
   }
 
@@ -355,7 +353,7 @@ public class CoreClientModule extends AbstractGinModule {
   @Provides
   @Singleton
   PlaceHistoryHandler placeHistoryHandlerProvider(final PlaceHistoryMapper historyMapper,
-      final PlaceController placeController, final EventBus eventBus, @Root final Entry homePlace) {
+      final PlaceController placeController, final EventBus eventBus, @Root final Resource homePlace) {
     PlaceHistoryHandler placeHistoryHandler = new PlaceHistoryHandler(historyMapper);
     placeHistoryHandler.register(placeController, eventBus, homePlace);
     return placeHistoryHandler;

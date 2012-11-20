@@ -12,11 +12,12 @@ import javax.xml.bind.annotation.XmlTransient;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Handler(RepositoryService.class)
 @Path("/")
-public final class Repository extends Entry {
+public final class Repository extends Resource {
 
   public static final String TYPE_NAME = "Repository";
 
-  public static EntryType<Repository> TYPE = new EntryType<Repository>(Entry.TYPE, TYPE_NAME) {
+  public static ResourceType<Repository> TYPE = new ResourceType<Repository>(Resource.TYPE,
+      TYPE_NAME) {
     @Override
     public Repository createInstance() {
       return new Repository();
@@ -24,7 +25,12 @@ public final class Repository extends Entry {
   };
 
   @Override
-  public EntryType<?> getResourceType() {
+  public String getPath() {
+    return "";
+  }
+
+  @Override
+  public ResourceType<Repository> getResourceType() {
     return TYPE;
   }
 

@@ -8,8 +8,7 @@ import org.cloudlet.web.core.shared.RepositoryService;
 import javax.persistence.NoResultException;
 
 @Singleton
-public class RepositoryServiceImpl extends EntryServiceImpl<Repository> implements
-    RepositoryService {
+public class RepositoryServiceImpl extends ResourceServiceImpl<Repository> implements RepositoryService {
 
   @Override
   public Repository get() {

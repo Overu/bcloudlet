@@ -9,11 +9,12 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlType
 public class ResourceType<T extends Resource> extends WebType<T> {
+
   private Map<String, Object> widgets = new HashMap<String, Object>();
 
-  public static final String OPERATIONS = "operations";
+  public static String OPERATIONS = "operations";
 
-  public static final String PROPERTIES = "properties";
+  public static String PROPERTIES = "properties";
 
   private boolean _abstract;
 
@@ -25,12 +26,14 @@ public class ResourceType<T extends Resource> extends WebType<T> {
 
   private transient Map<String, Operation> operations = new HashMap<String, Operation>();
 
+  private transient Map<String, Operation> allOperations;
+
   public ResourceType() {
   }
 
   public ResourceType(ResourceType superType, String name) {
     this.superType = superType;
-    this.name = name;
+    setName(name);
     WebPlatform.getInstance().addType(this);
   }
 
@@ -38,16 +41,27 @@ public class ResourceType<T extends Resource> extends WebType<T> {
     this(null, name);
   }
 
-  public void addOperation(final Operation operation) {
+  public void addOperation(Operation operation) {
     operations.put(operation.getName(), operation);
   }
 
-  public void addProperty(final Property property) {
+  public void addProperty(Property property) {
     properties.put(property.getName(), property);
   }
 
   public T createInstance() {
-    throw new UnsupportedOperationException();
+    return (T) new ResourceProxy(this);
+  }
+
+  public Map<String, Operation> getAllOperations() {
+    if (allOperations == null) {
+      allOperations = new HashMap<String, Operation>();
+      allOperations.putAll(operations);
+      if (superType != null) {
+        allOperations.putAll(superType.getAllOperations());
+      }
+    }
+    return allOperations;
   }
 
   public Map<String, Property> getAllProperties() {
@@ -61,7 +75,7 @@ public class ResourceType<T extends Resource> extends WebType<T> {
     return allProperties;
   }
 
-  public Operation getOperation(final String name) {
+  public Operation getOperation(String name) {
     Operation operation = operations.get(name);
     if (operation == null && superType != null) {
       operation = superType.getOperation(name);
@@ -73,8 +87,7 @@ public class ResourceType<T extends Resource> extends WebType<T> {
     return properties;
   }
 
-  @Override
-  public Property getProperty(final String name) {
+  public Property getProperty(String name) {
     Property result = properties.get(name);
     return result;
   }
@@ -96,11 +109,11 @@ public class ResourceType<T extends Resource> extends WebType<T> {
     return result;
   }
 
-  public Set<String> getWidgetKeys() {
+  public Set<String> getRenditionKinds() {
     Set<String> result = new HashSet<String>();
     result.addAll(widgets.keySet());
     if (superType != null) {
-      result.addAll(superType.getWidgetKeys());
+      result.addAll(superType.getRenditionKinds());
     }
     return result;
   }
@@ -126,11 +139,11 @@ public class ResourceType<T extends Resource> extends WebType<T> {
     return content.getResourceType().hasSuperType(this);
   }
 
-  public void setAbstract(final boolean value) {
+  public void setAbstract(boolean value) {
     this._abstract = value;
   }
 
-  public void setSuperType(final ResourceType superType) {
+  public void setSuperType(ResourceType superType) {
     this.superType = superType;
   }
 

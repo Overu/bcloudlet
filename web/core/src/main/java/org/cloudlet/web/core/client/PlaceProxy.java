@@ -9,7 +9,6 @@ import com.google.gwt.http.client.Response;
 import com.sencha.gxt.data.shared.loader.DataProxy;
 
 import org.cloudlet.web.core.shared.Resource;
-import org.cloudlet.web.core.shared.Entry;
 
 public class PlaceProxy implements DataProxy<Resource, String> {
 
@@ -32,7 +31,7 @@ public class PlaceProxy implements DataProxy<Resource, String> {
       String data = null;
       final StringBuilder url =
           loadConfig == null ? place.getUriBuilder() : loadConfig.getUriBuilder();
-      url.append("?" + Entry.CHILDREN + "=true");
+      url.append("?" + Resource.CHILDREN + "=true");
       url.insert(0, "api");
       RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url.toString());
       builder.setHeader("Accept", "application/json");

@@ -11,19 +11,19 @@ import javax.xml.bind.annotation.XmlType;
 @Handler(SectionService.class)
 @Path("section")
 @DefaultField(key = "title", value = "用户组")
-public class Section extends Entry {
+public class Section extends Resource {
 
   public static final String TYPE_NAME = "Section";
 
-  public static EntryType TYPE = new EntryType(Entry.TYPE, TYPE_NAME) {
+  public static ResourceType TYPE = new ResourceType(Resource.TYPE, TYPE_NAME) {
     @Override
-    public Entry createInstance() {
+    public Section createInstance() {
       return new Section();
     }
   };
 
   @Override
-  public EntryType getResourceType() {
+  public ResourceType getResourceType() {
     return TYPE;
   }
 

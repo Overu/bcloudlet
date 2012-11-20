@@ -6,5 +6,5 @@ import org.cloudlet.web.core.shared.Book;
 import org.cloudlet.web.core.shared.BookService;
 
 @Singleton
-public class BookServiceImpl extends EntryServiceImpl<Book> implements BookService {
+public class BookServiceImpl extends ResourceServiceImpl<Book> implements BookService {
 }

@@ -7,9 +7,9 @@ import java.util.List;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
@@ -19,21 +19,23 @@ import javax.xml.bind.annotation.XmlType;
 
 @MappedSuperclass
 @XmlType(name = Feed.TYPE_NAME)
-public abstract class Feed<E extends Entry> extends Resource {
+public abstract class Feed<E extends Resource> extends Resource {
 
   public static final String TYPE_NAME = "Feed";
 
-  public static FeedType TYPE = new FeedType(Resource.TYPE, TYPE_NAME, Entry.TYPE);
+  public static FeedType TYPE = new FeedType(Resource.TYPE, TYPE_NAME, Resource.TYPE);
 
   @Transient
   protected List<E> entries;
+
   @Transient
   protected Long queryCount;
 
-  public static final String POST_WIDGET = "post";
+  public static final String NEW = "new";
 
-  public static final String LIST_WIDGET = "list";
+  public static final String LIST = "all";
 
+  @Override
   @POST
   @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
   @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -50,18 +52,18 @@ public abstract class Feed<E extends Entry> extends Resource {
     return (E) getService().createEntry(this, entry);
   }
 
-  public List<E> getEntries() {
-    return entries;
-  }
-
-  @Path("{path}")
-  public final E getEntry(@PathParam("path") String path) {
-    E result = (E) getCache().get(path);
-    if (result == null && !GWT.isClient()) {
-      result = (E) getService().findEntry(this, path);
-      if (result != null) {
-        getCache().put(path, result);
+  public E getEntry(String path) {
+    E result = null;
+    if (GWT.isClient()) {
+      if (entries != null) {
+        for (E entry : entries) {
+          if (path.equals(entry.getPath())) {
+            result = entry;
+          }
+        }
       }
+    } else {
+      result = (E) getService().findEntry(this, path);
     }
     if (result != null && resourceContext != null) {
       resourceContext.initResource(result);
@@ -71,19 +73,34 @@ public abstract class Feed<E extends Entry> extends Resource {
 
   public abstract Class<E> getEntryType();
 
+  public List<E> getList() {
+    return entries;
+  }
+
+  @Override
+  public Object getPropertyValue(String path) {
+    return super.getPropertyValue(path);
+  }
+
   @XmlElement
   public Long getQueryCount() {
     return queryCount;
   }
 
   @Override
-  public FeedType getResourceType() {
+  public FeedType<? extends Feed<?>, ? extends E> getResourceType() {
     return TYPE;
   }
 
   @Override
   public FeedService getService() {
     return (FeedService) super.getService();
+  }
+
+  @GET
+  @Path(NEW)
+  public E newEntry() {
+    return getResourceType().getEntryType().createInstance();
   }
 
   public void setEntries(List<E> entries) {
@@ -93,13 +110,12 @@ public abstract class Feed<E extends Entry> extends Resource {
   @Override
   protected void doLoad() {
     super.doLoad();
-    loadEntries();
+    doLoadEntries();
   }
 
-  protected void loadEntries() {
-    FeedService service = getService();
-    entries = service.findEntries(this, 0, -1);
-    queryCount = service.countEntries(this);
+  protected void doLoadEntries() {
+    entries = getService().findEntries(this, 0, -1);
+    queryCount = getService().countEntries(this);
   }
 
 }

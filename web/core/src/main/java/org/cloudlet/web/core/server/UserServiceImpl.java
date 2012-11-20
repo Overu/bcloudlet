@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 import javax.persistence.NoResultException;
 
 @Singleton
-public class UserServiceImpl extends EntryServiceImpl<User> implements UserService {
+public class UserServiceImpl extends ResourceServiceImpl<User> implements UserService {
 
   private static final Logger logger = Logger.getLogger(UserServiceImpl.class.getName());
 

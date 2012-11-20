@@ -6,7 +6,6 @@ import com.google.inject.Inject;
 
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.UUID;
@@ -32,17 +31,19 @@ public class BookTest extends CoreTest {
     total = total + 1;
     book.setPath("book" + total);
     book.setTitle("娱乐 " + total);
-    book.setContentStream(new ByteArrayInputStream("Good work".getBytes()));
+    // book.setContentStream(new ByteArrayInputStream("Good work".getBytes()));
     books.createEntry(book);
 
-    Rendition rendition = new Rendition();
+    Media cover = new Media();
 
-    InputStream stream = getClass().getResourceAsStream("covers/sanguo.jpg");
-    rendition.setContentStream(stream);
-    rendition.setPath("cover");
-    rendition.setTitle("Cover");
-    book.createChild(rendition);
-    book.setCover(rendition);
+    InputStream stream = getClass().getResourceAsStream("/covers/sanguo.jpg");
+    cover.setContentStream(stream);
+    cover.setPath("cover");
+    cover.setTitle("Cover");
+    cover.setParent(book);
+    cover.save();
+
+    book.setCover(cover);
     book.update();
     books.load();
     assertEquals(total, books.getChildrenCount());
@@ -59,7 +60,7 @@ public class BookTest extends CoreTest {
 
     JAXBContext jc =
         JAXBContext.newInstance(Repository.class, DataGraph.class, GroupFeed.class, UserFeed.class,
-            User.class, Rendition.class, BookFeed.class);
+            User.class, Media.class, BookFeed.class);
     Marshaller marshaller = jc.createMarshaller();
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     marshaller.marshal(books, os);

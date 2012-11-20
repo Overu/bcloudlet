@@ -12,11 +12,13 @@ import javax.xml.bind.annotation.XmlType;
 @Entity
 @Table(name = "t_user")
 @Handler(UserService.class)
-public class User extends Entry implements Principal {
+public class User extends Resource implements Principal {
+
   public static final String TYPE_NAME = "User";
-  public static EntryType TYPE = new EntryType(Entry.TYPE, "TYPE_NAME") {
+
+  public static ResourceType<User> TYPE = new ResourceType<User>(Resource.TYPE, TYPE_NAME) {
     @Override
-    public Entry createInstance() {
+    public User createInstance() {
       return new User();
     }
   };
@@ -45,7 +47,7 @@ public class User extends Entry implements Principal {
   }
 
   @Override
-  public EntryType getResourceType() {
+  public ResourceType<User> getResourceType() {
     return TYPE;
   }
 
