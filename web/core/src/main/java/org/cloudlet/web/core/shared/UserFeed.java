@@ -32,4 +32,12 @@ public class UserFeed extends PagingFeed<User> {
   public FeedType<UserFeed, User> getResourceType() {
     return TYPE;
   }
+
+  @Override
+  public User newEntry() {
+    User user = new User();
+    user.setName("abc");
+    user.setEmail("abc@mycompany.com");
+    return user;
+  }
 }

@@ -29,7 +29,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import org.cloudlet.web.core.client.style.BaseResources;
 import org.cloudlet.web.core.shared.CorePackage;
 import org.cloudlet.web.core.shared.DynaResource;
-import org.cloudlet.web.core.shared.Rendition;
 import org.cloudlet.web.core.shared.Repository;
 import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.ResourceManager;
@@ -63,7 +62,7 @@ public class CoreClientModule extends AbstractGinModule {
     UserGrid userGrid;
 
     @Inject
-    UserFrom userForm;
+    UserFeedEditor userForm;
 
     @Inject
     UserEditor userModify;
@@ -101,13 +100,11 @@ public class CoreClientModule extends AbstractGinModule {
           public void onSuccess(Resource result) {
             MultivaluedMap<String, String> paramMap = resource.getQueryParameters();
             String renditionKind = paramMap.getFirst(Resource.RENDITION);
-            Rendition rendition = renditionKind != null ? result.getRendition(renditionKind) : null;
-            if (rendition != null) {
-              rendition.setQueryParameters(paramMap);
-              render(rendition, main);
-            } else {
-              render(result, main);
-            }
+            Resource rendition =
+                result.getRendition(renditionKind == null ? Resource.HOME : renditionKind);
+            paramMap.remove(Resource.RENDITION);
+            rendition.setQueryParameters(paramMap);
+            render(rendition, main);
           }
         });
       } else {

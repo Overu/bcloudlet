@@ -45,8 +45,7 @@ public class ResourceProxy<C extends IsResource> implements DataProxy<C, String>
       if (RequestBuilder.POST.equals(method) || RequestBuilder.PUT.equals(method)) {
         data = generateData(loadConfig);
       }
-      onRequest(loadConfig);
-      final StringBuilder url = loadConfig.asResource().getRendition().getUriBuilder();
+      final StringBuilder url = loadConfig.asResource().getUriBuilder();
       url.insert(0, "api");
       RequestBuilder builder = new RequestBuilder(method, url.toString());
       builder.setHeader("Accept", "application/json");
@@ -89,9 +88,6 @@ public class ResourceProxy<C extends IsResource> implements DataProxy<C, String>
     JSONObject dg = new JSONObject();
     dg.put("dataGraph", root);
     return dg.toString();
-  }
-
-  protected void onRequest(C config) {
   }
 
 }

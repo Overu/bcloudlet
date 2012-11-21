@@ -4,6 +4,7 @@ import com.google.gwt.core.shared.GWT;
 
 import com.sencha.gxt.data.shared.SortInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.MappedSuperclass;
@@ -125,7 +126,13 @@ public abstract class Feed<E extends Resource> extends Resource {
   @Override
   protected void doLoad() {
     super.doLoad();
-    doLoadEntries();
+    if (NEW.equals(renditionKind)) {
+      entries = new ArrayList<E>();
+      E entry = newEntry();
+      entries.add(entry);
+    } else if (LIST.equals(renditionKind)) {
+      doLoadEntries();
+    }
   }
 
   protected void doLoadEntries() {
