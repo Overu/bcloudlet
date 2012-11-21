@@ -122,7 +122,7 @@ public abstract class AbstractUserFieldView extends WebView implements IsWidget,
       TextField textField = entry.getValue();
       if (json != null) {
         if (object.containsKey(key)) {
-          textField.setText(object.get(key).isString().stringValue());
+          textField.setText(object.get(key).toString());
         }
       } else {
         String value = textField.getValue();

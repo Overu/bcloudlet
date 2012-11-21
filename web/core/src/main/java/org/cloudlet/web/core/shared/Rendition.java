@@ -5,6 +5,11 @@ import java.util.List;
 public class Rendition extends Resource {
 
   @Override
+  public Rendition getRendition() {
+    return this;
+  }
+
+  @Override
   public Rendition getRendition(String kind) {
     throw new UnsupportedOperationException();
   }
@@ -24,5 +29,4 @@ public class Rendition extends Resource {
     }
     return builder;
   }
-
 }

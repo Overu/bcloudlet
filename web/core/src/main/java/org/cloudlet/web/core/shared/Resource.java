@@ -313,6 +313,10 @@ public abstract class Resource extends Place implements IsResource {
     }
   }
 
+  public Rendition getRendition() {
+    return getRendition(HOME);
+  }
+
   public Rendition getRendition(String kind) {
     return getRenditions().get(kind);
   }
@@ -322,9 +326,6 @@ public abstract class Resource extends Place implements IsResource {
     if (renditions == null) {
       renditions = new HashMap<String, Rendition>();
       for (String kind : getResourceType().getRenditionKinds()) {
-        if (HOME.equals(kind)) {
-          continue;
-        }
         Rendition rendition = new Rendition();
         rendition.setParent(this);
         rendition.setPath(kind);

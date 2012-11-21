@@ -23,6 +23,7 @@ import com.sencha.gxt.widget.core.client.tree.Tree;
 
 import org.cloudlet.web.core.shared.DynaResource;
 import org.cloudlet.web.core.shared.Property;
+import org.cloudlet.web.core.shared.Rendition;
 import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.ResourceManager;
 import org.cloudlet.web.core.shared.ResourceType;
@@ -40,7 +41,12 @@ public class ResourceTree extends WebView implements IsWidget {
     public List<Resource> read(final Object loadConfig, final String data) {
       Resource parent = (Resource) loadConfig;
       List<Resource> result = new ArrayList<Resource>();
-      result.addAll(parent.getRenditions().values());
+      for (Rendition rendition : parent.getRenditions().values()) {
+        if (rendition.getPath().equals(Resource.HOME)) {
+          continue;
+        }
+        result.add(rendition);
+      }
       for (Property prop : parent.getResourceType().getAllProperties().values()) {
         if (prop.getType() instanceof ResourceType) {
           Resource res = parent.getRelationship(prop);
@@ -105,7 +111,12 @@ public class ResourceTree extends WebView implements IsWidget {
     store.add(root);
     JSONFeedReader reader = new JSONFeedReader();
 
-    ResourceProxy<Resource> jsonProxy = new ResourceProxy<Resource>();
+    ResourceProxy<Resource> jsonProxy = new ResourceProxy<Resource>() {
+      @Override
+      protected void onRequest(Resource config) {
+        config.getRendition().getQueryParameters().addFirst(Resource.CHILDREN, "true");
+      };
+    };
     loader = new TreeLoader<Resource>(jsonProxy, reader) {
       @Override
       public boolean hasChildren(final Resource parent) {

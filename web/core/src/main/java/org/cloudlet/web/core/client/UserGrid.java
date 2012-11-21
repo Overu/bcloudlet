@@ -336,7 +336,7 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint, ListLoadC
         loader.load(UserGrid.this);
       }
     }));
-    cp.addButton(new TextButton("Modify User", new SelectHandler() {
+    cp.addButton(new TextButton("Edit", new SelectHandler() {
 
       @Override
       public void onSelect(final SelectEvent event) {

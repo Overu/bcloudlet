@@ -28,6 +28,8 @@ public class ResourceType<T extends Resource> extends WebType<T> {
 
   private transient Map<String, Operation> allOperations;
 
+  private transient Map<Class<?>, Object> providers = new HashMap<Class<?>, Object>();
+
   public ResourceType() {
   }
 
@@ -92,6 +94,14 @@ public class ResourceType<T extends Resource> extends WebType<T> {
     return result;
   }
 
+  public <T> T getProvider(Class<T> cls) {
+    T provider = (T) providers.get(cls);
+    if (provider == null && superType != null) {
+      provider = (T) superType.getProvider(cls);
+    }
+    return provider;
+  }
+
   @Override
   public String getQualifiedName() {
     return getPackage().getName() + "." + getName();
@@ -103,6 +113,7 @@ public class ResourceType<T extends Resource> extends WebType<T> {
     if (superType != null) {
       result.addAll(superType.getRenditionKinds());
     }
+    result.add(HOME);
     return result;
   }
 
@@ -141,6 +152,10 @@ public class ResourceType<T extends Resource> extends WebType<T> {
 
   public void setAbstract(boolean value) {
     this._abstract = value;
+  }
+
+  public <T> void setProvider(Class<T> cls, T instnace) {
+    providers.put(cls, instnace);
   }
 
   public void setSuperType(ResourceType superType) {

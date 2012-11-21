@@ -28,11 +28,11 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import org.cloudlet.web.core.client.style.BaseResources;
 import org.cloudlet.web.core.shared.CorePackage;
+import org.cloudlet.web.core.shared.DynaResource;
 import org.cloudlet.web.core.shared.Rendition;
 import org.cloudlet.web.core.shared.Repository;
 import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.ResourceManager;
-import org.cloudlet.web.core.shared.DynaResource;
 import org.cloudlet.web.core.shared.ResourceType;
 import org.cloudlet.web.core.shared.Root;
 import org.cloudlet.web.core.shared.User;
@@ -121,6 +121,8 @@ public class CoreClientModule extends AbstractGinModule {
       UserFeed.TYPE.setWidget(UserFeed.LIST, userGrid);
       UserFeed.TYPE.setWidget(UserFeed.NEW, userForm);
       User.TYPE.setWidget(Resource.HOME, userModify);
+
+      Resource.TYPE.setProvider(JSONObjectProvider.class, new JSONResourceProvider<Resource>());
 
       BaseResources.INSTANCE();
       main = new SimplePanel();
