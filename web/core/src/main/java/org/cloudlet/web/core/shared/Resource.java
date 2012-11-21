@@ -106,7 +106,7 @@ public abstract class Resource extends Place implements IsResource {
   @Transient
   private List<Resource> children;
 
-  public static final String HOME = "";
+  public static final String SELF = "";
 
   protected String content;
 
@@ -267,13 +267,6 @@ public abstract class Resource extends Place implements IsResource {
     return contentStream;
   }
 
-  public Resource getHome() {
-    if (isHome()) {
-      return this;
-    }
-    return home;
-  }
-
   public String getId() {
     return id;
   }
@@ -327,7 +320,11 @@ public abstract class Resource extends Place implements IsResource {
   }
 
   public Resource getRendition(String kind) {
-    return getRenditions().get(kind);
+    if (isHome()) {
+      return getRenditions().get(kind);
+    } else {
+      return getSelf().getRendition(kind);
+    }
   }
 
   public String getRenditionKind() {
@@ -358,6 +355,13 @@ public abstract class Resource extends Place implements IsResource {
   @XmlTransient
   public ResourceType<? extends Resource> getResourceType() {
     return TYPE;
+  }
+
+  public Resource getSelf() {
+    if (isHome()) {
+      return this;
+    }
+    return home;
   }
 
   public ResourceService getService() {
@@ -404,7 +408,7 @@ public abstract class Resource extends Place implements IsResource {
   @XmlTransient
   public Object getWidget() {
     if (widget == null) {
-      String kind = renditionKind == null ? HOME : renditionKind;
+      String kind = renditionKind == null ? SELF : renditionKind;
       widget = getResourceType().getWidget(kind);
     }
     return widget;
@@ -446,6 +450,7 @@ public abstract class Resource extends Place implements IsResource {
   }
 
   public void readFrom(Resource delta) {
+    this.nativeData = delta.nativeData;
     if (delta.title != null) {
       this.title = delta.title;
     }
@@ -565,4 +570,5 @@ public abstract class Resource extends Place implements IsResource {
       loadChildren();
     }
   }
+
 }

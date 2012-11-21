@@ -58,14 +58,14 @@ public class UserFeedEditor extends WebView<UserFeed> {
             if (children != null) {
               for (int i = 0; i < children.size(); i++) {
                 JSONObject object = children.get(i).isObject();
-                User child = (User) CoreClientModule.readResource(object);
-                child.setParent(resource.getHome());
+                User child = (User) JSONResourceProvider.readResource(object);
+                child.setParent(resource.getSelf());
                 entries.add(child);
               }
             } else {
               JSONObject object = c.isObject();
-              User child = (User) CoreClientModule.readResource(object);
-              child.setParent(resource.getHome());
+              User child = (User) JSONResourceProvider.readResource(object);
+              child.setParent(resource.getSelf());
               entries.add(child);
             }
             resource.setEntries(entries);

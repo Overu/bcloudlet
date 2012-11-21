@@ -113,7 +113,7 @@ public class ResourceType<T extends Resource> extends WebType<T> {
     if (superType != null) {
       result.addAll(superType.getRenditionKinds());
     }
-    result.add(Resource.HOME);
+    result.add(Resource.SELF);
     return result;
   }
 

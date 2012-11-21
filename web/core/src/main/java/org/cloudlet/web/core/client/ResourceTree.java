@@ -39,10 +39,10 @@ public class ResourceTree extends WebView implements IsWidget {
     @Override
     public List<Resource> read(final Object loadConfig, final String data) {
       Resource parent = (Resource) loadConfig;
-      parent = parent.getHome();
+      parent = parent.getSelf();
       List<Resource> result = new ArrayList<Resource>();
       for (Resource res : parent.getRenditions().values()) {
-        if (res.getRenditionKind().equals(Resource.HOME)) {
+        if (res.getRenditionKind().equals(Resource.SELF)) {
           continue;
         }
         res.getQueryParameters().addFirst(Resource.CHILDREN, "true");
@@ -72,7 +72,7 @@ public class ResourceTree extends WebView implements IsWidget {
         if (children != null) {
           for (int i = 0; i < children.size(); i++) {
             JSONObject object = children.get(i).isObject();
-            Resource child = CoreClientModule.readResource(object);
+            Resource child = JSONResourceProvider.readResource(object);
             parent.addChild(child);
             result.add(child);
             child.setParent(parent);
@@ -80,7 +80,7 @@ public class ResourceTree extends WebView implements IsWidget {
           }
         } else {
           JSONObject object = c.isObject();
-          Resource child = CoreClientModule.readResource(object);
+          Resource child = JSONResourceProvider.readResource(object);
           parent.addChild(child);
           result.add(child);
           child.setParent(parent);
@@ -114,7 +114,7 @@ public class ResourceTree extends WebView implements IsWidget {
     };
 
     store = new TreeStore<Resource>(keyProvider);
-    Resource home = root.getRendition(Resource.HOME);
+    Resource home = root.getRendition(Resource.SELF);
     home.getQueryParameters().addFirst(Resource.CHILDREN, "true");
     store.add(home);
     JSONFeedReader reader = new JSONFeedReader();

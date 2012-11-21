@@ -23,7 +23,7 @@ public class BookFeed extends PagingFeed<Book> {
   public static final String RECOMMENDED = "recommended";
 
   @SuppressWarnings("hiding")
-  public static FeedType<BookFeed, Book> TYPE = new FeedType<BookFeed, Book>(BookFeed.TYPE,
+  public static FeedType<BookFeed, Book> TYPE = new FeedType<BookFeed, Book>(PagingFeed.TYPE,
       TYPE_NAME, Book.TYPE) {
 
     @Override

@@ -78,7 +78,7 @@ public class UserGrid extends WebView<UserFeed> implements EntryPoint, ListLoadC
 
     @Override
     public ListLoadResult<User> read(final Object loadConfig, final String data) {
-      UserFeed parent = (UserFeed) ((IsResource) loadConfig).asResource().getHome();
+      UserFeed parent = (UserFeed) ((IsResource) loadConfig).asResource().getSelf();
       JSONObject root = JSONParser.parseLenient(data).isObject();
       JSONObject feed = root.get("dataGraph").isObject().get("root").isObject();
       JSONValue entries = feed.get(Feed.ENTRIES);
@@ -87,7 +87,7 @@ public class UserGrid extends WebView<UserFeed> implements EntryPoint, ListLoadC
       if (entries != null && (records = entries.isArray()) != null) {
         for (int i = 0; i < records.size(); i++) {
           JSONObject json = records.get(i).isObject();
-          User user = (User) CoreClientModule.readResource(json);
+          User user = (User) JSONResourceProvider.readResource(json);
           user.setParent(parent);
           users.add(user);
         }
@@ -325,7 +325,7 @@ public class UserGrid extends WebView<UserFeed> implements EntryPoint, ListLoadC
 
       @Override
       public void onSelect(final SelectEvent event) {
-        placeController.goTo(resource.getParent().getRendition(Feed.NEW));
+        placeController.goTo(resource.getRendition(Feed.NEW));
       }
     }));
     cp.addButton(new TextButton("Refresh", new SelectHandler() {
