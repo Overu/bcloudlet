@@ -20,6 +20,10 @@ public class User extends Resource implements Principal {
 
   public static final String NAME = "name";
 
+  public static final String PHONE = "phone";
+  public static final String STATE = "state";
+  public static final String ZIP = "zip";
+
   public static ResourceType<User> TYPE = new ResourceType<User>(Resource.TYPE, TYPE_NAME) {
     @Override
     public User createInstance() {

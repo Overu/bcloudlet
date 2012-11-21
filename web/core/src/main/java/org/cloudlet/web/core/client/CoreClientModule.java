@@ -173,6 +173,7 @@ public class CoreClientModule extends AbstractGinModule {
   public static void renderResource(final Resource resource, final AcceptsOneWidget panel,
       final AsyncCallback<IsWidget> callback) {
     if (resource instanceof DynaResource) {
+      final DynaResource delegate = (DynaResource) resource;
       loadResource(resource, new AsyncCallback<Resource>() {
         @Override
         public void onFailure(Throwable caught) {
@@ -180,6 +181,7 @@ public class CoreClientModule extends AbstractGinModule {
 
         @Override
         public void onSuccess(Resource result) {
+          delegate.setDelegate(result);
           renderResource(result, panel, callback);
         }
       });

@@ -96,9 +96,23 @@ public class JSONResourceProvider<T extends Resource> implements JSONObjectProvi
   public static String readString(JSONObject data, String field) {
     JSONValue value = data.get(field);
     if (value != null) {
-      return value.isString().stringValue();
+      if (value.isString() != null) {
+        return value.isString().stringValue();
+      }
+      if (value.isNumber() != null) {
+        Double.toString(value.isNumber().doubleValue());
+      }
+      if (value.isNull() != null) {
+        return null;
+      }
     }
     return null;
+  }
+
+  public static void writeString(JSONObject json, String field, String email) {
+    if (email != null) {
+      json.put(field, new JSONString(email));
+    }
   }
 
   @Override

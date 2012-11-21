@@ -29,11 +29,6 @@ import org.cloudlet.web.core.shared.User;
 import org.cloudlet.web.core.shared.UserFeed;
 import org.cloudlet.web.core.shared.WebView;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 public abstract class AbstractUserFieldView extends WebView<User> implements IsWidget, EntryPoint {
 
   interface Responsecallback {
@@ -47,36 +42,33 @@ public abstract class AbstractUserFieldView extends WebView<User> implements IsW
   ResourceManager resourceManager;
 
   private ContentPanel cp;
-
-  protected Map<String, TextField> textFieldMap;
+  TextField name;
+  TextField email;
+  TextField phone;
+  TextField state;
+  TextField zip;
 
   public AbstractUserFieldView(final String viewName) {
-    textFieldMap = new HashMap<String, TextField>();
 
     VerticalLayoutContainer p = new VerticalLayoutContainer();
     p.setLayoutData(new MarginData(8));
 
-    final TextField name = new TextField();
+    name = new TextField();
     name.setAllowBlank(false);
     p.add(new FieldLabel(name, "Name"), new VerticalLayoutData(1, -1));
-    textFieldMap.put("name", name);
 
-    final TextField email = new TextField();
+    email = new TextField();
     email.setAllowBlank(false);
     p.add(new FieldLabel(email, "Email"), new VerticalLayoutData(1, -1));
-    textFieldMap.put("email", email);
 
-    TextField phone = new TextField();
+    phone = new TextField();
     p.add(new FieldLabel(phone, "Phone"), new VerticalLayoutData(1, -1));
-    textFieldMap.put("phone", phone);
 
-    TextField state = new TextField();
+    state = new TextField();
     p.add(new FieldLabel(state, "State"), new VerticalLayoutData(1, -1));
-    textFieldMap.put("state", state);
 
-    TextField zip = new TextField();
+    zip = new TextField();
     p.add(new FieldLabel(zip, "Zip"), new VerticalLayoutData(1, -1));
-    textFieldMap.put("zip", zip);
 
     cp = new ContentPanel();
     cp.setHeadingText(viewName);
@@ -93,6 +85,10 @@ public abstract class AbstractUserFieldView extends WebView<User> implements IsW
         user.setParent(resource.getParent());
         user.setPath(resource.getPath());
         user.setEmail(email.getText());
+        user.setName(name.getText());
+        user.setPhone(phone.getText());
+        user.setState(state.getText());
+        user.setZip(zip.getText());
         saveResource(user);
       }
     }));
@@ -122,34 +118,15 @@ public abstract class AbstractUserFieldView extends WebView<User> implements IsW
   @Override
   public void setValue(User resource) {
     super.setValue(resource);
-    initJSON(resource);
+    initForm(resource);
   }
 
-  protected JSONObject initJSON(User resource) {
-    JSONObject json = resource.getNativeData();
-    Set<Entry<String, TextField>> entrySet = textFieldMap.entrySet();
-    JSONObject object = null;
-    if (json != null) {
-      object = json;
-    } else {
-      object = new JSONObject();
-    }
-    for (Entry<String, TextField> entry : entrySet) {
-      String key = entry.getKey();
-      TextField textField = entry.getValue();
-      if (json != null) {
-        if (object.containsKey(key)) {
-          textField.setText(object.get(key).toString());
-        }
-      } else {
-        String value = textField.getValue();
-        if (value == null || value.equals("")) {
-          continue;
-        }
-        putJSON(object, key, value);
-      }
-    }
-    return object;
+  protected void initForm(User user) {
+    name.setText(user.getName());
+    email.setText(user.getEmail());
+    phone.setText(user.getPhone());
+    state.setText(user.getState());
+    zip.setText(user.getZip());
   }
 
   @SuppressWarnings("unused")
