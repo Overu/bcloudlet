@@ -114,6 +114,15 @@ public abstract class Feed<E extends Resource> extends Resource {
   }
 
   @Override
+  protected Resource doGetByPath(String path) {
+    Resource result = getEntry(path);
+    if (result == null) {
+      result = super.doGetByPath(path);
+    }
+    return result;
+  }
+
+  @Override
   protected void doLoad() {
     super.doLoad();
     doLoadEntries();

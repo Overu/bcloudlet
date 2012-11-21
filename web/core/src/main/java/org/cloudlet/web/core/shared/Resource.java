@@ -172,13 +172,7 @@ public abstract class Resource extends Place implements IsResource {
 
   @Path("{path}")
   public Resource getByPath(@PathParam("path") String path) {
-    Property prop = getResourceType().getProperty(path);
-    Resource result;
-    if (prop != null) {
-      result = getRelationship(prop);
-    } else {
-      result = getChild(path);
-    }
+    Resource result = doGetByPath(path);
     if (result != null) {
       if (resourceContext != null) {
         resourceContext.initResource(result);
@@ -513,6 +507,17 @@ public abstract class Resource extends Place implements IsResource {
     update();
     data.root = this;
     return data;
+  }
+
+  protected Resource doGetByPath(String path) {
+    Property prop = getResourceType().getProperty(path);
+    Resource result;
+    if (prop != null) {
+      result = getRelationship(prop);
+    } else {
+      result = getChild(path);
+    }
+    return result;
   }
 
   protected void doLoad() {
