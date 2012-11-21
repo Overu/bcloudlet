@@ -17,13 +17,13 @@ public class JSONResourceProvider<T extends Resource> implements JSONObjectProvi
     JSONObject json = new JSONObject();
     json.put("@xsi.type", new JSONString(model.getResourceType().getName()));
     if (model.getId() != null) {
-      json.put("id", new JSONString(model.getId()));
+      json.put(Resource.ID, new JSONString(model.getId()));
     }
     if (model.getPath() != null) {
-      json.put("path", new JSONString(model.getPath()));
+      json.put(Resource.PATH, new JSONString(model.getPath()));
     }
     if (model.getTitle() != null) {
-      json.put("title", new JSONString(model.getTitle()));
+      json.put(Resource.TITLE, new JSONString(model.getTitle()));
     }
     return json;
   }

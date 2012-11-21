@@ -23,7 +23,10 @@ import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.TextField;
 import com.sencha.gxt.widget.core.client.info.Info;
 
+import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.ResourceManager;
+import org.cloudlet.web.core.shared.User;
+import org.cloudlet.web.core.shared.UserFeed;
 import org.cloudlet.web.core.shared.WebView;
 
 import java.util.HashMap;
@@ -31,14 +34,17 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-public abstract class AbstractUserFieldView extends WebView implements IsWidget, EntryPoint {
+public abstract class AbstractUserFieldView extends WebView<User> implements IsWidget, EntryPoint {
 
   interface Responsecallback {
     void completed(String text);
   }
 
   @Inject
-  ResourceManager placeManager;
+  ResourceProxy<Resource> proxy;
+
+  @Inject
+  ResourceManager resourceManager;
 
   private ContentPanel cp;
 
@@ -75,7 +81,7 @@ public abstract class AbstractUserFieldView extends WebView implements IsWidget,
     cp = new ContentPanel();
     cp.setHeadingText(viewName);
     cp.setWidget(p);
-    cp.addButton(new TextButton("Commit", new SelectHandler() {
+    cp.addButton(new TextButton("Save", new SelectHandler() {
 
       @Override
       public void onSelect(final SelectEvent event) {
@@ -83,7 +89,11 @@ public abstract class AbstractUserFieldView extends WebView implements IsWidget,
           Info.display("name or email is Null", "");
           return;
         }
-        selectHandler(event);
+        User user = new User();
+        user.setParent(resource.getParent());
+        user.setPath(resource.getPath());
+        user.setEmail(email.getText());
+        saveResource(user);
       }
     }));
 
@@ -109,7 +119,14 @@ public abstract class AbstractUserFieldView extends WebView implements IsWidget,
     RootPanel.get().add(this);
   }
 
-  protected JSONObject initJSON(JSONObject json) {
+  @Override
+  public void setValue(User resource) {
+    super.setValue(resource);
+    initJSON(resource);
+  }
+
+  protected JSONObject initJSON(User resource) {
+    JSONObject json = resource.getNativeData();
     Set<Entry<String, TextField>> entrySet = textFieldMap.entrySet();
     JSONObject object = null;
     if (json != null) {
@@ -140,7 +157,18 @@ public abstract class AbstractUserFieldView extends WebView implements IsWidget,
 
   }
 
-  protected abstract void selectHandler(SelectEvent event);
+  protected void saveResource(final Resource resource) {
+    proxy.put(resource, new com.google.gwt.core.client.Callback<String, Throwable>() {
+      @Override
+      public void onFailure(Throwable reason) {
+      }
+
+      @Override
+      public void onSuccess(String result) {
+        resourceManager.goTo(getValue().getParent().getRendition(UserFeed.LIST));
+      }
+    });
+  }
 
   protected void send(final RequestBuilder builder, final String requestData) {
     try {

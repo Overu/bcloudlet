@@ -66,7 +66,7 @@ public class CoreClientModule extends AbstractGinModule {
     UserFrom userForm;
 
     @Inject
-    UserModify userModify;
+    UserEditor userModify;
 
     @Inject
     RepositoryExplorer explorer;
@@ -123,6 +123,7 @@ public class CoreClientModule extends AbstractGinModule {
       User.TYPE.setWidget(Resource.HOME, userModify);
 
       Resource.TYPE.setProvider(JSONObjectProvider.class, new JSONResourceProvider<Resource>());
+      User.TYPE.setProvider(JSONObjectProvider.class, new JSONUserProvider());
 
       BaseResources.INSTANCE();
       main = new SimplePanel();

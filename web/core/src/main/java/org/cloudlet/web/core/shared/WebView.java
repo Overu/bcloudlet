@@ -2,17 +2,17 @@ package org.cloudlet.web.core.shared;
 
 import com.google.gwt.user.client.TakesValue;
 
-public class WebView implements TakesValue<Resource> {
+public class WebView<T extends Resource> implements TakesValue<T> {
 
-  protected Resource resource;
+  protected T resource;
 
   @Override
-  public Resource getValue() {
+  public T getValue() {
     return resource;
   }
 
   @Override
-  public void setValue(Resource resource) {
+  public void setValue(T resource) {
     this.resource = resource;
   }
 

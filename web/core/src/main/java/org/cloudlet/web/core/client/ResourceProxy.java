@@ -17,6 +17,10 @@ public class ResourceProxy<C extends IsResource> implements DataProxy<C, String>
 
   private DataWriter<C, String> writer;
 
+  public void delete(final C loadConfig, final Callback<String, Throwable> callback) {
+    sendRequest(loadConfig, callback, RequestBuilder.DELETE);
+  }
+
   public DataWriter<C, String> getWriter() {
     return writer;
   }
@@ -26,30 +30,15 @@ public class ResourceProxy<C extends IsResource> implements DataProxy<C, String>
     sendRequest(loadConfig, callback, RequestBuilder.GET);
   }
 
+  public void post(final C loadConfig, final Callback<String, Throwable> callback) {
+    sendRequest(loadConfig, callback, RequestBuilder.POST);
+  }
+
   public void put(final C loadConfig, final Callback<String, Throwable> callback) {
     sendRequest(loadConfig, callback, RequestBuilder.PUT);
   }
 
-  public void setWriter(DataWriter<C, String> writer) {
-    this.writer = writer;
-  }
-
-  protected String generateData(C loadConfig) {
-    Resource res = loadConfig.asResource();
-    JSONObjectProvider<Resource> provider =
-        res.getResourceType().getProvider(JSONObjectProvider.class);
-    JSONObject json = provider.write(res);
-    JSONObject root = new JSONObject();
-    root.put("root", json);
-    JSONObject dg = new JSONObject();
-    dg.put("dataGraph", root);
-    return dg.toString();
-  }
-
-  protected void onRequest(C config) {
-  }
-
-  private void sendRequest(final C loadConfig, final Callback<String, Throwable> callback,
+  public void sendRequest(final C loadConfig, final Callback<String, Throwable> callback,
       RequestBuilder.Method method) {
     try {
       String data = null;
@@ -61,6 +50,9 @@ public class ResourceProxy<C extends IsResource> implements DataProxy<C, String>
       url.insert(0, "api");
       RequestBuilder builder = new RequestBuilder(method, url.toString());
       builder.setHeader("Accept", "application/json");
+      if (RequestBuilder.POST.equals(method) || RequestBuilder.PUT.equals(method)) {
+        builder.setHeader("Content-Type", "application/json");
+      }
       builder.sendRequest(data, new RequestCallback() {
 
         @Override
@@ -81,6 +73,25 @@ public class ResourceProxy<C extends IsResource> implements DataProxy<C, String>
     } catch (Exception e) {
       callback.onFailure(e);
     }
+  }
+
+  public void setWriter(DataWriter<C, String> writer) {
+    this.writer = writer;
+  }
+
+  protected String generateData(C loadConfig) {
+    Resource res = loadConfig.asResource();
+    JSONObjectProvider<Resource> provider =
+        res.getResourceType().getProvider(JSONObjectProvider.class);
+    JSONObject json = provider.write(res);
+    JSONObject root = new JSONObject();
+    root.put("root", json);
+    JSONObject dg = new JSONObject();
+    dg.put("dataGraph", root);
+    return dg.toString();
+  }
+
+  protected void onRequest(C config) {
   }
 
 }

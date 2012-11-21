@@ -16,6 +16,8 @@ public class User extends Resource implements Principal {
 
   public static final String TYPE_NAME = "User";
 
+  public static final String EMAIL = "email";
+
   public static ResourceType<User> TYPE = new ResourceType<User>(Resource.TYPE, TYPE_NAME) {
     @Override
     public User createInstance() {
