@@ -15,7 +15,6 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.text.shared.AbstractSafeHtmlRenderer;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -73,13 +72,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class UserGrid extends WebView implements IsWidget, EntryPoint, ListLoadConfig, IsResource {
+public class UserGrid extends WebView<UserFeed> implements EntryPoint, ListLoadConfig, IsResource {
 
   class JSONFeedReader implements DataReader<ListLoadResult<User>, String> {
 
     @Override
     public ListLoadResult<User> read(final Object loadConfig, final String data) {
-      UserFeed parent = (UserFeed) ((IsResource) loadConfig).asResource().getParent();
+      UserFeed parent = (UserFeed) ((IsResource) loadConfig).asResource().getSelf();
       JSONObject root = JSONParser.parseLenient(data).isObject();
       JSONObject feed = root.get("dataGraph").isObject().get("root").isObject();
       JSONValue entries = feed.get(Feed.ENTRIES);
@@ -88,7 +87,7 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint, ListLoadC
       if (entries != null && (records = entries.isArray()) != null) {
         for (int i = 0; i < records.size(); i++) {
           JSONObject json = records.get(i).isObject();
-          User user = (User) CoreClientModule.readResource(json);
+          User user = (User) JSONResourceProvider.readResource(json);
           user.setParent(parent);
           users.add(user);
         }
@@ -326,7 +325,7 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint, ListLoadC
 
       @Override
       public void onSelect(final SelectEvent event) {
-        placeController.goTo(resource.getParent().getRendition(Feed.NEW));
+        placeController.goTo(resource.getRendition(Feed.NEW));
       }
     }));
     cp.addButton(new TextButton("Refresh", new SelectHandler() {
@@ -405,7 +404,7 @@ public class UserGrid extends WebView implements IsWidget, EntryPoint, ListLoadC
   }
 
   @Override
-  public void setValue(Resource resource) {
+  public void setValue(UserFeed resource) {
     super.setValue(resource);
     loader.load(this);
   }
