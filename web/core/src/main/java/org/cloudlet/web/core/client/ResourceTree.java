@@ -6,7 +6,6 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -32,7 +31,7 @@ import org.cloudlet.web.core.shared.WebView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ResourceTree extends WebView implements IsWidget {
+public class ResourceTree extends WebView {
 
   class JSONFeedReader implements DataReader<List<Resource>, String> {
 
@@ -104,7 +103,7 @@ public class ResourceTree extends WebView implements IsWidget {
   TreeStore<Resource> store;
 
   @Inject
-  public ResourceTree(@Root Resource root) {
+  public ResourceTree(@Root final Resource root) {
     con = new BorderLayoutContainer();
     ModelKeyProvider<Resource> keyProvider = new ModelKeyProvider<Resource>() {
       @Override
@@ -164,7 +163,7 @@ public class ResourceTree extends WebView implements IsWidget {
   }
 
   @Override
-  public void setValue(Resource resource) {
+  public void setValue(final Resource resource) {
     // if (resource != this.resource) {
     // store.clear();
     // store.add(resource);

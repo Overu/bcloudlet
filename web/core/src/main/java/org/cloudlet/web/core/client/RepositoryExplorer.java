@@ -37,7 +37,7 @@ import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.WebView;
 
-public class RepositoryExplorer extends WebView implements IsWidget, AcceptsOneWidget, EntryPoint {
+public class RepositoryExplorer extends WebView implements AcceptsOneWidget, EntryPoint {
 
   private DelayedTask windowResizeTask;
   private BorderLayoutContainer con;
@@ -106,11 +106,6 @@ public class RepositoryExplorer extends WebView implements IsWidget, AcceptsOneW
     RootPanel.get().add(con);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.cloudlet.web.core.shared.WebView#setValue(org.cloudlet.web.core.shared.Resource)
-   */
   @Override
   public void setValue(final Resource resource) {
     super.setValue(resource);

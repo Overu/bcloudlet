@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import com.sencha.gxt.widget.core.client.ContentPanel;
+import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 
 import org.cloudlet.web.core.shared.Feed;
 import org.cloudlet.web.core.shared.User;
@@ -27,10 +27,10 @@ public class UserFeedEditor extends WebView<UserFeed> {
   @Inject
   ResourceProxy<UserFeed> proxy;
 
-  private ContentPanel cp;
+  private SimpleContainer cp;
 
   public UserFeedEditor() {
-    cp = new ContentPanel();
+    cp = new SimpleContainer();
   }
 
   @Override
@@ -44,11 +44,11 @@ public class UserFeedEditor extends WebView<UserFeed> {
     if (resource.getEntries() == null) {
       proxy.load(resource, new Callback<String, Throwable>() {
         @Override
-        public void onFailure(Throwable reason) {
+        public void onFailure(final Throwable reason) {
         }
 
         @Override
-        public void onSuccess(String data) {
+        public void onSuccess(final String data) {
           JSONObject dg = JSONParser.parseLenient(data).isObject();
           JSONObject root = dg.get("dataGraph").isObject().get("root").isObject();
           JSONValue c = root.get(Feed.ENTRIES);
