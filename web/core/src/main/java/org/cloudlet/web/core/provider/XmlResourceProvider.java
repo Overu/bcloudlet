@@ -1,6 +1,5 @@
 package org.cloudlet.web.core.provider;
 
-import org.cloudlet.web.core.shared.DataGraph;
 import org.cloudlet.web.core.shared.Feed;
 import org.cloudlet.web.core.shared.Resource;
 import org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider;
@@ -27,7 +26,7 @@ import javax.xml.stream.XMLStreamWriter;
 @Produces("application/ios+xml")
 @Consumes("application/ios+xml")
 @Singleton
-public class XmlResourceProvider extends AbstractMessageReaderWriterProvider<DataGraph<Resource>> {
+public class XmlResourceProvider extends AbstractMessageReaderWriterProvider<Resource> {
 
   @Override
   public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations,
@@ -42,20 +41,20 @@ public class XmlResourceProvider extends AbstractMessageReaderWriterProvider<Dat
   }
 
   @Override
-  public DataGraph<Resource> readFrom(Class<DataGraph<Resource>> type, Type genericType,
-      Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> httpHeaders,
-      InputStream entityStream) throws IOException, WebApplicationException {
+  public Resource readFrom(Class<Resource> type, Type genericType, Annotation[] annotations,
+      MediaType mediaType, MultivaluedMap<String, String> httpHeaders, InputStream entityStream)
+      throws IOException, WebApplicationException {
     return null;
   }
 
   @Override
-  public void writeTo(DataGraph<Resource> t, Class<?> type, Type genericType,
-      Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, Object> httpHeaders,
-      OutputStream entityStream) throws IOException, WebApplicationException {
+  public void writeTo(Resource t, Class<?> type, Type genericType, Annotation[] annotations,
+      MediaType mediaType, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream)
+      throws IOException, WebApplicationException {
     try {
       XMLStreamWriter writer = XMLOutputFactory.newFactory().createXMLStreamWriter(entityStream);
       writer.writeStartDocument();
-      writeResource(writer, t.root);
+      writeResource(writer, t);
       writer.writeEndDocument();
     } catch (XMLStreamException e) {
       e.printStackTrace();

@@ -2,25 +2,24 @@ package org.cloudlet.web.core.shared;
 
 import com.google.gwt.core.shared.GWT;
 
+import com.sencha.gxt.data.shared.SortDir;
 import com.sencha.gxt.data.shared.SortInfo;
+import com.sencha.gxt.data.shared.SortInfoBean;
+import com.sencha.gxt.data.shared.loader.ListLoadConfig;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response.Status;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 @MappedSuperclass
 @XmlType(name = Feed.TYPE_NAME)
-public abstract class Feed<E extends Resource> extends Resource {
+public abstract class Feed<E extends Resource> extends Resource implements ListLoadConfig {
 
   public static final String TYPE_NAME = "Feed";
 
@@ -42,19 +41,6 @@ public abstract class Feed<E extends Resource> extends Resource {
   public static final String LIST = "list";
 
   public static final String ENTRIES = "entries";
-
-  @Override
-  @POST
-  @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  public DataGraph<Resource> create(DataGraph<Resource> data) {
-    if (!getResourceType().getEntryType().isInstance(data.root)) {
-      // does not accept an entry of given type
-      throw new WebApplicationException(Status.BAD_REQUEST);
-    }
-    data.root = createEntry((E) data.root);
-    return data;
-  }
 
   public E createEntry(E entry) {
     return (E) getService().createEntry(this, entry);
@@ -106,12 +92,38 @@ public abstract class Feed<E extends Resource> extends Resource {
     return (FeedService) super.getService();
   }
 
+  @Override
+  @XmlTransient
+  public List<? extends SortInfo> getSortInfo() {
+    List<String> sorts = getQueryParameters().get(Feed.SORT);
+    if (sorts != null) {
+      List<SortInfo> sortInfo = new ArrayList<SortInfo>();
+      for (String sort : sorts) {
+        String[] pair = sort.split("|");
+        SortInfoBean s = new SortInfoBean();
+        s.setSortField(pair[0]);
+        s.setSortDir(pair.length > 1 ? SortDir.valueOf(pair[1]) : SortDir.ASC);
+        sortInfo.add(s);
+      }
+      return sortInfo;
+    }
+    return Collections.EMPTY_LIST;
+  }
+
   public E newEntry() {
     return getResourceType().getEntryType().createInstance();
   }
 
   public void setEntries(List<E> entries) {
     this.entries = entries;
+  }
+
+  @Override
+  public void setSortInfo(List<? extends SortInfo> info) {
+    for (SortInfo sort : info) {
+      String value = sort.getSortField() + "|" + sort.getSortDir();
+      getQueryParameters().add(Feed.SORT, value);
+    }
   }
 
   @Override
@@ -131,6 +143,8 @@ public abstract class Feed<E extends Resource> extends Resource {
       E entry = newEntry();
       entries.add(entry);
     } else if (LIST.equals(renditionKind)) {
+      doLoadEntries();
+    } else {
       doLoadEntries();
     }
   }

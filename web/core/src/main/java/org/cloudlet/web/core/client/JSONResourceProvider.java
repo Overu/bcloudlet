@@ -1,5 +1,6 @@
 package org.cloudlet.web.core.client;
 
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
@@ -8,7 +9,9 @@ import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.ResourceType;
 import org.cloudlet.web.core.shared.WebPlatform;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class JSONResourceProvider<T extends Resource> implements JSONObjectProvider<T> {
 
@@ -82,15 +85,30 @@ public class JSONResourceProvider<T extends Resource> implements JSONObjectProvi
   }
 
   public static Resource readResource(JSONObject json) {
-    String type = json.get("@xsi.type").isString().stringValue();
+    String type;
+    if (json.containsKey("@xsi.type")) {
+      type = json.get("@xsi.type").isString().stringValue();
+    } else {
+      type = json.keySet().iterator().next();
+      json = json.get(type).isObject();
+    }
     ResourceType objectType = WebPlatform.getInstance().getResourceType(type);
     Resource resource = objectType.createInstance();
+    readResource(resource, json);
+    return resource;
+  }
+
+  public static void readResource(Resource resource, JSONObject json) {
     JSONObjectProvider<Resource> provider =
         resource.getResourceType().getProvider(JSONObjectProvider.class);
     provider.read(resource, json);
-    // content.readFrom(root);
     resource.setNativeData(json);
-    return resource;
+  }
+
+  public static void readRoot(Resource resource, JSONObject json) {
+    String type = json.keySet().iterator().next();
+    json = json.get(type).isObject();
+    readResource(resource, json);
   }
 
   public static String readString(JSONObject data, String field) {
@@ -128,6 +146,26 @@ public class JSONResourceProvider<T extends Resource> implements JSONObjectProvi
     model.setPath(readString(data, Resource.PATH));
     model.setTitle(readString(data, Resource.TITLE));
     model.setChildrenCount(readLong(data, Resource.CHILDREN_COUNT));
+
+    JSONValue value = data.get(Resource.CHILDREN);
+    if (value != null) {
+      List<Resource> children = new ArrayList<Resource>();
+      JSONArray array = value.isArray();
+      if (array != null) {
+        for (int i = 0; i < array.size(); i++) {
+          JSONObject object = array.get(i).isObject();
+          Resource child = JSONResourceProvider.readResource(object);
+          children.add(child);
+          child.setParent(model.getSelf());
+        }
+      } else {
+        JSONObject object = value.isObject();
+        Resource child = JSONResourceProvider.readResource(object);
+        children.add(child);
+        child.setParent(model.getSelf());
+      }
+      model.setChildren(children);
+    }
   }
 
   @Override

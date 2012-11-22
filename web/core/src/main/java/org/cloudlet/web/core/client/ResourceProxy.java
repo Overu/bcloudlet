@@ -6,46 +6,46 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 
 import com.sencha.gxt.data.shared.loader.DataProxy;
 import com.sencha.gxt.data.shared.writer.DataWriter;
 
-import org.cloudlet.web.core.shared.IsResource;
 import org.cloudlet.web.core.shared.Resource;
 
-public class ResourceProxy<C extends IsResource> implements DataProxy<C, String> {
+public class ResourceProxy<T extends Resource> implements DataProxy<T, T> {
 
-  private DataWriter<C, String> writer;
+  private DataWriter<T, String> writer;
 
-  public void delete(final C loadConfig, final Callback<String, Throwable> callback) {
-    sendRequest(loadConfig, callback, RequestBuilder.DELETE);
+  public void delete(final T resource, final Callback<T, Throwable> callback) {
+    sendRequest(resource, callback, RequestBuilder.DELETE);
   }
 
-  public DataWriter<C, String> getWriter() {
+  public DataWriter<T, String> getWriter() {
     return writer;
   }
 
   @Override
-  public void load(final C loadConfig, final Callback<String, Throwable> callback) {
-    sendRequest(loadConfig, callback, RequestBuilder.GET);
+  public void load(final T resource, final Callback<T, Throwable> callback) {
+    sendRequest(resource, callback, RequestBuilder.GET);
   }
 
-  public void post(final C loadConfig, final Callback<String, Throwable> callback) {
-    sendRequest(loadConfig, callback, RequestBuilder.POST);
+  public void post(final T resource, final Callback<T, Throwable> callback) {
+    sendRequest(resource, callback, RequestBuilder.POST);
   }
 
-  public void put(final C loadConfig, final Callback<String, Throwable> callback) {
-    sendRequest(loadConfig, callback, RequestBuilder.PUT);
+  public void put(final T resource, final Callback<T, Throwable> callback) {
+    sendRequest(resource, callback, RequestBuilder.PUT);
   }
 
-  public void sendRequest(final C loadConfig, final Callback<String, Throwable> callback,
+  public void sendRequest(final T resource, final Callback<T, Throwable> callback,
       RequestBuilder.Method method) {
     try {
       String data = null;
       if (RequestBuilder.POST.equals(method) || RequestBuilder.PUT.equals(method)) {
-        data = generateData(loadConfig);
+        data = generateData(resource);
       }
-      final StringBuilder url = loadConfig.asResource().getUriBuilder();
+      final StringBuilder url = resource.getUriBuilder();
       url.insert(0, "api");
       RequestBuilder builder = new RequestBuilder(method, url.toString());
       builder.setHeader("Accept", "application/json");
@@ -61,12 +61,14 @@ public class ResourceProxy<C extends IsResource> implements DataProxy<C, String>
 
         @Override
         public void onResponseReceived(Request request, Response response) {
-          if (response.getStatusCode() != Response.SC_OK) {
+          if (response.getStatusCode() == Response.SC_OK) {
+            JSONObject data = JSONParser.parseLenient(response.getText()).isObject();
+            JSONResourceProvider.readRoot(resource, data);
+            callback.onSuccess(resource);
+          } else {
             callback.onFailure(new RuntimeException("GET " + url.toString()
                 + "\r\nInvalid status code " + response.getStatusCode()));
-            return;
           }
-          callback.onSuccess(response.getText());
         }
       });
     } catch (Exception e) {
@@ -74,20 +76,15 @@ public class ResourceProxy<C extends IsResource> implements DataProxy<C, String>
     }
   }
 
-  public void setWriter(DataWriter<C, String> writer) {
+  public void setWriter(DataWriter<T, String> writer) {
     this.writer = writer;
   }
 
-  protected String generateData(C loadConfig) {
-    Resource res = loadConfig.asResource();
+  protected String generateData(T res) {
     JSONObjectProvider<Resource> provider =
         res.getResourceType().getProvider(JSONObjectProvider.class);
     JSONObject json = provider.write(res);
-    JSONObject root = new JSONObject();
-    root.put("root", json);
-    JSONObject dg = new JSONObject();
-    dg.put("dataGraph", root);
-    return dg.toString();
+    return json.toString();
   }
 
 }

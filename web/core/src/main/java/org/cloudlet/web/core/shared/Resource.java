@@ -9,7 +9,6 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +26,6 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -40,12 +38,11 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
 
 @TypeDef(name = "content", typeClass = ResourceEntity.class)
 @MappedSuperclass
-@XmlType(name = Resource.TYPE_NAME)
-public abstract class Resource extends Place implements IsResource {
+// @XmlType(name = Resource.TYPE_NAME)
+public abstract class Resource extends Place {
 
   public static final String TYPE_NAME = "Resource";
 
@@ -132,27 +129,6 @@ public abstract class Resource extends Place implements IsResource {
   @Transient
   private Resource home;
 
-  public void addChild(Resource resource) {
-    if (children == null) {
-      children = new ArrayList<Resource>();
-    }
-    children.add(resource);
-    resource.setParent(this);
-  }
-
-  @Override
-  public Resource asResource() {
-    return this;
-  }
-
-  @POST
-  @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  public DataGraph<Resource> create(DataGraph<Resource> data) {
-    data.root = createChild(data.root);
-    return data;
-  }
-
   public Resource createChild(Resource child) {
     return getService().createChild(this, child);
   }
@@ -160,13 +136,12 @@ public abstract class Resource extends Place implements IsResource {
   @POST
   @Consumes({MediaType.MULTIPART_FORM_DATA})
   @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  public DataGraph<Resource> createFromMultipart(@Context UriInfo uriInfo,
+  public Resource createFromMultipart(@Context UriInfo uriInfo,
       @HeaderParam("Content-Length") Integer contentLength,
       @HeaderParam("Content-Type") String contentType, InputStream inputStream) {
-    DataGraph data = new DataGraph();
-    data.root =
+    Resource res =
         getService().createFromMultipart(this, uriInfo, inputStream, contentType, contentLength);
-    return data;
+    return res;
   }
 
   @DELETE
@@ -424,18 +399,13 @@ public abstract class Resource extends Place implements IsResource {
 
   @GET
   @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml"})
-  public DataGraph<Resource> load() {
+  public Resource load() {
     doLoad();
-    DataGraph<Resource> data = new DataGraph<Resource>();
-    data.root = this;
-    return data;
+    return this;
   }
 
   public void loadChildren() {
-    List<Resource> list = getService().findChildren(this);
-    for (Resource res : list) {
-      addChild(res);
-    }
+    children = getService().findChildren(this);
   }
 
   public void readFrom(MultivaluedMap<String, String> params) {
@@ -468,6 +438,10 @@ public abstract class Resource extends Place implements IsResource {
 
   public Resource save() {
     return getService().save(this);
+  }
+
+  public void setChildren(List<Resource> children) {
+    this.children = children;
   }
 
   public void setChildrenCount(long totalResults) {
@@ -542,16 +516,6 @@ public abstract class Resource extends Place implements IsResource {
 
   public Resource update() {
     return getService().update(this);
-  }
-
-  @PUT
-  @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  public DataGraph<Resource> update(DataGraph<Resource> data) {
-    readFrom(data.root);
-    update();
-    data.root = this;
-    return data;
   }
 
   protected Resource doGetByPath(String path) {

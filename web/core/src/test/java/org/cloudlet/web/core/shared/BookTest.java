@@ -59,8 +59,8 @@ public class BookTest extends CoreTest {
     books.load();
 
     JAXBContext jc =
-        JAXBContext.newInstance(Repository.class, DataGraph.class, GroupFeed.class, UserFeed.class,
-            User.class, Media.class, BookFeed.class);
+        JAXBContext.newInstance(Repository.class, GroupFeed.class, UserFeed.class, User.class,
+            Media.class, BookFeed.class);
     Marshaller marshaller = jc.createMarshaller();
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     marshaller.marshal(books, os);

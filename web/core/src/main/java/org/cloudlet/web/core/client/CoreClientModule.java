@@ -28,6 +28,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import org.cloudlet.web.core.client.style.BaseResources;
 import org.cloudlet.web.core.shared.CorePackage;
 import org.cloudlet.web.core.shared.DynaResource;
+import org.cloudlet.web.core.shared.Feed;
 import org.cloudlet.web.core.shared.Repository;
 import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.ResourceManager;
@@ -118,6 +119,7 @@ public class CoreClientModule extends AbstractGinModule {
 
       Resource.TYPE.setProvider(JSONObjectProvider.class, new JSONResourceProvider<Resource>());
       User.TYPE.setProvider(JSONObjectProvider.class, new JSONUserProvider());
+      Feed.TYPE.setProvider(JSONObjectProvider.class, new JSONFeedProvider());
 
       BaseResources.INSTANCE();
       main = new SimplePanel();
@@ -150,8 +152,7 @@ public class CoreClientModule extends AbstractGinModule {
             return;
           }
 
-          JSONObject dg = JSONParser.parseLenient(response.getText()).isObject();
-          JSONObject data = dg.get("dataGraph").isObject().get("root").isObject();
+          JSONObject data = JSONParser.parseLenient(response.getText()).isObject();
           Resource resource = JSONResourceProvider.readResource(data);
           if (proxy instanceof DynaResource) {
             resource.setParent(proxy.getParent()); // TODO load recursively

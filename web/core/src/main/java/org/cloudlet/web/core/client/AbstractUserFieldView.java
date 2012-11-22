@@ -25,7 +25,6 @@ import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.TextField;
 import com.sencha.gxt.widget.core.client.info.Info;
 
-import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.ResourceManager;
 import org.cloudlet.web.core.shared.User;
 import org.cloudlet.web.core.shared.UserFeed;
@@ -42,7 +41,7 @@ public abstract class AbstractUserFieldView extends WebView<User> implements Ent
   }
 
   @Inject
-  ResourceProxy<Resource> proxy;
+  ResourceProxy<User> proxy;
 
   @Inject
   ResourceManager resourceManager;
@@ -143,14 +142,14 @@ public abstract class AbstractUserFieldView extends WebView<User> implements Ent
 
   }
 
-  protected void saveResource(final Resource resource) {
-    proxy.put(resource, new com.google.gwt.core.client.Callback<String, Throwable>() {
+  protected void saveResource(final User resource) {
+    proxy.put(resource, new com.google.gwt.core.client.Callback<User, Throwable>() {
       @Override
       public void onFailure(final Throwable reason) {
       }
 
       @Override
-      public void onSuccess(final String result) {
+      public void onSuccess(final User result) {
         resourceManager.goTo(getValue().getParent().getRendition(UserFeed.LIST));
       }
     });
