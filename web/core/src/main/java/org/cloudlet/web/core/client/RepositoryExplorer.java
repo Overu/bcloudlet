@@ -83,7 +83,7 @@ public class RepositoryExplorer extends WebView implements IsWidget, AcceptsOneW
 
     center = new SimpleContainer();
 
-    BorderLayoutData northData = new BorderLayoutData(100);
+    BorderLayoutData northData = new BorderLayoutData(70);
     northData.setMargins(new Margins(5));
 
     BorderLayoutData westData = new BorderLayoutData(150);
@@ -112,7 +112,7 @@ public class RepositoryExplorer extends WebView implements IsWidget, AcceptsOneW
    * @see org.cloudlet.web.core.shared.WebView#setValue(org.cloudlet.web.core.shared.Resource)
    */
   @Override
-  public void setValue(Resource resource) {
+  public void setValue(final Resource resource) {
     super.setValue(resource);
     placeTree.setValue(resource);
   }

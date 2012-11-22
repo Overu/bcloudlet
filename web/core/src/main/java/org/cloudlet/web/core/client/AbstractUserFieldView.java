@@ -1,13 +1,15 @@
 package org.cloudlet.web.core.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.shared.GWT;
+import com.google.gwt.editor.client.Editor;
+import com.google.gwt.editor.client.SimpleBeanEditorDriver;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -29,7 +31,11 @@ import org.cloudlet.web.core.shared.User;
 import org.cloudlet.web.core.shared.UserFeed;
 import org.cloudlet.web.core.shared.WebView;
 
-public abstract class AbstractUserFieldView extends WebView<User> implements IsWidget, EntryPoint {
+public abstract class AbstractUserFieldView extends WebView<User> implements EntryPoint,
+    Editor<User> {
+
+  interface Driver extends SimpleBeanEditorDriver<User, AbstractUserFieldView> {
+  }
 
   interface Responsecallback {
     void completed(String text);
@@ -42,14 +48,21 @@ public abstract class AbstractUserFieldView extends WebView<User> implements IsW
   ResourceManager resourceManager;
 
   private ContentPanel cp;
+
+  @Path(User.NAME)
   TextField name;
+  @Path(User.EMAIL)
   TextField email;
+  @Path(User.PHONE)
   TextField phone;
+  @Path(User.STATE)
   TextField state;
+  @Path(User.ZIP)
   TextField zip;
 
-  public AbstractUserFieldView(final String viewName) {
+  private static Driver driver = GWT.create(Driver.class);
 
+  public AbstractUserFieldView(final String viewName) {
     VerticalLayoutContainer p = new VerticalLayoutContainer();
     p.setLayoutData(new MarginData(8));
 
@@ -81,15 +94,7 @@ public abstract class AbstractUserFieldView extends WebView<User> implements IsW
           Info.display("name or email is Null", "");
           return;
         }
-        User user = new User();
-        user.setParent(resource.getParent());
-        user.setPath(resource.getPath());
-        user.setEmail(email.getText());
-        user.setName(name.getText());
-        user.setPhone(phone.getText());
-        user.setState(state.getText());
-        user.setZip(zip.getText());
-        saveResource(user);
+        saveResource(driver.flush());
       }
     }));
 
@@ -103,6 +108,9 @@ public abstract class AbstractUserFieldView extends WebView<User> implements IsW
         onAttach(event);
       }
     });
+
+    driver.initialize(this);
+    driver.edit(resource);
   }
 
   @Override
@@ -116,17 +124,18 @@ public abstract class AbstractUserFieldView extends WebView<User> implements IsW
   }
 
   @Override
-  public void setValue(User resource) {
+  public void setValue(final User resource) {
     super.setValue(resource);
     initForm(resource);
   }
 
-  protected void initForm(User user) {
-    name.setText(user.getName());
-    email.setText(user.getEmail());
-    phone.setText(user.getPhone());
-    state.setText(user.getState());
-    zip.setText(user.getZip());
+  protected void initForm(final User user) {
+    driver.edit(user);
+    // name.setText(user.getName());
+    // email.setText(user.getEmail());
+    // phone.setText(user.getPhone());
+    // state.setText(user.getState());
+    // zip.setText(user.getZip());
   }
 
   @SuppressWarnings("unused")
@@ -137,11 +146,11 @@ public abstract class AbstractUserFieldView extends WebView<User> implements IsW
   protected void saveResource(final Resource resource) {
     proxy.put(resource, new com.google.gwt.core.client.Callback<String, Throwable>() {
       @Override
-      public void onFailure(Throwable reason) {
+      public void onFailure(final Throwable reason) {
       }
 
       @Override
-      public void onSuccess(String result) {
+      public void onSuccess(final String result) {
         resourceManager.goTo(getValue().getParent().getRendition(UserFeed.LIST));
       }
     });
