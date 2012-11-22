@@ -8,7 +8,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
@@ -32,18 +31,12 @@ import com.sencha.gxt.core.client.resources.CommonStyles;
 import com.sencha.gxt.core.client.util.Format;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
+import com.sencha.gxt.data.shared.PropertyAccess;
 import com.sencha.gxt.data.shared.SortDir;
 import com.sencha.gxt.data.shared.SortInfo;
 import com.sencha.gxt.data.shared.SortInfoBean;
 import com.sencha.gxt.data.shared.StringLabelProvider;
-import com.sencha.gxt.data.shared.loader.DataReader;
 import com.sencha.gxt.data.shared.loader.ListLoadConfig;
-import com.sencha.gxt.data.shared.loader.ListLoadResult;
-import com.sencha.gxt.data.shared.loader.ListLoadResultBean;
-import com.sencha.gxt.data.shared.loader.ListLoader;
-import com.sencha.gxt.data.shared.loader.LoadExceptionEvent;
-import com.sencha.gxt.data.shared.loader.LoadExceptionEvent.LoadExceptionHandler;
-import com.sencha.gxt.data.shared.loader.LoadResultListStoreBinding;
 import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.ListView;
 import com.sencha.gxt.widget.core.client.ListViewCustomAppearance;
@@ -74,25 +67,13 @@ import java.util.List;
 
 public class UserGrid extends WebView<UserFeed> implements EntryPoint, ListLoadConfig, IsResource {
 
-  class JSONFeedReader implements DataReader<ListLoadResult<User>, String> {
 
+  class JSONFeedReader implements DataReader<ListLoadResult<User>, UserFeed> {
     @Override
-    public ListLoadResult<User> read(final Object loadConfig, final String data) {
-      UserFeed parent = (UserFeed) ((IsResource) loadConfig).asResource().getSelf();
-      JSONObject root = JSONParser.parseLenient(data).isObject();
-      JSONObject feed = root.get("dataGraph").isObject().get("root").isObject();
-      JSONValue entries = feed.get(Feed.ENTRIES);
-      JSONArray records;
-      List<User> users = new ArrayList<User>();
-      if (entries != null && (records = entries.isArray()) != null) {
-        for (int i = 0; i < records.size(); i++) {
-          JSONObject json = records.get(i).isObject();
-          User user = (User) JSONResourceProvider.readResource(json);
-          user.setParent(parent);
-          users.add(user);
-        }
-      }
-      ListLoadResultBean<User> result = new ListLoadResultBean<User>(users);
+    public ListLoadResult<User> read(final Object loadConfig, final UserFeed data) {
+      List<User> users = data.getEntries();
+      ListLoadResultBean<User> result =
+          new ListLoadResultBean<User>(users == null ? Collections.EMPTY_LIST : users);
       return result;
     }
   }
@@ -169,12 +150,19 @@ public class UserGrid extends WebView<UserFeed> implements EntryPoint, ListLoadC
     String thumbWrap();
   }
 
-  ModelKeyProvider<User> key = new ModelKeyProvider<User>() {
-    @Override
-    public String getKey(final User item) {
-      return item.getId();
-    }
-  };
+  interface UserProperties extends PropertyAccess<User> {
+    ValueProvider<User, String> email();
+
+    ModelKeyProvider<User> id();
+
+    ValueProvider<User, String> name();
+
+    ValueProvider<User, String> phone();
+
+    ValueProvider<User, String> state();
+
+    ValueProvider<User, String> zip();
+  }
 
   @Inject
   ResourceManager placeController;
@@ -189,44 +177,50 @@ public class UserGrid extends WebView<UserFeed> implements EntryPoint, ListLoadC
   private ListView<User, User> listView;
   private VerticalLayoutContainer con;
 
+  private ResourceProxy<UserFeed> proxy;
+  private ListStore<User> store;
+
   static {
     r = GWT.create(Renderer.class);
     resources = GWT.create(Resources.class);
     resources.css().ensureInjected();
   }
 
-  private ListLoader<UserGrid, ListLoadResult<User>> loader;
+  private static UserProperties properties = GWT.create(UserProperties.class);
+  private ListLoader<UserFeed, ListLoadResult<User>> loader;
 
   public UserGrid() {
     final Style style = resources.css();
 
-    JSONFeedReader reader = new JSONFeedReader();
+    proxy = new ResourceProxy<UserFeed>();
+    store = new ListStore<User>(properties.id());
 
-    ResourceProxy<UserGrid> proxy = new ResourceProxy<UserGrid>();
 
-    loader = new ListLoader<UserGrid, ListLoadResult<User>>(proxy, reader);
+    ResourceProxy<UserFeed> proxy = new ResourceProxy<UserFeed>();
 
-    loader.addLoadExceptionHandler(new LoadExceptionHandler<UserGrid>() {
+    loader = new ListLoader<UserFeed, ListLoadResult<User>>(proxy, reader);
+
+    loader.addLoadExceptionHandler(new LoadExceptionHandler<UserFeed>() {
       @Override
-      public void onLoadException(final LoadExceptionEvent<UserGrid> event) {
+      public void onLoadException(final LoadExceptionEvent<UserFeed> event) {
         System.out.println(event.getException());
       }
     });
 
     ListStore<User> store = new ListStore<User>(key);
-    loader.addLoadHandler(new LoadResultListStoreBinding<UserGrid, User, ListLoadResult<User>>(
+    loader.addLoadHandler(new LoadResultListStoreBinding<UserFeed, User, ListLoadResult<User>>(
         store));
 
     ColumnConfig<User, String> cc1 =
-        new ColumnConfig<User, String>(new JSONStringValueProvider("name"), 100, "Sender");
+        new ColumnConfig<User, String>(properties.name(), 100, "Sender");
     ColumnConfig<User, String> cc2 =
-        new ColumnConfig<User, String>(new JSONStringValueProvider("email"), 165, "Email");
+        new ColumnConfig<User, String>(properties.email(), 165, "Email");
     ColumnConfig<User, String> cc3 =
-        new ColumnConfig<User, String>(new JSONStringValueProvider("phone"), 100, "Phone");
+        new ColumnConfig<User, String>(properties.phone(), 100, "Phone");
     ColumnConfig<User, String> cc4 =
-        new ColumnConfig<User, String>(new JSONStringValueProvider("state"), 50, "State");
+        new ColumnConfig<User, String>(properties.state(), 50, "State");
     ColumnConfig<User, String> cc5 =
-        new ColumnConfig<User, String>(new JSONStringValueProvider("zip"), 65, "Zip Code");
+        new ColumnConfig<User, String>(properties.zip(), 65, "Zip Code");
 
     List<ColumnConfig<User, ?>> l = new ArrayList<ColumnConfig<User, ?>>();
     l.add(cc1);
@@ -238,7 +232,6 @@ public class UserGrid extends WebView<UserFeed> implements EntryPoint, ListLoadC
 
     grid = new Grid<User>(store, cm);
     grid.getView().setForceFit(true);
-    grid.setLoader(loader);
     grid.setLoadMask(true);
     grid.setBorders(true);
     grid.getView().setEmptyText("Please hit the load button.");
@@ -332,7 +325,9 @@ public class UserGrid extends WebView<UserFeed> implements EntryPoint, ListLoadC
 
       @Override
       public void onSelect(final SelectEvent event) {
-        loader.load(UserGrid.this);
+        load();
+        // loader.load(UserGrid.this);
+        loader.load(getValue());
       }
     }));
     cp.addButton(new TextButton("Edit", new SelectHandler() {
@@ -355,7 +350,8 @@ public class UserGrid extends WebView<UserFeed> implements EntryPoint, ListLoadC
         try {
           RequestProvider.DELETE("api/users/" + selectedItem).contentType(
               RequestFactory.JSON_CONTENT_TYPE_UTF8).send();
-          loader.load(UserGrid.this);
+          // loader.load(UserGrid.this);
+          loader.load(getValue());
         } catch (RequestException e) {
           e.printStackTrace();
         }
@@ -396,7 +392,7 @@ public class UserGrid extends WebView<UserFeed> implements EntryPoint, ListLoadC
   }
 
   @Override
-  public void setSortInfo(List<? extends SortInfo> info) {
+  public void setSortInfo(final List<? extends SortInfo> info) {
     for (SortInfo sort : info) {
       String value = sort.getSortField() + "|" + sort.getSortDir();
       resource.getQueryParameters().add(Feed.SORT, value);
@@ -404,9 +400,47 @@ public class UserGrid extends WebView<UserFeed> implements EntryPoint, ListLoadC
   }
 
   @Override
-  public void setValue(UserFeed resource) {
+  public void setValue(final UserFeed resource) {
     super.setValue(resource);
-    loader.load(this);
+    if (store.getAll().size() != 0) {
+      return;
+    }
+    load();
+  }
+
+  private void load() {
+    proxy.load(resource, new Callback<String, Throwable>() {
+
+      @Override
+      public void onFailure(final Throwable reason) {
+      }
+
+      @Override
+      public void onSuccess(final String result) {
+        UserFeed parent = (UserFeed) ((IsResource) resource).asResource().getSelf();
+        JSONObject root = JSONParser.parseLenient(result).isObject();
+        JSONObject feed = root.get("dataGraph").isObject().get("root").isObject();
+        JSONValue entries = feed.get(Feed.ENTRIES);
+        JSONArray records;
+        List<User> users = new ArrayList<User>();
+        if (entries != null && (records = entries.isArray()) != null) {
+          for (int i = 0; i < records.size(); i++) {
+            JSONObject json = records.get(i).isObject();
+            User user = (User) JSONResourceProvider.readResource(json);
+            user.setParent(parent);
+            users.add(user);
+          }
+        } else {
+          JSONObject object = entries.isObject();
+          User user = (User) JSONResourceProvider.readResource(object);
+          user.setParent(parent);
+          users.add(user);
+        }
+        store.replaceAll(users);
+      }
+    });
+    loader.load(resource);
+    loader.load(resource);
   }
 
   private void selectView(final String viewName) {
@@ -421,5 +455,4 @@ public class UserGrid extends WebView<UserFeed> implements EntryPoint, ListLoadC
     }
     con.onResize();
   }
-
 }
