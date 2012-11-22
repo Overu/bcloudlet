@@ -9,7 +9,6 @@ import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.AsyncProvider;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
@@ -29,18 +28,15 @@ import com.google.web.bindery.event.shared.EventBus;
 import org.cloudlet.web.core.client.style.BaseResources;
 import org.cloudlet.web.core.shared.CorePackage;
 import org.cloudlet.web.core.shared.DynaResource;
-import org.cloudlet.web.core.shared.Rendition;
 import org.cloudlet.web.core.shared.Repository;
 import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.ResourceManager;
-import org.cloudlet.web.core.shared.ResourceType;
 import org.cloudlet.web.core.shared.Root;
 import org.cloudlet.web.core.shared.User;
 import org.cloudlet.web.core.shared.UserFeed;
 import org.cloudlet.web.core.shared.WebPlatform;
 import org.cloudlet.web.core.shared.WebView;
 
-import java.util.Date;
 import java.util.logging.Logger;
 
 import javax.ws.rs.core.MultivaluedMap;
@@ -63,7 +59,7 @@ public class CoreClientModule extends AbstractGinModule {
     UserGrid userGrid;
 
     @Inject
-    UserFrom userForm;
+    UserFeedEditor userForm;
 
     @Inject
     UserEditor userModify;
@@ -101,13 +97,11 @@ public class CoreClientModule extends AbstractGinModule {
           public void onSuccess(Resource result) {
             MultivaluedMap<String, String> paramMap = resource.getQueryParameters();
             String renditionKind = paramMap.getFirst(Resource.RENDITION);
-            Rendition rendition = renditionKind != null ? result.getRendition(renditionKind) : null;
-            if (rendition != null) {
-              rendition.setQueryParameters(paramMap);
-              render(rendition, main);
-            } else {
-              render(result, main);
-            }
+            Resource rendition =
+                result.getRendition(renditionKind == null ? Resource.SELF : renditionKind);
+            paramMap.remove(Resource.RENDITION);
+            rendition.setQueryParameters(paramMap);
+            render(rendition, main);
           }
         });
       } else {
@@ -116,11 +110,11 @@ public class CoreClientModule extends AbstractGinModule {
     }
 
     private void start() {
-      Repository.TYPE.setWidget(Resource.HOME, explorer);
+      Repository.TYPE.setWidget(Resource.SELF, explorer);
 
       UserFeed.TYPE.setWidget(UserFeed.LIST, userGrid);
       UserFeed.TYPE.setWidget(UserFeed.NEW, userForm);
-      User.TYPE.setWidget(Resource.HOME, userModify);
+      User.TYPE.setWidget(Resource.SELF, userModify);
 
       Resource.TYPE.setProvider(JSONObjectProvider.class, new JSONResourceProvider<Resource>());
       User.TYPE.setProvider(JSONObjectProvider.class, new JSONUserProvider());
@@ -158,7 +152,7 @@ public class CoreClientModule extends AbstractGinModule {
 
           JSONObject dg = JSONParser.parseLenient(response.getText()).isObject();
           JSONObject data = dg.get("dataGraph").isObject().get("root").isObject();
-          Resource resource = readResource(data);
+          Resource resource = JSONResourceProvider.readResource(data);
           if (proxy instanceof DynaResource) {
             resource.setParent(proxy.getParent()); // TODO load recursively
           } else {
@@ -172,96 +166,6 @@ public class CoreClientModule extends AbstractGinModule {
     }
   }
 
-  public static boolean readBoolean(JSONObject json, String field) {
-    Boolean b = readBooleanObject(json, field);
-    return b == null ? false : b.booleanValue();
-  }
-
-  public static Boolean readBooleanObject(JSONObject json, String field) {
-    JSONValue value = json.get(field);
-    if (value != null) {
-      return value.isBoolean().booleanValue();
-    }
-    return null;
-  }
-
-  public static Date readDate(JSONObject json, String field) {
-    Double d = readDoubleObject(json, field);
-    if (d != null) {
-      return new Date(d.longValue());
-    }
-    return null;
-  }
-
-  public static double readDouble(JSONObject json, String field) {
-    Double d = readDoubleObject(json, field);
-    if (d != null) {
-      return d.doubleValue();
-    }
-    return 0;
-  }
-
-  public static Double readDoubleObject(JSONObject json, String field) {
-    JSONValue value = json.get(field);
-    if (value != null) {
-      return value.isNumber().doubleValue();
-    }
-    return null;
-  }
-
-  public static int readInt(JSONObject json, String field) {
-    Double d = readDoubleObject(json, field);
-    if (d != null) {
-      return d.intValue();
-    }
-    return 0;
-  }
-
-  public static Integer readInteger(JSONObject json, String field) {
-    Double d = readDoubleObject(json, field);
-    if (d != null) {
-      return d.intValue();
-    }
-    return null;
-  }
-
-  public static long readLong(JSONObject json, String field) {
-    Double d = readDoubleObject(json, field);
-    if (d != null) {
-      return d.longValue();
-    }
-    return 0;
-  }
-
-  public static Long readLongObject(JSONObject json, String field) {
-    Double d = readDoubleObject(json, field);
-    if (d != null) {
-      return d.longValue();
-    }
-    return null;
-  }
-
-  public static Resource readResource(JSONObject json) {
-    String type = json.get("@xsi.type").isString().stringValue();
-    ResourceType objectType = WebPlatform.getInstance().getResourceType(type);
-    Resource resource = objectType.createInstance();
-    resource.setId(readString(json, Resource.ID));
-    resource.setPath(readString(json, Resource.PATH));
-    resource.setTitle(readString(json, Resource.TITLE));
-    resource.setChildrenCount(readLong(json, Resource.CHILDREN_COUNT));
-    // content.readFrom(root);
-    resource.setNativeData(json);
-    return resource;
-  }
-
-  public static String readString(JSONObject json, String field) {
-    JSONValue value = json.get(field);
-    if (value != null) {
-      return value.isString().stringValue();
-    }
-    return null;
-  }
-
   public static void render(Resource resource, AcceptsOneWidget panel) {
     renderResources(resource, panel, null);
   }
@@ -269,6 +173,7 @@ public class CoreClientModule extends AbstractGinModule {
   public static void renderResource(final Resource resource, final AcceptsOneWidget panel,
       final AsyncCallback<IsWidget> callback) {
     if (resource instanceof DynaResource) {
+      final DynaResource delegate = (DynaResource) resource;
       loadResource(resource, new AsyncCallback<Resource>() {
         @Override
         public void onFailure(Throwable caught) {
@@ -276,6 +181,7 @@ public class CoreClientModule extends AbstractGinModule {
 
         @Override
         public void onSuccess(Resource result) {
+          delegate.setDelegate(result);
           renderResource(result, panel, callback);
         }
       });

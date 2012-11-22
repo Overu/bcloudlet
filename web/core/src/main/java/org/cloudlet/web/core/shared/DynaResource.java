@@ -1,12 +1,40 @@
 package org.cloudlet.web.core.shared;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class DynaResource extends Resource {
 
+  Resource delegate;
+
   @Override
   public Resource getByPath(String path) {
-    return null;
+    return delegate == null ? null : delegate.getByPath(path);
+  }
+
+  public Resource getDelegate() {
+    return delegate;
+  }
+
+  @Override
+  public Resource getRelationship(Property prop) {
+    return delegate == null ? null : delegate.getRelationship(prop);
+  }
+
+  @Override
+  public Resource getRendition(String kind) {
+    return delegate == null ? null : delegate.getRendition(kind);
+  }
+
+  @Override
+  public Map<String, Resource> getRenditions() {
+    return delegate == null ? Collections.EMPTY_MAP : delegate.getRenditions();
+  }
+
+  @Override
+  public ResourceType<? extends Resource> getResourceType() {
+    return delegate.getResourceType();
   }
 
   @Override
@@ -26,5 +54,9 @@ public class DynaResource extends Resource {
       }
     }
     return builder;
+  }
+
+  public void setDelegate(Resource delegate) {
+    this.delegate = delegate;
   }
 }

@@ -122,7 +122,7 @@ public abstract class RequestProvider extends RequestBuilder {
         if (GET.toString().equals(method)) {
           JSONObject dg = JSONParser.parseLenient(response.getText()).isObject();
           JSONObject root = dg.get("dataGraph").isObject().get("root").isObject();
-          resource = CoreClientModule.readResource(root);
+          resource = JSONResourceProvider.readResource(root);
           resource.setParent(placeProxy == null ? resource.getParent() : placeProxy.getParent());
         }
         callback.onSuccess((T) resource);

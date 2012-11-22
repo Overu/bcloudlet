@@ -1,8 +1,9 @@
 package org.cloudlet.web.core.shared;
 
 import com.google.gwt.user.client.TakesValue;
+import com.google.gwt.user.client.ui.IsWidget;
 
-public class WebView<T extends Resource> implements TakesValue<T> {
+public abstract class WebView<T extends Resource> implements TakesValue<T>, IsWidget {
 
   protected T resource;
 

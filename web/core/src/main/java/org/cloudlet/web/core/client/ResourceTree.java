@@ -23,7 +23,6 @@ import com.sencha.gxt.widget.core.client.tree.Tree;
 
 import org.cloudlet.web.core.shared.DynaResource;
 import org.cloudlet.web.core.shared.Property;
-import org.cloudlet.web.core.shared.Rendition;
 import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.ResourceManager;
 import org.cloudlet.web.core.shared.ResourceType;
@@ -40,12 +39,14 @@ public class ResourceTree extends WebView implements IsWidget {
     @Override
     public List<Resource> read(final Object loadConfig, final String data) {
       Resource parent = (Resource) loadConfig;
+      parent = parent.getSelf();
       List<Resource> result = new ArrayList<Resource>();
-      for (Rendition rendition : parent.getRenditions().values()) {
-        if (rendition.getPath().equals(Resource.HOME)) {
+      for (Resource res : parent.getRenditions().values()) {
+        if (res.getRenditionKind().equals(Resource.SELF)) {
           continue;
         }
-        result.add(rendition);
+        res.getQueryParameters().addFirst(Resource.CHILDREN, "true");
+        result.add(res);
       }
       for (Property prop : parent.getResourceType().getAllProperties().values()) {
         if (prop.getType() instanceof ResourceType) {
@@ -53,12 +54,13 @@ public class ResourceTree extends WebView implements IsWidget {
           if (res != null) {
             result.add(res);
           } else {
-            DynaResource proxy = new DynaResource();
-            proxy.setParent(parent);
-            proxy.setPath(prop.getPath());
-            proxy.setTitle(prop.getTitle());
-            result.add(proxy);
+            res = new DynaResource();
+            res.setParent(parent);
+            res.setPath(prop.getPath());
+            res.setTitle(prop.getTitle());
+            result.add(res);
           }
+          res.getQueryParameters().addFirst(Resource.CHILDREN, "true");
         }
       }
 
@@ -70,15 +72,19 @@ public class ResourceTree extends WebView implements IsWidget {
         if (children != null) {
           for (int i = 0; i < children.size(); i++) {
             JSONObject object = children.get(i).isObject();
-            Resource child = CoreClientModule.readResource(object);
+            Resource child = JSONResourceProvider.readResource(object);
             parent.addChild(child);
             result.add(child);
+            child.setParent(parent);
+            child.getQueryParameters().addFirst(Resource.CHILDREN, "true");
           }
         } else {
           JSONObject object = c.isObject();
-          Resource child = CoreClientModule.readResource(object);
+          Resource child = JSONResourceProvider.readResource(object);
           parent.addChild(child);
           result.add(child);
+          child.setParent(parent);
+          child.getQueryParameters().addFirst(Resource.CHILDREN, "true");
         }
       }
       return result;
@@ -108,15 +114,12 @@ public class ResourceTree extends WebView implements IsWidget {
     };
 
     store = new TreeStore<Resource>(keyProvider);
-    store.add(root);
+    Resource home = root.getRendition(Resource.SELF);
+    home.getQueryParameters().addFirst(Resource.CHILDREN, "true");
+    store.add(home);
     JSONFeedReader reader = new JSONFeedReader();
 
-    ResourceProxy<Resource> jsonProxy = new ResourceProxy<Resource>() {
-      @Override
-      protected void onRequest(Resource config) {
-        config.getRendition().getQueryParameters().addFirst(Resource.CHILDREN, "true");
-      };
-    };
+    ResourceProxy<Resource> jsonProxy = new ResourceProxy<Resource>();
     loader = new TreeLoader<Resource>(jsonProxy, reader) {
       @Override
       public boolean hasChildren(final Resource parent) {

@@ -10,6 +10,7 @@ import org.hibernate.annotations.TypeDef;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,7 +106,7 @@ public abstract class Resource extends Place implements IsResource {
   @Transient
   private List<Resource> children;
 
-  public static final String HOME = "";
+  public static final String SELF = "";
 
   protected String content;
 
@@ -122,11 +123,14 @@ public abstract class Resource extends Place implements IsResource {
   protected String renditionKind;
 
   @Transient
-  public Map<String, Rendition> renditions;
+  public Map<String, Resource> renditions;
 
   @XmlTransient
   @Transient
   private MultivaluedMap<String, String> queryParameters;
+
+  @Transient
+  private Resource home;
 
   public void addChild(Resource resource) {
     if (children == null) {
@@ -218,11 +222,13 @@ public abstract class Resource extends Place implements IsResource {
         result.setQueryParameters(paramMap);
       } else {
         String renditionKind = paramMap.getFirst(Resource.RENDITION);
-        Rendition rendition = renditionKind != null ? result.getRendition(renditionKind) : null;
+        Resource rendition = renditionKind != null ? result.getRendition(renditionKind) : null;
         if (rendition != null) {
           rendition.setQueryParameters(paramMap);
           result = rendition;
+          paramMap.remove(Resource.RENDITION);
         }
+        result.setQueryParameters(paramMap);
       }
     }
     return result;
@@ -313,32 +319,49 @@ public abstract class Resource extends Place implements IsResource {
     }
   }
 
-  public Rendition getRendition() {
-    return getRendition(HOME);
+  public Resource getRendition(String kind) {
+    if (isHome()) {
+      return getRenditions().get(kind);
+    } else {
+      return getSelf().getRendition(kind);
+    }
   }
 
-  public Rendition getRendition(String kind) {
-    return getRenditions().get(kind);
+  public String getRenditionKind() {
+    return renditionKind;
   }
 
   @XmlTransient
-  public Map<String, Rendition> getRenditions() {
+  public Map<String, Resource> getRenditions() {
+    if (!isHome()) {
+      return Collections.EMPTY_MAP;
+    }
     if (renditions == null) {
-      renditions = new HashMap<String, Rendition>();
-      for (String kind : getResourceType().getRenditionKinds()) {
-        Rendition rendition = new Rendition();
-        rendition.setParent(this);
-        rendition.setPath(kind);
-        rendition.setTitle(kind);
-        renditions.put(kind, rendition);
+      renditions = new HashMap<String, Resource>();
+      ResourceType<? extends Resource> type = getResourceType();
+      for (String kind : type.getRenditionKinds()) {
+        Resource res = type.createInstance();
+        res.readFrom(this);
+        res.setParent(this.getParent());
+        res.setTitle(kind); // TODO
+        res.setRenditionKind(kind);
+        res.setHome(this);
+        renditions.put(kind, res);
       }
     }
     return renditions;
   }
 
   @XmlTransient
-  public ResourceType<?> getResourceType() {
+  public ResourceType<? extends Resource> getResourceType() {
     return TYPE;
+  }
+
+  public Resource getSelf() {
+    if (isHome()) {
+      return this;
+    }
+    return home;
   }
 
   public ResourceService getService() {
@@ -355,14 +378,26 @@ public abstract class Resource extends Place implements IsResource {
   }
 
   public StringBuilder getUriBuilder() {
+    StringBuilder builder;
     if (getParent() == null) {
-      return new StringBuilder("/");
+      builder = new StringBuilder("/");
+    } else {
+      builder = getParent().getUriBuilder();
+      if (builder.length() > 1) {
+        builder.append("/");
+      }
+      builder.append(path);
     }
-    StringBuilder builder = getParent().getUriBuilder();
-    if (builder.length() > 1) {
-      builder.append("/");
+
+    if (renditionKind != null) {
+      builder.append("?").append(RENDITION).append("=").append(renditionKind);
+      for (String key : getQueryParameters().keySet()) {
+        List<String> values = getQueryParameters().get(key);
+        for (String value : values) {
+          builder.append("&").append(key).append("=").append(value);
+        }
+      }
     }
-    builder.append(path);
     return builder;
   }
 
@@ -373,18 +408,18 @@ public abstract class Resource extends Place implements IsResource {
   @XmlTransient
   public Object getWidget() {
     if (widget == null) {
-      if (parent != null) {
-        widget = parent.getResourceType().getWidget(getPath());
-      }
-      if (widget == null) {
-        widget = getResourceType().getWidget(HOME);
-      }
+      String kind = renditionKind == null ? SELF : renditionKind;
+      widget = getResourceType().getWidget(kind);
     }
     return widget;
   }
 
   public boolean hasChildren() {
     return childrenCount > 0;
+  }
+
+  public boolean isHome() {
+    return renditionKind == null;
   }
 
   @GET
@@ -415,6 +450,7 @@ public abstract class Resource extends Place implements IsResource {
   }
 
   public void readFrom(Resource delta) {
+    this.nativeData = delta.nativeData;
     if (delta.title != null) {
       this.title = delta.title;
     }
@@ -444,6 +480,10 @@ public abstract class Resource extends Place implements IsResource {
 
   public void setContentStream(InputStream inputStream) {
     this.contentStream = inputStream;
+  }
+
+  public void setHome(Resource home) {
+    this.home = home;
   }
 
   public void setId(String id) {
@@ -482,6 +522,10 @@ public abstract class Resource extends Place implements IsResource {
 
   public void setQueryParameters(MultivaluedMap<String, String> queryParameters) {
     this.queryParameters = queryParameters;
+  }
+
+  public void setRenditionKind(String renditionKind) {
+    this.renditionKind = renditionKind;
   }
 
   public void setTitle(String title) {
@@ -526,4 +570,5 @@ public abstract class Resource extends Place implements IsResource {
       loadChildren();
     }
   }
+
 }
