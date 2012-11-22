@@ -2,10 +2,6 @@ package org.cloudlet.web.core.client;
 
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -31,12 +27,12 @@ import org.cloudlet.web.core.shared.WebView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ResourceTree extends WebView {
+public class ResourceTree extends WebView<Resource> {
 
-  class JSONFeedReader implements DataReader<List<Resource>, String> {
+  class JSONFeedReader implements DataReader<List<Resource>, Resource> {
 
     @Override
-    public List<Resource> read(final Object loadConfig, final String data) {
+    public List<Resource> read(final Object loadConfig, final Resource data) {
       Resource parent = (Resource) loadConfig;
       parent = parent.getSelf();
       List<Resource> result = new ArrayList<Resource>();
@@ -62,28 +58,10 @@ public class ResourceTree extends WebView {
           res.getQueryParameters().addFirst(Resource.CHILDREN, "true");
         }
       }
-
-      JSONObject dg = JSONParser.parseLenient(data).isObject();
-      JSONObject root = dg.get("dataGraph").isObject().get("root").isObject();
-      JSONValue c = root.get(Resource.CHILDREN);
-      if (c != null) {
-        JSONArray children = c.isArray();
-        if (children != null) {
-          for (int i = 0; i < children.size(); i++) {
-            JSONObject object = children.get(i).isObject();
-            Resource child = JSONResourceProvider.readResource(object);
-            parent.addChild(child);
-            result.add(child);
-            child.setParent(parent);
-            child.getQueryParameters().addFirst(Resource.CHILDREN, "true");
-          }
-        } else {
-          JSONObject object = c.isObject();
-          Resource child = JSONResourceProvider.readResource(object);
-          parent.addChild(child);
-          result.add(child);
-          child.setParent(parent);
+      if (data.getChildren() != null) {
+        for (Resource child : data.getChildren()) {
           child.getQueryParameters().addFirst(Resource.CHILDREN, "true");
+          result.add(child);
         }
       }
       return result;
@@ -108,7 +86,12 @@ public class ResourceTree extends WebView {
     ModelKeyProvider<Resource> keyProvider = new ModelKeyProvider<Resource>() {
       @Override
       public String getKey(final Resource item) {
-        return item.getUri();
+        StringBuilder builder = item.getSelf().getUriBuilder().append("@");
+        String kind = item.getRenditionKind();
+        if (kind != null) {
+          builder.append(kind);
+        }
+        return builder.toString();
       }
     };
 

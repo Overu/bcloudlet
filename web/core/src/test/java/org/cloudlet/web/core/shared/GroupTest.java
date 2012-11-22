@@ -50,8 +50,8 @@ public class GroupTest extends CoreTest {
     repo.load();
 
     JAXBContext jc =
-        JAXBContext.newInstance(Repository.class, DataGraph.class, GroupFeed.class, UserFeed.class,
-            User.class, Media.class);
+        JAXBContext.newInstance(Repository.class, GroupFeed.class, UserFeed.class, User.class,
+            Media.class);
     Marshaller marshaller = jc.createMarshaller();
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     marshaller.marshal(repo, os);

@@ -4,6 +4,10 @@ import java.security.Principal;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -67,12 +71,6 @@ public class User extends Resource implements Principal {
     return zip;
   }
 
-  @Override
-  public void readFrom(Resource delta) {
-    super.readFrom(delta);
-    readFrom((User) delta);
-  }
-
   public User setEmail(final String value) {
     this.email = value;
     return this;
@@ -95,7 +93,17 @@ public class User extends Resource implements Principal {
     this.zip = zip;
   }
 
+  @PUT
+  @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  public User update(User data) {
+    readFrom(data);
+    update();
+    return data;
+  }
+
   protected void readFrom(User delta) {
+    super.readFrom(delta);
     if (delta.name != null) {
       this.name = delta.name;
     }

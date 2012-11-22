@@ -5,9 +5,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.resources.client.ClientBundle;
@@ -32,12 +30,8 @@ import com.sencha.gxt.core.client.resources.CommonStyles;
 import com.sencha.gxt.core.client.util.Format;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
-import com.sencha.gxt.data.shared.SortDir;
-import com.sencha.gxt.data.shared.SortInfo;
-import com.sencha.gxt.data.shared.SortInfoBean;
 import com.sencha.gxt.data.shared.StringLabelProvider;
 import com.sencha.gxt.data.shared.loader.DataReader;
-import com.sencha.gxt.data.shared.loader.ListLoadConfig;
 import com.sencha.gxt.data.shared.loader.ListLoadResult;
 import com.sencha.gxt.data.shared.loader.ListLoadResultBean;
 import com.sencha.gxt.data.shared.loader.ListLoader;
@@ -61,8 +55,6 @@ import com.sencha.gxt.widget.core.client.toolbar.LabelToolItem;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
 import org.cloudlet.web.core.shared.Feed;
-import org.cloudlet.web.core.shared.IsResource;
-import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.ResourceManager;
 import org.cloudlet.web.core.shared.User;
 import org.cloudlet.web.core.shared.UserFeed;
@@ -72,27 +64,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class UserGrid extends WebView<UserFeed> implements EntryPoint, ListLoadConfig, IsResource {
+public class UserGrid extends WebView<UserFeed> implements EntryPoint {
 
-  class JSONFeedReader implements DataReader<ListLoadResult<User>, String> {
-
+  class JSONFeedReader implements DataReader<ListLoadResult<User>, UserFeed> {
     @Override
-    public ListLoadResult<User> read(final Object loadConfig, final String data) {
-      UserFeed parent = (UserFeed) ((IsResource) loadConfig).asResource().getSelf();
-      JSONObject root = JSONParser.parseLenient(data).isObject();
-      JSONObject feed = root.get("dataGraph").isObject().get("root").isObject();
-      JSONValue entries = feed.get(Feed.ENTRIES);
-      JSONArray records;
-      List<User> users = new ArrayList<User>();
-      if (entries != null && (records = entries.isArray()) != null) {
-        for (int i = 0; i < records.size(); i++) {
-          JSONObject json = records.get(i).isObject();
-          User user = (User) JSONResourceProvider.readResource(json);
-          user.setParent(parent);
-          users.add(user);
-        }
-      }
-      ListLoadResultBean<User> result = new ListLoadResultBean<User>(users);
+    public ListLoadResult<User> read(final Object loadConfig, final UserFeed data) {
+      List<User> users = data.getEntries();
+      ListLoadResultBean<User> result =
+          new ListLoadResultBean<User>(users == null ? Collections.EMPTY_LIST : users);
       return result;
     }
   }
@@ -195,26 +174,26 @@ public class UserGrid extends WebView<UserFeed> implements EntryPoint, ListLoadC
     resources.css().ensureInjected();
   }
 
-  private ListLoader<UserGrid, ListLoadResult<User>> loader;
+  private ListLoader<UserFeed, ListLoadResult<User>> loader;
 
   public UserGrid() {
     final Style style = resources.css();
 
     JSONFeedReader reader = new JSONFeedReader();
 
-    ResourceProxy<UserGrid> proxy = new ResourceProxy<UserGrid>();
+    ResourceProxy<UserFeed> proxy = new ResourceProxy<UserFeed>();
 
-    loader = new ListLoader<UserGrid, ListLoadResult<User>>(proxy, reader);
+    loader = new ListLoader<UserFeed, ListLoadResult<User>>(proxy, reader);
 
-    loader.addLoadExceptionHandler(new LoadExceptionHandler<UserGrid>() {
+    loader.addLoadExceptionHandler(new LoadExceptionHandler<UserFeed>() {
       @Override
-      public void onLoadException(final LoadExceptionEvent<UserGrid> event) {
+      public void onLoadException(final LoadExceptionEvent<UserFeed> event) {
         System.out.println(event.getException());
       }
     });
 
     ListStore<User> store = new ListStore<User>(key);
-    loader.addLoadHandler(new LoadResultListStoreBinding<UserGrid, User, ListLoadResult<User>>(
+    loader.addLoadHandler(new LoadResultListStoreBinding<UserFeed, User, ListLoadResult<User>>(
         store));
 
     ColumnConfig<User, String> cc1 =
@@ -332,7 +311,7 @@ public class UserGrid extends WebView<UserFeed> implements EntryPoint, ListLoadC
 
       @Override
       public void onSelect(final SelectEvent event) {
-        loader.load(UserGrid.this);
+        loader.load(getValue());
       }
     }));
     cp.addButton(new TextButton("Edit", new SelectHandler() {
@@ -355,7 +334,7 @@ public class UserGrid extends WebView<UserFeed> implements EntryPoint, ListLoadC
         try {
           RequestProvider.DELETE("api/users/" + selectedItem).contentType(
               RequestFactory.JSON_CONTENT_TYPE_UTF8).send();
-          loader.load(UserGrid.this);
+          loader.load(getValue());
         } catch (RequestException e) {
           e.printStackTrace();
         }
@@ -364,30 +343,8 @@ public class UserGrid extends WebView<UserFeed> implements EntryPoint, ListLoadC
   }
 
   @Override
-  public Resource asResource() {
-    return getValue();
-  }
-
-  @Override
   public Widget asWidget() {
     return cp;
-  }
-
-  @Override
-  public List<? extends SortInfo> getSortInfo() {
-    List<String> sorts = resource.getQueryParameters().get(Feed.SORT);
-    if (sorts != null) {
-      List<SortInfo> sortInfo = new ArrayList<SortInfo>();
-      for (String sort : sorts) {
-        String[] pair = sort.split("|");
-        SortInfoBean s = new SortInfoBean();
-        s.setSortField(pair[0]);
-        s.setSortDir(pair.length > 1 ? SortDir.valueOf(pair[1]) : SortDir.ASC);
-        sortInfo.add(s);
-      }
-      return sortInfo;
-    }
-    return Collections.EMPTY_LIST;
   }
 
   @Override
@@ -396,17 +353,9 @@ public class UserGrid extends WebView<UserFeed> implements EntryPoint, ListLoadC
   }
 
   @Override
-  public void setSortInfo(List<? extends SortInfo> info) {
-    for (SortInfo sort : info) {
-      String value = sort.getSortField() + "|" + sort.getSortDir();
-      resource.getQueryParameters().add(Feed.SORT, value);
-    }
-  }
-
-  @Override
   public void setValue(UserFeed resource) {
     super.setValue(resource);
-    loader.load(this);
+    loader.load(resource);
   }
 
   private void selectView(final String viewName) {
