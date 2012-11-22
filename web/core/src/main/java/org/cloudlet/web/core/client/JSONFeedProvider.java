@@ -17,17 +17,24 @@ public class JSONFeedProvider<F extends Feed<E>, E extends Resource> extends
   public void read(F feed, JSONObject data) {
     super.read(feed, data);
     JSONValue value = data.get(Feed.ENTRIES);
-    JSONArray records;
-    List<E> entries = new ArrayList<E>();
-    if (value != null && (records = value.isArray()) != null) {
-      for (int i = 0; i < records.size(); i++) {
-        JSONObject json = records.get(i).isObject();
-        E user = (E) JSONResourceProvider.readResource(json);
-        user.setParent(feed.getSelf());
-        entries.add(user);
+    if (value != null) {
+      List<E> entries = new ArrayList<E>();
+      JSONArray array = value.isArray();
+      if (array != null) {
+        for (int i = 0; i < array.size(); i++) {
+          JSONObject object = array.get(i).isObject();
+          E child = (E) JSONResourceProvider.readResource(object);
+          entries.add(child);
+          child.setParent(feed.getSelf());
+        }
+      } else {
+        JSONObject object = value.isObject();
+        E child = (E) JSONResourceProvider.readResource(object);
+        entries.add(child);
+        child.setParent(feed.getSelf());
       }
+      feed.setEntries(entries);
     }
-    feed.setEntries(entries);
   }
 
   @Override
