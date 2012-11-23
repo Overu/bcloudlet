@@ -79,7 +79,7 @@ public class UserEditor extends ResourceEditor<User> {
 
   @Override
   protected boolean validateForm() {
-    if (name.getText() == null || email.getText() == null) {
+    if (!name.isValid() || !email.isValid()) {
       Info.display("name or email is Null", "");
       return false;
     }
