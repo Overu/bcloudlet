@@ -2,6 +2,7 @@ package org.cloudlet.web.core.client;
 
 import com.google.gwt.editor.client.Editor;
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.ContentPanel;
@@ -16,18 +17,34 @@ import org.cloudlet.web.core.shared.WebView;
 
 public abstract class ResourceEditor<T extends Resource> extends WebView<T> implements Editor<T> {
 
+  private boolean initialized = false;
+
   @Inject
   protected ResourceProxy<T> proxy;
 
+  @Inject
   protected ContentPanel cp;
 
   @Inject
   ResourceManager resourceManager;
 
-  public ResourceEditor(final String viewName) {
-    cp = new ContentPanel();
-    cp.setHeadingText(viewName);
+  @Override
+  public Widget asWidget() {
+    if (!initialized) {
+      initView();
+    }
+    return cp;
+  }
 
+  @Override
+  public void setValue(final T resource) {
+    super.setValue(resource);
+    initForm(resource);
+  }
+
+  protected abstract void initForm(T resource);
+
+  protected void initView() {
     cp.addButton(new TextButton("Save", new SelectHandler() {
       @Override
       public void onSelect(final SelectEvent event) {
@@ -38,14 +55,6 @@ public abstract class ResourceEditor<T extends Resource> extends WebView<T> impl
       }
     }));
   }
-
-  @Override
-  public void setValue(final T resource) {
-    super.setValue(resource);
-    initForm(resource);
-  }
-
-  protected abstract void initForm(T resource);
 
   protected abstract T readForm();
 
@@ -65,5 +74,4 @@ public abstract class ResourceEditor<T extends Resource> extends WebView<T> impl
   }
 
   protected abstract boolean validateForm();
-
 }
