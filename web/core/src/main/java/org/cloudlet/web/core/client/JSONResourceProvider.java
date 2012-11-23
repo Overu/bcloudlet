@@ -127,6 +127,16 @@ public class JSONResourceProvider<T extends Resource> implements JSONObjectProvi
     return null;
   }
 
+  public static JSONObject writeResource(Resource res) {
+    JSONObject root = new JSONObject();
+
+    ResourceType<? extends Resource> type = res.getResourceType();
+    JSONObjectProvider<Resource> provider = type.getProvider(JSONObjectProvider.class);
+    JSONObject json = provider.write(res);
+    root.put(type.getName(), json);
+    return root;
+  }
+
   public static void writeString(JSONObject json, String field, String email) {
     if (email != null) {
       json.put(field, new JSONString(email));
@@ -183,4 +193,5 @@ public class JSONResourceProvider<T extends Resource> implements JSONObjectProvi
     }
     return json;
   }
+
 }

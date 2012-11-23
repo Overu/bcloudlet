@@ -18,28 +18,11 @@ public class ResourceProxy<T extends Resource> implements DataProxy<T, T> {
   private DataWriter<T, String> writer;
 
   public void delete(final T resource, final Callback<T, Throwable> callback) {
-    sendRequest(resource, callback, RequestBuilder.DELETE);
+    execute(RequestBuilder.DELETE, resource, callback);
   }
 
-  public DataWriter<T, String> getWriter() {
-    return writer;
-  }
-
-  @Override
-  public void load(final T resource, final Callback<T, Throwable> callback) {
-    sendRequest(resource, callback, RequestBuilder.GET);
-  }
-
-  public void post(final T resource, final Callback<T, Throwable> callback) {
-    sendRequest(resource, callback, RequestBuilder.POST);
-  }
-
-  public void put(final T resource, final Callback<T, Throwable> callback) {
-    sendRequest(resource, callback, RequestBuilder.PUT);
-  }
-
-  public void sendRequest(final T resource, final Callback<T, Throwable> callback,
-      RequestBuilder.Method method) {
+  public void execute(RequestBuilder.Method method, final T resource,
+      final Callback<T, Throwable> callback) {
     try {
       String data = null;
       if (RequestBuilder.POST.equals(method) || RequestBuilder.PUT.equals(method)) {
@@ -76,14 +59,29 @@ public class ResourceProxy<T extends Resource> implements DataProxy<T, T> {
     }
   }
 
+  public DataWriter<T, String> getWriter() {
+    return writer;
+  }
+
+  @Override
+  public void load(final T resource, final Callback<T, Throwable> callback) {
+    execute(RequestBuilder.GET, resource, callback);
+  }
+
+  public void post(final T resource, final Callback<T, Throwable> callback) {
+    execute(RequestBuilder.POST, resource, callback);
+  }
+
+  public void put(final T resource, final Callback<T, Throwable> callback) {
+    execute(RequestBuilder.PUT, resource, callback);
+  }
+
   public void setWriter(DataWriter<T, String> writer) {
     this.writer = writer;
   }
 
   protected String generateData(T res) {
-    JSONObjectProvider<Resource> provider =
-        res.getResourceType().getProvider(JSONObjectProvider.class);
-    JSONObject json = provider.write(res);
+    JSONObject json = JSONResourceProvider.writeResource(res);
     return json.toString();
   }
 

@@ -300,9 +300,6 @@ public class UserGrid extends WebView<UserFeed> implements EntryPoint {
   @Override
   public void setValue(final UserFeed resource) {
     super.setValue(resource);
-    if (store.getAll().size() != 0) {
-      return;
-    }
     load();
   }
 
