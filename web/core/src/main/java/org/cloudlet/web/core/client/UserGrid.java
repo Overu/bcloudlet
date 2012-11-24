@@ -1,6 +1,5 @@
 package org.cloudlet.web.core.client;
 
-import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -11,8 +10,6 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.text.shared.AbstractSafeHtmlRenderer;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.RequestFactory;
 
@@ -47,15 +44,16 @@ import com.sencha.gxt.widget.core.client.toolbar.LabelToolItem;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
 import org.cloudlet.web.core.shared.Feed;
+import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.ResourceManager;
+import org.cloudlet.web.core.shared.ResourceWidget;
 import org.cloudlet.web.core.shared.User;
 import org.cloudlet.web.core.shared.UserFeed;
-import org.cloudlet.web.core.shared.WebView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserGrid extends WebView<UserFeed> implements EntryPoint {
+public class UserGrid extends ContentPanel implements ResourceWidget<UserFeed> {
 
   @FormatterFactories(@FormatterFactory(factory = ShortenFactory.class, name = "shorten"))
   interface Renderer extends XTemplates {
@@ -114,8 +112,6 @@ public class UserGrid extends WebView<UserFeed> implements EntryPoint {
 
   @Inject
   ResourceManager placeController;
-
-  private ContentPanel cp;
 
   private static Renderer r;
   private static Resources resources;
@@ -240,18 +236,17 @@ public class UserGrid extends WebView<UserFeed> implements EntryPoint {
     con.add(toolBar, new VerticalLayoutData(1, -1));
     con.add(grid, new VerticalLayoutData(1, 1));
 
-    cp = new ContentPanel();
-    cp.setHeadingText("Json Grid Example");
-    cp.setWidget(con);
-    cp.setButtonAlign(BoxLayoutPack.CENTER);
-    cp.addButton(new TextButton("Add User", new SelectHandler() {
+    setHeadingText("Json Grid Example");
+    setWidget(con);
+    setButtonAlign(BoxLayoutPack.CENTER);
+    addButton(new TextButton("Add User", new SelectHandler() {
 
       @Override
       public void onSelect(final SelectEvent event) {
-        placeController.goTo(resource.getRendition(Feed.NEW));
+        placeController.goTo(getResource().getRendition(Feed.NEW));
       }
     }));
-    cp.addButton(new TextButton("Refresh", new SelectHandler() {
+    addButton(new TextButton("Refresh", new SelectHandler() {
 
       @Override
       public void onSelect(final SelectEvent event) {
@@ -259,7 +254,7 @@ public class UserGrid extends WebView<UserFeed> implements EntryPoint {
         // loader.load(getValue());
       }
     }));
-    cp.addButton(new TextButton("Edit", new SelectHandler() {
+    addButton(new TextButton("Edit", new SelectHandler() {
 
       @Override
       public void onSelect(final SelectEvent event) {
@@ -269,7 +264,7 @@ public class UserGrid extends WebView<UserFeed> implements EntryPoint {
         placeController.goTo(selectedItem);
       }
     }));
-    cp.addButton(new TextButton("Delete User", new SelectHandler() {
+    addButton(new TextButton("Delete User", new SelectHandler() {
 
       @Override
       public void onSelect(final SelectEvent event) {
@@ -288,23 +283,18 @@ public class UserGrid extends WebView<UserFeed> implements EntryPoint {
   }
 
   @Override
-  public Widget asWidget() {
-    return cp;
+  public UserFeed getResource() {
+    return (UserFeed) getData(Resource.class.getName());
   }
 
   @Override
-  public void onModuleLoad() {
-    RootPanel.get().add(this);
-  }
-
-  @Override
-  public void setValue(final UserFeed resource) {
-    super.setValue(resource);
+  public void setResource(final UserFeed resource) {
+    setData(Resource.class.getName(), resource);
     load();
   }
 
   private void load() {
-    proxy.load(resource, new com.google.gwt.core.client.Callback<UserFeed, Throwable>() {
+    proxy.load(getResource(), new com.google.gwt.core.client.Callback<UserFeed, Throwable>() {
       @Override
       public void onFailure(final Throwable reason) {
       }

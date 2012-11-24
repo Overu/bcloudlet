@@ -1,8 +1,10 @@
 package org.cloudlet.web.core.client;
 
 import com.google.gwt.editor.client.Editor;
+import com.google.gwt.editor.client.EditorContext;
+import com.google.gwt.editor.client.EditorVisitor;
+import com.google.gwt.editor.client.SimpleBeanEditorDriver;
 import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.widget.core.client.ContentPanel;
@@ -12,51 +14,61 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 
 import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.ResourceManager;
+import org.cloudlet.web.core.shared.ResourceWidget;
 import org.cloudlet.web.core.shared.UserFeed;
-import org.cloudlet.web.core.shared.WebView;
 
-public abstract class ResourceEditor<T extends Resource> extends WebView<T> implements Editor<T> {
+public abstract class ResourceEditor<T extends Resource> extends ContentPanel implements Editor<T>,
+    ResourceWidget<T> {
 
-  private boolean initialized = false;
+  class ValueVisitor<V> extends EditorVisitor {
+
+    private V value;
+
+    @Override
+    public <M> boolean visit(EditorContext<M> ctx) {
+      M value = ctx.getFromModel();
+      return super.visit(ctx);
+    }
+  }
 
   @Inject
   protected ResourceProxy<T> proxy;
 
   @Inject
-  protected ContentPanel cp;
-
-  @Inject
   ResourceManager resourceManager;
 
+  private boolean initialized = false;
+
+  private ValueVisitor<T> visitor = new ValueVisitor<T>();
+
   @Override
-  public Widget asWidget() {
-    if (!initialized) {
-      initView();
-    }
-    return cp;
+  public T getResource() {
+    return getDriver().flush();
   }
 
   @Override
-  public void setValue(final T resource) {
-    super.setValue(resource);
-    initForm(resource);
+  public void setResource(final T resource) {
+    ensureInitialized();
+    getDriver().edit(resource);
   }
 
-  protected abstract void initForm(T resource);
+  protected abstract <D extends SimpleBeanEditorDriver<T, ResourceEditor<T>>> D getDriver();
 
   protected void initView() {
-    cp.addButton(new TextButton("Save", new SelectHandler() {
+    addButton(new TextButton("Save", new SelectHandler() {
       @Override
       public void onSelect(final SelectEvent event) {
-        if (validateForm()) {
-          T resource = readForm();
-          save(resource);
-        }
+        T resource = getDriver().flush();
+        save(resource);
       }
     }));
   }
 
-  protected abstract T readForm();
+  @Override
+  protected void onAttach() {
+    ensureInitialized();
+    super.onAttach();
+  }
 
   protected void save(final T resource) {
     RequestBuilder.Method method =
@@ -68,10 +80,17 @@ public abstract class ResourceEditor<T extends Resource> extends WebView<T> impl
 
       @Override
       public void onSuccess(final T result) {
-        resourceManager.goTo(getValue().getParent().getRendition(UserFeed.LIST));
+        resourceManager.goTo(getResource().getParent().getRendition(UserFeed.LIST));
       }
     });
   }
 
-  protected abstract boolean validateForm();
+  private void ensureInitialized() {
+    if (!initialized) {
+      initialized = true;
+      initView();
+      getDriver().initialize(this);
+    }
+  }
+
 }

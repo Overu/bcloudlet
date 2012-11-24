@@ -2,7 +2,6 @@ package org.cloudlet.web.core.client;
 
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.ValueProvider;
@@ -21,13 +20,13 @@ import org.cloudlet.web.core.shared.Property;
 import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.ResourceManager;
 import org.cloudlet.web.core.shared.ResourceType;
+import org.cloudlet.web.core.shared.ResourceWidget;
 import org.cloudlet.web.core.shared.Root;
-import org.cloudlet.web.core.shared.WebView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ResourceTree extends WebView<Resource> {
+public class ResourceTree extends BorderLayoutContainer implements ResourceWidget<Resource> {
 
   class JSONFeedReader implements DataReader<List<Resource>, Resource> {
 
@@ -69,8 +68,6 @@ public class ResourceTree extends WebView<Resource> {
 
   }
 
-  BorderLayoutContainer con;
-
   @Inject
   ResourceManager resourceManager;
 
@@ -82,7 +79,6 @@ public class ResourceTree extends WebView<Resource> {
 
   @Inject
   public ResourceTree(@Root final Resource root) {
-    con = new BorderLayoutContainer();
     ModelKeyProvider<Resource> keyProvider = new ModelKeyProvider<Resource>() {
       @Override
       public String getKey(final Resource item) {
@@ -137,21 +133,21 @@ public class ResourceTree extends WebView<Resource> {
       }
     });
 
-    con.add(tree, new VerticalLayoutData(1, 1));
+    add(tree, new VerticalLayoutData(1, 1));
   }
 
   @Override
-  public Widget asWidget() {
-    return con;
+  public Resource getResource() {
+    return (Resource) getData(Resource.class.getName());
   }
 
   @Override
-  public void setValue(final Resource resource) {
+  public void setResource(final Resource resource) {
+    setData(Resource.class.getName(), resource);
     // if (resource != this.resource) {
     // store.clear();
     // store.add(resource);
     // loader.load(resource);
     // }
-    super.setValue(resource);
   }
 }

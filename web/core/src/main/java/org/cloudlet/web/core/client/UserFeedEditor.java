@@ -1,38 +1,27 @@
 package org.cloudlet.web.core.client;
 
 import com.google.gwt.core.client.Callback;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.core.shared.GWT;
+import com.google.gwt.editor.client.SimpleBeanEditorDriver;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import com.sencha.gxt.widget.core.client.container.SimpleContainer;
-
 import org.cloudlet.web.core.shared.User;
 import org.cloudlet.web.core.shared.UserFeed;
-import org.cloudlet.web.core.shared.WebView;
 
-public class UserFeedEditor extends WebView<UserFeed> {
+public class UserFeedEditor extends ResourceEditor<UserFeed> {
+
+  interface Driver extends SimpleBeanEditorDriver<UserFeed, UserFeedEditor> {
+  }
 
   @Inject
   private Provider<UserEditor> editorProvider;
 
-  @Inject
-  ResourceProxy<UserFeed> proxy;
-
-  private SimpleContainer cp;
-
-  public UserFeedEditor() {
-    cp = new SimpleContainer();
-  }
+  private static Driver driver = GWT.create(Driver.class);
 
   @Override
-  public Widget asWidget() {
-    return cp;
-  }
-
-  @Override
-  public void setValue(final UserFeed resource) {
-    super.setValue(resource);
+  public void setResource(final UserFeed resource) {
+    super.setResource(resource);
     if (resource.getEntries() == null) {
       proxy.load(resource, new Callback<UserFeed, Throwable>() {
         @Override
@@ -41,7 +30,7 @@ public class UserFeedEditor extends WebView<UserFeed> {
 
         @Override
         public void onSuccess(final UserFeed data) {
-          setValue(data);
+          setResource(data);
         }
       });
     } else {
@@ -49,13 +38,25 @@ public class UserFeedEditor extends WebView<UserFeed> {
     }
   }
 
+  @SuppressWarnings("unchecked")
+  @Override
+  protected Driver getDriver() {
+    return driver;
+  }
+
+  @Override
+  protected void initView() {
+    super.initView();
+    driver.initialize(this);
+  }
+
   private void createEditors() {
-    if (resource.getEntries() != null) {
-      cp.clear();
-      for (User user : resource.getEntries()) {
+    if (getResource().getEntries() != null) {
+      clear();
+      for (User user : getResource().getEntries()) {
         UserEditor editor = editorProvider.get();
-        editor.setValue(user);
-        cp.add(editor);
+        editor.setResource(user);
+        add(editor);
       }
     }
   }

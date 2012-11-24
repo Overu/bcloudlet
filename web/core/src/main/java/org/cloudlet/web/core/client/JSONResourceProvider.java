@@ -118,7 +118,7 @@ public class JSONResourceProvider<T extends Resource> implements JSONObjectProvi
         return value.isString().stringValue();
       }
       if (value.isNumber() != null) {
-        Double.toString(value.isNumber().doubleValue());
+        return Double.toString(value.isNumber().doubleValue());
       }
       if (value.isNull() != null) {
         return null;

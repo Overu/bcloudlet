@@ -31,12 +31,13 @@ import org.cloudlet.web.core.shared.DynaResource;
 import org.cloudlet.web.core.shared.Feed;
 import org.cloudlet.web.core.shared.Repository;
 import org.cloudlet.web.core.shared.Resource;
+import org.cloudlet.web.core.shared.ResourceContainer;
 import org.cloudlet.web.core.shared.ResourceManager;
+import org.cloudlet.web.core.shared.ResourceWidget;
 import org.cloudlet.web.core.shared.Root;
 import org.cloudlet.web.core.shared.User;
 import org.cloudlet.web.core.shared.UserFeed;
 import org.cloudlet.web.core.shared.WebPlatform;
-import org.cloudlet.web.core.shared.WebView;
 
 import java.util.logging.Logger;
 
@@ -167,11 +168,16 @@ public class CoreClientModule extends AbstractGinModule {
     }
   }
 
-  public static void render(Resource resource, AcceptsOneWidget panel) {
-    renderResources(resource, panel, null);
+  public static void render(Resource resource, final AcceptsOneWidget panel) {
+    renderResources(resource, new ResourceContainer() {
+      @Override
+      public void addResourceWidget(IsWidget widget) {
+        panel.setWidget(widget);
+      }
+    }, null);
   }
 
-  public static void renderResource(final Resource resource, final AcceptsOneWidget panel,
+  public static void renderResource(final Resource resource, final ResourceContainer panel,
       final AsyncCallback<IsWidget> callback) {
     if (resource instanceof DynaResource) {
       final DynaResource delegate = (DynaResource) resource;
@@ -216,7 +222,7 @@ public class CoreClientModule extends AbstractGinModule {
     }
   }
 
-  public static void renderResources(final Resource resource, final AcceptsOneWidget panel,
+  public static void renderResources(final Resource resource, final ResourceContainer panel,
       final AsyncCallback<IsWidget> callback) {
     Resource parent = resource.getParent();
     if (parent != null) {
@@ -229,8 +235,8 @@ public class CoreClientModule extends AbstractGinModule {
 
         @Override
         public void onSuccess(final IsWidget result) {
-          if (result instanceof AcceptsOneWidget) {
-            renderResource(resource, (AcceptsOneWidget) result, callback);
+          if (result instanceof ResourceContainer) {
+            renderResource(resource, (ResourceContainer) result, callback);
           } else {
             logger.info(result.getClass().getName()
                 + " must implement AcceptsOneWidget to render child widget.");
@@ -243,11 +249,11 @@ public class CoreClientModule extends AbstractGinModule {
   }
 
   private static void appendWidget(Resource resource, IsWidget widget,
-      final AcceptsOneWidget panel, final AsyncCallback<IsWidget> callback) {
+      final ResourceContainer panel, final AsyncCallback<IsWidget> callback) {
     resource.setWidget(widget);
-    panel.setWidget(widget);
-    if (widget instanceof WebView) {
-      ((WebView) widget).setValue(resource);
+    panel.addResourceWidget(widget);
+    if (widget instanceof ResourceWidget) {
+      ((ResourceWidget) widget).setResource(resource);
     }
     if (callback != null) {
       callback.onSuccess(widget);

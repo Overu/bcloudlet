@@ -9,7 +9,6 @@ import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.TextField;
-import com.sencha.gxt.widget.core.client.info.Info;
 
 import org.cloudlet.web.core.shared.User;
 
@@ -35,15 +34,16 @@ public class UserEditor extends ResourceEditor<User> {
 
   private static Driver driver = GWT.create(Driver.class);
 
+  @SuppressWarnings("unchecked")
   @Override
-  protected void initForm(final User user) {
-    driver.edit(user);
+  protected Driver getDriver() {
+    return driver;
   }
 
   @Override
   protected void initView() {
     super.initView();
-    cp.setHeadingText("User Modify");
+    setHeadingText("User Modify");
 
     VerticalLayoutContainer p = new VerticalLayoutContainer();
     p.setLayoutData(new MarginData(8));
@@ -60,24 +60,7 @@ public class UserEditor extends ResourceEditor<User> {
 
     p.add(new FieldLabel(zip, "Zip"), new VerticalLayoutData(1, -1));
 
-    cp.setWidget(p);
-
-    driver.initialize(this);
-    driver.edit(resource);
-  }
-
-  @Override
-  protected User readForm() {
-    return driver.flush();
-  }
-
-  @Override
-  protected boolean validateForm() {
-    if (!name.isValid() || !email.isValid()) {
-      Info.display("name or email is Null", "");
-      return false;
-    }
-    return true;
+    setWidget(p);
   }
 
 }

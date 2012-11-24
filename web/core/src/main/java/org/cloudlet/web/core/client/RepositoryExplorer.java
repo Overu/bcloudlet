@@ -13,62 +13,38 @@
  */
 package org.cloudlet.web.core.client;
 
-import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.shared.GWT;
-import com.google.gwt.event.logical.shared.ResizeEvent;
-import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.inject.Inject;
 
-import com.sencha.gxt.core.client.util.DelayedTask;
 import com.sencha.gxt.core.client.util.Margins;
 import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
-import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer.BorderLayoutData;
 import com.sencha.gxt.widget.core.client.container.HtmlLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.MarginData;
-import com.sencha.gxt.widget.core.client.container.ResizeContainer;
 import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 
-import org.cloudlet.web.core.shared.Resource;
-import org.cloudlet.web.core.shared.WebView;
+import org.cloudlet.web.core.shared.Repository;
+import org.cloudlet.web.core.shared.ResourceContainer;
+import org.cloudlet.web.core.shared.ResourceWidget;
 
-public class RepositoryExplorer extends WebView implements AcceptsOneWidget, EntryPoint {
-
-  private DelayedTask windowResizeTask;
-  private BorderLayoutContainer con;
-  private int windowResizeDelay = !GWT.isScript() ? 100 : 0;
+public class RepositoryExplorer extends BorderLayoutContainer implements
+    ResourceWidget<Repository>, ResourceContainer {
 
   SimpleContainer center;
 
   private final ResourceTree placeTree;
 
+  private Repository repo;
+
   @Inject
   public RepositoryExplorer(final ResourceTree placeTree) {
-    this.placeTree = placeTree;
-    con = new BorderLayoutContainer();
-
-    if (windowResizeTask == null) {
-      windowResizeTask = new DelayedTask() {
-        @Override
-        public void onExecute() {
-          onWindowResize(Window.getClientWidth(), Window.getClientHeight());
-        }
-      };
-    }
-    Window.addResizeHandler(new ResizeHandler() {
-      @Override
-      public void onResize(final ResizeEvent event) {
-        windowResizeTask.delay(windowResizeDelay);
-      }
-    });
-
     Window.enableScrolling(false);
-    con.setPixelSize(Window.getClientWidth(), Window.getClientHeight());
+    setPixelSize(Window.getClientWidth(), Window.getClientHeight());
+    setMonitorWindowResize(true);
+
+    this.placeTree = placeTree;
 
     StringBuffer sb = new StringBuffer();
     sb.append("<div id='demo-theme'></div><div id=demo-title>Retech Explorer Demo</div>");
@@ -91,37 +67,33 @@ public class RepositoryExplorer extends WebView implements AcceptsOneWidget, Ent
 
     MarginData centerData = new MarginData(0, 5, 4, 0);
 
-    con.setNorthWidget(northPanel, northData);
-    con.setWestWidget(west, westData);
-    con.setCenterWidget(center, centerData);
+    setNorthWidget(northPanel, northData);
+    setWestWidget(west, westData);
+    setCenterWidget(center, centerData);
   }
 
   @Override
-  public Widget asWidget() {
-    return con;
-  }
-
-  @Override
-  public void onModuleLoad() {
-    RootPanel.get().add(con);
-  }
-
-  @Override
-  public void setValue(final Resource resource) {
-    super.setValue(resource);
-    placeTree.setValue(resource);
-  }
-
-  @Override
-  public void setWidget(final IsWidget w) {
+  public void addResourceWidget(final IsWidget w) {
     center.setWidget(w);
-    if (w instanceof WebView) {
-      ResizeContainer widget = (ResizeContainer) w.asWidget();
+    if (w instanceof RequiresResize) {
+      RequiresResize widget = (RequiresResize) w;
       widget.onResize();
     }
   }
 
+  @Override
+  public Repository getResource() {
+    return repo;
+  }
+
+  @Override
+  public void setResource(Repository resource) {
+    placeTree.setResource(resource);
+    this.repo = resource;
+  }
+
+  @Override
   protected void onWindowResize(final int width, final int height) {
-    con.setPixelSize(width, height);
+    setPixelSize(width, height);
   }
 }
