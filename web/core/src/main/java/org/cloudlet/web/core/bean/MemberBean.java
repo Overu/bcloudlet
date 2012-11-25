@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
@@ -16,7 +15,6 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType
 @Entity
-@Table(name = "t_member")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Handler(MemberService.class)
 public class MemberBean extends ResourceBean {
