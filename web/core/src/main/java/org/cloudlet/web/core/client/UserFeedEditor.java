@@ -53,7 +53,9 @@ public class UserFeedEditor extends ResourceEditor<UserFeed> {
 
   @Override
   protected void initView() {
-    super.initView();
+    setHeadingText("添加新用户");
+    // hide save button
+    // super.initView();
     driver.initialize(this);
   }
 
@@ -63,6 +65,8 @@ public class UserFeedEditor extends ResourceEditor<UserFeed> {
       clear();
       for (User user : entries) {
         UserEditor editor = editorProvider.get();
+        editor.setHeaderVisible(false);
+        editor.setBorders(false);
         ResourcePlace<User> userPlace = getPlace().getChild(user.getPath());
         userPlace.setResource(user);
         editor.setPlace(userPlace);

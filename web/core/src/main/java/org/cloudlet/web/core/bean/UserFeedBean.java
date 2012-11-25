@@ -22,14 +22,12 @@ import javax.xml.bind.annotation.XmlType;
 @DefaultField(key = "title", value = "系统用户")
 public class UserFeedBean extends PagingFeedBean<UserBean> {
 
+  @Override
   @POST
   @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
   @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  public UserFeedBean create(UserFeedBean feed) {
-    for (UserBean u : feed.getEntries()) {
-      createEntry(u);
-    }
-    return this;
+  public UserBean createEntry(UserBean user) {
+    return super.createEntry(user);
   }
 
   @Override

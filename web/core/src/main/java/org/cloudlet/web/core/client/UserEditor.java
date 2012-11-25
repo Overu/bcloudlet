@@ -48,7 +48,7 @@ public class UserEditor extends ResourceEditor<User> {
   @Override
   protected void initView() {
     super.initView();
-    setHeadingText("User Modify");
+    setHeadingText("修改用户");
 
     VerticalLayoutContainer p = new VerticalLayoutContainer();
     p.setLayoutData(new MarginData(8));

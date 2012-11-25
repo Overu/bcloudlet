@@ -89,7 +89,8 @@ public class ResourcePlace<T extends Resource> extends Place {
       if (RequestBuilder.POST.equals(method) || RequestBuilder.PUT.equals(method)) {
         data = generateData();
       }
-      final StringBuilder url = getUriBuilder();
+      final StringBuilder url =
+          RequestBuilder.POST.equals(method) ? getParent().getUriBuilder() : getUriBuilder();
       url.insert(0, "api");
       RequestBuilder builder = new RequestBuilder(method, url.toString());
       builder.setHeader("Accept", "application/json");
