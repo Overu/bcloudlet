@@ -13,15 +13,9 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
 
 @MappedSuperclass
-@XmlType(name = FeedBean.TYPE_NAME)
 public abstract class FeedBean<E extends ResourceBean> extends ResourceBean {
-
-  public static final String TYPE_NAME = "Feed";
-
-  public static FeedType TYPE = new FeedType(ResourceBean.TYPE, TYPE_NAME, ResourceBean.TYPE);
 
   public static final String SORT = "sort";
 
@@ -82,18 +76,11 @@ public abstract class FeedBean<E extends ResourceBean> extends ResourceBean {
   }
 
   @Override
-  public FeedType<? extends FeedBean<?>, ? extends E> getResourceType() {
-    return TYPE;
-  }
-
-  @Override
   public FeedService getService() {
     return (FeedService) super.getService();
   }
 
-  public E newEntry() {
-    return getResourceType().getEntryType().createInstance();
-  }
+  public abstract E newEntry();
 
   public void setEntries(List<E> entries) {
     this.entries = entries;

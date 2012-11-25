@@ -41,9 +41,9 @@ public class XmlResourceProvider extends AbstractMessageReaderWriterProvider<Res
   }
 
   @Override
-  public ResourceBean readFrom(Class<ResourceBean> type, Type genericType, Annotation[] annotations,
-      MediaType mediaType, MultivaluedMap<String, String> httpHeaders, InputStream entityStream)
-      throws IOException, WebApplicationException {
+  public ResourceBean readFrom(Class<ResourceBean> type, Type genericType,
+      Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> httpHeaders,
+      InputStream entityStream) throws IOException, WebApplicationException {
     return null;
   }
 
@@ -63,8 +63,9 @@ public class XmlResourceProvider extends AbstractMessageReaderWriterProvider<Res
     }
   }
 
-  private void writeResource(XMLStreamWriter writer, ResourceBean resource) throws XMLStreamException {
-    writer.writeStartElement(resource.getResourceType().getName());
+  private void writeResource(XMLStreamWriter writer, ResourceBean resource)
+      throws XMLStreamException {
+    writer.writeStartElement(resource.getType().getName());
     if (resource.getTitle() != null) {
       writer.writeAttribute(ResourceBean.TITLE, resource.getTitle());
     }

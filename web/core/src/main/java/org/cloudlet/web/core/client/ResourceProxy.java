@@ -5,8 +5,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import com.sencha.gxt.data.shared.loader.DataProxy;
 
-import org.cloudlet.web.core.shared.ResourcePlace;
-
 public class ResourceProxy<T extends ResourcePlace> implements DataProxy<T, T> {
 
   @Override

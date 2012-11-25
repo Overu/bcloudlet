@@ -1,12 +1,18 @@
 package org.cloudlet.web.core.bean;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.Provider;
+import com.google.inject.Singleton;
+
 import org.cloudlet.web.core.service.ResourceService;
-import org.cloudlet.web.core.shared.Package;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
-public abstract class WebPlatform {
+@Singleton
+public final class WebPlatform {
 
   private static WebPlatform instance;
 
@@ -16,31 +22,34 @@ public abstract class WebPlatform {
 
   private Class<? extends RepositoryBean> repositoryType;
 
-  public Map<String, ResourceType> resourceTypes = new HashMap<String, ResourceType>();
-
   private Map<String, Package> packages = new HashMap<String, Package>();
+
+  private static final Logger logger = Logger.getLogger(WebPlatform.class.getName());
+
+  @Inject
+  private Injector injector;
+
+  @Inject
+  private Provider<RepositoryBean> repository;
 
   public WebPlatform() {
     instance = this;
   }
 
-  public void addType(ResourceType type) {
-    resourceTypes.put(type.getName(), type);
-  }
-
-  public abstract Object getObject(String type, String id);
-
-  public Operation getOperation(final String fullName) {
-    int index = fullName.lastIndexOf(".");
-    String typeName = fullName.substring(0, index);
-    WebType type = getWebType(typeName);
-    if (type != null && type instanceof ResourceType) {
-      ResourceType resType = (ResourceType) type;
-      String simpleName = fullName.substring(index + 1);
-      return resType.getOperation(simpleName);
+  public Object getObject(String type, String id) {
+    try {
+      Class<?> cls = Class.forName(type);
+      if (Enum.class.isAssignableFrom(cls)) {
+        Class<? extends Enum> enumClass = (Class<? extends Enum>) cls;
+        return Enum.valueOf(enumClass, id);
+      } else if (ResourceBean.class.isAssignableFrom(cls)) {
+        ResourceService service = getService((Class<? extends ResourceBean>) cls);
+        return service.getById(id, (Class<? extends ResourceBean>) cls);
+      }
+    } catch (ClassNotFoundException e) {
+      logger.severe(e.getMessage());
     }
     return null;
-
   }
 
   public Package getPackage(final String name) {
@@ -51,43 +60,39 @@ public abstract class WebPlatform {
     return packages;
   }
 
-  public abstract RepositoryBean getRepository();
+  public RepositoryBean getRepository() {
+    return repository.get();
+  }
 
   public Class<? extends RepositoryBean> getRepositoryType() {
     return repositoryType;
   }
 
-  public abstract <T extends ResourceBean> T getResource(Class<T> resourceType);
-
-  public <T extends ResourceBean> ResourceType<T> getResourceType(Class<T> cls) {
-    return (ResourceType<T>) getType(cls.getName());
+  public <T extends ResourceBean> T getResource(Class<T> resourceType) {
+    return injector.getInstance(resourceType);
   }
 
-  public ResourceType getResourceType(String name) {
-    return resourceTypes.get(name);
-  }
-
-  public abstract <S extends ResourceService> S getService(Class<? extends ResourceBean> contentType);
-
-  public WebType getType(final String fullName) {
-    int index = fullName.lastIndexOf(".");
-    String pkgName = fullName.substring(0, index);
-    Package pkg = getPackage(pkgName);
-    if (pkg != null) {
-      String simpleName = fullName.substring(index + 1);
-      return pkg.getType(simpleName);
+  public <S extends ResourceService> S getService(Class<? extends ResourceBean> contentType) {
+    Class<S> serviceType = (Class<S>) getServiceType(contentType);
+    if (serviceType == null) {
+      System.out.println();
     }
+    // TODO proxy-based creation
+    return injector.getInstance(serviceType);
+  }
+
+  public <T extends ResourceService> Class<T> getServiceType(
+      Class<? extends ResourceBean> contentClass) {
+    Handler handler = contentClass.getAnnotation(Handler.class);
+    if (handler != null) {
+      return (Class<T>) handler.value();
+    }
+    Class superClass = contentClass.getSuperclass();
+    if (ResourceBean.class.isAssignableFrom(superClass)) {
+      return getServiceType(superClass);
+    }
+    // TODO proxy-based creation
     return null;
-  }
-
-  public WebType getWebType(Class cls) {
-    WebType type = getType(cls.getName());
-    return type;
-  }
-
-  public WebType getWebType(final String fullName) {
-    WebType type = getType(fullName);
-    return type;
   }
 
   public void setRepositoryType(Class<? extends RepositoryBean> repositoryType) {

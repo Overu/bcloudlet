@@ -6,9 +6,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import org.cloudlet.web.core.shared.ResourcePlace;
-import org.cloudlet.web.core.shared.User;
-import org.cloudlet.web.core.shared.UserFeed;
+import org.cloudlet.web.core.User;
+import org.cloudlet.web.core.UserFeed;
 
 import java.util.List;
 

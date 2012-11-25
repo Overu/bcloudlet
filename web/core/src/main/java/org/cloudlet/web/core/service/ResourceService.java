@@ -15,7 +15,6 @@ import org.cloudlet.web.core.bean.DefaultField;
 import org.cloudlet.web.core.bean.Relationship;
 import org.cloudlet.web.core.bean.RepositoryBean;
 import org.cloudlet.web.core.bean.ResourceBean;
-import org.cloudlet.web.core.bean.ResourceType;
 import org.cloudlet.web.core.bean.WebPlatform;
 
 import java.io.BufferedInputStream;
@@ -176,14 +175,15 @@ public class ResourceService<T extends ResourceBean> implements Provider<T> {
       }
       if (item != null) {
         String rt = params.getFirst(ResourceBean.RESOURCE_TYPE);
-        ResourceType<ResourceBean> resourceType = WebPlatform.getInstance().getResourceType(rt);
-        res = resourceType.createInstance();
-        res.setContentStream(item.openStream());
-        res.setPath(item.getFieldName());
-        res.setMimeType(item.getContentType());
-        res.setParent(parent);
-        res.readFrom(params);
-        res.save();
+        res = ClassUtil.createInstance(rt, ResourceBean.class);
+        if (res != null) {
+          res.setContentStream(item.openStream());
+          res.setPath(item.getFieldName());
+          res.setMimeType(item.getContentType());
+          res.setParent(parent);
+          res.readFrom(params);
+          res.save();
+        }
       }
     } catch (Exception e) {
       // VirusFoundException, VirusFoundException will be handled by ServiceEndPointUtil centrally

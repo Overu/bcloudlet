@@ -2,9 +2,9 @@ package org.cloudlet.web.core.bean;
 
 import com.google.gwt.core.shared.GWT;
 
+import org.cloudlet.web.core.Resource;
 import org.cloudlet.web.core.server.ResourceEntity;
 import org.cloudlet.web.core.service.ResourceService;
-import org.cloudlet.web.core.shared.Resource;
 import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -38,14 +38,9 @@ import javax.xml.bind.annotation.XmlTransient;
 
 @TypeDef(name = "content", typeClass = ResourceEntity.class)
 @MappedSuperclass
-// @XmlType(name = Resource.TYPE_NAME)
 public abstract class ResourceBean {
 
-  public static final String TYPE_NAME = "Resource";
-
   private static final Logger logger = Logger.getLogger(ResourceBean.class.getName());
-
-  public static final ResourceType<ResourceBean> TYPE = new ResourceType<ResourceBean>(TYPE_NAME);
 
   public static String ID = "id";
 
@@ -62,9 +57,6 @@ public abstract class ResourceBean {
   public static final String RENDITION = "rendition";
 
   protected String title;
-
-  @Transient
-  protected Object widget;
 
   @Context
   @Transient
@@ -113,7 +105,6 @@ public abstract class ResourceBean {
   @Transient
   protected String renditionKind;
 
-  @XmlTransient
   @Transient
   public ResourceBean createChild(ResourceBean child) {
     return getService().createChild(this, child);
@@ -211,23 +202,9 @@ public abstract class ResourceBean {
     return null;
   }
 
-  public ResourceBean getRelationship(Property prop) {
-    if (prop.getTargetType() instanceof ResourceType) {
-      ResourceBean result = (ResourceBean) getPropertyValue(prop.getPath());
-      return result;
-    } else {
-      return null;
-    }
-  }
-
   @XmlTransient
   public String getRenditionKind() {
     return renditionKind;
-  }
-
-  @XmlTransient
-  public ResourceType<? extends ResourceBean> getResourceType() {
-    return TYPE;
   }
 
   @XmlTransient
@@ -253,7 +230,6 @@ public abstract class ResourceBean {
     return getUriBuilder(true);
   }
 
-  @XmlTransient
   public StringBuilder getUriBuilder(boolean includeParams) {
     StringBuilder builder;
     if (getParent() == null) {
@@ -270,15 +246,6 @@ public abstract class ResourceBean {
 
   public long getVersion() {
     return version;
-  }
-
-  @XmlTransient
-  public Object getWidget() {
-    if (widget == null) {
-      String kind = renditionKind == null ? SELF : renditionKind;
-      widget = getResourceType().getWidget(kind);
-    }
-    return widget;
   }
 
   public boolean hasChildren() {
@@ -386,21 +353,17 @@ public abstract class ResourceBean {
     this.version = version;
   }
 
-  public void setWidget(Object widget) {
-    this.widget = widget;
-  }
-
   public ResourceBean update() {
     return getService().update(this);
   }
 
   protected ResourceBean doGetByPath(String path) {
-    Property prop = getResourceType().getProperty(path);
-    ResourceBean result;
-    if (prop != null) {
-      result = getRelationship(prop);
-    } else {
-      result = getChild(path);
+    ResourceBean result = getChild(path);
+    if (result == null) {
+      Object propValue = getPropertyValue(path);
+      if (propValue != null && propValue instanceof ResourceBean) {
+        result = (ResourceBean) propValue;
+      }
     }
     return result;
   }

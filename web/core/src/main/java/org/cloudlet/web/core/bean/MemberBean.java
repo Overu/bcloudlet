@@ -1,7 +1,7 @@
 package org.cloudlet.web.core.bean;
 
+import org.cloudlet.web.core.Role;
 import org.cloudlet.web.core.service.MemberService;
-import org.cloudlet.web.core.shared.Role;
 
 import java.util.logging.Logger;
 
@@ -13,22 +13,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = MemberBean.TYPE_NAME)
-@XmlType(name = MemberBean.TYPE_NAME)
+@XmlRootElement
+@XmlType
 @Entity
 @Table(name = "t_member")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Handler(MemberService.class)
 public class MemberBean extends ResourceBean {
-
-  public static final String TYPE_NAME = "Member";
-
-  public static ResourceType<MemberBean> TYPE = new ResourceType<MemberBean>(ResourceBean.TYPE, "member") {
-    @Override
-    public MemberBean createInstance() {
-      return new MemberBean();
-    }
-  };
 
   public static Logger logger = Logger.getLogger(MemberBean.class.getName());
 

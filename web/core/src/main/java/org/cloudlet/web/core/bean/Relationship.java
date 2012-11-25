@@ -21,10 +21,8 @@ import org.hibernate.annotations.TypeDef;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 @Entity
-@Table(name = "web_relationsip")
 @TypeDef(name = "content", typeClass = ResourceEntity.class)
 public class Relationship {
 

@@ -25,8 +25,7 @@ import com.sencha.gxt.widget.core.client.container.HtmlLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.MarginData;
 import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 
-import org.cloudlet.web.core.shared.Repository;
-import org.cloudlet.web.core.shared.ResourcePlace;
+import org.cloudlet.web.core.Repository;
 
 public class RepositoryExplorer extends BorderLayoutContainer implements
     ResourceWidget<Repository>, ResourceContainer {

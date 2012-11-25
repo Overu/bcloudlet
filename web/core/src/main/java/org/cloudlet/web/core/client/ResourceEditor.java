@@ -7,15 +7,15 @@ import com.google.gwt.editor.client.SimpleBeanEditorDriver;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
 import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 
-import org.cloudlet.web.core.shared.Resource;
-import org.cloudlet.web.core.shared.ResourceManager;
-import org.cloudlet.web.core.shared.ResourcePlace;
+import org.cloudlet.web.core.Resource;
 
 public abstract class ResourceEditor<T extends Resource> extends ContentPanel implements Editor<T>,
     ResourceWidget<T> {
@@ -43,6 +43,8 @@ public abstract class ResourceEditor<T extends Resource> extends ContentPanel im
 
   private ResourcePlace<T> place;
 
+  private AutoBean<T> bean;
+
   @Override
   public ResourcePlace<T> getPlace() {
     return place;
@@ -52,7 +54,9 @@ public abstract class ResourceEditor<T extends Resource> extends ContentPanel im
   public void setPlace(ResourcePlace<T> place) {
     this.place = place;
     ensureInitialized();
-    getDriver().edit(place.getResource());
+    T res = place.getResource();
+    getDriver().edit(res);
+    bean = AutoBeanUtils.getAutoBean(res);
   }
 
   protected abstract <D extends SimpleBeanEditorDriver<T, ResourceEditor<T>>> D getDriver();

@@ -1,7 +1,7 @@
 package org.cloudlet.web.core.bean;
 
+import org.cloudlet.web.core.UserFeed;
 import org.cloudlet.web.core.service.UserFeedService;
-import org.cloudlet.web.core.shared.UserFeed;
 
 import javax.persistence.Entity;
 import javax.ws.rs.Consumes;
@@ -14,23 +14,13 @@ import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = UserFeedBean.TYPE_NAME)
-@XmlType(name = UserFeedBean.TYPE_NAME)
+@XmlRootElement
+@XmlType
 @Entity
 @Handler(UserFeedService.class)
 @Path("users")
 @DefaultField(key = "title", value = "系统用户")
 public class UserFeedBean extends PagingFeedBean<UserBean> {
-
-  public static final String TYPE_NAME = "UserFeed";
-
-  public static FeedType<UserFeedBean, UserBean> TYPE = new FeedType<UserFeedBean, UserBean>(
-      PagingFeedBean.TYPE, TYPE_NAME, UserBean.TYPE) {
-    @Override
-    public UserFeedBean createInstance() {
-      return new UserFeedBean();
-    }
-  };
 
   @POST
   @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -45,11 +35,6 @@ public class UserFeedBean extends PagingFeedBean<UserBean> {
   @Override
   public Class<UserBean> getEntryType() {
     return UserBean.class;
-  }
-
-  @Override
-  public FeedType<UserFeedBean, UserBean> getResourceType() {
-    return TYPE;
   }
 
   @Override

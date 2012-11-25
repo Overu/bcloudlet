@@ -41,10 +41,8 @@ import com.sencha.gxt.widget.core.client.grid.Grid;
 import com.sencha.gxt.widget.core.client.toolbar.LabelToolItem;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
-import org.cloudlet.web.core.shared.ResourceManager;
-import org.cloudlet.web.core.shared.ResourcePlace;
-import org.cloudlet.web.core.shared.User;
-import org.cloudlet.web.core.shared.UserFeed;
+import org.cloudlet.web.core.User;
+import org.cloudlet.web.core.UserFeed;
 
 import java.util.ArrayList;
 import java.util.List;

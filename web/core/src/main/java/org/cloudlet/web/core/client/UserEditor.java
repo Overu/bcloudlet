@@ -10,7 +10,7 @@ import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.Verti
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.TextField;
 
-import org.cloudlet.web.core.shared.User;
+import org.cloudlet.web.core.User;
 
 public class UserEditor extends ResourceEditor<User> {
 

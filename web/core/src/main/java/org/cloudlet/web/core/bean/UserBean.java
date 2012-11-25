@@ -1,12 +1,11 @@
 package org.cloudlet.web.core.bean;
 
+import org.cloudlet.web.core.User;
 import org.cloudlet.web.core.service.UserService;
-import org.cloudlet.web.core.shared.User;
 
 import java.security.Principal;
 
 import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Produces;
@@ -14,14 +13,11 @@ import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = UserBean.TYPE_NAME)
-@XmlType(name = UserBean.TYPE_NAME)
+@XmlRootElement
+@XmlType
 @Entity
-@Table(name = "t_user")
 @Handler(UserService.class)
 public class UserBean extends ResourceBean implements Principal {
-
-  public static final String TYPE_NAME = "User";
 
   public static final String EMAIL = "email";
 
@@ -30,14 +26,6 @@ public class UserBean extends ResourceBean implements Principal {
   public static final String PHONE = "phone";
   public static final String STATE = "state";
   public static final String ZIP = "zip";
-
-  public static ResourceType<UserBean> TYPE = new ResourceType<UserBean>(ResourceBean.TYPE,
-      TYPE_NAME) {
-    @Override
-    public UserBean createInstance() {
-      return new UserBean();
-    }
-  };
 
   private String name;
 
@@ -60,11 +48,6 @@ public class UserBean extends ResourceBean implements Principal {
 
   public String getPhone() {
     return phone;
-  }
-
-  @Override
-  public ResourceType<UserBean> getResourceType() {
-    return TYPE;
   }
 
   public String getState() {

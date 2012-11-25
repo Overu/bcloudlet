@@ -13,14 +13,10 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import org.cloudlet.web.core.Repository;
+import org.cloudlet.web.core.User;
+import org.cloudlet.web.core.UserFeed;
 import org.cloudlet.web.core.client.style.BaseResources;
-import org.cloudlet.web.core.shared.Repository;
-import org.cloudlet.web.core.shared.ResourceManager;
-import org.cloudlet.web.core.shared.ResourcePlace;
-import org.cloudlet.web.core.shared.Root;
-import org.cloudlet.web.core.shared.User;
-import org.cloudlet.web.core.shared.UserFeed;
-import org.cloudlet.web.core.shared.WidgetRegistry;
 
 import java.util.logging.Logger;
 
@@ -70,14 +66,14 @@ public class CoreClientModule extends AbstractGinModule {
     }
 
     private void start() {
-      WidgetRegistry.register(Repository.class);
-      WidgetRegistry.register(UserFeed.class);
-      WidgetRegistry.register(User.class);
+      ClientPlatform.register(Repository.class);
+      ClientPlatform.register(UserFeed.class);
+      ClientPlatform.register(User.class);
 
-      WidgetRegistry.setWidget(Repository.class, "", explorer);
-      WidgetRegistry.setWidget(User.class, "", userModify);
-      WidgetRegistry.setWidget(UserFeed.class, UserFeedEditor.NEW, userForm);
-      WidgetRegistry.setWidget(UserFeed.class, UserGrid.LIST, userGrid);
+      ClientPlatform.setWidget(Repository.class, "", explorer);
+      ClientPlatform.setWidget(User.class, "", userModify);
+      ClientPlatform.setWidget(UserFeed.class, UserFeedEditor.NEW, userForm);
+      ClientPlatform.setWidget(UserFeed.class, UserGrid.LIST, userGrid);
 
       BaseResources.INSTANCE();
       main = new SimplePanel();
@@ -92,7 +88,7 @@ public class CoreClientModule extends AbstractGinModule {
 
   private static final Logger logger = Logger.getLogger(CoreClientModule.class.getName());
 
-  @Root
+  @RootPlace
   @Provides
   @Singleton
   public ResourcePlace getHomePage(final ResourcePlace root) {
@@ -118,7 +114,7 @@ public class CoreClientModule extends AbstractGinModule {
   @Singleton
   PlaceHistoryHandler placeHistoryHandlerProvider(final PlaceHistoryMapper historyMapper,
       final PlaceController placeController, final EventBus eventBus,
-      @Root final ResourcePlace homePlace) {
+      @RootPlace final ResourcePlace homePlace) {
     PlaceHistoryHandler placeHistoryHandler = new PlaceHistoryHandler(historyMapper);
     placeHistoryHandler.register(placeController, eventBus, homePlace);
     return placeHistoryHandler;

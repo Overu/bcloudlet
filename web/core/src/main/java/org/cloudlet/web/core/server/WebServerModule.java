@@ -18,7 +18,6 @@ import org.cloudlet.web.core.service.BookFeedService;
 import org.cloudlet.web.core.service.GroupFeedService;
 import org.cloudlet.web.core.service.RepositoryService;
 import org.cloudlet.web.core.service.UserFeedService;
-import org.cloudlet.web.core.shared.CorePackage;
 
 import java.util.logging.Logger;
 
@@ -33,8 +32,7 @@ public class WebServerModule extends AbstractModule {
 
     install(new JpaPersistModule("persist.jpaUnit")); // TODO read from
 
-    bind(CorePackage.class).asEagerSingleton();
-    bind(WebPlatform.class).to(WebServerPlatform.class).asEagerSingleton();
+    bind(WebPlatform.class).asEagerSingleton();
     bind(RepositoryBean.class).toProvider(RepositoryService.class);
     bind(UserFeedBean.class).toProvider(UserFeedService.class);
     bind(GroupFeedBean.class).toProvider(GroupFeedService.class);

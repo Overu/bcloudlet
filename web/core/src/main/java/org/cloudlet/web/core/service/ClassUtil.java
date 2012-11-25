@@ -19,6 +19,26 @@ public class ClassUtil {
 
   static Logger logger = Logger.getLogger(ClassUtil.class.getName());
 
+  public static <T> T createInstance(String className, Class<T> baseType) {
+    try {
+      Class cls = Class.forName(className);
+      if (baseType.isAssignableFrom(cls)) {
+        return (T) cls.newInstance();
+      }
+    } catch (Exception e) {
+      logger.severe(e.getMessage());
+    }
+    return null;
+  }
+
+  public static Class<?> getClass(String className) {
+    try {
+      return Class.forName(className);
+    } catch (ClassNotFoundException e) {
+      return null;
+    }
+  }
+
   public static String getSimpleName(Class<?> cls) {
     String name = cls.getName();
     int index = name.lastIndexOf(".");
