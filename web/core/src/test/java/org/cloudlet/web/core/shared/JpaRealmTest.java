@@ -9,6 +9,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.subject.Subject;
+import org.cloudlet.web.core.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 

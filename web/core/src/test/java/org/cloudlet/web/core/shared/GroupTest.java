@@ -4,6 +4,12 @@ import static org.junit.Assert.assertEquals;
 
 import com.google.inject.Inject;
 
+import org.cloudlet.web.core.bean.GroupBean;
+import org.cloudlet.web.core.bean.GroupFeedBean;
+import org.cloudlet.web.core.bean.MediaBean;
+import org.cloudlet.web.core.bean.RepositoryBean;
+import org.cloudlet.web.core.bean.UserBean;
+import org.cloudlet.web.core.bean.UserFeedBean;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -16,20 +22,20 @@ import javax.xml.bind.Marshaller;
 public class GroupTest extends CoreTest {
 
   @Inject
-  Repository repo;
+  RepositoryBean repo;
 
   @Inject
-  GroupFeed groups;
+  GroupFeedBean groups;
 
   @Inject
-  UserFeed users;
+  UserFeedBean users;
 
   @Test
   public void testSubResource() throws JAXBException {
     System.out.println(UUID.randomUUID().toString());
-    Group group = groups.getEntry("mygroup");
+    GroupBean group = groups.getEntry("mygroup");
     if (group == null) {
-      group = new Group();
+      group = new GroupBean();
       group.setPath("mygroup");
       group = groups.createEntry(group);
     } else {
@@ -37,7 +43,7 @@ public class GroupTest extends CoreTest {
     }
     users.load();
     long total = users.getChildrenCount();
-    User user = new User();
+    UserBean user = new UserBean();
     long r = total + 1;
     user.setName("Fan" + r);
     user.setEmail("fantongx@gmail.com");
@@ -50,8 +56,8 @@ public class GroupTest extends CoreTest {
     repo.load();
 
     JAXBContext jc =
-        JAXBContext.newInstance(Repository.class, GroupFeed.class, UserFeed.class, User.class,
-            Media.class);
+        JAXBContext.newInstance(RepositoryBean.class, GroupFeedBean.class, UserFeedBean.class,
+            UserBean.class, MediaBean.class);
     Marshaller marshaller = jc.createMarshaller();
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     marshaller.marshal(repo, os);

@@ -3,15 +3,13 @@ package org.cloudlet.web.core.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.text.shared.AbstractSafeHtmlRenderer;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
-import com.google.web.bindery.requestfactory.shared.RequestFactory;
 
 import com.sencha.gxt.cell.core.client.SimpleSafeHtmlCell;
 import com.sencha.gxt.cell.core.client.form.ComboBoxCell.TriggerAction;
@@ -43,10 +41,8 @@ import com.sencha.gxt.widget.core.client.grid.Grid;
 import com.sencha.gxt.widget.core.client.toolbar.LabelToolItem;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
-import org.cloudlet.web.core.shared.Feed;
-import org.cloudlet.web.core.shared.Resource;
 import org.cloudlet.web.core.shared.ResourceManager;
-import org.cloudlet.web.core.shared.ResourceWidget;
+import org.cloudlet.web.core.shared.ResourcePlace;
 import org.cloudlet.web.core.shared.User;
 import org.cloudlet.web.core.shared.UserFeed;
 
@@ -110,8 +106,10 @@ public class UserGrid extends ContentPanel implements ResourceWidget<UserFeed> {
     ValueProvider<User, String> zip();
   }
 
+  public static final String LIST = "list";
+
   @Inject
-  ResourceManager placeController;
+  ResourceManager resourceManager;
 
   private static Renderer r;
   private static Resources resources;
@@ -121,7 +119,6 @@ public class UserGrid extends ContentPanel implements ResourceWidget<UserFeed> {
   private ListView<User, User> listView;
   private VerticalLayoutContainer con;
   private ListStore<User> store;
-  private ResourceProxy<UserFeed> proxy;
 
   private static UserPorperties properties = GWT.create(UserPorperties.class);
 
@@ -131,10 +128,11 @@ public class UserGrid extends ContentPanel implements ResourceWidget<UserFeed> {
     resources.css().ensureInjected();
   }
 
+  private ResourcePlace<UserFeed> place;
+
   public UserGrid() {
     final Style style = resources.css();
 
-    proxy = new ResourceProxy<UserFeed>();
     store = new ListStore<User>(properties.id());
 
     ColumnConfig<User, String> cc1 =
@@ -199,9 +197,7 @@ public class UserGrid extends ContentPanel implements ResourceWidget<UserFeed> {
 
       @Override
       public SafeHtml render(final User user) {
-        JSONObject object = user.getNativeData();
-        return r.renderItem(object.containsKey("name") ? object.get("name").isString()
-            .stringValue() : "", style);
+        return r.renderItem(user.getName() == null ? "" : user.getName(), style);
       }
     }));
     // listView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -243,7 +239,8 @@ public class UserGrid extends ContentPanel implements ResourceWidget<UserFeed> {
 
       @Override
       public void onSelect(final SelectEvent event) {
-        placeController.goTo(getResource().getRendition(Feed.NEW));
+        ResourcePlace place = getPlace().getRendition(UserFeedEditor.NEW);
+        resourceManager.goTo(place);
       }
     }));
     addButton(new TextButton("Refresh", new SelectHandler() {
@@ -261,7 +258,7 @@ public class UserGrid extends ContentPanel implements ResourceWidget<UserFeed> {
         if (selectedItem == null || selectedItem.equals("")) {
           return;
         }
-        placeController.goTo(selectedItem);
+        resourceManager.goTo(selectedItem);
       }
     }));
     addButton(new TextButton("Delete User", new SelectHandler() {
@@ -271,37 +268,30 @@ public class UserGrid extends ContentPanel implements ResourceWidget<UserFeed> {
         if (selectedItem == null || selectedItem.equals("")) {
           return;
         }
-        try {
-          RequestProvider.DELETE("api/users/" + selectedItem).contentType(
-              RequestFactory.JSON_CONTENT_TYPE_UTF8).send();
-          // loader.load(getValue());
-        } catch (RequestException e) {
-          e.printStackTrace();
-        }
       }
     }));
   }
 
   @Override
-  public UserFeed getResource() {
-    return (UserFeed) getData(Resource.class.getName());
+  public ResourcePlace<UserFeed> getPlace() {
+    return place;
   }
 
   @Override
-  public void setResource(final UserFeed resource) {
-    setData(Resource.class.getName(), resource);
+  public void setPlace(ResourcePlace<UserFeed> place) {
+    this.place = place;
     load();
   }
 
   private void load() {
-    proxy.load(getResource(), new com.google.gwt.core.client.Callback<UserFeed, Throwable>() {
+    getPlace().load(new AsyncCallback<ResourcePlace<UserFeed>>() {
       @Override
       public void onFailure(final Throwable reason) {
       }
 
       @Override
-      public void onSuccess(final UserFeed result) {
-        List<User> users = result.getEntries();
+      public void onSuccess(final ResourcePlace<UserFeed> result) {
+        List<User> users = result.getResource().getEntries();
         store.replaceAll(users);
       }
     });

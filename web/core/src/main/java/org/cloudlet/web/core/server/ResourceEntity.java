@@ -1,6 +1,6 @@
 package org.cloudlet.web.core.server;
 
-import org.cloudlet.web.core.shared.Resource;
+import org.cloudlet.web.core.bean.ResourceBean;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.engine.spi.SessionImplementor;
@@ -37,8 +37,8 @@ public class ResourceEntity implements UserType {
     if (o1 == null || o2 == null) {
       return false;
     }
-    final Resource p1 = (Resource) o1;
-    final Resource p2 = (Resource) o2;
+    final ResourceBean p1 = (ResourceBean) o1;
+    final ResourceBean p2 = (ResourceBean) o2;
     return p1.getClass() == p2.getClass() && p1.getId().equals(p2.getId());
   }
 
@@ -71,7 +71,7 @@ public class ResourceEntity implements UserType {
       StringType.INSTANCE.nullSafeSet(st, null, index, session);
       StringType.INSTANCE.nullSafeSet(st, null, index + 1, session);
     } else {
-      Resource content = (Resource) value;
+      ResourceBean content = (ResourceBean) value;
       StringType.INSTANCE.nullSafeSet(st, content.getClass().getName(), index, session);
       StringType.INSTANCE.nullSafeSet(st, content.getId(), index + 1, session);
     }
@@ -85,7 +85,7 @@ public class ResourceEntity implements UserType {
 
   @Override
   public Class<?> returnedClass() {
-    return Resource.class;
+    return ResourceBean.class;
   }
 
   @Override

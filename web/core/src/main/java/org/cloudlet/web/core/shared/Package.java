@@ -1,5 +1,11 @@
 package org.cloudlet.web.core.shared;
 
+import org.cloudlet.web.core.bean.NamedElement;
+import org.cloudlet.web.core.bean.Property;
+import org.cloudlet.web.core.bean.ResourceType;
+import org.cloudlet.web.core.bean.WebPlatform;
+import org.cloudlet.web.core.bean.WebType;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,20 +28,20 @@ public class Package extends NamedElement {
     return type;
   }
 
+  protected <T> void addProperty(final ResourceType entityType, final String name,
+      final WebType type, final boolean many) {
+    Property property = new Property();
+    property.setName(name);
+    property.setTargetType(type);
+    property.setMany(many);
+    entityType.addProperty(property);
+  }
+
   protected void addResourceType(final ResourceType... types) {
     for (ResourceType type : types) {
       type.setPackage(this);
       addType(type);
     }
-  }
-
-  protected <T> void addProperty(final ResourceType entityType, final String name,
-      final WebType type, final boolean many) {
-    Property property = new Property();
-    property.setName(name);
-    property.setType(type);
-    property.setMany(many);
-    entityType.addProperty(property);
   }
 
   protected void init() {

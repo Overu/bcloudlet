@@ -2,6 +2,14 @@ package org.cloudlet.web.core.shared;
 
 import com.google.inject.Inject;
 
+import org.cloudlet.web.core.bean.GroupBean;
+import org.cloudlet.web.core.bean.GroupFeedBean;
+import org.cloudlet.web.core.bean.MemberBean;
+import org.cloudlet.web.core.bean.MemberFeedBean;
+import org.cloudlet.web.core.bean.RepositoryBean;
+import org.cloudlet.web.core.bean.UserBean;
+import org.cloudlet.web.core.bean.UserFeedBean;
+import org.cloudlet.web.core.bean.UserMember;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -15,22 +23,22 @@ import javax.xml.bind.Marshaller;
 public class JAXBTest extends CoreTest {
 
   @Inject
-  Repository repo;
+  RepositoryBean repo;
 
   @Inject
-  UserFeed users;
+  UserFeedBean users;
 
   @Inject
-  GroupFeed groups;
+  GroupFeedBean groups;
 
   @Test
   public void testJAXB() throws JAXBException {
-    User user = new User();
+    UserBean user = new UserBean();
     user.setName("user1");
-    List<User> userList = new ArrayList<User>();
+    List<UserBean> userList = new ArrayList<UserBean>();
     userList.add(user);
     users.setEntries(userList);
-    JAXBContext jc = JAXBContext.newInstance(UserFeed.class, User.class);
+    JAXBContext jc = JAXBContext.newInstance(UserFeedBean.class, UserBean.class);
     Marshaller marshaller = jc.createMarshaller();
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     marshaller.marshal(users, os);
@@ -39,20 +47,20 @@ public class JAXBTest extends CoreTest {
 
   @Test
   public void testMembers() throws JAXBException {
-    Group group = groups.getEntry("mygroup");
+    GroupBean group = groups.getEntry("mygroup");
     if (group == null) {
-      group = new Group();
+      group = new GroupBean();
       group.setName("My Group");
       group.setPath("mygroup");
       groups.createEntry(group);
     }
 
-    User user = new User();
+    UserBean user = new UserBean();
     user.setName("user" + System.currentTimeMillis());
     user.setPath(user.getName());
     users.createEntry(user);
 
-    MemberFeed members = group.getMembers();
+    MemberFeedBean members = group.getMembers();
     UserMember member1 = new UserMember();
     member1.setUser(user);
     member1.setRole(GroupRole.MANAGER);
@@ -61,8 +69,8 @@ public class JAXBTest extends CoreTest {
     members.load();
 
     JAXBContext jc =
-        JAXBContext.newInstance(MemberFeed.class, Member.class, User.class, UserFeed.class,
-            Group.class, GroupFeed.class);
+        JAXBContext.newInstance(MemberFeedBean.class, MemberBean.class, UserBean.class, UserFeedBean.class,
+            GroupBean.class, GroupFeedBean.class);
     Marshaller marshaller = jc.createMarshaller();
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     marshaller.marshal(members, os);

@@ -2,6 +2,20 @@ package org.cloudlet.web.core.shared;
 
 import com.google.inject.Singleton;
 
+import org.cloudlet.web.core.bean.BookBean;
+import org.cloudlet.web.core.bean.BookFeedBean;
+import org.cloudlet.web.core.bean.FeedBean;
+import org.cloudlet.web.core.bean.GroupBean;
+import org.cloudlet.web.core.bean.GroupFeedBean;
+import org.cloudlet.web.core.bean.MediaBean;
+import org.cloudlet.web.core.bean.MemberBean;
+import org.cloudlet.web.core.bean.MemberFeedBean;
+import org.cloudlet.web.core.bean.RepositoryBean;
+import org.cloudlet.web.core.bean.ResourceBean;
+import org.cloudlet.web.core.bean.SectionBean;
+import org.cloudlet.web.core.bean.UserBean;
+import org.cloudlet.web.core.bean.UserFeedBean;
+
 @Singleton
 public class CorePackage extends Package {
 
@@ -11,10 +25,10 @@ public class CorePackage extends Package {
 
   public CorePackage() {
     setName(NAME);
-    addResourceType(Resource.TYPE, Feed.TYPE, Media.TYPE, Repository.TYPE);
-    addResourceType(User.TYPE, Group.TYPE, Member.TYPE, UserFeed.TYPE, GroupFeed.TYPE,
-        MemberFeed.TYPE);
-    addResourceType(Book.TYPE, BookFeed.TYPE, Section.TYPE);
+    addResourceType(ResourceBean.TYPE, FeedBean.TYPE, MediaBean.TYPE, RepositoryBean.TYPE);
+    addResourceType(UserBean.TYPE, GroupBean.TYPE, MemberBean.TYPE, UserFeedBean.TYPE, GroupFeedBean.TYPE,
+        MemberFeedBean.TYPE);
+    addResourceType(BookBean.TYPE, BookFeedBean.TYPE, SectionBean.TYPE);
     init();
   }
 

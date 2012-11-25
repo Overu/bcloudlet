@@ -4,6 +4,14 @@ import static org.junit.Assert.assertEquals;
 
 import com.google.inject.Inject;
 
+import org.cloudlet.web.core.bean.BookBean;
+import org.cloudlet.web.core.bean.BookFeedBean;
+import org.cloudlet.web.core.bean.GroupFeedBean;
+import org.cloudlet.web.core.bean.MediaBean;
+import org.cloudlet.web.core.bean.RepositoryBean;
+import org.cloudlet.web.core.bean.SectionBean;
+import org.cloudlet.web.core.bean.UserBean;
+import org.cloudlet.web.core.bean.UserFeedBean;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -17,24 +25,24 @@ import javax.xml.bind.Marshaller;
 public class BookTest extends CoreTest {
 
   @Inject
-  Repository repo;
+  RepositoryBean repo;
 
   @Inject
-  BookFeed books;
+  BookFeedBean books;
 
   @Test
   public void testCreateBook() throws JAXBException {
     System.out.println(UUID.randomUUID().toString());
     books.load();
     long total = books.getChildrenCount();
-    Book book = new Book();
+    BookBean book = new BookBean();
     total = total + 1;
     book.setPath("book" + total);
     book.setTitle("娱乐 " + total);
     // book.setContentStream(new ByteArrayInputStream("Good work".getBytes()));
     books.createEntry(book);
 
-    Media cover = new Media();
+    MediaBean cover = new MediaBean();
 
     InputStream stream = getClass().getResourceAsStream("/covers/sanguo.jpg");
     cover.setContentStream(stream);
@@ -48,7 +56,7 @@ public class BookTest extends CoreTest {
     books.load();
     assertEquals(total, books.getChildrenCount());
     for (int i = 0; i < 10; i++) {
-      Section section = new Section();
+      SectionBean section = new SectionBean();
       section.setPath("section" + i);
       section.setTitle("第" + i + "章");
       section
@@ -59,8 +67,8 @@ public class BookTest extends CoreTest {
     books.load();
 
     JAXBContext jc =
-        JAXBContext.newInstance(Repository.class, GroupFeed.class, UserFeed.class, User.class,
-            Media.class, BookFeed.class);
+        JAXBContext.newInstance(RepositoryBean.class, GroupFeedBean.class, UserFeedBean.class, UserBean.class,
+            MediaBean.class, BookFeedBean.class);
     Marshaller marshaller = jc.createMarshaller();
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     marshaller.marshal(books, os);
