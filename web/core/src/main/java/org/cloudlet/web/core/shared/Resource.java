@@ -250,6 +250,7 @@ public abstract class Resource extends Place {
     return mimeType;
   }
 
+  @XmlTransient
   public <T> T getNativeData() {
     return (T) nativeData;
   }
@@ -332,6 +333,7 @@ public abstract class Resource extends Place {
     return TYPE;
   }
 
+  @XmlTransient
   public Resource getSelf() {
     if (isHome()) {
       return this;
@@ -339,6 +341,7 @@ public abstract class Resource extends Place {
     return home;
   }
 
+  @XmlTransient
   public ResourceService getService() {
     return WebPlatform.getInstance().getService(getClass());
   }

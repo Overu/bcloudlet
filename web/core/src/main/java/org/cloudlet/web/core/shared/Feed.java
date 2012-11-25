@@ -70,6 +70,7 @@ public abstract class Feed<E extends Resource> extends Resource implements ListL
     return result;
   }
 
+  @XmlTransient
   public abstract Class<E> getEntryType();
 
   @Override
