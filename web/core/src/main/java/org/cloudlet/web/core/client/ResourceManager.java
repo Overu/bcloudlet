@@ -18,15 +18,15 @@ public class ResourceManager implements PlaceHistoryMapper {
   @Inject
   ResourcePlace root;
 
-  public ResourcePlace getPlace(Resource resource) {
-    ResourcePlace place = getPlace(resource.getUri());
-    place.setResource(resource);
-    return place;
-  }
-
   @Override
   public ResourcePlace getPlace(String token) {
     return root.getByUri(token);
+  }
+
+  public <T extends Resource> ResourcePlace<T> getPlace(T resource) {
+    ResourcePlace<T> place = getPlace(resource.getUri());
+    place.setResource(resource);
+    return place;
   }
 
   @Override

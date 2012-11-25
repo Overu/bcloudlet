@@ -245,7 +245,7 @@ public class UserGrid extends ContentPanel implements ResourceWidget<UserFeed> {
 
       @Override
       public void onSelect(final SelectEvent event) {
-        load();
+        refresh();
         // loader.load(getValue());
       }
     }));
@@ -259,13 +259,23 @@ public class UserGrid extends ContentPanel implements ResourceWidget<UserFeed> {
         resourceManager.goTo(selectedItem);
       }
     }));
-    addButton(new TextButton("Delete User", new SelectHandler() {
+    addButton(new TextButton("Delete", new SelectHandler() {
 
       @Override
       public void onSelect(final SelectEvent event) {
         if (selectedItem == null || selectedItem.equals("")) {
           return;
         }
+        resourceManager.getPlace(selectedItem).delete(new AsyncCallback<ResourcePlace<User>>() {
+          @Override
+          public void onFailure(Throwable caught) {
+          }
+
+          @Override
+          public void onSuccess(ResourcePlace<User> result) {
+            refresh();
+          }
+        });
       }
     }));
   }
@@ -280,13 +290,7 @@ public class UserGrid extends ContentPanel implements ResourceWidget<UserFeed> {
     return UserFeed.class;
   }
 
-  @Override
-  public void setPlace(ResourcePlace<UserFeed> place) {
-    this.place = place;
-    load();
-  }
-
-  private void load() {
+  public void refresh() {
     getPlace().load(new AsyncCallback<ResourcePlace<UserFeed>>() {
       @Override
       public void onFailure(final Throwable reason) {
@@ -298,6 +302,12 @@ public class UserGrid extends ContentPanel implements ResourceWidget<UserFeed> {
         store.replaceAll(users);
       }
     });
+  }
+
+  @Override
+  public void setPlace(ResourcePlace<UserFeed> place) {
+    this.place = place;
+    refresh();
   }
 
   private void selectView(final String viewName) {

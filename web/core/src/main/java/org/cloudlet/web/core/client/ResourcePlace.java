@@ -82,7 +82,8 @@ public class ResourcePlace<T extends Resource> extends Place {
     execute(RequestBuilder.DELETE, callback);
   }
 
-  public void execute(RequestBuilder.Method method, final AsyncCallback<ResourcePlace<T>> callback) {
+  public void execute(final RequestBuilder.Method method,
+      final AsyncCallback<ResourcePlace<T>> callback) {
     try {
       String data = null;
       if (RequestBuilder.POST.equals(method) || RequestBuilder.PUT.equals(method)) {
@@ -106,41 +107,32 @@ public class ResourcePlace<T extends Resource> extends Place {
 
         @Override
         public void onResponseReceived(Request request, Response response) {
-          if (response.getStatusCode() == Response.SC_OK) {
-            String data = response.getText();
-            JSONObject json = JSONParser.parse(data).isObject();
-            String typeName = json.get("type").isString().stringValue();
-            Class<T> resourceType = (Class<T>) ClientPlatform.getResourceType(typeName);
-            if (resourceType == null) {
-              resourceType = getResourceType();
+          int statusCode = response.getStatusCode();
+          if (statusCode / 100 == 2) {
+            if (statusCode == Response.SC_OK) {
+              if (!method.equals(RequestBuilder.DELETE)) {
+                String data = response.getText();
+                JSONObject json = JSONParser.parse(data).isObject();
+                String typeName = json.get("type").isString().stringValue();
+                Class<T> resourceType = (Class<T>) ClientPlatform.getResourceType(typeName);
+                if (resourceType == null) {
+                  resourceType = getResourceType();
+                }
+                if (resourceType == null) {
+                  resourceType = (Class<T>) Resource.class;
+                }
+                setResourceType(resourceType);
+                AutoBean<T> result = AutoBeanCodex.decode(factory, resourceType, data);
+                final T resource = result.as();
+                setResource(resource);
+              }
             }
-            if (resourceType == null) {
-              resourceType = (Class<T>) Resource.class;
-            }
-            setResourceType(resourceType);
-            AutoBean<T> result = AutoBeanCodex.decode(factory, resourceType, data);
-            final T resource = result.as();
-            // if (parent != null) {
-            // parent.get(new AsyncCallback<ResourcePlace>() {
-            // @Override
-            // public void onFailure(Throwable caught) {
-            // };
-            //
-            // @Override
-            // public void onSuccess(ResourcePlace result) {
-            // resource.setParent(result.getResource());
-            // };
-            // });
-            // }
-            setResource(resource);
             if (callback != null) {
               callback.onSuccess(ResourcePlace.this);
             }
-          } else {
-            if (callback != null) {
-              callback.onFailure(new RuntimeException("GET " + url.toString()
-                  + "\r\nInvalid status code " + response.getStatusCode()));
-            }
+          } else if (callback != null) {
+            callback.onFailure(new RuntimeException("GET " + url.toString()
+                + "\r\nInvalid status code " + statusCode));
           }
         }
       });

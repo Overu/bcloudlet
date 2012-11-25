@@ -37,15 +37,17 @@ public class GroupTest extends CoreTest {
     }
     users.load();
     long total = users.getChildrenCount();
-    UserBean user = new UserBean();
-    long r = total + 1;
-    user.setName("Fan" + r);
-    user.setEmail("fantongx@gmail.com");
-    user.setPhone(Long.toString(r));
-    users.createEntry(user);
-    users.load();
-    assertEquals(total + 1, users.getChildrenCount());
-
+    for (int i = 1; i <= 10; i++) {
+      UserBean user = new UserBean();
+      long count = total + i;
+      user.setName("User " + count);
+      user.setPath("user" + count);
+      user.setEmail("user" + count + "@gmail.com");
+      user.setPhone(Long.toString(count));
+      users.createEntry(user);
+      users.load();
+      assertEquals(count, users.getChildrenCount());
+    }
     repo.loadChildren();
     repo.load();
 
@@ -57,5 +59,4 @@ public class GroupTest extends CoreTest {
     marshaller.marshal(repo, os);
     System.out.println(os.toString());
   }
-
 }
