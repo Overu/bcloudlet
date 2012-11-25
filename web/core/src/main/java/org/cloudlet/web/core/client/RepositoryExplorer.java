@@ -85,6 +85,11 @@ public class RepositoryExplorer extends BorderLayoutContainer implements
   }
 
   @Override
+  public Class<Repository> getResourceType() {
+    return Repository.class;
+  }
+
+  @Override
   public void setPlace(ResourcePlace<Repository> place) {
     this.place = place;
     placeTree.setPlace(place);

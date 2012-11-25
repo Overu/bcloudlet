@@ -276,6 +276,11 @@ public class UserGrid extends ContentPanel implements ResourceWidget<UserFeed> {
   }
 
   @Override
+  public Class<UserFeed> getResourceType() {
+    return UserFeed.class;
+  }
+
+  @Override
   public void setPlace(ResourcePlace<UserFeed> place) {
     this.place = place;
     load();

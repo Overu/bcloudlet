@@ -81,6 +81,11 @@ public class ResourceTree<T extends Resource> extends BorderLayoutContainer impl
   }
 
   @Override
+  public Class<T> getResourceType() {
+    return (Class<T>) Resource.class;
+  }
+
+  @Override
   public void setPlace(ResourcePlace<T> place) {
     this.place = place;
     // if (resource != this.resource) {

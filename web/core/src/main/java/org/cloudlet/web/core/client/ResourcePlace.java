@@ -54,7 +54,7 @@ public class ResourcePlace<T extends Resource> extends Place {
 
   private String rendition;
 
-  private ResourcePlace parent;
+  private ResourcePlace<? extends Resource> parent;
 
   private Map<String, ResourcePlace<? extends Resource>> children;
 
@@ -67,7 +67,7 @@ public class ResourcePlace<T extends Resource> extends Place {
   // children.put(place.getPath(), place);
   // }
 
-  private ResourcePlace host;
+  private ResourcePlace<? extends Resource> host;
 
   public ResourcePlace<T> copy() {
     ResourcePlace<T> result = placeProvider.get();
@@ -75,7 +75,6 @@ public class ResourcePlace<T extends Resource> extends Place {
     result.setParent(parent);
     result.setTitle(title);
     result.setResourceType(resourceType);
-    result.setResource(resource);
     return result;
   }
 
@@ -100,7 +99,9 @@ public class ResourcePlace<T extends Resource> extends Place {
 
         @Override
         public void onError(Request request, Throwable exception) {
-          callback.onFailure(exception);
+          if (callback != null) {
+            callback.onFailure(exception);
+          }
         }
 
         @Override
@@ -132,10 +133,14 @@ public class ResourcePlace<T extends Resource> extends Place {
             // });
             // }
             setResource(resource);
-            callback.onSuccess(ResourcePlace.this);
+            if (callback != null) {
+              callback.onSuccess(ResourcePlace.this);
+            }
           } else {
-            callback.onFailure(new RuntimeException("GET " + url.toString()
-                + "\r\nInvalid status code " + response.getStatusCode()));
+            if (callback != null) {
+              callback.onFailure(new RuntimeException("GET " + url.toString()
+                  + "\r\nInvalid status code " + response.getStatusCode()));
+            }
           }
         }
       });
@@ -242,6 +247,9 @@ public class ResourcePlace<T extends Resource> extends Place {
       result.setRendition(kind);
       result.setTitle(kind);
       result.host = this;
+      if (Resource.SELF.equals(kind)) {
+        result.setResource(this.resource);
+      }
       getRenditions().put(kind, result);
     }
     return result;
@@ -416,14 +424,23 @@ public class ResourcePlace<T extends Resource> extends Place {
   }
 
   public void resolve(final Class<T> resourceType, final AsyncCallback<ResourcePlace<T>> callback) {
-    if (resource != null && (resourceType == null || resourceType.equals(this.resourceType))) {
-      callback.onSuccess(this);
+    if (resource != null && (resourceType.equals(this.resourceType))) {
+      if (callback != null) {
+        callback.onSuccess(this);
+      }
       return;
-    } else if (resource != null) {
-      // TODO decode into specified type
     }
     setResourceType(resourceType);
-    load(callback);
+    if (resource != null) {
+      // Re-decode according to given resourceType
+      AutoBean<T> bean = AutoBeanUtils.getAutoBean(resource);
+      Splittable s = AutoBeanCodex.encode(bean);
+      bean = AutoBeanCodex.decode(factory, resourceType, s);
+      resource = bean.as();
+      return;
+    } else {
+      load(callback);
+    }
   }
 
   public void setParent(ResourcePlace parent) {
@@ -490,7 +507,18 @@ public class ResourcePlace<T extends Resource> extends Place {
     setWidget(widget);
     panel.addResourceWidget(widget);
     if (widget instanceof ResourceWidget) {
-      ((ResourceWidget) widget).setPlace(this);
+      final ResourceWidget<T> rw = (ResourceWidget<T>) widget;
+      Class<T> rt = rw.getResourceType();
+      resolve(rt, new AsyncCallback<ResourcePlace<T>>() {
+        @Override
+        public void onFailure(Throwable caught) {
+        }
+
+        @Override
+        public void onSuccess(ResourcePlace<T> result) {
+          rw.setPlace(ResourcePlace.this);
+        }
+      });
     }
     if (callback != null) {
       callback.onSuccess(widget);

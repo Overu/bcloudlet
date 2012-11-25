@@ -34,6 +34,11 @@ public class UserEditor extends ResourceEditor<User> {
 
   private static Driver driver = GWT.create(Driver.class);
 
+  @Override
+  public Class<User> getResourceType() {
+    return User.class;
+  }
+
   @SuppressWarnings("unchecked")
   @Override
   protected Driver getDriver() {

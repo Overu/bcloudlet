@@ -24,22 +24,25 @@ public class UserFeedEditor extends ResourceEditor<UserFeed> {
   private static Driver driver = GWT.create(Driver.class);
 
   @Override
-  public void setPlace(ResourcePlace<UserFeed> resource) {
-    super.setPlace(resource);
-    if (resource.getResource().getEntries() == null) {
-      resource.load(new AsyncCallback<ResourcePlace<UserFeed>>() {
-        @Override
-        public void onFailure(final Throwable reason) {
-        }
+  public Class<UserFeed> getResourceType() {
+    return UserFeed.class;
+  }
 
-        @Override
-        public void onSuccess(final ResourcePlace<UserFeed> data) {
-          setPlace(data);
-        }
-      });
-    } else {
-      createEditors();
-    }
+  @Override
+  public void setPlace(ResourcePlace<UserFeed> place) {
+    super.setPlace(place);
+    place.resolve(UserFeed.class, new AsyncCallback<ResourcePlace<UserFeed>>() {
+      @Override
+      public void onFailure(Throwable caught) {
+        // TODO Auto-generated method stub
+      }
+
+      @Override
+      public void onSuccess(ResourcePlace<UserFeed> result) {
+        createEditors();
+      }
+    });
+
   }
 
   @SuppressWarnings("unchecked")
