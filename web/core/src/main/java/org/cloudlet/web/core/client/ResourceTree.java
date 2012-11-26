@@ -15,52 +15,42 @@ import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 
-import org.cloudlet.web.core.shared.DynaResource;
-import org.cloudlet.web.core.shared.Property;
-import org.cloudlet.web.core.shared.Resource;
-import org.cloudlet.web.core.shared.ResourceManager;
-import org.cloudlet.web.core.shared.ResourceType;
-import org.cloudlet.web.core.shared.ResourceWidget;
-import org.cloudlet.web.core.shared.Root;
+import org.cloudlet.web.core.Resource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class ResourceTree extends BorderLayoutContainer implements ResourceWidget<Resource> {
+public class ResourceTree<T extends Resource> extends BorderLayoutContainer implements
+    ResourceWidget<T> {
 
-  class JSONFeedReader implements DataReader<List<Resource>, Resource> {
+  class JSONFeedReader implements DataReader<List<ResourcePlace>, ResourcePlace> {
 
     @Override
-    public List<Resource> read(final Object loadConfig, final Resource data) {
-      Resource parent = (Resource) loadConfig;
-      parent = parent.getSelf();
-      List<Resource> result = new ArrayList<Resource>();
-      for (Resource res : parent.getRenditions().values()) {
-        if (res.getRenditionKind().equals(Resource.SELF)) {
+    public List<ResourcePlace> read(final Object loadConfig, final ResourcePlace place) {
+      Resource resource = place.getResource();
+
+      List<ResourcePlace> result = new ArrayList<ResourcePlace>();
+      String resourceType = resource.getType();
+      Map<String, Object> widgets = ClientPlatform.getWidgets(resourceType);
+      for (String kind : widgets.keySet()) {
+        if (Resource.SELF.equals(kind)) {
           continue;
         }
-        res.getQueryParameters().addFirst(Resource.CHILDREN, "true");
-        result.add(res);
+        Object widget = widgets.get(kind);
+        ResourcePlace rendition = place.getHost().getRendition(kind);
+        rendition.setWidget(widget);
+        result.add(rendition);
       }
-      for (Property prop : parent.getResourceType().getAllProperties().values()) {
-        if (prop.getType() instanceof ResourceType) {
-          Resource res = parent.getRelationship(prop);
-          if (res != null) {
-            result.add(res);
-          } else {
-            res = new DynaResource();
-            res.setParent(parent);
-            res.setPath(prop.getPath());
-            res.setTitle(prop.getTitle());
-            result.add(res);
-          }
-          res.getQueryParameters().addFirst(Resource.CHILDREN, "true");
-        }
-      }
-      if (data.getChildren() != null) {
-        for (Resource child : data.getChildren()) {
-          child.getQueryParameters().addFirst(Resource.CHILDREN, "true");
-          result.add(child);
+
+      List<Resource> children = resource.getChildren();
+      if (children != null) {
+        for (Resource child : children) {
+          ResourcePlace childPlace = place.getHost().getChild(child.getPath());
+          childPlace.setResource(child);
+          ResourcePlace self = childPlace.getRendition(Resource.SELF);
+          self.getQueryParameters().addFirst(Resource.CHILDREN, "true");
+          result.add(self);
         }
       }
       return result;
@@ -71,41 +61,61 @@ public class ResourceTree extends BorderLayoutContainer implements ResourceWidge
   @Inject
   ResourceManager resourceManager;
 
-  TreeLoader<Resource> loader;
+  TreeLoader<ResourcePlace> loader;
 
-  Tree<Resource, String> tree;
+  Tree<ResourcePlace, String> tree;
 
-  TreeStore<Resource> store;
+  TreeStore<ResourcePlace> store;
 
+  private boolean initialized = false;
+
+  @RootPlace
   @Inject
-  public ResourceTree(@Root final Resource root) {
-    ModelKeyProvider<Resource> keyProvider = new ModelKeyProvider<Resource>() {
+  ResourcePlace root;
+
+  private ResourcePlace<T> place;
+
+  @Override
+  public ResourcePlace<T> getPlace() {
+    return place;
+  }
+
+  @Override
+  public Class<T> getResourceType() {
+    return (Class<T>) Resource.class;
+  }
+
+  @Override
+  public void setPlace(ResourcePlace<T> place) {
+    this.place = place;
+    // if (resource != this.resource) {
+    // store.clear();
+    // store.add(resource);
+    // loader.load(resource);
+    // }
+  }
+
+  protected void initView() {
+    ModelKeyProvider<ResourcePlace> keyProvider = new ModelKeyProvider<ResourcePlace>() {
       @Override
-      public String getKey(final Resource item) {
-        StringBuilder builder = item.getSelf().getUriBuilder().append("@");
-        String kind = item.getRenditionKind();
-        if (kind != null) {
-          builder.append(kind);
-        }
-        return builder.toString();
+      public String getKey(final ResourcePlace item) {
+        return item.getUri();
       }
     };
 
-    store = new TreeStore<Resource>(keyProvider);
-    Resource home = root.getRendition(Resource.SELF);
-    home.getQueryParameters().addFirst(Resource.CHILDREN, "true");
-    store.add(home);
+    store = new TreeStore<ResourcePlace>(keyProvider);
+
     JSONFeedReader reader = new JSONFeedReader();
 
-    ResourceProxy<Resource> jsonProxy = new ResourceProxy<Resource>();
-    loader = new TreeLoader<Resource>(jsonProxy, reader) {
+    ResourceProxy jsonProxy = new ResourceProxy();
+    loader = new TreeLoader<ResourcePlace>(jsonProxy, reader) {
       @Override
-      public boolean hasChildren(final Resource parent) {
-        return parent.hasChildren();// show relationship on navigation menu
+      public boolean hasChildren(final ResourcePlace parent) {
+        return parent.hasChildren();
       }
     };
-    loader.addLoadHandler(new ChildTreeStoreBinding<Resource>(store));
-    tree = new Tree<Resource, String>(store, new ValueProvider<Resource, String>() {
+    loader.addLoadHandler(new ChildTreeStoreBinding<ResourcePlace>(store));
+    tree = new Tree<ResourcePlace, String>(store, new ValueProvider<ResourcePlace, String>() {
 
       @Override
       public String getPath() {
@@ -113,41 +123,42 @@ public class ResourceTree extends BorderLayoutContainer implements ResourceWidge
       }
 
       @Override
-      public String getValue(final Resource object) {
+      public String getValue(final ResourcePlace object) {
         return object.getTitle();
       }
 
       @Override
-      public void setValue(final Resource object, final String value) {
+      public void setValue(final ResourcePlace object, final String value) {
         object.setTitle(value);
       }
     }, new GrayTreeAppearance());
 
     tree.setLoader(loader);
     // tree.getStyle().setLeafIcon(ExampleImages.INSTANCE.music());
-    tree.getSelectionModel().addSelectionHandler(new SelectionHandler<Resource>() {
+    tree.getSelectionModel().addSelectionHandler(new SelectionHandler<ResourcePlace>() {
       @Override
-      public void onSelection(final SelectionEvent<Resource> event) {
+      public void onSelection(final SelectionEvent<ResourcePlace> event) {
         resourceManager.goTo(event.getSelectedItem());
         tree.getSelectionModel().deselectAll();
       }
     });
 
     add(tree, new VerticalLayoutData(1, 1));
+    ResourcePlace home = root.getRendition(Resource.SELF);
+    home.getQueryParameters().addFirst(Resource.CHILDREN, "true");
+    store.add(home);
   }
 
   @Override
-  public Resource getResource() {
-    return (Resource) getData(Resource.class.getName());
+  protected void onAttach() {
+    ensureInitialized();
+    super.onAttach();
   }
 
-  @Override
-  public void setResource(final Resource resource) {
-    setData(Resource.class.getName(), resource);
-    // if (resource != this.resource) {
-    // store.clear();
-    // store.add(resource);
-    // loader.load(resource);
-    // }
+  private void ensureInitialized() {
+    if (!initialized) {
+      initialized = true;
+      initView();
+    }
   }
 }

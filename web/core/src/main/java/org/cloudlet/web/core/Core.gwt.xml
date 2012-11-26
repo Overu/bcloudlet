@@ -6,7 +6,7 @@
 
   <extend-configuration-property name="gin.module" value="org.cloudlet.web.core.client.CoreClientModule" />
 
+  <source path="" includes="*.java" />
   <source path='client' />
-  <source path='shared' />
   <super-source path="super" />
 </module>

@@ -1,7 +1,7 @@
 package org.cloudlet.web.core.provider;
 
-import org.cloudlet.web.core.shared.Feed;
-import org.cloudlet.web.core.shared.Resource;
+import org.cloudlet.web.core.bean.FeedBean;
+import org.cloudlet.web.core.bean.ResourceBean;
 import org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider;
 
 import java.io.IOException;
@@ -26,7 +26,7 @@ import javax.xml.stream.XMLStreamWriter;
 @Produces("application/ios+xml")
 @Consumes("application/ios+xml")
 @Singleton
-public class XmlResourceProvider extends AbstractMessageReaderWriterProvider<Resource> {
+public class XmlResourceProvider extends AbstractMessageReaderWriterProvider<ResourceBean> {
 
   @Override
   public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations,
@@ -41,14 +41,14 @@ public class XmlResourceProvider extends AbstractMessageReaderWriterProvider<Res
   }
 
   @Override
-  public Resource readFrom(Class<Resource> type, Type genericType, Annotation[] annotations,
-      MediaType mediaType, MultivaluedMap<String, String> httpHeaders, InputStream entityStream)
-      throws IOException, WebApplicationException {
+  public ResourceBean readFrom(Class<ResourceBean> type, Type genericType,
+      Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> httpHeaders,
+      InputStream entityStream) throws IOException, WebApplicationException {
     return null;
   }
 
   @Override
-  public void writeTo(Resource t, Class<?> type, Type genericType, Annotation[] annotations,
+  public void writeTo(ResourceBean t, Class<?> type, Type genericType, Annotation[] annotations,
       MediaType mediaType, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream)
       throws IOException, WebApplicationException {
     try {
@@ -63,27 +63,28 @@ public class XmlResourceProvider extends AbstractMessageReaderWriterProvider<Res
     }
   }
 
-  private void writeResource(XMLStreamWriter writer, Resource resource) throws XMLStreamException {
-    writer.writeStartElement(resource.getResourceType().getName());
+  private void writeResource(XMLStreamWriter writer, ResourceBean resource)
+      throws XMLStreamException {
+    writer.writeStartElement(resource.getType().getName());
     if (resource.getTitle() != null) {
-      writer.writeAttribute(Resource.TITLE, resource.getTitle());
+      writer.writeAttribute(ResourceBean.TITLE, resource.getTitle());
     }
-    writer.writeAttribute(Resource.PATH, resource.getPath());
-    writer.writeAttribute(Resource.URI, resource.getUri());
+    writer.writeAttribute(ResourceBean.PATH, resource.getPath());
+    writer.writeAttribute(ResourceBean.URI, resource.getUri());
     if (resource.getContent() != null) {
       writer.writeCharacters(resource.getContent());
     }
-    Collection<Resource> rels = resource.getChildren();
+    Collection<ResourceBean> rels = resource.getChildren();
     if (rels != null && !rels.isEmpty()) {
-      for (Resource rel : rels) {
+      for (ResourceBean rel : rels) {
         writeResource(writer, rel);
       }
     }
-    if (resource instanceof Feed) {
-      Feed feed = (Feed) resource;
-      List<Resource> entries = feed.getEntries();
+    if (resource instanceof FeedBean) {
+      FeedBean feed = (FeedBean) resource;
+      List<ResourceBean> entries = feed.getEntries();
       if (entries != null && !entries.isEmpty()) {
-        for (Resource entry : entries) {
+        for (ResourceBean entry : entries) {
           writeResource(writer, entry);
         }
       }

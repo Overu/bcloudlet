@@ -25,21 +25,19 @@ import com.sencha.gxt.widget.core.client.container.HtmlLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.MarginData;
 import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 
-import org.cloudlet.web.core.shared.Repository;
-import org.cloudlet.web.core.shared.ResourceContainer;
-import org.cloudlet.web.core.shared.ResourceWidget;
+import org.cloudlet.web.core.Repository;
 
 public class RepositoryExplorer extends BorderLayoutContainer implements
     ResourceWidget<Repository>, ResourceContainer {
 
   SimpleContainer center;
 
-  private final ResourceTree placeTree;
+  private final ResourceTree<Repository> placeTree;
 
-  private Repository repo;
+  private ResourcePlace<Repository> place;
 
   @Inject
-  public RepositoryExplorer(final ResourceTree placeTree) {
+  public RepositoryExplorer(final ResourceTree<Repository> placeTree) {
     Window.enableScrolling(false);
     setPixelSize(Window.getClientWidth(), Window.getClientHeight());
     setMonitorWindowResize(true);
@@ -82,14 +80,19 @@ public class RepositoryExplorer extends BorderLayoutContainer implements
   }
 
   @Override
-  public Repository getResource() {
-    return repo;
+  public ResourcePlace<Repository> getPlace() {
+    return place;
   }
 
   @Override
-  public void setResource(Repository resource) {
-    placeTree.setResource(resource);
-    this.repo = resource;
+  public Class<Repository> getResourceType() {
+    return Repository.class;
+  }
+
+  @Override
+  public void setPlace(ResourcePlace<Repository> place) {
+    this.place = place;
+    placeTree.setPlace(place);
   }
 
   @Override

@@ -10,7 +10,7 @@ import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.Verti
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.TextField;
 
-import org.cloudlet.web.core.shared.User;
+import org.cloudlet.web.core.User;
 
 public class UserEditor extends ResourceEditor<User> {
 
@@ -34,6 +34,11 @@ public class UserEditor extends ResourceEditor<User> {
 
   private static Driver driver = GWT.create(Driver.class);
 
+  @Override
+  public Class<User> getResourceType() {
+    return User.class;
+  }
+
   @SuppressWarnings("unchecked")
   @Override
   protected Driver getDriver() {
@@ -43,7 +48,7 @@ public class UserEditor extends ResourceEditor<User> {
   @Override
   protected void initView() {
     super.initView();
-    setHeadingText("User Modify");
+    setHeadingText("修改用户");
 
     VerticalLayoutContainer p = new VerticalLayoutContainer();
     p.setLayoutData(new MarginData(8));
