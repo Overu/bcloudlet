@@ -1,7 +1,6 @@
 package org.cloudlet.web.core.bean;
 
 import org.cloudlet.web.core.Role;
-import org.cloudlet.web.core.service.MemberService;
 
 import java.util.logging.Logger;
 
@@ -16,7 +15,6 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@Handler(MemberService.class)
 public class MemberBean extends ResourceBean {
 
   public static Logger logger = Logger.getLogger(MemberBean.class.getName());
@@ -30,7 +28,7 @@ public class MemberBean extends ResourceBean {
   @XmlTransient
   public Role getRole() {
     if (role == null && roleType != null && roleName != null) {
-      WebPlatform.getInstance().getObject(roleType, roleName);
+      getObject(roleType, roleName);
     }
     return role;
   }

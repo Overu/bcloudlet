@@ -7,6 +7,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.cloudlet.web.core.Resource;
+import org.cloudlet.web.core.Root;
 
 @Singleton
 public class ResourceManager implements PlaceHistoryMapper {
@@ -14,7 +15,7 @@ public class ResourceManager implements PlaceHistoryMapper {
   @Inject
   PlaceController placeController;
 
-  @RootPlace
+  @Root
   @Inject
   ResourcePlace root;
 

@@ -1,7 +1,5 @@
 package org.cloudlet.web.core.bean;
 
-import org.cloudlet.web.core.service.GroupService;
-
 import java.security.Principal;
 
 import javax.persistence.Entity;
@@ -14,7 +12,6 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType
 @Entity
-@Handler(GroupService.class)
 @Path("group")
 @DefaultField(key = "title", value = "用户组")
 public class GroupBean extends ResourceBean implements Principal {

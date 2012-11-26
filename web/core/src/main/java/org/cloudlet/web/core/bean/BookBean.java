@@ -1,7 +1,5 @@
 package org.cloudlet.web.core.bean;
 
-import org.cloudlet.web.core.service.BookService;
-
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.ws.rs.Path;
@@ -14,7 +12,6 @@ import javax.xml.bind.annotation.XmlType;
 @Entity
 @Path("book")
 @DefaultField(key = "title", value = "图书")
-@Handler(BookService.class)
 public class BookBean extends ResourceBean {
 
   public static final String SECTIONS = "sections";

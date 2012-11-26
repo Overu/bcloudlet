@@ -14,6 +14,7 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 import org.cloudlet.web.core.Repository;
+import org.cloudlet.web.core.Root;
 import org.cloudlet.web.core.User;
 import org.cloudlet.web.core.UserFeed;
 import org.cloudlet.web.core.client.style.BaseResources;
@@ -88,7 +89,7 @@ public class CoreClientModule extends AbstractGinModule {
 
   private static final Logger logger = Logger.getLogger(CoreClientModule.class.getName());
 
-  @RootPlace
+  @Root
   @Provides
   @Singleton
   public ResourcePlace getHomePage(final ResourcePlace root) {
@@ -114,7 +115,7 @@ public class CoreClientModule extends AbstractGinModule {
   @Singleton
   PlaceHistoryHandler placeHistoryHandlerProvider(final PlaceHistoryMapper historyMapper,
       final PlaceController placeController, final EventBus eventBus,
-      @RootPlace final ResourcePlace homePlace) {
+      @Root final ResourcePlace homePlace) {
     PlaceHistoryHandler placeHistoryHandler = new PlaceHistoryHandler(historyMapper);
     placeHistoryHandler.register(placeController, eventBus, homePlace);
     return placeHistoryHandler;

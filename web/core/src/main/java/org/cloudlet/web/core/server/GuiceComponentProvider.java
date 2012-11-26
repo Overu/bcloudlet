@@ -29,7 +29,7 @@ public class GuiceComponentProvider implements ComponentProvider {
 
     @Override
     public T provide() {
-      T resource = WebPlatform.getInstance().getResource(clz);
+      T resource = WebPlatform.get().getInstance(clz);
       resourceContext.initResource(resource);
       return resource;
     }
@@ -57,8 +57,7 @@ public class GuiceComponentProvider implements ComponentProvider {
 
     // TODO register intercepters
     DynamicConfiguration dc = Injections.getConfiguration(locator);
-    final ServiceBindingBuilder bindingBuilder =
-        Injections.newFactoryBinder(new GuiceFactory(component));
+    final ServiceBindingBuilder bindingBuilder = Injections.newFactoryBinder(new GuiceFactory(component));
     bindingBuilder.to(component);
     for (Class contract : providerContracts) {
       bindingBuilder.to(contract);

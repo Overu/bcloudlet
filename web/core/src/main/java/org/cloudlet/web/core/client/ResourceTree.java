@@ -16,13 +16,13 @@ import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.Verti
 import com.sencha.gxt.widget.core.client.tree.Tree;
 
 import org.cloudlet.web.core.Resource;
+import org.cloudlet.web.core.Root;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ResourceTree<T extends Resource> extends BorderLayoutContainer implements
-    ResourceWidget<T> {
+public class ResourceTree<T extends Resource> extends BorderLayoutContainer implements ResourceWidget<T> {
 
   class JSONFeedReader implements DataReader<List<ResourcePlace>, ResourcePlace> {
 
@@ -69,7 +69,7 @@ public class ResourceTree<T extends Resource> extends BorderLayoutContainer impl
 
   private boolean initialized = false;
 
-  @RootPlace
+  @Root
   @Inject
   ResourcePlace root;
 

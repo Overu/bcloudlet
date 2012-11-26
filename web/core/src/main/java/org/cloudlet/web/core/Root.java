@@ -1,4 +1,4 @@
-package org.cloudlet.web.core.client;
+package org.cloudlet.web.core;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
@@ -13,5 +13,5 @@ import java.lang.annotation.Target;
 @BindingAnnotation
 @Target({FIELD, PARAMETER, METHOD})
 @Retention(RUNTIME)
-public @interface RootPlace {
+public @interface Root {
 }

@@ -9,15 +9,16 @@ import com.google.inject.persist.finder.Finder;
 import com.google.inject.persist.jpa.JpaPersistModule;
 
 import org.aopalliance.intercept.MethodInterceptor;
+import org.cloudlet.web.core.Root;
 import org.cloudlet.web.core.bean.BookFeedBean;
 import org.cloudlet.web.core.bean.GroupFeedBean;
 import org.cloudlet.web.core.bean.RepositoryBean;
 import org.cloudlet.web.core.bean.UserFeedBean;
 import org.cloudlet.web.core.bean.WebPlatform;
-import org.cloudlet.web.core.service.BookFeedService;
-import org.cloudlet.web.core.service.GroupFeedService;
-import org.cloudlet.web.core.service.RepositoryService;
-import org.cloudlet.web.core.service.UserFeedService;
+import org.cloudlet.web.core.service.BookFeedProvider;
+import org.cloudlet.web.core.service.GroupFeedProvider;
+import org.cloudlet.web.core.service.RepositoryProvider;
+import org.cloudlet.web.core.service.UserFeedProvider;
 
 import java.util.logging.Logger;
 
@@ -32,11 +33,13 @@ public class WebServerModule extends AbstractModule {
 
     install(new JpaPersistModule("persist.jpaUnit")); // TODO read from
 
+    requestStaticInjection(InjectionListener.class);
+
     bind(WebPlatform.class).asEagerSingleton();
-    bind(RepositoryBean.class).toProvider(RepositoryService.class);
-    bind(UserFeedBean.class).toProvider(UserFeedService.class);
-    bind(GroupFeedBean.class).toProvider(GroupFeedService.class);
-    bind(BookFeedBean.class).toProvider(BookFeedService.class);
+    bind(RepositoryBean.class).toProvider(RepositoryProvider.class);
+    bind(UserFeedBean.class).annotatedWith(Root.class).toProvider(UserFeedProvider.class);
+    bind(GroupFeedBean.class).annotatedWith(Root.class).toProvider(GroupFeedProvider.class);
+    bind(BookFeedBean.class).annotatedWith(Root.class).toProvider(BookFeedProvider.class);
 
     MethodInterceptor finderInterceptor = new JpaFinderProxy();
     requestInjection(finderInterceptor);

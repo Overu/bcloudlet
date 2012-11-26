@@ -82,15 +82,13 @@ public class ResourcePlace<T extends Resource> extends Place {
     execute(RequestBuilder.DELETE, callback);
   }
 
-  public void execute(final RequestBuilder.Method method,
-      final AsyncCallback<ResourcePlace<T>> callback) {
+  public void execute(final RequestBuilder.Method method, final AsyncCallback<ResourcePlace<T>> callback) {
     try {
       String data = null;
       if (RequestBuilder.POST.equals(method) || RequestBuilder.PUT.equals(method)) {
         data = generateData();
       }
-      final StringBuilder url =
-          RequestBuilder.POST.equals(method) ? getParent().getUriBuilder() : getUriBuilder();
+      final StringBuilder url = RequestBuilder.POST.equals(method) ? getParent().getUriBuilder() : getUriBuilder();
       url.insert(0, "api");
       RequestBuilder builder = new RequestBuilder(method, url.toString());
       builder.setHeader("Accept", "application/json");
@@ -132,8 +130,7 @@ public class ResourcePlace<T extends Resource> extends Place {
               callback.onSuccess(ResourcePlace.this);
             }
           } else if (callback != null) {
-            callback.onFailure(new RuntimeException("GET " + url.toString()
-                + "\r\nInvalid status code " + statusCode));
+            callback.onFailure(new RuntimeException("GET " + url.toString() + "\r\nInvalid status code " + statusCode));
           }
         }
       });
@@ -354,8 +351,7 @@ public class ResourcePlace<T extends Resource> extends Place {
           if (result instanceof ResourceContainer) {
             renderCurrent((ResourceContainer) result, callback);
           } else {
-            logger.info(result.getClass().getName()
-                + " must implement ResourceContainer to render child widget.");
+            logger.info(result.getClass().getName() + " must implement ResourceContainer to render child widget.");
           }
         }
       });
@@ -364,8 +360,7 @@ public class ResourcePlace<T extends Resource> extends Place {
     }
   }
 
-  public void renderCurrent(final ResourceContainer container,
-      final AsyncCallback<IsWidget> callback) {
+  public void renderCurrent(final ResourceContainer container, final AsyncCallback<IsWidget> callback) {
     if (widget == null) {
       if (resource == null) {
         load(new AsyncCallback<ResourcePlace<T>>() {
@@ -417,19 +412,19 @@ public class ResourcePlace<T extends Resource> extends Place {
   }
 
   public void resolve(final Class<T> resourceType, final AsyncCallback<ResourcePlace<T>> callback) {
-    if (resource != null && (resourceType.equals(this.resourceType))) {
+    boolean matchType = resourceType.equals(this.resourceType);
+    this.resourceType = resourceType;
+    if (resource != null) {
+      if (!matchType) {
+        // Re-decode according to given resourceType
+        AutoBean<T> bean = AutoBeanUtils.getAutoBean(resource);
+        Splittable s = AutoBeanCodex.encode(bean);
+        bean = AutoBeanCodex.decode(factory, resourceType, s);
+        resource = bean.as();
+      }
       if (callback != null) {
         callback.onSuccess(this);
       }
-      return;
-    }
-    setResourceType(resourceType);
-    if (resource != null) {
-      // Re-decode according to given resourceType
-      AutoBean<T> bean = AutoBeanUtils.getAutoBean(resource);
-      Splittable s = AutoBeanCodex.encode(bean);
-      bean = AutoBeanCodex.decode(factory, resourceType, s);
-      resource = bean.as();
       return;
     } else {
       load(callback);
@@ -454,6 +449,8 @@ public class ResourcePlace<T extends Resource> extends Place {
 
   public void setResource(T resource) {
     this.resource = resource;
+    AutoBean<T> bean = AutoBeanUtils.getAutoBean(resource);
+    setResourceType(bean.getType());
   }
 
   public void setResourceType(Class<T> resourceType) {
@@ -495,8 +492,7 @@ public class ResourcePlace<T extends Resource> extends Place {
     return first;
   }
 
-  private void appendWidget(IsWidget widget, final ResourceContainer panel,
-      final AsyncCallback<IsWidget> callback) {
+  private void appendWidget(IsWidget widget, final ResourceContainer panel, final AsyncCallback<IsWidget> callback) {
     setWidget(widget);
     panel.addResourceWidget(widget);
     if (widget instanceof ResourceWidget) {

@@ -1,9 +1,13 @@
 package org.cloudlet.web.core.bean;
 
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.util.ByteSource;
 import org.cloudlet.web.core.UserFeed;
-import org.cloudlet.web.core.service.UserFeedService;
+import org.cloudlet.web.core.server.JpaRealm;
 
 import javax.persistence.Entity;
+import javax.persistence.NoResultException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -17,51 +21,71 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType
 @Entity
-@Handler(UserFeedService.class)
 @Path("users")
 @DefaultField(key = "title", value = "系统用户")
 public class UserFeedBean extends PagingFeedBean<UserBean> {
 
-  @Override
-  @POST
-  @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  public UserBean createEntry(UserBean user) {
-    return super.createEntry(user);
-  }
+	@Override
+	@POST
+	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	public UserBean createEntry(UserBean user) {
+		return super.createEntry(user);
+	}
 
-  @Override
-  public Class<UserBean> getEntryType() {
-    return UserBean.class;
-  }
+	public UserBean findUserByUsername(final String userName) {
+		UserBean toRtn = null;
+		try {
+			toRtn = em()
+					.createQuery("select u from com.goodow.web.security.server.domain.User u where u.userName = :userName", UserBean.class)
+					.setParameter("userName", userName).getSingleResult();
+		} catch (NoResultException e) {
+		}
+		return toRtn;
+	}
 
-  @Override
-  public Class<UserFeed> getType() {
-    return UserFeed.class;
-  }
+	@Override
+	public Class<UserBean> getEntryType() {
+		return UserBean.class;
+	}
 
-  @Override
-  @GET
-  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml"})
-  public UserFeedBean load() {
-    doLoad();
-    return this;
-  }
+	@Override
+	public Class<UserFeed> getType() {
+		return UserFeed.class;
+	}
 
-  @Override
-  public UserBean newEntry() {
-    UserBean user = new UserBean();
-    user.setName("abc");
-    user.setEmail("abc@mycompany.com");
-    return user;
-  }
+	@Override
+	@GET
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml" })
+	public UserFeedBean load() {
+		doLoad();
+		return this;
+	}
 
-  @PUT
-  @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  public UserFeedBean update(UserFeedBean feed) {
-    readFrom(feed);
-    update();
-    return this;
-  }
+	@Override
+	public UserBean newEntry() {
+		UserBean user = super.newEntry();
+		user.setName("abc");
+		user.setEmail("abc@mycompany.com");
+		return user;
+	}
+
+	@PUT
+	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	public UserFeedBean update(UserFeedBean feed) {
+		readFrom(feed);
+		save();
+		return this;
+	}
+
+	public void updatePassword(final String userName, final String newPwd) {
+		UserBean user = findUserByUsername(userName);
+		if (user == null) {
+			throw new UnknownAccountException("找不到用户名: " + userName);
+		}
+		String hashedPwd = new SimpleHash(JpaRealm.ALGORITHM_NAME, newPwd.toCharArray(), ByteSource.Util.bytes(user.getPhone())).toHex();
+		user.setEmail(hashedPwd);
+		em().persist(user);
+	}
 }

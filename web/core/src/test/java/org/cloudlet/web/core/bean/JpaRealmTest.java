@@ -9,7 +9,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.subject.Subject;
-import org.cloudlet.web.core.service.UserService;
+import org.cloudlet.web.core.Root;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,8 +18,9 @@ public class JpaRealmTest extends CoreTest {
   String userName = "admin";
   String pwd = "1234";
 
+  @Root
   @Inject
-  private UserService userService;
+  private UserFeedBean userService;
 
   @Inject
   SecurityManager securityManager;
