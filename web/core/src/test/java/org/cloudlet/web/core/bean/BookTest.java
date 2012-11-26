@@ -4,6 +4,14 @@ import static org.junit.Assert.assertEquals;
 
 import com.google.inject.Inject;
 
+import org.cloudlet.web.core.service.BookBean;
+import org.cloudlet.web.core.service.BookFeedBean;
+import org.cloudlet.web.core.service.GroupFeedBean;
+import org.cloudlet.web.core.service.MediaBean;
+import org.cloudlet.web.core.service.RepositoryBean;
+import org.cloudlet.web.core.service.SectionBean;
+import org.cloudlet.web.core.service.UserBean;
+import org.cloudlet.web.core.service.UserFeedBean;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;

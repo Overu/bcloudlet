@@ -18,8 +18,8 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.cloudlet.web.core.Root;
-import org.cloudlet.web.core.bean.UserBean;
-import org.cloudlet.web.core.bean.UserFeedBean;
+import org.cloudlet.web.core.service.UserBean;
+import org.cloudlet.web.core.service.UserFeedBean;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

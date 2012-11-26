@@ -11,6 +11,8 @@ public interface Resource {
 
   String SELF = "";
 
+  String RESOURCE_TYPE = "resourceType";
+
   List<Resource> getChildren();
 
   int getChildrenCount();

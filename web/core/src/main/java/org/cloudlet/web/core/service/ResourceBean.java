@@ -1,4 +1,6 @@
-package org.cloudlet.web.core.bean;
+package org.cloudlet.web.core.service;
+
+import com.google.inject.ImplementedBy;
 
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
@@ -7,9 +9,8 @@ import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.RequestContext;
 import org.apache.commons.fileupload.util.Streams;
 import org.apache.commons.io.IOUtils;
+import org.cloudlet.web.core.Registry;
 import org.cloudlet.web.core.Resource;
-import org.cloudlet.web.core.server.ResourceEntity;
-import org.cloudlet.web.core.service.ClassUtil;
 import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -57,7 +58,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-@TypeDef(name = "content", typeClass = ResourceEntity.class)
+@TypeDef(name = "resource", typeClass = ResourceType.class)
 @MappedSuperclass
 @EntityListeners(InjectionListener.class)
 public abstract class ResourceBean {
@@ -73,8 +74,6 @@ public abstract class ResourceBean {
   public static String URI = "uri";
 
   public static String VERSION = "version";
-
-  public static String RESOURCE_TYPE = "resourceType";
 
   public static final String RENDITION = "rendition";
 
@@ -95,7 +94,7 @@ public abstract class ResourceBean {
   @ManyToOne
   protected UserBean owner;
 
-  @Type(type = "content")
+  @Type(type = "resource")
   @Columns(columns = {@Column(name = "parentType"), @Column(name = "parentId")})
   protected ResourceBean parent;
 
@@ -206,10 +205,12 @@ public abstract class ResourceBean {
         }
       }
       if (item != null) {
-        String rt = params.getFirst(ResourceBean.RESOURCE_TYPE);
-        Class<?> cls = ClassUtil.getClass(rt);
-        if (cls != null && ResourceBean.class.isAssignableFrom(cls)) {
-          res = WebPlatform.get().getInstance((Class<? extends ResourceBean>) cls);
+        String rt = params.getFirst(Resource.RESOURCE_TYPE);
+        Class<? extends Resource> cls = Registry.getResourceType(rt);
+        if (cls != null) {
+          ImplementedBy impl = cls.getAnnotation(ImplementedBy.class);
+          Class<? extends ResourceBean> beanType = (Class<? extends ResourceBean>) impl.value();
+          res = WebPlatform.get().getInstance(beanType);
           res.setContentStream(item.openStream());
           res.setPath(item.getFieldName());
           res.setMimeType(item.getContentType());
@@ -332,9 +333,7 @@ public abstract class ResourceBean {
     return title;
   }
 
-  public Class<? extends Resource> getType() {
-    return Resource.class;
-  }
+  public abstract String getType();
 
   @XmlElement
   public String getUri() {
@@ -531,7 +530,7 @@ public abstract class ResourceBean {
     this.title = title;
   }
 
-  public void setType(Class<? extends Resource> type) {
+  public void setType(String type) {
     // do nothing;
   }
 

@@ -1,16 +1,19 @@
-package org.cloudlet.web.core.bean;
+package org.cloudlet.web.core.service;
+
+import org.cloudlet.web.core.Book;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.ws.rs.Path;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement
-@XmlType
-@Entity
-@Path("book")
+@XmlRootElement(name = Book.TYPE)
+@XmlType(name = Book.TYPE)
+@Entity(name = Book.TYPE)
+@Table(name = Book.TYPE)
 @DefaultField(key = "title", value = "图书")
 public class BookBean extends ResourceBean {
 
@@ -24,6 +27,11 @@ public class BookBean extends ResourceBean {
   @XmlTransient
   public MediaBean getCover() {
     return cover;
+  }
+
+  @Override
+  public String getType() {
+    return Book.TYPE;
   }
 
   public void setCover(MediaBean cover) {

@@ -10,6 +10,7 @@ import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.subject.Subject;
 import org.cloudlet.web.core.Root;
+import org.cloudlet.web.core.service.UserFeedBean;
 import org.junit.Before;
 import org.junit.Test;
 

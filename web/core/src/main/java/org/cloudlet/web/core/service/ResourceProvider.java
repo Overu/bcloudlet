@@ -2,10 +2,6 @@ package org.cloudlet.web.core.service;
 
 import com.google.inject.Provider;
 
-import org.cloudlet.web.core.bean.DefaultField;
-import org.cloudlet.web.core.bean.RepositoryBean;
-import org.cloudlet.web.core.bean.ResourceBean;
-import org.cloudlet.web.core.bean.WebPlatform;
 
 import java.util.logging.Logger;
 

@@ -10,15 +10,15 @@ import com.google.inject.persist.jpa.JpaPersistModule;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.cloudlet.web.core.Root;
-import org.cloudlet.web.core.bean.BookFeedBean;
-import org.cloudlet.web.core.bean.GroupFeedBean;
-import org.cloudlet.web.core.bean.RepositoryBean;
-import org.cloudlet.web.core.bean.UserFeedBean;
-import org.cloudlet.web.core.bean.WebPlatform;
+import org.cloudlet.web.core.service.BookFeedBean;
 import org.cloudlet.web.core.service.BookFeedProvider;
+import org.cloudlet.web.core.service.GroupFeedBean;
 import org.cloudlet.web.core.service.GroupFeedProvider;
+import org.cloudlet.web.core.service.RepositoryBean;
 import org.cloudlet.web.core.service.RepositoryProvider;
+import org.cloudlet.web.core.service.UserFeedBean;
 import org.cloudlet.web.core.service.UserFeedProvider;
+import org.cloudlet.web.core.service.WebPlatform;
 
 import java.util.logging.Logger;
 

@@ -11,9 +11,9 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.cloudlet.web.core.bean;
+package org.cloudlet.web.core.service;
 
-import org.cloudlet.web.core.server.ResourceEntity;
+import org.cloudlet.web.core.CorePackage;
 import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -21,9 +21,11 @@ import org.hibernate.annotations.TypeDef;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
-@TypeDef(name = "content", typeClass = ResourceEntity.class)
+@Table(name = CorePackage.PREFIX + "Relationship")
+@TypeDef(name = "content", typeClass = ResourceType.class)
 public class Relationship {
 
   @Id

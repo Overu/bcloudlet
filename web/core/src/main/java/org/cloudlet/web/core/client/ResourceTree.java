@@ -15,6 +15,7 @@ import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 
+import org.cloudlet.web.core.Registry;
 import org.cloudlet.web.core.Resource;
 import org.cloudlet.web.core.Root;
 
@@ -32,7 +33,7 @@ public class ResourceTree<T extends Resource> extends BorderLayoutContainer impl
 
       List<ResourcePlace> result = new ArrayList<ResourcePlace>();
       String resourceType = resource.getType();
-      Map<String, Object> widgets = ClientPlatform.getWidgets(resourceType);
+      Map<String, Object> widgets = Registry.getWidgets(resourceType);
       for (String kind : widgets.keySet()) {
         if (Resource.SELF.equals(kind)) {
           continue;

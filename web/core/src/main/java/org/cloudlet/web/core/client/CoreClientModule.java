@@ -13,8 +13,10 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import org.cloudlet.web.core.CorePackage;
 import org.cloudlet.web.core.Repository;
 import org.cloudlet.web.core.Root;
+import org.cloudlet.web.core.Registry;
 import org.cloudlet.web.core.User;
 import org.cloudlet.web.core.UserFeed;
 import org.cloudlet.web.core.client.style.BaseResources;
@@ -67,14 +69,11 @@ public class CoreClientModule extends AbstractGinModule {
     }
 
     private void start() {
-      ClientPlatform.register(Repository.class);
-      ClientPlatform.register(UserFeed.class);
-      ClientPlatform.register(User.class);
-
-      ClientPlatform.setWidget(Repository.class, "", explorer);
-      ClientPlatform.setWidget(User.class, "", userModify);
-      ClientPlatform.setWidget(UserFeed.class, UserFeedEditor.NEW, userForm);
-      ClientPlatform.setWidget(UserFeed.class, UserGrid.LIST, userGrid);
+      CorePackage.init();
+      Registry.setWidget(Repository.TYPE, "", explorer);
+      Registry.setWidget(User.TYPE, "", userModify);
+      Registry.setWidget(UserFeed.TYPE, UserFeedEditor.NEW, userForm);
+      Registry.setWidget(UserFeed.TYPE, UserGrid.LIST, userGrid);
 
       BaseResources.INSTANCE();
       main = new SimplePanel();
@@ -113,9 +112,8 @@ public class CoreClientModule extends AbstractGinModule {
 
   @Provides
   @Singleton
-  PlaceHistoryHandler placeHistoryHandlerProvider(final PlaceHistoryMapper historyMapper,
-      final PlaceController placeController, final EventBus eventBus,
-      @Root final ResourcePlace homePlace) {
+  PlaceHistoryHandler placeHistoryHandlerProvider(final PlaceHistoryMapper historyMapper, final PlaceController placeController,
+      final EventBus eventBus, @Root final ResourcePlace homePlace) {
     PlaceHistoryHandler placeHistoryHandler = new PlaceHistoryHandler(historyMapper);
     placeHistoryHandler.register(placeController, eventBus, homePlace);
     return placeHistoryHandler;

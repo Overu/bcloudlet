@@ -1,4 +1,4 @@
-package org.cloudlet.web.core.bean;
+package org.cloudlet.web.core.service;
 
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -9,17 +9,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public class UserMember extends MemberBean {
+public class GroupMember extends MemberBean {
 
   @ManyToOne
-  private UserBean user;
+  private GroupBean group;
 
-  public UserBean getUser() {
-    return user;
+  public GroupBean getGroup() {
+    return group;
   }
 
-  public void setUser(UserBean user) {
-    this.user = user;
+  public void setGroup(GroupBean group) {
+    this.group = group;
   }
 
 }

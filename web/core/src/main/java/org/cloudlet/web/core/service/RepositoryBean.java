@@ -1,18 +1,17 @@
-package org.cloudlet.web.core.bean;
+package org.cloudlet.web.core.service;
 
 import org.cloudlet.web.core.Repository;
 
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+import javax.persistence.Table;
 import javax.ws.rs.Path;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement
-@XmlType
-@Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@XmlRootElement(name = Repository.TYPE)
+@XmlType(name = Repository.TYPE)
+@Entity(name = Repository.TYPE)
+@Table(name = Repository.TYPE)
 @Path("/")
 public final class RepositoryBean extends ResourceBean {
 
@@ -27,8 +26,8 @@ public final class RepositoryBean extends ResourceBean {
   }
 
   @Override
-  public Class<Repository> getType() {
-    return Repository.class;
+  public String getType() {
+    return Repository.TYPE;
   }
 
   @Override

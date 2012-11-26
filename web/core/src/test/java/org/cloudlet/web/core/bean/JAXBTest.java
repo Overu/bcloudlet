@@ -3,6 +3,14 @@ package org.cloudlet.web.core.bean;
 import com.google.inject.Inject;
 
 import org.cloudlet.web.core.GroupRole;
+import org.cloudlet.web.core.service.GroupBean;
+import org.cloudlet.web.core.service.GroupFeedBean;
+import org.cloudlet.web.core.service.MemberBean;
+import org.cloudlet.web.core.service.MemberFeedBean;
+import org.cloudlet.web.core.service.RepositoryBean;
+import org.cloudlet.web.core.service.UserBean;
+import org.cloudlet.web.core.service.UserFeedBean;
+import org.cloudlet.web.core.service.UserMember;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;

@@ -1,6 +1,5 @@
-package org.cloudlet.web.core.server;
+package org.cloudlet.web.core.service;
 
-import org.cloudlet.web.core.bean.ResourceBean;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.engine.spi.SessionImplementor;
@@ -12,7 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ResourceEntity implements UserType {
+public class ResourceType implements UserType {
 
   @Override
   public Object assemble(final Serializable cached, final Object arg1) throws HibernateException {
@@ -53,33 +52,32 @@ public class ResourceEntity implements UserType {
   }
 
   @Override
-  public Object nullSafeGet(final ResultSet resultSet, final String[] names,
-      final SessionImplementor session, final Object owner) throws HibernateException, SQLException {
+  public Object nullSafeGet(final ResultSet resultSet, final String[] names, final SessionImplementor session, final Object owner)
+      throws HibernateException, SQLException {
     String type = StringType.INSTANCE.nullSafeGet(resultSet, names[0], session);
     String id = StringType.INSTANCE.nullSafeGet(resultSet, names[1], session);
     if (type != null && id != null) {
-      Object result = ((Session) session).get(type, id);
+      Object result = ((Session) session).createQuery("from " + type + " where id=:id").setParameter("id", id).uniqueResult();
       return result;
     }
     return null;
   }
 
   @Override
-  public void nullSafeSet(final PreparedStatement st, final Object value, final int index,
-      final SessionImplementor session) throws HibernateException, SQLException {
+  public void nullSafeSet(final PreparedStatement st, final Object value, final int index, final SessionImplementor session)
+      throws HibernateException, SQLException {
     if (value == null) {
       StringType.INSTANCE.nullSafeSet(st, null, index, session);
       StringType.INSTANCE.nullSafeSet(st, null, index + 1, session);
     } else {
-      ResourceBean content = (ResourceBean) value;
-      StringType.INSTANCE.nullSafeSet(st, content.getClass().getName(), index, session);
-      StringType.INSTANCE.nullSafeSet(st, content.getId(), index + 1, session);
+      ResourceBean resource = (ResourceBean) value;
+      StringType.INSTANCE.nullSafeSet(st, resource.getType(), index, session);
+      StringType.INSTANCE.nullSafeSet(st, resource.getId(), index + 1, session);
     }
   }
 
   @Override
-  public Object replace(final Object original, final Object arg1, final Object arg2)
-      throws HibernateException {
+  public Object replace(final Object original, final Object arg1, final Object arg2) throws HibernateException {
     return original;
   }
 

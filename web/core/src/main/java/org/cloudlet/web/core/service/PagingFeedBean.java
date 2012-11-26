@@ -1,4 +1,4 @@
-package org.cloudlet.web.core.bean;
+package org.cloudlet.web.core.service;
 
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;

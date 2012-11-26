@@ -1,18 +1,14 @@
-package org.cloudlet.web.core.client;
-
-import org.cloudlet.web.core.Resource;
+package org.cloudlet.web.core;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ClientPlatform {
+public class Registry {
 
-  public static Map<String, Map<String, Object>> widgets =
-      new HashMap<String, Map<String, Object>>();
+  private static Map<String, Class<? extends Resource>> nameToClassMap = new HashMap<String, Class<? extends Resource>>();
 
-  public static Map<String, Class<? extends Resource>> nameToClassMap =
-      new HashMap<String, Class<? extends Resource>>();
+  public static Map<String, Map<String, Object>> widgets = new HashMap<String, Map<String, Object>>();
 
   public static Class<? extends Resource> getResourceType(String name) {
     return nameToClassMap.get(name);
@@ -36,8 +32,8 @@ public class ClientPlatform {
     return widgets.get(resourceType);
   }
 
-  public static void register(Class<? extends Resource> resourceType) {
-    nameToClassMap.put(resourceType.getName(), resourceType);
+  public static void register(String name, Class<? extends Resource> resourceType) {
+    nameToClassMap.put(name, resourceType);
   }
 
   public static final void setWidget(Class<?> cls, String rendition, Object widget) {
@@ -52,4 +48,5 @@ public class ClientPlatform {
     }
     typedWidgets.put(rendition, widget);
   }
+
 }

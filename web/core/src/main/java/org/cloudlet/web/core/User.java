@@ -2,6 +2,8 @@ package org.cloudlet.web.core;
 
 public interface User extends Resource {
 
+  String TYPE = CorePackage.PREFIX + "User";
+
   String getEmail();
 
   String getName();

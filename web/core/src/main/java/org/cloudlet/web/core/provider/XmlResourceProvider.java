@@ -1,7 +1,7 @@
 package org.cloudlet.web.core.provider;
 
-import org.cloudlet.web.core.bean.FeedBean;
-import org.cloudlet.web.core.bean.ResourceBean;
+import org.cloudlet.web.core.service.FeedBean;
+import org.cloudlet.web.core.service.ResourceBean;
 import org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider;
 
 import java.io.IOException;
@@ -29,28 +29,24 @@ import javax.xml.stream.XMLStreamWriter;
 public class XmlResourceProvider extends AbstractMessageReaderWriterProvider<ResourceBean> {
 
   @Override
-  public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations,
-      MediaType mediaType) {
+  public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
     return true;
   }
 
   @Override
-  public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations,
-      MediaType mediaType) {
+  public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
     return true;
   }
 
   @Override
-  public ResourceBean readFrom(Class<ResourceBean> type, Type genericType,
-      Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> httpHeaders,
-      InputStream entityStream) throws IOException, WebApplicationException {
+  public ResourceBean readFrom(Class<ResourceBean> type, Type genericType, Annotation[] annotations, MediaType mediaType,
+      MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException, WebApplicationException {
     return null;
   }
 
   @Override
-  public void writeTo(ResourceBean t, Class<?> type, Type genericType, Annotation[] annotations,
-      MediaType mediaType, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream)
-      throws IOException, WebApplicationException {
+  public void writeTo(ResourceBean t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,
+      MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException, WebApplicationException {
     try {
       XMLStreamWriter writer = XMLOutputFactory.newFactory().createXMLStreamWriter(entityStream);
       writer.writeStartDocument();
@@ -63,9 +59,8 @@ public class XmlResourceProvider extends AbstractMessageReaderWriterProvider<Res
     }
   }
 
-  private void writeResource(XMLStreamWriter writer, ResourceBean resource)
-      throws XMLStreamException {
-    writer.writeStartElement(resource.getType().getName());
+  private void writeResource(XMLStreamWriter writer, ResourceBean resource) throws XMLStreamException {
+    writer.writeStartElement(resource.getType());
     if (resource.getTitle() != null) {
       writer.writeAttribute(ResourceBean.TITLE, resource.getTitle());
     }

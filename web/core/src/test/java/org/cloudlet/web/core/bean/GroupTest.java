@@ -5,6 +5,12 @@ import static org.junit.Assert.assertEquals;
 import com.google.inject.Inject;
 
 import org.cloudlet.web.core.Root;
+import org.cloudlet.web.core.service.GroupBean;
+import org.cloudlet.web.core.service.GroupFeedBean;
+import org.cloudlet.web.core.service.MediaBean;
+import org.cloudlet.web.core.service.RepositoryBean;
+import org.cloudlet.web.core.service.UserBean;
+import org.cloudlet.web.core.service.UserFeedBean;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
