@@ -4,7 +4,11 @@ import org.cloudlet.web.core.BookFeed;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -23,12 +27,20 @@ public class BookFeedBean extends PagingFeedBean<BookBean> {
   public static final String RECOMMENDED = "recommended";
 
   @Override
+  @POST
+  @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  public BookBean createEntry(BookBean book) {
+    return super.createEntry(book);
+  }
+
+  @Override
   public Class<BookBean> getEntryType() {
     return BookBean.class;
   }
 
   @Override
-  public String getType() {
+  public String getResourceType() {
     return BookFeed.TYPE;
   }
 

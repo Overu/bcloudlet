@@ -5,6 +5,16 @@ import java.util.List;
 
 public interface Resource {
 
+  String ID = "id";
+
+  String TITLE = "title";
+
+  String PATH = "path";
+
+  String URI = "uri";
+
+  String VERSION = "version";
+
   String RENDITION = "rendition";
 
   String CHILDREN = "children";
@@ -21,13 +31,15 @@ public interface Resource {
 
   String getId();
 
+  User getOwner();
+
   String getPath();
 
   String getRenditionKind();
 
-  String getTitle();
+  String getResourceType();
 
-  String getType();
+  String getTitle();
 
   String getUri();
 
@@ -43,13 +55,15 @@ public interface Resource {
 
   void setLeaf(boolean value);
 
+  void setOwner(User user);
+
   void setPath(String path);
 
   void setRenditionKind(String kind);
 
-  void setTitle(String title);
+  void setResourceType(String value);
 
-  void setType(String value);
+  void setTitle(String title);
 
   void setUri(String uri);
 

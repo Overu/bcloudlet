@@ -65,18 +65,6 @@ public abstract class ResourceBean {
 
   private static final Logger logger = Logger.getLogger(ResourceBean.class.getName());
 
-  public static String ID = "id";
-
-  public static String TITLE = "title";
-
-  public static String PATH = "path";
-
-  public static String URI = "uri";
-
-  public static String VERSION = "version";
-
-  public static final String RENDITION = "rendition";
-
   protected String title;
 
   @Context
@@ -122,7 +110,7 @@ public abstract class ResourceBean {
   @QueryParam(CHILDREN)
   protected boolean loadChildren;
 
-  @QueryParam(RENDITION)
+  @QueryParam(Resource.RENDITION)
   @Transient
   protected String renditionKind;
 
@@ -315,10 +303,10 @@ public abstract class ResourceBean {
   }
 
   public Object getPropertyValue(String name) {
-    if (TITLE.equals(name)) {
+    if (Resource.TITLE.equals(name)) {
       return title;
     }
-    if (PATH.equals(name)) {
+    if (Resource.PATH.equals(name)) {
       return path;
     }
     return null;
@@ -329,11 +317,11 @@ public abstract class ResourceBean {
     return renditionKind;
   }
 
+  public abstract String getResourceType();
+
   public String getTitle() {
     return title;
   }
-
-  public abstract String getType();
 
   @XmlElement
   public String getUri() {
@@ -386,8 +374,8 @@ public abstract class ResourceBean {
   }
 
   public void readFrom(MultivaluedMap<String, String> params) {
-    String path = params.getFirst(ResourceBean.PATH);
-    String title = params.getFirst(ResourceBean.TITLE);
+    String path = params.getFirst(Resource.PATH);
+    String title = params.getFirst(Resource.TITLE);
     if (path != null) {
       this.path = path;
     }
@@ -513,9 +501,9 @@ public abstract class ResourceBean {
   }
 
   public void setPropertyValue(String name, String value) {
-    if (TITLE.equals(name)) {
+    if (Resource.TITLE.equals(name)) {
       title = value;
-    } else if (PATH.equals(name)) {
+    } else if (Resource.PATH.equals(name)) {
       path = value;
     } else if (CHILDREN_COUNT.equals(name)) {
       childrenCount = value == null ? 0 : Long.valueOf(value);
@@ -526,12 +514,12 @@ public abstract class ResourceBean {
     this.renditionKind = renditionKind;
   }
 
-  public void setTitle(String title) {
-    this.title = title;
+  public void setResourceType(String type) {
+    // do nothing;
   }
 
-  public void setType(String type) {
-    // do nothing;
+  public void setTitle(String title) {
+    this.title = title;
   }
 
   public void setUri(String value) {

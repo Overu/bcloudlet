@@ -30,7 +30,7 @@ public class BookBean extends ResourceBean {
   }
 
   @Override
-  public String getType() {
+  public String getResourceType() {
     return Book.TYPE;
   }
 

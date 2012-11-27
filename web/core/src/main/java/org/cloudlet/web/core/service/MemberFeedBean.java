@@ -21,7 +21,7 @@ public class MemberFeedBean extends FeedBean<MemberBean> {
   }
 
   @Override
-  public String getType() {
+  public String getResourceType() {
     return MemberFeed.TYPE;
   }
 

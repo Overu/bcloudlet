@@ -46,7 +46,7 @@ public class GroupBean extends ResourceBean implements Principal {
   }
 
   @Override
-  public String getType() {
+  public String getResourceType() {
     return Group.TYPE;
   }
 

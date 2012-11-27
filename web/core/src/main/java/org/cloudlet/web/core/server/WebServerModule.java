@@ -9,6 +9,7 @@ import com.google.inject.persist.finder.Finder;
 import com.google.inject.persist.jpa.JpaPersistModule;
 
 import org.aopalliance.intercept.MethodInterceptor;
+import org.cloudlet.web.core.CorePackage;
 import org.cloudlet.web.core.Root;
 import org.cloudlet.web.core.service.BookFeedBean;
 import org.cloudlet.web.core.service.BookFeedProvider;
@@ -35,6 +36,7 @@ public class WebServerModule extends AbstractModule {
 
     requestStaticInjection(InjectionListener.class);
 
+    bind(CorePackage.class).asEagerSingleton();
     bind(WebPlatform.class).asEagerSingleton();
     bind(RepositoryBean.class).toProvider(RepositoryProvider.class);
     bind(UserFeedBean.class).annotatedWith(Root.class).toProvider(UserFeedProvider.class);

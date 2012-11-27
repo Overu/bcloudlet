@@ -19,8 +19,8 @@ import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 
 import org.cloudlet.web.core.CoreAutoBeanFactory;
-import org.cloudlet.web.core.Resource;
 import org.cloudlet.web.core.Registry;
+import org.cloudlet.web.core.Resource;
 
 import java.util.HashMap;
 import java.util.List;
@@ -113,7 +113,7 @@ public class ResourcePlace<T extends Resource> extends Place {
               if (!method.equals(RequestBuilder.DELETE)) {
                 String data = response.getText();
                 JSONObject json = JSONParser.parse(data).isObject();
-                String typeName = json.get("type").isString().stringValue();
+                String typeName = json.get(Resource.RESOURCE_TYPE).isString().stringValue();
                 Class<T> resourceType = (Class<T>) Registry.getResourceType(typeName);
                 if (resourceType == null) {
                   resourceType = getResourceType();
@@ -376,7 +376,7 @@ public class ResourcePlace<T extends Resource> extends Place {
         });
         return;
       } else {
-        String type = resource.getType();
+        String type = resource.getResourceType();
         widget = Registry.getWidget(type, rendition);
         if (widget == null) {
           if (callback != null) {

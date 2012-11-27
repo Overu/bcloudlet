@@ -43,10 +43,14 @@ public class AutoBeanTest {
     User user = userBean.as();
     user.setId("u1");
     user.setTitle("User1");
-    user.setType("User");
+    user.setResourceType("User");
     user.setDateCreated(new Date());
     user.setPhone("12345");
     user.setLeaf(true);
+    user.setOwner(user);
+    String userdata = AutoBeanCodex.encode(userBean).getPayload();
+    System.out.println(userdata);
+
     children.add(user);
     Repository repo = repoBean.as();
     repo.setId("repo");

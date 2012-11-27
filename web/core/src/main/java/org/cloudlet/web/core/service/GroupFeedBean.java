@@ -22,7 +22,7 @@ public class GroupFeedBean extends PagingFeedBean<GroupBean> {
   }
 
   @Override
-  public String getType() {
+  public String getResourceType() {
     return GroupFeed.TYPE;
   }
 

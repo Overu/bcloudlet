@@ -52,7 +52,7 @@ public class UserFeedBean extends PagingFeedBean<UserBean> {
   }
 
   @Override
-  public String getType() {
+  public String getResourceType() {
     return UserFeed.TYPE;
   }
 

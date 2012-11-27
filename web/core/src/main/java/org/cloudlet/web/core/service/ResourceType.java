@@ -71,7 +71,7 @@ public class ResourceType implements UserType {
       StringType.INSTANCE.nullSafeSet(st, null, index + 1, session);
     } else {
       ResourceBean resource = (ResourceBean) value;
-      StringType.INSTANCE.nullSafeSet(st, resource.getType(), index, session);
+      StringType.INSTANCE.nullSafeSet(st, resource.getResourceType(), index, session);
       StringType.INSTANCE.nullSafeSet(st, resource.getId(), index + 1, session);
     }
   }

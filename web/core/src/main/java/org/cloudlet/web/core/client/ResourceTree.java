@@ -32,7 +32,7 @@ public class ResourceTree<T extends Resource> extends BorderLayoutContainer impl
       Resource resource = place.getResource();
 
       List<ResourcePlace> result = new ArrayList<ResourcePlace>();
-      String resourceType = resource.getType();
+      String resourceType = resource.getResourceType();
       Map<String, Object> widgets = Registry.getWidgets(resourceType);
       for (String kind : widgets.keySet()) {
         if (Resource.SELF.equals(kind)) {

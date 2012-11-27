@@ -7,6 +7,12 @@ import com.google.web.bindery.autobean.shared.AutoBeanFactory.Category;
 @Category(ResourceCategory.class)
 public interface CoreAutoBeanFactory extends AutoBeanFactory {
 
+  AutoBean<Book> createBook();
+
+  AutoBean<BookFeed> createBookFeed();
+
+  AutoBean<Media> createMedia();
+
   AutoBean<Repository> createRepository();
 
   AutoBean<User> createUser();

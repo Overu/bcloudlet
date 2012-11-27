@@ -45,7 +45,7 @@ public class MemberBean extends ResourceBean {
   }
 
   @Override
-  public String getType() {
+  public String getResourceType() {
     return Member.TYPE;
   }
 

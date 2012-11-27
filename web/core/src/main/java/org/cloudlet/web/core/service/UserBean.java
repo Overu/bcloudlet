@@ -55,7 +55,7 @@ public class UserBean extends ResourceBean implements Principal {
   }
 
   @Override
-  public String getType() {
+  public String getResourceType() {
     return User.TYPE;
   }
 

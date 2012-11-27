@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlType;
 public class SectionBean extends ResourceBean {
 
   @Override
-  public String getType() {
+  public String getResourceType() {
     return Section.TYPE;
   }
 

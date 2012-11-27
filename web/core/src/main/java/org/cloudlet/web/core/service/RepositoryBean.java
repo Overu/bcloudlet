@@ -26,7 +26,7 @@ public final class RepositoryBean extends ResourceBean {
   }
 
   @Override
-  public String getType() {
+  public String getResourceType() {
     return Repository.TYPE;
   }
 

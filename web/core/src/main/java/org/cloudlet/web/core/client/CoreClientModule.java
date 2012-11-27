@@ -13,6 +13,7 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import org.cloudlet.web.core.Book;
 import org.cloudlet.web.core.BookFeed;
 import org.cloudlet.web.core.CorePackage;
 import org.cloudlet.web.core.Registry;
@@ -51,6 +52,12 @@ public class CoreClientModule extends AbstractGinModule {
     UserEditor userModify;
 
     @Inject
+    BookFeedEditor newBookEditor;
+
+    @Inject
+    BookEditor bookEditor;
+
+    @Inject
     RepositoryExplorer explorer;
 
     SimplePanel main;
@@ -80,6 +87,8 @@ public class CoreClientModule extends AbstractGinModule {
       Registry.setWidget(UserFeed.TYPE, ResourceGrid.LIST, userGrid);
 
       Registry.setWidget(BookFeed.TYPE, ResourceGrid.LIST, bookGrid);
+      Registry.setWidget(Book.TYPE, "", bookEditor);
+      Registry.setWidget(BookFeed.TYPE, BookFeedEditor.NEW, newBookEditor);
 
       BaseResources.INSTANCE();
       main = new SimplePanel();
