@@ -8,7 +8,6 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.AutoBeanVisitor;
 
@@ -22,8 +21,7 @@ import org.cloudlet.web.core.Resource;
 
 import java.util.Map;
 
-public abstract class ResourceEditor<T extends Resource> extends ContentPanel implements Editor<T>,
-    ResourceWidget<T> {
+public abstract class ResourceEditor<T extends Resource> extends ContentPanel implements Editor<T>, ResourceWidget<T> {
 
   class ValueVisitor<V> extends EditorVisitor {
 
@@ -51,9 +49,8 @@ public abstract class ResourceEditor<T extends Resource> extends ContentPanel im
 
   private ResourcePlace<T> place;
 
-  private AutoBean<T> bean;
-
-  private AutoBean<T> decode;
+  private AutoBean<T> bean1;
+  private AutoBean<T> bean2;
 
   @Override
   public ResourcePlace<T> getPlace() {
@@ -61,13 +58,12 @@ public abstract class ResourceEditor<T extends Resource> extends ContentPanel im
   }
 
   @Override
-  public void setPlace(final ResourcePlace<T> place) {
+  public void setPlace(ResourcePlace<T> place) {
     this.place = place;
     ensureInitialized();
     T res = place.getResource();
     getDriver().edit(res);
-    bean = AutoBeanUtils.getAutoBean(res);
-    decode = AutoBeanCodex.decode(bean.getFactory(), bean.getType(), AutoBeanCodex.encode(bean));
+    swapBean();
   }
 
   protected abstract <D extends SimpleBeanEditorDriver<T, ResourceEditor<T>>> D getDriver();
@@ -77,21 +73,19 @@ public abstract class ResourceEditor<T extends Resource> extends ContentPanel im
       @Override
       public void onSelect(final SelectEvent event) {
         T resource = getDriver().flush();
-        final Map<String, Object> diff;
         if (getDriver().isDirty()) {
-          diff = AutoBeanUtils.diff(decode, bean);
-          AutoBean<T> delta = factory.create(bean.getType());
-          delta.accept(new AutoBeanVisitor() {
+          final Map<String, Object> diff = AutoBeanUtils.diff(bean2, bean1);
+          bean2 = factory.create(bean1.getType());
+          bean2.accept(new AutoBeanVisitor() {
             @Override
-            public boolean visitValueProperty(final String propertyName, final Object value,
-                final PropertyContext ctx) {
+            public boolean visitValueProperty(final String propertyName, final Object value, final PropertyContext ctx) {
               if (diff.containsKey(propertyName)) {
                 ctx.set(diff.get(propertyName));
               }
               return false;
             }
           });
-          place.setResource(delta.as());
+          place.setResource(bean2.as());
         }
         save();
       }
@@ -106,8 +100,7 @@ public abstract class ResourceEditor<T extends Resource> extends ContentPanel im
 
   protected void save() {
     T resource = getPlace().getResource();
-    RequestBuilder.Method method =
-        resource.getId() == null ? RequestBuilder.POST : RequestBuilder.PUT;
+    RequestBuilder.Method method = resource.getId() == null ? RequestBuilder.POST : RequestBuilder.PUT;
     place.execute(method, new AsyncCallback<ResourcePlace<T>>() {
       @Override
       public void onFailure(final Throwable reason) {
@@ -127,6 +120,25 @@ public abstract class ResourceEditor<T extends Resource> extends ContentPanel im
       initView();
       getDriver().initialize(this);
     }
+  }
+
+  private void swapBean() {
+    bean1 = AutoBeanUtils.getAutoBean(place.getResource());
+    final Map<String, Object> allProperties = AutoBeanUtils.getAllProperties(bean1);
+    bean2 = factory.create(bean1.getType());
+    bean2.accept(new AutoBeanVisitor() {
+      @Override
+      public boolean visitValueProperty(final String propertyName, final Object value, final PropertyContext ctx) {
+        if (allProperties.containsKey(propertyName)) {
+          Object object = allProperties.get(propertyName);
+          if (object == null) {
+            return false;
+          }
+          ctx.set(object);
+        }
+        return false;
+      }
+    });
   }
 
 }
