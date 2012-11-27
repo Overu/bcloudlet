@@ -75,16 +75,7 @@ public abstract class ResourceEditor<T extends Resource> extends ContentPanel im
         T resource = getDriver().flush();
         if (getDriver().isDirty()) {
           final Map<String, Object> diff = AutoBeanUtils.diff(bean2, bean1);
-          bean2 = factory.create(bean1.getType());
-          bean2.accept(new AutoBeanVisitor() {
-            @Override
-            public boolean visitValueProperty(final String propertyName, final Object value, final PropertyContext ctx) {
-              if (diff.containsKey(propertyName)) {
-                ctx.set(diff.get(propertyName));
-              }
-              return false;
-            }
-          });
+          bean2 = createBean(diff);
           place.setResource(bean2.as());
         }
         save();
@@ -114,6 +105,24 @@ public abstract class ResourceEditor<T extends Resource> extends ContentPanel im
     });
   }
 
+  private AutoBean<T> createBean(final Map<String, Object> properties) {
+    AutoBean<T> bean = factory.create(bean1.getType());
+    bean.accept(new AutoBeanVisitor() {
+      @Override
+      public boolean visitValueProperty(final String propertyName, final Object value, final PropertyContext ctx) {
+        if (properties.containsKey(propertyName)) {
+          Object object = properties.get(propertyName);
+          if (object == null) {
+            return false;
+          }
+          ctx.set(object);
+        }
+        return false;
+      }
+    });
+    return bean;
+  }
+
   private void ensureInitialized() {
     if (!initialized) {
       initialized = true;
@@ -124,21 +133,7 @@ public abstract class ResourceEditor<T extends Resource> extends ContentPanel im
 
   private void swapBean() {
     bean1 = AutoBeanUtils.getAutoBean(place.getResource());
-    final Map<String, Object> allProperties = AutoBeanUtils.getAllProperties(bean1);
-    bean2 = factory.create(bean1.getType());
-    bean2.accept(new AutoBeanVisitor() {
-      @Override
-      public boolean visitValueProperty(final String propertyName, final Object value, final PropertyContext ctx) {
-        if (allProperties.containsKey(propertyName)) {
-          Object object = allProperties.get(propertyName);
-          if (object == null) {
-            return false;
-          }
-          ctx.set(object);
-        }
-        return false;
-      }
-    });
+    bean2 = createBean(AutoBeanUtils.getAllProperties(bean1));
   }
 
 }

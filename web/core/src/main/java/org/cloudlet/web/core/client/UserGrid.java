@@ -1,94 +1,21 @@
 package org.cloudlet.web.core.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.text.shared.AbstractSafeHtmlRenderer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.inject.Inject;
 
-import com.sencha.gxt.cell.core.client.SimpleSafeHtmlCell;
-import com.sencha.gxt.cell.core.client.form.ComboBoxCell.TriggerAction;
-import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.core.client.ValueProvider;
-import com.sencha.gxt.core.client.XTemplates;
-import com.sencha.gxt.core.client.XTemplates.Formatter;
-import com.sencha.gxt.core.client.XTemplates.FormatterFactories;
-import com.sencha.gxt.core.client.XTemplates.FormatterFactory;
-import com.sencha.gxt.core.client.resources.CommonStyles;
-import com.sencha.gxt.core.client.util.Format;
-import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.data.shared.PropertyAccess;
-import com.sencha.gxt.data.shared.StringLabelProvider;
-import com.sencha.gxt.widget.core.client.ContentPanel;
-import com.sencha.gxt.widget.core.client.ListView;
-import com.sencha.gxt.widget.core.client.ListViewCustomAppearance;
-import com.sencha.gxt.widget.core.client.button.TextButton;
-import com.sencha.gxt.widget.core.client.container.BoxLayoutContainer.BoxLayoutPack;
-import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
-import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData;
-import com.sencha.gxt.widget.core.client.event.SelectEvent;
-import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
-import com.sencha.gxt.widget.core.client.form.SimpleComboBox;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
-import com.sencha.gxt.widget.core.client.grid.ColumnModel;
-import com.sencha.gxt.widget.core.client.grid.Grid;
-import com.sencha.gxt.widget.core.client.toolbar.LabelToolItem;
-import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
 import org.cloudlet.web.core.User;
 import org.cloudlet.web.core.UserFeed;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class UserGrid extends ContentPanel implements ResourceWidget<UserFeed> {
-
-  @FormatterFactories(@FormatterFactory(factory = ShortenFactory.class, name = "shorten"))
-  interface Renderer extends XTemplates {
-    @XTemplate(source = "UserGrid.html")
-    public SafeHtml renderItem(String name, Style style);
-  }
-
-  interface Resources extends ClientBundle {
-    @Source("UserGrid.css")
-    Style css();
-  }
-
-  static class Shorten implements Formatter<String> {
-
-    private int length;
-
-    public Shorten(final int length) {
-      this.length = length;
-    }
-
-    @Override
-    public String format(final String data) {
-      return Format.ellipse(data, length);
-    }
-  }
-
-  static class ShortenFactory {
-    public static Shorten getFormat(final int length) {
-      return new Shorten(length);
-    }
-  }
-
-  interface Style extends CssResource {
-    String over();
-
-    String select();
-
-    String thumb();
-
-    String thumbWrap();
-  }
+public class UserGrid extends ResourceGrid<User, UserFeed> {
 
   interface UserPorperties extends PropertyAccess<User> {
     ValueProvider<User, String> email();
@@ -104,193 +31,46 @@ public class UserGrid extends ContentPanel implements ResourceWidget<UserFeed> {
     ValueProvider<User, String> zip();
   }
 
-  public static final String LIST = "list";
-
-  @Inject
-  ResourceManager resourceManager;
-
-  private static Renderer r;
-  private static Resources resources;
-
-  private User selectedItem;
-  private Grid<User> grid;
-  private ListView<User, User> listView;
-  private VerticalLayoutContainer con;
-  private ListStore<User> store;
-
   private static UserPorperties properties = GWT.create(UserPorperties.class);
-
-  static {
-    r = GWT.create(Renderer.class);
-    resources = GWT.create(Resources.class);
-    resources.css().ensureInjected();
-  }
-
-  private ResourcePlace<UserFeed> place;
-
-  public UserGrid() {
-    final Style style = resources.css();
-
-    store = new ListStore<User>(properties.id());
-
-    ColumnConfig<User, String> cc1 =
-        new ColumnConfig<User, String>(properties.name(), 100, "Sender");
-    ColumnConfig<User, String> cc2 =
-        new ColumnConfig<User, String>(properties.email(), 165, "Email");
-    ColumnConfig<User, String> cc3 =
-        new ColumnConfig<User, String>(properties.phone(), 100, "Phone");
-    ColumnConfig<User, String> cc4 =
-        new ColumnConfig<User, String>(properties.state(), 50, "State");
-    ColumnConfig<User, String> cc5 =
-        new ColumnConfig<User, String>(properties.zip(), 65, "Zip Code");
-
-    List<ColumnConfig<User, ?>> l = new ArrayList<ColumnConfig<User, ?>>();
-    l.add(cc1);
-    l.add(cc2);
-    l.add(cc3);
-    l.add(cc4);
-    l.add(cc5);
-    ColumnModel<User> cm = new ColumnModel<User>(l);
-
-    grid = new Grid<User>(store, cm);
-    grid.getView().setForceFit(true);
-    grid.setLoadMask(true);
-    grid.setBorders(true);
-    grid.getView().setEmptyText("Please hit the load button.");
-    // grid.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-    grid.getSelectionModel().addSelectionHandler(new SelectionHandler<User>() {
-
-      @Override
-      public void onSelection(final SelectionEvent<User> event) {
-        selectedItem = event.getSelectedItem();
-      }
-    });
-
-    ListViewCustomAppearance<User> appearance =
-        new ListViewCustomAppearance<User>("." + style.thumbWrap(), style.over(), style.select()) {
-
-          @Override
-          public void renderEnd(final SafeHtmlBuilder builder) {
-            String markup =
-                new StringBuilder("<div class=\"").append(CommonStyles.get().clear()).append(
-                    "\"></div>").toString();
-            builder.appendHtmlConstant(markup);
-          }
-
-          @Override
-          public void renderItem(final SafeHtmlBuilder builder, final SafeHtml content) {
-            builder.appendHtmlConstant("<div class='" + style.thumbWrap()
-                + "' style='border: 1px solid white'>");
-            builder.append(content);
-            builder.appendHtmlConstant("</div>");
-          }
-        };
-
-    listView = new ListView<User, User>(store, new IdentityValueProvider<User>() {
-      @Override
-      public void setValue(final User object, final User value) {
-      }
-    }, appearance);
-    listView.setCell(new SimpleSafeHtmlCell<User>(new AbstractSafeHtmlRenderer<User>() {
-
-      @Override
-      public SafeHtml render(final User user) {
-        return r.renderItem(user.getName() == null ? "" : user.getName(), style);
-      }
-    }));
-    // listView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-    listView.getSelectionModel().addSelectionHandler(new SelectionHandler<User>() {
-
-      @Override
-      public void onSelection(final SelectionEvent<User> event) {
-        selectedItem = event.getSelectedItem();
-      }
-    });
-
-    SimpleComboBox<String> type = new SimpleComboBox<String>(new StringLabelProvider<String>());
-    type.setTriggerAction(TriggerAction.ALL);
-    type.setEditable(false);
-    type.setWidth(100);
-    type.add("Table");
-    type.add("List");
-    type.setValue("Table");
-    // selectView(type.getValue());
-    type.addSelectionHandler(new SelectionHandler<String>() {
-      @Override
-      public void onSelection(final SelectionEvent<String> event) {
-        selectView(event.getSelectedItem());
-      }
-    });
-
-    ToolBar toolBar = new ToolBar();
-    toolBar.add(new LabelToolItem("View:"));
-    toolBar.add(type);
-
-    con = new VerticalLayoutContainer();
-    con.add(toolBar, new VerticalLayoutData(1, -1));
-    con.add(grid, new VerticalLayoutData(1, 1));
-
-    setHeadingText("Json Grid Example");
-    setWidget(con);
-    setButtonAlign(BoxLayoutPack.CENTER);
-    addButton(new TextButton("Add User", new SelectHandler() {
-
-      @Override
-      public void onSelect(final SelectEvent event) {
-        ResourcePlace place = getPlace().getRendition(UserFeedEditor.NEW);
-        resourceManager.goTo(place);
-      }
-    }));
-    addButton(new TextButton("Refresh", new SelectHandler() {
-
-      @Override
-      public void onSelect(final SelectEvent event) {
-        refresh();
-        // loader.load(getValue());
-      }
-    }));
-    addButton(new TextButton("Edit", new SelectHandler() {
-
-      @Override
-      public void onSelect(final SelectEvent event) {
-        if (selectedItem == null || selectedItem.equals("")) {
-          return;
-        }
-        resourceManager.goTo(selectedItem);
-      }
-    }));
-    addButton(new TextButton("Delete", new SelectHandler() {
-
-      @Override
-      public void onSelect(final SelectEvent event) {
-        if (selectedItem == null || selectedItem.equals("")) {
-          return;
-        }
-        resourceManager.getPlace(selectedItem).delete(new AsyncCallback<ResourcePlace<User>>() {
-          @Override
-          public void onFailure(Throwable caught) {
-          }
-
-          @Override
-          public void onSuccess(ResourcePlace<User> result) {
-            refresh();
-          }
-        });
-      }
-    }));
-  }
-
-  @Override
-  public ResourcePlace<UserFeed> getPlace() {
-    return place;
-  }
 
   @Override
   public Class<UserFeed> getResourceType() {
     return UserFeed.class;
   }
 
-  public void refresh() {
+  @Override
+  protected AbstractSafeHtmlRenderer<User> getCell() {
+    return new AbstractSafeHtmlRenderer<User>() {
+
+      @Override
+      public SafeHtml render(final User user) {
+        return ResourceGrid.r.renderItem(user.getName() == null ? "" : user.getName(), ResourceGrid.resources.css());
+      }
+    };
+  }
+
+  @Override
+  protected ModelKeyProvider<User> getKey() {
+    return properties.id();
+  }
+
+  @Override
+  protected void initColumn(List<ColumnConfig<User, ?>> l) {
+    l.add(new ColumnConfig<User, String>(properties.name(), 100, "Sender"));
+    l.add(new ColumnConfig<User, String>(properties.email(), 165, "Email"));
+    l.add(new ColumnConfig<User, String>(properties.phone(), 100, "Phone"));
+    l.add(new ColumnConfig<User, String>(properties.state(), 50, "State"));
+    l.add(new ColumnConfig<User, String>(properties.zip(), 65, "Zip Code"));
+  }
+
+  @Override
+  protected void initView() {
+    setHeadingText("User Grid");
+    super.initView();
+  }
+
+  @Override
+  protected void refresh() {
     getPlace().load(new AsyncCallback<ResourcePlace<UserFeed>>() {
       @Override
       public void onFailure(final Throwable reason) {
@@ -303,24 +83,4 @@ public class UserGrid extends ContentPanel implements ResourceWidget<UserFeed> {
       }
     });
   }
-
-  @Override
-  public void setPlace(ResourcePlace<UserFeed> place) {
-    this.place = place;
-    refresh();
-  }
-
-  private void selectView(final String viewName) {
-    boolean cell = viewName.equals("Table");
-    if (cell) {
-      con.remove(listView);
-      con.add(grid, new VerticalLayoutData(1, 1));
-    } else {
-      con.remove(grid);
-      con.add(listView, new VerticalLayoutData(1, 1));
-      listView.setSize("100%", "100%");
-    }
-    con.onResize();
-  }
-
 }
