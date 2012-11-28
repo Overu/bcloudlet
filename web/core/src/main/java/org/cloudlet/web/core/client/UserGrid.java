@@ -3,10 +3,8 @@ package org.cloudlet.web.core.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.text.shared.AbstractSafeHtmlRenderer;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import com.sencha.gxt.core.client.ValueProvider;
-import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.data.shared.PropertyAccess;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 
@@ -19,8 +17,6 @@ public class UserGrid extends ResourceGrid<User, UserFeed> {
 
   interface UserPorperties extends PropertyAccess<User> {
     ValueProvider<User, String> email();
-
-    ModelKeyProvider<User> id();
 
     ValueProvider<User, String> name();
 
@@ -50,11 +46,6 @@ public class UserGrid extends ResourceGrid<User, UserFeed> {
   }
 
   @Override
-  protected ModelKeyProvider<User> getKey() {
-    return properties.id();
-  }
-
-  @Override
   protected void initColumn(List<ColumnConfig<User, ?>> l) {
     l.add(new ColumnConfig<User, String>(properties.name(), 100, "Sender"));
     l.add(new ColumnConfig<User, String>(properties.email(), 165, "Email"));
@@ -67,20 +58,5 @@ public class UserGrid extends ResourceGrid<User, UserFeed> {
   protected void initView() {
     setHeadingText("User Grid");
     super.initView();
-  }
-
-  @Override
-  protected void refresh() {
-    getPlace().load(new AsyncCallback<ResourcePlace<UserFeed>>() {
-      @Override
-      public void onFailure(final Throwable reason) {
-      }
-
-      @Override
-      public void onSuccess(final ResourcePlace<UserFeed> result) {
-        List<User> users = result.getResource().getEntries();
-        store.replaceAll(users);
-      }
-    });
   }
 }

@@ -3,6 +3,8 @@ package org.cloudlet.web.core.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -12,7 +14,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.cell.core.client.SimpleSafeHtmlCell;
-import com.sencha.gxt.cell.core.client.form.ComboBoxCell.TriggerAction;
 import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.core.client.XTemplates;
 import com.sencha.gxt.core.client.XTemplates.Formatter;
@@ -20,32 +21,46 @@ import com.sencha.gxt.core.client.XTemplates.FormatterFactories;
 import com.sencha.gxt.core.client.XTemplates.FormatterFactory;
 import com.sencha.gxt.core.client.resources.CommonStyles;
 import com.sencha.gxt.core.client.util.Format;
+import com.sencha.gxt.core.client.util.ToggleGroup;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.data.shared.PropertyAccess;
-import com.sencha.gxt.data.shared.StringLabelProvider;
 import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.ListView;
 import com.sencha.gxt.widget.core.client.ListViewCustomAppearance;
+import com.sencha.gxt.widget.core.client.button.ButtonBar;
 import com.sencha.gxt.widget.core.client.button.TextButton;
+import com.sencha.gxt.widget.core.client.button.ToggleButton;
 import com.sencha.gxt.widget.core.client.container.BoxLayoutContainer.BoxLayoutPack;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
-import com.sencha.gxt.widget.core.client.form.SimpleComboBox;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
-import com.sencha.gxt.widget.core.client.toolbar.LabelToolItem;
-import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
+import org.cloudlet.web.core.Feed;
 import org.cloudlet.web.core.Resource;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ResourceGrid<T extends Resource, S extends Resource> extends ContentPanel implements ResourceWidget<S> {
+public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extends ContentPanel implements ResourceWidget<F> {
+
+  enum ButtonCar {
+    GRID("Grid"), TITLE("Table");
+
+    private String name;
+
+    ButtonCar(String name) {
+      this.name = name;
+    }
+
+    String getName() {
+      return name;
+    }
+  }
 
   @FormatterFactories(@FormatterFactory(factory = ShortenFactory.class, name = "shorten"))
   interface Renderer extends XTemplates {
@@ -107,7 +122,7 @@ public abstract class ResourceGrid<T extends Resource, S extends Resource> exten
   private Grid<T> grid;
   private ListView<T, T> listView;
   private T selectedItem;
-  private ResourcePlace<S> place;
+  private ResourcePlace<F> place;
 
   static {
     r = GWT.create(Renderer.class);
@@ -116,26 +131,30 @@ public abstract class ResourceGrid<T extends Resource, S extends Resource> exten
   }
 
   @Override
-  public ResourcePlace<S> getPlace() {
+  public ResourcePlace<F> getPlace() {
     return place;
   }
 
   @Override
-  public void setPlace(ResourcePlace<S> place) {
+  public void setPlace(ResourcePlace<F> place) {
     this.place = place;
     refresh();
   }
 
   protected abstract AbstractSafeHtmlRenderer<T> getCell();
 
-  protected abstract ModelKeyProvider<T> getKey();
-
   protected abstract void initColumn(List<ColumnConfig<T, ?>> l);
 
   protected void initView() {
     final Style style = resources.css();
 
-    store = new ListStore<T>(getKey());
+    store = new ListStore<T>(new ModelKeyProvider<T>() {
+
+      @Override
+      public String getKey(T item) {
+        return item.getId();
+      }
+    });
 
     List<ColumnConfig<T, ?>> l = new ArrayList<ColumnConfig<T, ?>>();
     initColumn(l);
@@ -184,27 +203,46 @@ public abstract class ResourceGrid<T extends Resource, S extends Resource> exten
       }
     });
 
-    SimpleComboBox<String> type = new SimpleComboBox<String>(new StringLabelProvider<String>());
-    type.setTriggerAction(TriggerAction.ALL);
-    type.setEditable(false);
-    type.setWidth(100);
-    type.add("Table");
-    type.add("List");
-    type.setValue("Table");
-    type.addSelectionHandler(new SelectionHandler<String>() {
-      @Override
-      public void onSelection(final SelectionEvent<String> event) {
-        selectView(event.getSelectedItem());
-      }
-    });
+    // SimpleComboBox<String> type = new SimpleComboBox<String>(new StringLabelProvider<String>());
+    // type.setTriggerAction(TriggerAction.ALL);
+    // type.setEditable(false);
+    // type.setWidth(100);
+    // type.add("Table");
+    // type.add("List");
+    // type.setValue("Table");
+    // type.addSelectionHandler(new SelectionHandler<String>() {
+    // @Override
+    // public void onSelection(final SelectionEvent<String> event) {
+    // selectView(event.getSelectedItem());
+    // }
+    // });
 
-    ToolBar toolBar = new ToolBar();
-    toolBar.add(new LabelToolItem("View:"));
-    toolBar.add(type);
+    ButtonBar buttonBar = new ButtonBar();
+    ToggleGroup group = new ToggleGroup();
+    buttonBar.setPack(BoxLayoutPack.END);
+    for (ButtonCar car : ButtonCar.values()) {
+      final ToggleButton button = new ToggleButton(car.getName());
+      button.setWidth(40);
+      button.setData("car", car);
+      button.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+
+        @Override
+        public void onValueChange(ValueChangeEvent<Boolean> event) {
+          if (event.getValue() == true) {
+            selectView(((ButtonCar) button.getData("car")).getName());
+          }
+        }
+      });
+
+      group.add(button);
+      buttonBar.add(button);
+    }
+    ToggleButton gridButton = (ToggleButton) buttonBar.getWidget(0);
+    gridButton.setValue(true);
 
     con = new VerticalLayoutContainer();
-    con.add(toolBar, new VerticalLayoutData(1, -1));
-    con.add(grid, new VerticalLayoutData(1, 1));
+    con.add(buttonBar, new VerticalLayoutData(1, -1));
+    selectView(((ButtonCar) gridButton.getData("car")).getName());
 
     setWidget(con);
     setButtonAlign(BoxLayoutPack.CENTER);
@@ -260,7 +298,19 @@ public abstract class ResourceGrid<T extends Resource, S extends Resource> exten
     super.onAttach();
   }
 
-  protected abstract void refresh();
+  protected void refresh() {
+    getPlace().load(new AsyncCallback<ResourcePlace<F>>() {
+      @Override
+      public void onFailure(final Throwable reason) {
+      }
+
+      @Override
+      public void onSuccess(final ResourcePlace<F> result) {
+        List<T> books = result.getResource().getEntries();
+        store.replaceAll(books);
+      }
+    });
+  }
 
   private void ensureInitialized() {
     if (!initialized) {
@@ -271,7 +321,7 @@ public abstract class ResourceGrid<T extends Resource, S extends Resource> exten
 
   private void selectView(final String viewName) {
     boolean cell = viewName.equals("Table");
-    if (cell) {
+    if (!cell) {
       con.remove(listView);
       con.add(grid, new VerticalLayoutData(1, 1));
     } else {
