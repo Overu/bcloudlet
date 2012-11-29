@@ -21,7 +21,7 @@ public abstract class PagingFeedBean<E extends ResourceBean> extends FeedBean<E>
   @Override
   protected void doLoadEntries() {
     if (limit != 0) {
-      entries = findEntries(0, limit);
+      entries = findEntries(start, limit);
     }
     queryCount = countEntries();
   }
