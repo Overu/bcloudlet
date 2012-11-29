@@ -35,7 +35,7 @@ import com.sencha.gxt.data.shared.loader.PagingLoader;
 import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.ListView;
 import com.sencha.gxt.widget.core.client.ListViewCustomAppearance;
-import com.sencha.gxt.widget.core.client.button.TextButton;
+import com.sencha.gxt.widget.core.client.button.ButtonBar;
 import com.sencha.gxt.widget.core.client.button.ToggleButton;
 import com.sencha.gxt.widget.core.client.container.BoxLayoutContainer.BoxLayoutPack;
 import com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer;
@@ -61,20 +61,6 @@ import javax.ws.rs.core.MultivaluedMap;
 
 public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extends ContentPanel implements ResourceWidget<F> {
 
-  enum ButtonCar {
-    GRID("Grid"), TABLE("Table");
-
-    private String name;
-
-    ButtonCar(String name) {
-      this.name = name;
-    }
-
-    String getName() {
-      return name;
-    }
-  }
-
   @FormatterFactories(@FormatterFactory(factory = ShortenFactory.class, name = "shorten"))
   interface Renderer extends XTemplates {
     @XTemplate(source = "ResourceGrid.html")
@@ -88,6 +74,20 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
   interface Resources extends ClientBundle {
     @Source("ResourceGrid.css")
     Style css();
+  }
+
+  enum SelectButtonCar {
+    ADD("Add"), REFRESH("Refresh"), DELETE("Delete"), EDIT("Edit");
+
+    private String name;
+
+    SelectButtonCar(String name) {
+      this.name = name;
+    }
+
+    String getName() {
+      return name;
+    }
   }
 
   static class Shorten implements Formatter<String> {
@@ -118,6 +118,20 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     String thumb();
 
     String thumbWrap();
+  }
+
+  enum ViewButtonCar {
+    GRID("Grid"), TABLE("Table");
+
+    private String name;
+
+    ViewButtonCar(String name) {
+      this.name = name;
+    }
+
+    String getName() {
+      return name;
+    }
   }
 
   public final static String LIST = "list";
@@ -244,77 +258,47 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
       }
     });
 
-    ToolBar buttonBar = new ToolBar();
-    buttonBar.setMinButtonWidth(60);
+    ToggleGroup buttonGroup = new ToggleGroup();
+    final ButtonBar buttonBar = new ButtonBar();
+    buttonBar.addStyleName("x-toolbar-mark");
+    buttonBar.setMinButtonWidth(75);
     buttonBar.setPack(BoxLayoutPack.CENTER);
-    buttonBar.add(new TextButton("Add", new SelectHandler() {
 
-      @Override
-      public void onSelect(final SelectEvent event) {
-        ResourcePlace place = getPlace().getRendition(UserFeedEditor.NEW);
-        resourceManager.goTo(place);
-      }
-    }));
-    buttonBar.add(new TextButton("Refresh", new SelectHandler() {
+    for (final SelectButtonCar car : SelectButtonCar.values()) {
+      final ToggleButton button = new ToggleButton(car.getName());
+      button.addSelectHandler(new SelectHandler() {
 
-      @Override
-      public void onSelect(final SelectEvent event) {
-        refresh();
-      }
-    }));
-    buttonBar.add(new TextButton("Edit", new SelectHandler() {
-
-      @Override
-      public void onSelect(final SelectEvent event) {
-        if (selectedItem == null || selectedItem.equals("")) {
-          return;
+        @Override
+        public void onSelect(SelectEvent event) {
+          selectBase(car);
         }
-        resourceManager.goTo(selectedItem);
-      }
-    }));
-    buttonBar.add(new TextButton("Delete", new SelectHandler() {
-
-      @Override
-      public void onSelect(final SelectEvent event) {
-        if (selectedItem == null || selectedItem.equals("")) {
-          return;
-        }
-        resourceManager.getPlace(selectedItem).delete(new AsyncCallback<ResourcePlace<T>>() {
-          @Override
-          public void onFailure(Throwable caught) {
-          }
-
-          @Override
-          public void onSuccess(ResourcePlace<T> result) {
-            refresh();
-          }
-        });
-      }
-    }));
+      });
+      buttonGroup.add(button);
+      buttonBar.add(button);
+    }
 
     final PagingToolBar toolBar = new PagingToolBar(5);
     toolBar.getElement().getStyle().setProperty("borderBottom", "none");
     toolBar.bind(loader);
 
-    ToggleGroup group = new ToggleGroup();
+    ToggleGroup viewGroup = new ToggleGroup();
     ToolBar viewBar = new ToolBar();
     viewBar.setPack(BoxLayoutPack.END);
     viewBar.setBorders(false);
     viewBar.add(new LabelToolItem("View :&nbsp&nbsp&nbsp"));
-    for (ButtonCar car : ButtonCar.values()) {
+    for (final ViewButtonCar car : ViewButtonCar.values()) {
       final ToggleButton button = new ToggleButton(car.getName());
       button.setWidth(40);
-      button.setData("car", car);
       button.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 
         @Override
         public void onValueChange(ValueChangeEvent<Boolean> event) {
           if (event.getValue() == true) {
-            selectView(((ButtonCar) button.getData("car")).getName());
+            selectView(car);
           }
         }
       });
-      group.add(button);
+      viewGroup.add(button);
       viewBar.add(button);
     }
     ToggleButton gridButton = (ToggleButton) viewBar.getWidget(1);
@@ -325,9 +309,9 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     hor.add(viewBar, new HorizontalLayoutData(0.15, 1));
 
     con = new VerticalLayoutContainer();
-    con.add(buttonBar, new VerticalLayoutData(1, 27));
+    con.add(buttonBar, new VerticalLayoutData(1, 34));
     con.add(hor, new VerticalLayoutData(1, 27));
-    selectView(((ButtonCar) gridButton.getData("car")).getName());
+    selectView(ViewButtonCar.GRID);
 
     setWidget(con);
   }
@@ -349,15 +333,54 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     }
   }
 
-  private void selectView(final String viewName) {
-    boolean cell = viewName.equals("Table");
-    if (!cell) {
-      con.remove(listView);
-      con.add(grid, new VerticalLayoutData(1, 1));
-    } else {
-      con.remove(grid);
-      con.add(listView, new VerticalLayoutData(1, 1));
-      listView.setSize("100%", "100%");
+  private void selectBase(SelectButtonCar car) {
+    switch (car) {
+      case ADD:
+        ResourcePlace place = getPlace().getRendition(UserFeedEditor.NEW);
+        resourceManager.goTo(place);
+        break;
+      case REFRESH:
+        refresh();
+        break;
+      case DELETE:
+        if (selectedItem == null || selectedItem.equals("")) {
+          return;
+        }
+        resourceManager.getPlace(selectedItem).delete(new AsyncCallback<ResourcePlace<T>>() {
+          @Override
+          public void onFailure(Throwable caught) {
+          }
+
+          @Override
+          public void onSuccess(ResourcePlace<T> result) {
+            refresh();
+          }
+        });
+        break;
+      case EDIT:
+        if (selectedItem == null || selectedItem.equals("")) {
+          return;
+        }
+        resourceManager.goTo(selectedItem);
+        break;
+      default:
+        break;
+    }
+  }
+
+  private void selectView(ViewButtonCar car) {
+    switch (car) {
+      case TABLE:
+        con.remove(grid);
+        con.add(listView, new VerticalLayoutData(1, 1));
+        listView.setSize("100%", "100%");
+        break;
+      case GRID:
+        con.remove(listView);
+        con.add(grid, new VerticalLayoutData(1, 1));
+        break;
+      default:
+        break;
     }
     con.onResize();
   }
