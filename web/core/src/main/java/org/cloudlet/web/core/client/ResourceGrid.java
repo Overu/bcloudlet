@@ -1,5 +1,6 @@
 package org.cloudlet.web.core.client;
 
+import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -22,10 +23,10 @@ import com.sencha.gxt.core.client.XTemplates.FormatterFactory;
 import com.sencha.gxt.core.client.resources.CommonStyles;
 import com.sencha.gxt.core.client.util.Format;
 import com.sencha.gxt.core.client.util.ToggleGroup;
-import com.sencha.gxt.data.client.loader.RpcProxy;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.data.shared.PropertyAccess;
+import com.sencha.gxt.data.shared.loader.DataProxy;
 import com.sencha.gxt.data.shared.loader.LoadResultListStoreBinding;
 import com.sencha.gxt.data.shared.loader.PagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
@@ -37,6 +38,8 @@ import com.sencha.gxt.widget.core.client.ListViewCustomAppearance;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.button.ToggleButton;
 import com.sencha.gxt.widget.core.client.container.BoxLayoutContainer.BoxLayoutPack;
+import com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer;
+import com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer.HorizontalLayoutData;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
@@ -167,9 +170,9 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
       }
     });
 
-    RpcProxy<PagingLoadConfig, PagingLoadResult<T>> proxy = new RpcProxy<PagingLoadConfig, PagingLoadResult<T>>() {
+    DataProxy<PagingLoadConfig, PagingLoadResult<T>> proxy = new DataProxy<PagingLoadConfig, PagingLoadResult<T>>() {
       @Override
-      public void load(final PagingLoadConfig loadConfig, final AsyncCallback<PagingLoadResult<T>> callback) {
+      public void load(final PagingLoadConfig loadConfig, final Callback<PagingLoadResult<T>, Throwable> callback) {
         final MultivaluedMap<String, String> queryParameters = getPlace().getQueryParameters();
         queryParameters.putSingle("limit", String.valueOf(loadConfig.getLimit()));
         queryParameters.putSingle("start", String.valueOf(loadConfig.getOffset()));
@@ -192,10 +195,6 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     loader = new PagingLoader<PagingLoadConfig, PagingLoadResult<T>>(proxy);
     loader.setRemoteSort(true);
     loader.addLoadHandler(new LoadResultListStoreBinding<PagingLoadConfig, T, PagingLoadResult<T>>(store));
-
-    final PagingToolBar toolBar = new PagingToolBar(5);
-    toolBar.getElement().getStyle().setProperty("borderBottom", "none");
-    toolBar.bind(loader);
 
     List<ColumnConfig<T, ?>> l = new ArrayList<ColumnConfig<T, ?>>();
     initColumn(l);
@@ -245,37 +244,10 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
       }
     });
 
-    ToggleGroup group = new ToggleGroup();
     ToolBar buttonBar = new ToolBar();
-    buttonBar.setPack(BoxLayoutPack.END);
-    buttonBar.add(new LabelToolItem("View :&nbsp&nbsp&nbsp"));
-    for (ButtonCar car : ButtonCar.values()) {
-      final ToggleButton button = new ToggleButton(car.getName());
-      button.setWidth(40);
-      button.setData("car", car);
-      button.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-
-        @Override
-        public void onValueChange(ValueChangeEvent<Boolean> event) {
-          if (event.getValue() == true) {
-            selectView(((ButtonCar) button.getData("car")).getName());
-          }
-        }
-      });
-      group.add(button);
-      buttonBar.add(button);
-    }
-    ToggleButton gridButton = (ToggleButton) buttonBar.getWidget(1);
-    gridButton.setValue(true);
-
-    con = new VerticalLayoutContainer();
-    con.add(buttonBar, new VerticalLayoutData(1, -1));
-    con.add(toolBar, new VerticalLayoutData(1, -1));
-    selectView(((ButtonCar) gridButton.getData("car")).getName());
-
-    setWidget(con);
-    setButtonAlign(BoxLayoutPack.CENTER);
-    addButton(new TextButton("Add", new SelectHandler() {
+    buttonBar.setMinButtonWidth(60);
+    buttonBar.setPack(BoxLayoutPack.CENTER);
+    buttonBar.add(new TextButton("Add", new SelectHandler() {
 
       @Override
       public void onSelect(final SelectEvent event) {
@@ -283,14 +255,14 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
         resourceManager.goTo(place);
       }
     }));
-    addButton(new TextButton("Refresh", new SelectHandler() {
+    buttonBar.add(new TextButton("Refresh", new SelectHandler() {
 
       @Override
       public void onSelect(final SelectEvent event) {
         refresh();
       }
     }));
-    addButton(new TextButton("Edit", new SelectHandler() {
+    buttonBar.add(new TextButton("Edit", new SelectHandler() {
 
       @Override
       public void onSelect(final SelectEvent event) {
@@ -300,7 +272,7 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
         resourceManager.goTo(selectedItem);
       }
     }));
-    addButton(new TextButton("Delete", new SelectHandler() {
+    buttonBar.add(new TextButton("Delete", new SelectHandler() {
 
       @Override
       public void onSelect(final SelectEvent event) {
@@ -319,6 +291,45 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
         });
       }
     }));
+
+    final PagingToolBar toolBar = new PagingToolBar(5);
+    toolBar.getElement().getStyle().setProperty("borderBottom", "none");
+    toolBar.bind(loader);
+
+    ToggleGroup group = new ToggleGroup();
+    ToolBar viewBar = new ToolBar();
+    viewBar.setPack(BoxLayoutPack.END);
+    viewBar.setBorders(false);
+    viewBar.add(new LabelToolItem("View :&nbsp&nbsp&nbsp"));
+    for (ButtonCar car : ButtonCar.values()) {
+      final ToggleButton button = new ToggleButton(car.getName());
+      button.setWidth(40);
+      button.setData("car", car);
+      button.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+
+        @Override
+        public void onValueChange(ValueChangeEvent<Boolean> event) {
+          if (event.getValue() == true) {
+            selectView(((ButtonCar) button.getData("car")).getName());
+          }
+        }
+      });
+      group.add(button);
+      viewBar.add(button);
+    }
+    ToggleButton gridButton = (ToggleButton) viewBar.getWidget(1);
+    gridButton.setValue(true);
+
+    HorizontalLayoutContainer hor = new HorizontalLayoutContainer();
+    hor.add(toolBar, new HorizontalLayoutData(0.85, 1));
+    hor.add(viewBar, new HorizontalLayoutData(0.15, 1));
+
+    con = new VerticalLayoutContainer();
+    con.add(buttonBar, new VerticalLayoutData(1, 27));
+    con.add(hor, new VerticalLayoutData(1, 27));
+    selectView(((ButtonCar) gridButton.getData("car")).getName());
+
+    setWidget(con);
   }
 
   @Override
@@ -329,17 +340,6 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
 
   protected void refresh() {
     loader.load();
-    // getPlace().load(new AsyncCallback<ResourcePlace<F>>() {
-    // @Override
-    // public void onFailure(final Throwable reason) {
-    // }
-    //
-    // @Override
-    // public void onSuccess(final ResourcePlace<F> result) {
-    // List<T> books = result.getResource().getEntries();
-    // store.replaceAll(books);
-    // }
-    // });
   }
 
   private void ensureInitialized() {
