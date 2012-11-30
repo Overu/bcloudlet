@@ -26,6 +26,7 @@ import com.sencha.gxt.core.client.util.ToggleGroup;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.data.shared.PropertyAccess;
+import com.sencha.gxt.data.shared.SortInfo;
 import com.sencha.gxt.data.shared.loader.DataProxy;
 import com.sencha.gxt.data.shared.loader.LoadResultListStoreBinding;
 import com.sencha.gxt.data.shared.loader.PagingLoadConfig;
@@ -135,6 +136,10 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
   }
 
   public final static String LIST = "list";
+  public final static String START = "start";
+  public final static String LIMIT = "limit";
+  public final static String SORTBY = "sortby";
+  public final static String SORTORDER = "sortorder";
 
   static Renderer r;
   static Resources resources;
@@ -142,7 +147,6 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
   @Inject
   ResourceManager resourceManager;
 
-  protected ListStore<T> store;
   protected PagingLoader<PagingLoadConfig, PagingLoadResult<T>> loader;
 
   private boolean initialized = false;
@@ -176,7 +180,7 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
   protected void initView() {
     final Style style = resources.css();
 
-    store = new ListStore<T>(new ModelKeyProvider<T>() {
+    ListStore<T> store = new ListStore<T>(new ModelKeyProvider<T>() {
 
       @Override
       public String getKey(T item) {
@@ -188,8 +192,14 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
       @Override
       public void load(final PagingLoadConfig loadConfig, final Callback<PagingLoadResult<T>, Throwable> callback) {
         final MultivaluedMap<String, String> queryParameters = getPlace().getQueryParameters();
-        queryParameters.putSingle("limit", String.valueOf(loadConfig.getLimit()));
-        queryParameters.putSingle("start", String.valueOf(loadConfig.getOffset()));
+        List<? extends SortInfo> sortInfo = loadConfig.getSortInfo();
+        if (sortInfo.size() > 0) {
+          SortInfo sort = sortInfo.get(0);
+          queryParameters.putSingle(SORTBY, sort.getSortField());
+          queryParameters.putSingle(SORTORDER, sort.getSortDir().name());
+        }
+        queryParameters.putSingle(LIMIT, String.valueOf(loadConfig.getLimit()));
+        queryParameters.putSingle(START, String.valueOf(loadConfig.getOffset()));
         getPlace().load(new AsyncCallback<ResourcePlace<F>>() {
           @Override
           public void onFailure(final Throwable reason) {
@@ -198,8 +208,8 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
           @Override
           public void onSuccess(final ResourcePlace<F> result) {
             List<T> books = result.getResource().getEntries();
-            queryParameters.remove("limit");
-            queryParameters.remove("start");
+            queryParameters.remove(LIMIT);
+            queryParameters.remove(START);
             callback.onSuccess(new PagingLoadResultBean<T>(books, result.getResource().getChildrenCount(), loadConfig.getOffset()));
           }
         });

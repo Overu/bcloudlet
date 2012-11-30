@@ -11,6 +11,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.NoResultException;
 import javax.persistence.Transient;
 import javax.persistence.TypedQuery;
+import javax.ws.rs.QueryParam;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -18,6 +19,15 @@ import javax.xml.bind.annotation.XmlTransient;
 public abstract class FeedBean<E extends ResourceBean> extends ResourceBean {
 
   public static final String SORT = "sort";
+
+  // sort=title|asc&sort=email|desc
+  @QueryParam("sortby")
+  @Transient
+  protected String sortBy;
+
+  @QueryParam("sortorder")
+  @Transient
+  protected String sortOrder;
 
   @Transient
   protected List<E> entries;
@@ -53,7 +63,8 @@ public abstract class FeedBean<E extends ResourceBean> extends ResourceBean {
 
   public List<E> findEntries(int start, int limit) {
     Class<E> entryType = getEntryType();
-    TypedQuery<E> query = em().createQuery("from " + entryType.getName() + " f where f.parent=:parent", entryType);
+    String orderBy = sortBy == null ? "" : (" order by f." + sortBy + (sortOrder == null ? "" : " " + sortOrder));
+    TypedQuery<E> query = em().createQuery("from " + entryType.getName() + " f where f.parent=:parent" + orderBy, entryType);
     if (start >= 0 && limit >= 0) {
       query.setFirstResult(start);
       query.setMaxResults(limit);
