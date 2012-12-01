@@ -21,13 +21,9 @@ public abstract class FeedBean<E extends ResourceBean> extends ResourceBean {
   public static final String SORT = "sort";
 
   // sort=title|asc&sort=email|desc
-  @QueryParam("sortby")
+  @QueryParam("sort")
   @Transient
-  protected String sortBy;
-
-  @QueryParam("sortorder")
-  @Transient
-  protected String sortOrder;
+  protected List<String> sorts;
 
   @Transient
   protected List<E> entries;
@@ -63,8 +59,16 @@ public abstract class FeedBean<E extends ResourceBean> extends ResourceBean {
 
   public List<E> findEntries(int start, int limit) {
     Class<E> entryType = getEntryType();
-    String orderBy = sortBy == null ? "" : (" order by f." + sortBy + (sortOrder == null ? "" : " " + sortOrder));
-    TypedQuery<E> query = em().createQuery("from " + entryType.getName() + " f where f.parent=:parent" + orderBy, entryType);
+    StringBuilder orderStr = new StringBuilder();
+    if (sorts != null && sorts.size() > 0) {
+      orderStr.append(" order by");
+      for (String s : sorts) {
+        String[] split = s.split("\\|");
+        orderStr.append(" f.").append(split[0]).append(" ").append(split[1]).append(",");
+      }
+      orderStr.deleteCharAt(orderStr.lastIndexOf(","));
+    }
+    TypedQuery<E> query = em().createQuery("from " + entryType.getName() + " f where f.parent=:parent" + orderStr.toString(), entryType);
     if (start >= 0 && limit >= 0) {
       query.setFirstResult(start);
       query.setMaxResults(limit);

@@ -138,8 +138,7 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
   public final static String LIST = "list";
   public final static String START = "start";
   public final static String LIMIT = "limit";
-  public final static String SORTBY = "sortby";
-  public final static String SORTORDER = "sortorder";
+  public final static String SORT = "sort";
 
   static Renderer r;
   static Resources resources;
@@ -192,11 +191,13 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
       @Override
       public void load(final PagingLoadConfig loadConfig, final Callback<PagingLoadResult<T>, Throwable> callback) {
         final MultivaluedMap<String, String> queryParameters = getPlace().getQueryParameters();
-        List<? extends SortInfo> sortInfo = loadConfig.getSortInfo();
-        if (sortInfo.size() > 0) {
-          SortInfo sort = sortInfo.get(0);
-          queryParameters.putSingle(SORTBY, sort.getSortField());
-          queryParameters.putSingle(SORTORDER, sort.getSortDir().name());
+        List<? extends SortInfo> sorts = loadConfig.getSortInfo();
+        if (sorts.size() > 0) {
+          StringBuilder sb = new StringBuilder();
+          for (SortInfo sort : sorts) {
+            sb.append(sort.getSortField()).append("|").append(sort.getSortDir().name());
+            queryParameters.add(SORT, sb.toString());
+          }
         }
         queryParameters.putSingle(LIMIT, String.valueOf(loadConfig.getLimit()));
         queryParameters.putSingle(START, String.valueOf(loadConfig.getOffset()));
@@ -210,6 +211,7 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
             List<T> books = result.getResource().getEntries();
             queryParameters.remove(LIMIT);
             queryParameters.remove(START);
+            queryParameters.remove(SORT);
             callback.onSuccess(new PagingLoadResultBean<T>(books, result.getResource().getChildrenCount(), loadConfig.getOffset()));
           }
         });
