@@ -21,9 +21,9 @@ public abstract class FeedBean<E extends ResourceBean> extends ResourceBean {
   public static final String SORT = "sort";
 
   // sort=title|asc&sort=email|desc
-  @QueryParam("sort")
+  @QueryParam(SORT)
   @Transient
-  protected List<String> sorts;
+  protected List<String> sort;
 
   @Transient
   protected List<E> entries;
@@ -60,9 +60,9 @@ public abstract class FeedBean<E extends ResourceBean> extends ResourceBean {
   public List<E> findEntries(int start, int limit) {
     Class<E> entryType = getEntryType();
     StringBuilder orderStr = new StringBuilder();
-    if (sorts != null && sorts.size() > 0) {
+    if (sort != null && sort.size() > 0) {
       orderStr.append(" order by");
-      for (String s : sorts) {
+      for (String s : sort) {
         String[] split = s.split("\\|");
         orderStr.append(" f.").append(split[0]).append(" ").append(split[1]).append(",");
       }

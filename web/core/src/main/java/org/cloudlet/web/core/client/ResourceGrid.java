@@ -54,6 +54,7 @@ import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
 import org.cloudlet.web.core.Feed;
 import org.cloudlet.web.core.Resource;
+import org.cloudlet.web.core.service.FeedBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -138,7 +139,6 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
   public final static String LIST = "list";
   public final static String START = "start";
   public final static String LIMIT = "limit";
-  public final static String SORT = "sort";
 
   static Renderer r;
   static Resources resources;
@@ -176,6 +176,10 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
 
   protected abstract void initColumn(List<ColumnConfig<T, ?>> l);
 
+  protected ResourceSearch<T, F> initSearch() {
+    return null;
+  }
+
   protected void initView() {
     final Style style = resources.css();
 
@@ -196,7 +200,7 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
           StringBuilder sb = new StringBuilder();
           for (SortInfo sort : sorts) {
             sb.append(sort.getSortField()).append("|").append(sort.getSortDir().name());
-            queryParameters.add(SORT, sb.toString());
+            queryParameters.add(FeedBean.SORT, sb.toString());
           }
         }
         queryParameters.putSingle(LIMIT, String.valueOf(loadConfig.getLimit()));
@@ -211,7 +215,7 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
             List<T> books = result.getResource().getEntries();
             queryParameters.remove(LIMIT);
             queryParameters.remove(START);
-            queryParameters.remove(SORT);
+            queryParameters.remove(FeedBean.SORT);
             callback.onSuccess(new PagingLoadResultBean<T>(books, result.getResource().getChildrenCount(), loadConfig.getOffset()));
           }
         });
@@ -321,6 +325,11 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     hor.add(viewBar, new HorizontalLayoutData(0.15, 1));
 
     con = new VerticalLayoutContainer();
+    ResourceSearch<T, F> resourceSearch = initSearch();
+    if (resourceSearch != null) {
+      resourceSearch.setPlace(getPlace());
+      con.add(resourceSearch, new VerticalLayoutData(1, 34));
+    }
     con.add(buttonBar, new VerticalLayoutData(1, 34));
     con.add(hor, new VerticalLayoutData(1, 27));
     selectView(ViewButtonCar.GRID);

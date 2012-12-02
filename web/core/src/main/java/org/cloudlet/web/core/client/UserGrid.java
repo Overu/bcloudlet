@@ -55,6 +55,11 @@ public class UserGrid extends ResourceGrid<User, UserFeed> {
   }
 
   @Override
+  protected ResourceSearch<User, UserFeed> initSearch() {
+    return new UserSearch();
+  }
+
+  @Override
   protected void initView() {
     setHeadingText("User Grid");
     super.initView();
