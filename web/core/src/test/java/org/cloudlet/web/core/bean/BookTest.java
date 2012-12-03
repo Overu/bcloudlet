@@ -20,7 +20,6 @@ import java.io.InputStream;
 import java.util.UUID;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 public class BookTest extends CoreTest {
@@ -33,7 +32,7 @@ public class BookTest extends CoreTest {
   BookFeedBean books;
 
   @Test
-  public void testCreateBook() throws JAXBException {
+  public void testCreateBook() throws Exception {
     System.out.println(UUID.randomUUID().toString());
     books.load();
     long total = books.getChildrenCount();
@@ -46,11 +45,10 @@ public class BookTest extends CoreTest {
     books.createEntry(book);
 
     MediaBean cover = book.create(MediaBean.class);
-
-    InputStream stream = getClass().getResourceAsStream("/covers/sanguo.jpg");
-    cover.setContentStream(stream);
     cover.setPath("cover");
     cover.setTitle("Cover");
+    InputStream stream = getClass().getResourceAsStream("/covers/sanguo.jpg");
+    cover.read(stream);
     cover.save();
 
     book.setCover(cover);

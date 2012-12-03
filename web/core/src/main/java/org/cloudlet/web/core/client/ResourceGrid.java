@@ -178,9 +178,7 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
 
   protected abstract void initColumn(List<ColumnConfig<T, ?>> l);
 
-  protected ResourceSearch<T, F> initSearch() {
-    return null;
-  }
+  protected abstract ResourceSearch<T, F> initSearch();
 
   protected void initView() {
     final Style style = resources.css();

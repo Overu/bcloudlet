@@ -23,6 +23,10 @@ public interface Resource {
 
   String RESOURCE_TYPE = "resourceType";
 
+  String PARENT_TYPE = "parentType";
+
+  String PARENT_ID = "parentId";
+
   List<Resource> getChildren();
 
   int getChildrenCount();
@@ -32,6 +36,10 @@ public interface Resource {
   String getId();
 
   User getOwner();
+
+  String getParentId();
+
+  String getParentType();
 
   String getPath();
 
@@ -56,6 +64,10 @@ public interface Resource {
   void setLeaf(boolean value);
 
   void setOwner(User user);
+
+  void setParentId(String value);
+
+  void setParentType(String value);
 
   void setPath(String path);
 

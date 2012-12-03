@@ -3,6 +3,7 @@ package org.cloudlet.web.core.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.text.shared.AbstractSafeHtmlRenderer;
+import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.PropertyAccess;
@@ -18,6 +19,9 @@ public class BookGrid extends ResourceGrid<Book, BookFeed> {
   interface BookPorperties extends PropertyAccess<Book> {
     ValueProvider<Book, String> title();
   }
+
+  @Inject
+  BookSearch bookSearch;
 
   private static BookPorperties properties = GWT.create(BookPorperties.class);
 
@@ -40,6 +44,11 @@ public class BookGrid extends ResourceGrid<Book, BookFeed> {
   @Override
   protected void initColumn(List<ColumnConfig<Book, ?>> l) {
     l.add(new ColumnConfig<Book, String>(properties.title(), 100, "Title"));
+  }
+
+  @Override
+  protected ResourceSearch<Book, BookFeed> initSearch() {
+    return bookSearch;
   }
 
   @Override

@@ -9,6 +9,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -42,6 +43,18 @@ public class BookFeedBean extends PagingFeedBean<BookBean> {
   @Override
   public String getResourceType() {
     return BookFeed.TYPE;
+  }
+
+  @Override
+  public BookBean newEntry() {
+    BookBean result = new BookBean();
+    result.setParent(this);
+    return result;
+  }
+
+  @Override
+  protected BookBean createFrom(MultivaluedMap<String, String> params) {
+    return newEntry();
   }
 
   @Override
