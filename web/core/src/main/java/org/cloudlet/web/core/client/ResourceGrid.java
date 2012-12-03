@@ -322,17 +322,21 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     ToggleButton gridButton = (ToggleButton) viewBar.getWidget(1);
     gridButton.setValue(true);
 
-    HorizontalLayoutContainer hor = new HorizontalLayoutContainer();
-    hor.add(toolBar, new HorizontalLayoutData(0.85, 1));
-    hor.add(viewBar, new HorizontalLayoutData(0.15, 1));
+    HorizontalLayoutContainer hor1 = new HorizontalLayoutContainer();
+    hor1.add(toolBar, new HorizontalLayoutData(0.85, 1));
+    hor1.add(viewBar, new HorizontalLayoutData(0.15, 1));
+
+    HorizontalLayoutContainer hor2 = new HorizontalLayoutContainer();
+    resourceSearch = initSearch();
+    hor2.add(buttonBar, new HorizontalLayoutData(resourceSearch == null ? 1 : 0.6, 1));
+    if (resourceSearch != null) {
+      resourceSearch.setPack(BoxLayoutPack.END);
+      hor2.add(resourceSearch, new HorizontalLayoutData(0.4, 1));
+    }
 
     con = new VerticalLayoutContainer();
-    resourceSearch = initSearch();
-    if (resourceSearch != null) {
-      con.add(resourceSearch, new VerticalLayoutData(1, 34));
-    }
-    con.add(buttonBar, new VerticalLayoutData(1, 34));
-    con.add(hor, new VerticalLayoutData(1, 27));
+    con.add(hor2, new VerticalLayoutData(1, 34));
+    con.add(hor1, new VerticalLayoutData(1, 27));
     selectView(ViewButtonCar.GRID);
 
     setWidget(con);

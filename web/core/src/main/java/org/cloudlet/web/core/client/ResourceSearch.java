@@ -22,6 +22,7 @@ import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoadResultBean;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
 import com.sencha.gxt.widget.core.client.ListView;
+import com.sencha.gxt.widget.core.client.container.BoxLayoutContainer.BoxLayoutPack;
 import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 import com.sencha.gxt.widget.core.client.form.ComboBox;
 import com.sencha.gxt.widget.core.client.toolbar.LabelToolItem;
@@ -52,10 +53,15 @@ public abstract class ResourceSearch<T extends Resource, F extends Feed<T>> exte
   private boolean initialized = false;
   private ResourcePlace<F> place;
   private ComboBox<T> combo;
+  private ToolBar toolBar = new ToolBar();
 
   @Override
   public ResourcePlace<F> getPlace() {
     return place;
+  }
+
+  public void setPack(BoxLayoutPack pack) {
+    toolBar.setPack(pack);
   }
 
   @Override
@@ -124,7 +130,7 @@ public abstract class ResourceSearch<T extends Resource, F extends Feed<T>> exte
     ComboBoxCell<T> cell = new ComboBoxCell<T>(store, getSearchLable(), view);
     combo = new ComboBox<T>(cell);
     combo.setLoader(loader);
-    combo.setWidth(580);
+    combo.setWidth(350);
     combo.setHideTrigger(true);
     combo.setPageSize(5);
     combo.addBeforeSelectionHandler(new BeforeSelectionHandler<T>() {
@@ -140,7 +146,6 @@ public abstract class ResourceSearch<T extends Resource, F extends Feed<T>> exte
       }
     });
 
-    ToolBar toolBar = new ToolBar();
     toolBar.add(new LabelToolItem("Serach："));
     toolBar.add(combo);
     setWidget(toolBar);
