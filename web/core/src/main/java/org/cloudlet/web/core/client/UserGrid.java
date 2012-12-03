@@ -3,6 +3,7 @@ package org.cloudlet.web.core.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.text.shared.AbstractSafeHtmlRenderer;
+import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.PropertyAccess;
@@ -26,6 +27,9 @@ public class UserGrid extends ResourceGrid<User, UserFeed> {
 
     ValueProvider<User, String> zip();
   }
+
+  @Inject
+  UserSearch userSearch;
 
   private static UserPorperties properties = GWT.create(UserPorperties.class);
 
@@ -56,7 +60,7 @@ public class UserGrid extends ResourceGrid<User, UserFeed> {
 
   @Override
   protected ResourceSearch<User, UserFeed> initSearch() {
-    return new UserSearch();
+    return userSearch;
   }
 
   @Override

@@ -25,6 +25,10 @@ public abstract class FeedBean<E extends ResourceBean> extends ResourceBean {
   @Transient
   protected List<String> sort;
 
+  @QueryParam(SEARCH)
+  @Transient
+  protected List<String> search;
+
   @Transient
   protected List<E> entries;
 
@@ -34,6 +38,8 @@ public abstract class FeedBean<E extends ResourceBean> extends ResourceBean {
   @Transient
   protected Long queryCount;
 
+  public final static String SEARCH = "search";
+
   public static final String NEW = "new";
 
   public static final String LIST = "list";
@@ -42,7 +48,9 @@ public abstract class FeedBean<E extends ResourceBean> extends ResourceBean {
 
   public long countEntries() {
     Class<E> entryType = getEntryType();
-    TypedQuery<Long> query = em().createQuery("select count(o) from " + entryType.getName() + " o where o.parent=:parent", Long.class);
+    TypedQuery<Long> query =
+        em().createQuery("select count(f) from " + entryType.getName() + " f where f.parent=:parent" + count().toString(),
+            Long.class);
     query.setParameter("parent", this);
     return query.getSingleResult().longValue();
   }
@@ -59,16 +67,8 @@ public abstract class FeedBean<E extends ResourceBean> extends ResourceBean {
 
   public List<E> findEntries(int start, int limit) {
     Class<E> entryType = getEntryType();
-    StringBuilder orderStr = new StringBuilder();
-    if (sort != null && sort.size() > 0) {
-      orderStr.append(" order by");
-      for (String s : sort) {
-        String[] split = s.split("\\|");
-        orderStr.append(" f.").append(split[0]).append(" ").append(split[1]).append(",");
-      }
-      orderStr.deleteCharAt(orderStr.lastIndexOf(","));
-    }
-    TypedQuery<E> query = em().createQuery("from " + entryType.getName() + " f where f.parent=:parent" + orderStr.toString(), entryType);
+    TypedQuery<E> query =
+        em().createQuery("from " + entryType.getName() + " f where f.parent=:parent" + count().append(limit()), entryType);
     if (start >= 0 && limit >= 0) {
       query.setFirstResult(start);
       query.setMaxResults(limit);
@@ -160,6 +160,30 @@ public abstract class FeedBean<E extends ResourceBean> extends ResourceBean {
   protected void doLoadEntries() {
     entries = findEntries(0, -1);
     queryCount = countEntries();
+  }
+
+  private StringBuilder count() {
+    StringBuilder limitQuery = new StringBuilder();
+    if (search != null && search.size() > 0) {
+      for (String s : search) {
+        String[] split = s.split("\\|");
+        limitQuery.append(" and").append(" f.").append(split[0]).append(" like '").append(split[1]).append("%'");
+      }
+    }
+    return limitQuery;
+  }
+
+  private StringBuilder limit() {
+    StringBuilder countQuery = new StringBuilder();
+    if (sort != null && sort.size() > 0) {
+      countQuery.append(" order by");
+      for (String s : sort) {
+        String[] split = s.split("\\|");
+        countQuery.append(" f.").append(split[0]).append(" ").append(split[1]).append(",");
+      }
+      countQuery.deleteCharAt(countQuery.lastIndexOf(","));
+    }
+    return countQuery;
   }
 
 }

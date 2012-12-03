@@ -154,6 +154,7 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
   private ListView<T, T> listView;
   private T selectedItem;
   private ResourcePlace<F> place;
+  private ResourceSearch<T, F> resourceSearch;
 
   static {
     r = GWT.create(Renderer.class);
@@ -169,6 +170,7 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
   @Override
   public void setPlace(ResourcePlace<F> place) {
     this.place = place;
+    resourceSearch.setPlace(place);
     refresh();
   }
 
@@ -325,9 +327,8 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     hor.add(viewBar, new HorizontalLayoutData(0.15, 1));
 
     con = new VerticalLayoutContainer();
-    ResourceSearch<T, F> resourceSearch = initSearch();
+    resourceSearch = initSearch();
     if (resourceSearch != null) {
-      resourceSearch.setPlace(getPlace());
       con.add(resourceSearch, new VerticalLayoutData(1, 34));
     }
     con.add(buttonBar, new VerticalLayoutData(1, 34));
@@ -379,7 +380,7 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
         });
         break;
       case EDIT:
-        if (selectedItem == null || selectedItem.equals("")) {
+        if (selectedItem == null) {
           return;
         }
         resourceManager.goTo(selectedItem);

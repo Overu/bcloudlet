@@ -12,6 +12,9 @@ import com.sencha.gxt.data.shared.PropertyAccess;
 import org.cloudlet.web.core.User;
 import org.cloudlet.web.core.UserFeed;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserSearch extends ResourceSearch<User, UserFeed> {
 
   interface UserProperties extends PropertyAccess<User> {
@@ -19,7 +22,8 @@ public class UserSearch extends ResourceSearch<User, UserFeed> {
   }
 
   interface UserTemplate extends XTemplates {
-    @XTemplate("<div class='{style.searchItem}'><h3><span><br />by {user.name}</span>{user.email}</h3>{user.phone}</div>")
+    // @XTemplate("<div class='{style.searchItem}'><h3><span><br />by {user.name}</span>{user.email}</h3>{user.phone}</div>")
+    @XTemplate("<div class='{style.searchItem}'>{user.name}</div>")
     SafeHtml render(User user, ResourceStyle style);
   }
 
@@ -36,7 +40,7 @@ public class UserSearch extends ResourceSearch<User, UserFeed> {
     return new AbstractCell<User>() {
       @Override
       public void render(com.google.gwt.cell.client.Cell.Context context, User value, SafeHtmlBuilder sb) {
-        template.render(value, style);
+        sb.append(template.render(value, style));
       }
     };
   }
@@ -44,6 +48,13 @@ public class UserSearch extends ResourceSearch<User, UserFeed> {
   @Override
   protected LabelProvider<User> getSearchLable() {
     return userProperties.name();
+  }
+
+  @Override
+  protected List<String> getSearchTitle() {
+    ArrayList<String> titles = new ArrayList<String>();
+    titles.add("name");
+    return titles;
   }
 
 }
