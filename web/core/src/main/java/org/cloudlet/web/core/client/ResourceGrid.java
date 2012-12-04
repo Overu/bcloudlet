@@ -16,6 +16,7 @@ import com.google.inject.Inject;
 
 import com.sencha.gxt.cell.core.client.SimpleSafeHtmlCell;
 import com.sencha.gxt.core.client.IdentityValueProvider;
+import com.sencha.gxt.core.client.ToStringValueProvider;
 import com.sencha.gxt.core.client.XTemplates;
 import com.sencha.gxt.core.client.XTemplates.Formatter;
 import com.sencha.gxt.core.client.XTemplates.FormatterFactories;
@@ -171,7 +172,6 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
   @Override
   public void setPlace(ResourcePlace<F> place) {
     this.place = place;
-    resourceSearch = initSearch();
     if (resourceSearch != null) {
       resourceSearch.setPlace(place);
     }
@@ -196,6 +196,7 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     });
 
     IdentityValueProvider<T> valueProvider = new IdentityValueProvider<T>();
+    ToStringValueProvider<T> stringProvider = new ToStringValueProvider<T>();
 
     DataProxy<PagingLoadConfig, PagingLoadResult<T>> proxy = new DataProxy<PagingLoadConfig, PagingLoadResult<T>>() {
       @Override
@@ -233,6 +234,7 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     loader.addLoadHandler(new LoadResultListStoreBinding<PagingLoadConfig, T, PagingLoadResult<T>>(store));
 
     CheckBoxSelectionModel<T> sm = new CheckBoxSelectionModel<T>(valueProvider);
+    ColumnConfig<T, ?> column = sm.getColumn();
 
     List<ColumnConfig<T, ?>> l = new ArrayList<ColumnConfig<T, ?>>();
     l.add(sm.getColumn());
@@ -284,7 +286,7 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     final ButtonBar buttonBar = new ButtonBar();
     buttonBar.addStyleName("x-toolbar-mark");
     buttonBar.setMinButtonWidth(75);
-    buttonBar.setPack(BoxLayoutPack.CENTER);
+    buttonBar.setPack(BoxLayoutPack.START);
 
     for (final SelectButtonCar car : SelectButtonCar.values()) {
       final ToggleButton button = new ToggleButton(car.getName());
@@ -331,10 +333,11 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     hor1.add(viewBar, new HorizontalLayoutData(0.15, 1));
 
     HorizontalLayoutContainer hor2 = new HorizontalLayoutContainer();
-    hor2.add(buttonBar, new HorizontalLayoutData(resourceSearch == null ? 1 : 0.6, 1));
+    resourceSearch = initSearch();
+    hor2.add(buttonBar, new HorizontalLayoutData(resourceSearch == null ? 1 : 0.5, 1));
     if (resourceSearch != null) {
       resourceSearch.setPack(BoxLayoutPack.END);
-      hor2.add(resourceSearch, new HorizontalLayoutData(0.4, 1));
+      hor2.add(resourceSearch, new HorizontalLayoutData(0.5, 1));
     }
 
     con = new VerticalLayoutContainer();
