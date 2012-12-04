@@ -184,6 +184,7 @@ public abstract class ResourceBean {
             media.setPath(key);
             media.setTitle(value.getName());
             media.setMimeType(value.getContentType());
+            media.save();
             files.add(key, media);
           }
         } finally {

@@ -64,7 +64,6 @@ public class UserEditor extends ResourceEditor<User> {
     p.add(new FieldLabel(state, "State"), new VerticalLayoutData(1, -1));
 
     p.add(new FieldLabel(zip, "Zip"), new VerticalLayoutData(1, -1));
-
     setWidget(p);
   }
 

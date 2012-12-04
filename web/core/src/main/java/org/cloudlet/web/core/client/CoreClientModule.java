@@ -46,13 +46,13 @@ public class CoreClientModule extends AbstractGinModule {
     BookGrid bookGrid;
 
     @Inject
-    UserFeedEditor userForm;
+    UserFeedEditor userFeedEditor;
 
     @Inject
-    UserEditor userModify;
+    UserEditor userEditor;
 
     @Inject
-    BookFeedEditor newBookEditor;
+    BookFeedEditor bookFeedEditor;
 
     @Inject
     BookEditor bookEditor;
@@ -82,13 +82,13 @@ public class CoreClientModule extends AbstractGinModule {
     private void start() {
       CorePackage.init();
       Registry.setWidget(Repository.TYPE, "", explorer);
-      Registry.setWidget(User.TYPE, "", userModify);
-      Registry.setWidget(UserFeed.TYPE, UserFeedEditor.NEW, userForm);
+      Registry.setWidget(User.TYPE, "", userEditor);
+      Registry.setWidget(UserFeed.TYPE, UserFeedEditor.NEW, userFeedEditor);
       Registry.setWidget(UserFeed.TYPE, ResourceGrid.LIST, userGrid);
 
-      Registry.setWidget(BookFeed.TYPE, ResourceGrid.LIST, bookGrid);
       Registry.setWidget(Book.TYPE, "", bookEditor);
-      Registry.setWidget(BookFeed.TYPE, BookFeedEditor.NEW, newBookEditor);
+      Registry.setWidget(BookFeed.TYPE, BookFeedEditor.NEW, bookFeedEditor);
+      Registry.setWidget(BookFeed.TYPE, ResourceGrid.LIST, bookGrid);
 
       BaseResources.INSTANCE();
       main = new SimplePanel();

@@ -36,7 +36,7 @@ public class BookEditor extends ResourceEditor<Book> {
   MediaField source;
 
   @Inject
-  MediaField cover;
+  ImageField cover;
 
   private static Driver driver = GWT.create(Driver.class);
 

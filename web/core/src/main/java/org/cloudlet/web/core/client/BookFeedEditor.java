@@ -53,7 +53,7 @@ public class BookFeedEditor extends ResourceEditor<BookFeed> {
 
   @Override
   protected void initView() {
-    setHeadingText("添加新用户");
+    setHeadingText("上传新书");
     // hide save button
     // super.initView();
     driver.initialize(this);

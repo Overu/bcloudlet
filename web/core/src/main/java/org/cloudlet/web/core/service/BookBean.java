@@ -8,7 +8,6 @@ import javax.persistence.Table;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = Book.TYPE)
@@ -25,8 +24,6 @@ public class BookBean extends ResourceBean {
   private MediaBean source;
 
   @Path("cover")
-  @DefaultField(key = "title", value = "成员")
-  @XmlTransient
   public MediaBean getCover() {
     return cover;
   }
@@ -36,6 +33,7 @@ public class BookBean extends ResourceBean {
     return Book.TYPE;
   }
 
+  @Path("source")
   public MediaBean getSource() {
     return source;
   }
@@ -55,23 +53,17 @@ public class BookBean extends ResourceBean {
     }
   }
 
-  @Override
-  public ResourceBean save() {
-    super.save();
-    if (cover != null) {
-      cover.save();
-    }
-    if (source != null) {
-      source.save();
-    }
-    return this;
-  }
-
   public void setCover(MediaBean cover) {
+    if (cover != null) {
+      cover.setParent(this);
+    }
     this.cover = cover;
   }
 
   public void setSource(MediaBean source) {
+    if (source != null) {
+      source.setParent(this);
+    }
     this.source = source;
   }
 

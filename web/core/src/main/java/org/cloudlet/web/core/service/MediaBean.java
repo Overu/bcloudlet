@@ -15,6 +15,12 @@ import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
@@ -27,6 +33,11 @@ public class MediaBean extends ResourceBean {
 
   private String mimeType;
 
+  @Override
+  public ResourceBean getByPath(String path) {
+    throw new UnsupportedOperationException();
+  }
+
   @XmlTransient
   public File getFile() {
     if (id == null) {
@@ -34,6 +45,13 @@ public class MediaBean extends ResourceBean {
     }
     String filePath = "D:/DevData/files/" + id;
     return new File(filePath);
+  }
+
+  @GET
+  @Path("{fileName}")
+  @Produces(MediaType.WILDCARD)
+  public Response getMedia(@PathParam("fileName") String fileName) {
+    return Response.ok().entity(openStream()).type(getMimeType()).build();
   }
 
   public String getMimeType() {

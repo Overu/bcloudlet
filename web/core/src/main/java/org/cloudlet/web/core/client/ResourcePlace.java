@@ -19,6 +19,7 @@ import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 
 import org.cloudlet.web.core.CoreAutoBeanFactory;
+import org.cloudlet.web.core.Media;
 import org.cloudlet.web.core.Registry;
 import org.cloudlet.web.core.Resource;
 
@@ -415,6 +416,16 @@ public class ResourcePlace<T extends Resource> extends Place {
     }
   }
 
+  public void renderOnly(final AcceptsOneWidget panel) {
+    renderCurrent(new ResourceContainer() {
+      @Override
+      public void addResourceWidget(IsWidget widget) {
+        panel.setWidget(widget);
+      }
+
+    }, null);
+  }
+
   public void resolve(final Class<T> resourceType, final AsyncCallback<ResourcePlace<T>> callback) {
     boolean matchType = resourceType.equals(this.resourceType);
     this.resourceType = resourceType;
@@ -453,8 +464,10 @@ public class ResourcePlace<T extends Resource> extends Place {
 
   public void setResource(T resource) {
     this.resource = resource;
-    AutoBean<T> bean = AutoBeanUtils.getAutoBean(resource);
-    setResourceType(bean.getType());
+    if (resource != null) {
+      AutoBean<T> bean = AutoBeanUtils.getAutoBean(resource);
+      setResourceType(bean.getType());
+    }
   }
 
   public void setResourceType(Class<T> resourceType) {
@@ -516,6 +529,12 @@ public class ResourcePlace<T extends Resource> extends Place {
     if (callback != null) {
       callback.onSuccess(widget);
     }
+  }
+
+  public static String getMediaUrl(Media media) {
+    String uri = media.getUri();
+    String url = "api" + uri + "/" + media.getTitle();
+    return url;
   }
 
 }
