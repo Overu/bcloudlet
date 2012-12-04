@@ -111,20 +111,7 @@ public class ResourcePlace<T extends Resource> extends Place {
           if (statusCode / 100 == 2) {
             if (statusCode == Response.SC_OK) {
               if (!method.equals(RequestBuilder.DELETE)) {
-                String data = response.getText();
-                JSONObject json = JSONParser.parse(data).isObject();
-                String typeName = json.get(Resource.RESOURCE_TYPE).isString().stringValue();
-                Class<T> resourceType = (Class<T>) Registry.getResourceType(typeName);
-                if (resourceType == null) {
-                  resourceType = getResourceType();
-                }
-                if (resourceType == null) {
-                  resourceType = (Class<T>) Resource.class;
-                }
-                setResourceType(resourceType);
-                AutoBean<T> result = AutoBeanCodex.decode(factory, resourceType, data);
-                final T resource = result.as();
-                setResource(resource);
+                readResource(response.getText());
               }
             }
             if (callback != null) {
@@ -329,6 +316,22 @@ public class ResourcePlace<T extends Resource> extends Place {
     execute(RequestBuilder.PUT, callback);
   }
 
+  public void readResource(String data) {
+    JSONObject json = JSONParser.parse(data).isObject();
+    String typeName = json.get(Resource.RESOURCE_TYPE).isString().stringValue();
+    Class<T> resourceType = (Class<T>) Registry.getResourceType(typeName);
+    if (resourceType == null) {
+      resourceType = getResourceType();
+    }
+    if (resourceType == null) {
+      resourceType = (Class<T>) Resource.class;
+    }
+    setResourceType(resourceType);
+    AutoBean<T> result = AutoBeanCodex.decode(factory, resourceType, data);
+    final T resource = result.as();
+    setResource(resource);
+  }
+
   public void render(final AcceptsOneWidget panel) {
     renderAll(new ResourceContainer() {
       @Override
@@ -514,4 +517,5 @@ public class ResourcePlace<T extends Resource> extends Place {
       callback.onSuccess(widget);
     }
   }
+
 }

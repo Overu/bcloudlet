@@ -15,13 +15,8 @@ import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -52,8 +47,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ResourceContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -64,6 +59,8 @@ import javax.xml.bind.annotation.XmlTransient;
 public abstract class ResourceBean {
 
   private static final Logger logger = Logger.getLogger(ResourceBean.class.getName());
+
+  public static final String CHILDREN = "children";
 
   protected String title;
 
@@ -86,11 +83,6 @@ public abstract class ResourceBean {
   @Columns(columns = {@Column(name = "parentType"), @Column(name = "parentId")})
   protected ResourceBean parent;
 
-  @Transient
-  private transient InputStream contentStream;
-
-  private String mimeType;
-
   public static final String CHILDREN_COUNT = "childrenCount";
 
   protected long childrenCount;
@@ -103,8 +95,6 @@ public abstract class ResourceBean {
   protected String content;
 
   public static final String CONTENT = "content";
-
-  public static final String CHILDREN = "children";
 
   @Transient
   @QueryParam(CHILDREN)
@@ -144,16 +134,21 @@ public abstract class ResourceBean {
     return child;
   }
 
+  public ResourceBean createFromInputStream(@Context UriInfo uriInfo, @QueryParam("path") Integer contentLength,
+      @HeaderParam("Content-Type") String contentType, InputStream inputStream) {
+    return null;
+  }
+
   @POST
   @Consumes({MediaType.MULTIPART_FORM_DATA})
-  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  public ResourceBean createFromMultipart(@Context UriInfo uriInfo, @HeaderParam("Content-Length") final Integer contentLength,
+  @Produces({MediaType.APPLICATION_JSON})
+  public ResourceBean createFromMultipartFormData(@Context UriInfo uriInfo, @HeaderParam("Content-Length") final Integer contentLength,
       @HeaderParam("Content-Type") final String contentType, final InputStream inputStream) {
+    ResourceBean result = null;
     MultivaluedMap<String, String> params = uriInfo.getQueryParameters();
     try {
       FileUpload fileUpload = new FileUpload();
       FileItemIterator iter = fileUpload.getItemIterator(new RequestContext() {
-
         @Override
         public String getCharacterEncoding() {
           return "UTF-8";
@@ -174,9 +169,7 @@ public abstract class ResourceBean {
           return inputStream;
         }
       });
-
-      ResourceBean res = null;
-      FileItemStream item = null;
+      MultivaluedMap<String, MediaBean> files = new MultivaluedHashMap<String, MediaBean>();
       while (iter.hasNext()) {
         FileItemStream value = iter.next();
         String key = value.getFieldName();
@@ -186,26 +179,22 @@ public abstract class ResourceBean {
             String strValue = Streams.asString(in, "UTF-8");
             params.add(key, strValue);
           } else {
-            item = value;
+            MediaBean media = WebPlatform.get().getInstance(MediaBean.class);
+            media.read(in);
+            media.setPath(key);
+            media.setTitle(value.getName());
+            media.setMimeType(value.getContentType());
+            files.add(key, media);
           }
         } finally {
           IOUtils.closeQuietly(in);
         }
       }
-      if (item != null) {
-        String rt = params.getFirst(Resource.RESOURCE_TYPE);
-        Class<? extends Resource> cls = Registry.getResourceType(rt);
-        if (cls != null) {
-          ImplementedBy impl = cls.getAnnotation(ImplementedBy.class);
-          Class<? extends ResourceBean> beanType = (Class<? extends ResourceBean>) impl.value();
-          res = WebPlatform.get().getInstance(beanType);
-          res.setContentStream(item.openStream());
-          res.setPath(item.getFieldName());
-          res.setMimeType(item.getContentType());
-          res.setParent(this);
-          res.readFrom(params);
-          res.save();
-        }
+      result = createFrom(params);
+      if (result != null) {
+        result.readParams(params);
+        result.readMedia(files);
+        result.save();
       }
     } catch (Exception e) {
       // VirusFoundException, VirusFoundException will be handled by
@@ -219,7 +208,7 @@ public abstract class ResourceBean {
       }
     } finally {
     }
-    return null;
+    return result;
   }
 
   @SuppressWarnings("unchecked")
@@ -270,23 +259,8 @@ public abstract class ResourceBean {
     return content;
   }
 
-  @XmlTransient
-  public InputStream getContentStream() {
-    return contentStream;
-  }
-
-  @XmlTransient
-  public File getFile() {
-    String filePath = "D:/DevData/resource/" + getId();
-    return new File(filePath);
-  }
-
   public String getId() {
     return id;
-  }
-
-  public String getMimeType() {
-    return mimeType;
   }
 
   public UserBean getOwner() {
@@ -373,7 +347,19 @@ public abstract class ResourceBean {
     }
   }
 
-  public void readFrom(MultivaluedMap<String, String> params) {
+  public void readFrom(ResourceBean delta) {
+    if (delta.title != null) {
+      this.title = delta.title;
+    }
+    if (delta.path != null) {
+      this.path = delta.path;
+    }
+  }
+
+  public void readMedia(MultivaluedMap<String, MediaBean> params) {
+  }
+
+  public void readParams(MultivaluedMap<String, String> params) {
     String path = params.getFirst(Resource.PATH);
     String title = params.getFirst(Resource.TITLE);
     if (path != null) {
@@ -381,15 +367,6 @@ public abstract class ResourceBean {
     }
     if (title != null) {
       this.title = title;
-    }
-  }
-
-  public void readFrom(ResourceBean delta) {
-    if (delta.title != null) {
-      this.title = delta.title;
-    }
-    if (delta.path != null) {
-      this.path = delta.path;
     }
   }
 
@@ -442,28 +419,6 @@ public abstract class ResourceBean {
     return this;
   }
 
-  public void saveResource(InputStream inputStream) {
-    InputStream in = null;
-    OutputStream out = null;
-    try {
-      File file = getFile();
-      file.getParentFile().mkdirs();
-      file.createNewFile();
-      in = new BufferedInputStream(inputStream);
-      out = new FileOutputStream(file);
-      byte[] buffer = new byte[1024];
-      for (int bytesRead = in.read(buffer); bytesRead > 0; bytesRead = in.read(buffer)) {
-        out.write(buffer, 0, bytesRead);
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-      throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
-    } finally {
-      IOUtils.closeQuietly(in);
-      IOUtils.closeQuietly(out);
-    }
-  }
-
   public void setChildren(List<ResourceBean> children) {
     this.children = children;
   }
@@ -476,16 +431,8 @@ public abstract class ResourceBean {
     this.content = content;
   }
 
-  public void setContentStream(InputStream inputStream) {
-    this.contentStream = inputStream;
-  }
-
   public void setId(String id) {
     this.id = id;
-  }
-
-  public void setMimeType(String mimeType) {
-    this.mimeType = mimeType;
   }
 
   public void setOwner(UserBean owner) {
@@ -530,19 +477,16 @@ public abstract class ResourceBean {
     this.version = version;
   }
 
-  public void writeResource(OutputStream out) throws IOException {
-    InputStream in = null;
-    try {
-      File file = getFile();
-      in = new BufferedInputStream(new FileInputStream(file));
-      byte[] buffer = new byte[1024];
-      for (int bytesRead = in.read(buffer); bytesRead > 0; bytesRead = in.read(buffer)) {
-        out.write(buffer, 0, bytesRead);
-      }
-    } finally {
-      IOUtils.closeQuietly(in);
-      IOUtils.closeQuietly(out);
+  protected ResourceBean createFrom(MultivaluedMap<String, String> params) {
+    String resourceType = params.getFirst(Resource.RESOURCE_TYPE);
+    Class<?> type = Registry.getResourceType(resourceType);
+    if (type != null) {
+      ImplementedBy impl = type.getAnnotation(ImplementedBy.class);
+      Class<? extends ResourceBean> resType = (Class<? extends ResourceBean>) impl.value();
+      ResourceBean result = create(resType);
+      return result;
     }
+    return null;
   }
 
   protected ResourceBean doGetByPath(String path) {
@@ -626,10 +570,6 @@ public abstract class ResourceBean {
 
   protected void transactionalSave() {
     em().persist(this);
-    InputStream stream = getContentStream();
-    if (stream != null) {
-      saveResource(stream);
-    }
   }
 
   private RuntimeException transformException(Exception e) {

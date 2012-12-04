@@ -9,7 +9,6 @@ import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SubmitCompleteEvent;
 import com.sencha.gxt.widget.core.client.event.SubmitCompleteEvent.SubmitCompleteHandler;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
-import com.sencha.gxt.widget.core.client.form.FileUploadField;
 import com.sencha.gxt.widget.core.client.form.FormPanel;
 import com.sencha.gxt.widget.core.client.form.FormPanel.Encoding;
 import com.sencha.gxt.widget.core.client.form.FormPanel.Method;
@@ -26,15 +25,18 @@ public class BookEditor extends ResourceEditor<Book> {
   @Inject
   FormPanel form;
 
-  @Inject
-  TextField resourceType;
+  // @Inject
+  // @Ignore
+  // TextField resourceType;
 
   @Inject
   TextField title;
 
   @Inject
-  @Ignore
-  FileUploadField source;
+  MediaField source;
+
+  @Inject
+  MediaField cover;
 
   private static Driver driver = GWT.create(Driver.class);
 
@@ -53,31 +55,41 @@ public class BookEditor extends ResourceEditor<Book> {
   protected void initView() {
     super.initView();
     setHeadingText("修改用户");
-    form.setEncoding(Encoding.MULTIPART);
-    setWidget(form);
 
     VerticalLayoutContainer p = new VerticalLayoutContainer();
     p.setLayoutData(new MarginData(8));
-    form.add(p);
 
-    source.setName("source");
-    source.setAllowBlank(false);
-    p.add(new FieldLabel(source, "Source"));
+    // TODO hide resourceType
+    // resourceType.setName(Resource.RESOURCE_TYPE);
+    // p.add(resourceType);
+
+    source.setName(Book.SOURCE);
+    p.add(new FieldLabel(source, "来源"));
+
+    cover.setName(Book.COVER);
+    p.add(new FieldLabel(cover, "封面"));
 
     title.setName(Resource.TITLE);
     title.setAllowBlank(false);
     p.add(new FieldLabel(title, "Title"));
 
-    // TODO hide resourceType
-    resourceType.setName(Resource.RESOURCE_TYPE);
-    p.add(resourceType);
-
+    form.add(p);
     form.addSubmitCompleteHandler(new SubmitCompleteHandler() {
       @Override
       public void onSubmitComplete(SubmitCompleteEvent event) {
-        System.out.println(event.getResults());
+        String html = event.getResults();
+        int begin = html.indexOf(">");
+        int end = html.lastIndexOf("<");
+        String json = html.substring(begin + 1, end);
+        ResourcePlace result = getPlace();
+        result.readResource(json);
+        ResourcePlace place = result.getParent().getRendition(UserGrid.LIST);
+        resourceManager.goTo(place);
       }
     });
+
+    form.setEncoding(Encoding.MULTIPART);
+    setWidget(form);
   }
 
   @Override
@@ -94,5 +106,4 @@ public class BookEditor extends ResourceEditor<Book> {
     form.setAction(uri.toString());
     form.submit();
   }
-
 }

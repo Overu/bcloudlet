@@ -49,8 +49,7 @@ public abstract class FeedBean<E extends ResourceBean> extends ResourceBean {
   public long countEntries() {
     Class<E> entryType = getEntryType();
     TypedQuery<Long> query =
-        em().createQuery("select count(f) from " + entryType.getName() + " f where f.parent=:parent" + count().toString(),
-            Long.class);
+        em().createQuery("select count(f) from " + entryType.getName() + " f where f.parent=:parent" + count().toString(), Long.class);
     query.setParameter("parent", this);
     return query.getSingleResult().longValue();
   }
