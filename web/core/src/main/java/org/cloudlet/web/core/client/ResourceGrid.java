@@ -45,6 +45,7 @@ import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
+import com.sencha.gxt.widget.core.client.grid.CheckBoxSelectionModel;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
@@ -170,7 +171,10 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
   @Override
   public void setPlace(ResourcePlace<F> place) {
     this.place = place;
-    resourceSearch.setPlace(place);
+    resourceSearch = initSearch();
+    if (resourceSearch != null) {
+      resourceSearch.setPlace(place);
+    }
     refresh();
   }
 
@@ -192,6 +196,8 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
         return item.getId();
       }
     });
+
+    IdentityValueProvider<T> valueProvider = new IdentityValueProvider<T>();
 
     DataProxy<PagingLoadConfig, PagingLoadResult<T>> proxy = new DataProxy<PagingLoadConfig, PagingLoadResult<T>>() {
       @Override
@@ -228,11 +234,15 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     loader.setRemoteSort(true);
     loader.addLoadHandler(new LoadResultListStoreBinding<PagingLoadConfig, T, PagingLoadResult<T>>(store));
 
+    CheckBoxSelectionModel<T> sm = new CheckBoxSelectionModel<T>(valueProvider);
+
     List<ColumnConfig<T, ?>> l = new ArrayList<ColumnConfig<T, ?>>();
+    l.add(sm.getColumn());
     initColumn(l);
     ColumnModel<T> cm = new ColumnModel<T>(l);
 
     grid = new Grid<T>(store, cm);
+    grid.setSelectionModel(sm);
     grid.getView().setForceFit(true);
     grid.setLoadMask(true);
     grid.setBorders(true);
@@ -262,11 +272,7 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
       }
     };
 
-    listView = new ListView<T, T>(store, new IdentityValueProvider<T>() {
-      @Override
-      public void setValue(final T object, final T value) {
-      }
-    }, appearance);
+    listView = new ListView<T, T>(store, valueProvider, appearance);
     listView.setCell(new SimpleSafeHtmlCell<T>(getCell()));
     listView.getSelectionModel().addSelectionHandler(new SelectionHandler<T>() {
 
@@ -327,7 +333,6 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     hor1.add(viewBar, new HorizontalLayoutData(0.15, 1));
 
     HorizontalLayoutContainer hor2 = new HorizontalLayoutContainer();
-    resourceSearch = initSearch();
     hor2.add(buttonBar, new HorizontalLayoutData(resourceSearch == null ? 1 : 0.6, 1));
     if (resourceSearch != null) {
       resourceSearch.setPack(BoxLayoutPack.END);
