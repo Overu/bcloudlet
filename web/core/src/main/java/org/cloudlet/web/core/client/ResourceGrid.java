@@ -353,6 +353,7 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     selectView(ViewButtonCar.GRID);
 
     setWidget(con);
+    setBodyBorder(false);
   }
 
   @Override
