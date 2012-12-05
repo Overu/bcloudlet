@@ -2,6 +2,10 @@ body {
   margin: 0;
 }
 
+div#resourcegrid > table > tbody > tr {
+  vertical-align: middle;
+}
+
 /* 
 #main {
   position: absolute;

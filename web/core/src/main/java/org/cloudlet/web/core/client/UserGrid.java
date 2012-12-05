@@ -44,7 +44,7 @@ public class UserGrid extends ResourceGrid<User, UserFeed> {
 
       @Override
       public SafeHtml render(final User user) {
-        return ResourceGrid.r.renderItem(user.getName() == null ? "" : user.getName(), ResourceGrid.resources.css());
+        return ResourceGrid.r.renderItem(user.getName(), getCoverUrl(null), ResourceGrid.resources.css());
       }
     };
   }

@@ -8,6 +8,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.text.shared.AbstractSafeHtmlRenderer;
@@ -38,6 +39,7 @@ import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.ListView;
 import com.sencha.gxt.widget.core.client.ListViewCustomAppearance;
 import com.sencha.gxt.widget.core.client.button.ButtonBar;
+import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.button.ToggleButton;
 import com.sencha.gxt.widget.core.client.container.BoxLayoutContainer.BoxLayoutPack;
 import com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer;
@@ -55,6 +57,7 @@ import com.sencha.gxt.widget.core.client.toolbar.PagingToolBar;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
 import org.cloudlet.web.core.Feed;
+import org.cloudlet.web.core.Media;
 import org.cloudlet.web.core.Resource;
 import org.cloudlet.web.core.service.FeedBean;
 
@@ -68,7 +71,7 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
   @FormatterFactories(@FormatterFactory(factory = ShortenFactory.class, name = "shorten"))
   interface Renderer extends XTemplates {
     @XTemplate(source = "ResourceGrid.html")
-    public SafeHtml renderItem(String name, Style style);
+    public SafeHtml renderItem(String name, String imageUrl, Style style);
   }
 
   interface ResourcePorperties<T> extends PropertyAccess<T> {
@@ -76,6 +79,8 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
   }
 
   interface Resources extends ClientBundle {
+    ImageResource cover();
+
     @Source("ResourceGrid.css")
     Style css();
   }
@@ -180,6 +185,13 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
 
   protected abstract AbstractSafeHtmlRenderer<T> getCell();
 
+  protected String getCoverUrl(Media media) {
+    if (media == null) {
+      return resources.cover().getSafeUri().asString();
+    }
+    return ResourcePlace.getMediaUrl(media);
+  }
+
   protected abstract void initColumn(List<ColumnConfig<T, ?>> l);
 
   protected abstract ResourceSearch<T, F> initSearch();
@@ -282,14 +294,13 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
       }
     });
 
-    ToggleGroup buttonGroup = new ToggleGroup();
     final ButtonBar buttonBar = new ButtonBar();
     buttonBar.addStyleName("x-toolbar-mark");
     buttonBar.setMinButtonWidth(75);
     buttonBar.setPack(BoxLayoutPack.START);
 
     for (final SelectButtonCar car : SelectButtonCar.values()) {
-      final ToggleButton button = new ToggleButton(car.getName());
+      final TextButton button = new TextButton(car.getName());
       button.addSelectHandler(new SelectHandler() {
 
         @Override
@@ -297,7 +308,6 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
           selectBase(car);
         }
       });
-      buttonGroup.add(button);
       buttonBar.add(button);
     }
 
@@ -355,6 +365,7 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
   }
 
   protected void refresh() {
+    grid.getView().getBody().setId("resourcegrid");
     loader.load();
   }
 
