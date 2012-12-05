@@ -54,7 +54,7 @@ public class BookEditor extends ResourceEditor<Book> {
   @Override
   protected void initView() {
     super.initView();
-    setHeadingText("修改用户");
+    setHeadingText("编辑图书");
 
     VerticalLayoutContainer p = new VerticalLayoutContainer();
     p.setLayoutData(new MarginData(8));
