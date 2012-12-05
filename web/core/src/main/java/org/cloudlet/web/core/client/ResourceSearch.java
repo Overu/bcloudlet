@@ -146,7 +146,7 @@ public abstract class ResourceSearch<T extends Resource, F extends Feed<T>> exte
       }
     });
 
-    toolBar.add(new LabelToolItem("Serach："));
+    toolBar.add(new LabelToolItem("Search："));
     toolBar.add(combo);
     setWidget(toolBar);
   }

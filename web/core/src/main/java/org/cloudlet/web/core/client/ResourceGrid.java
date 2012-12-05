@@ -17,7 +17,6 @@ import com.google.inject.Inject;
 
 import com.sencha.gxt.cell.core.client.SimpleSafeHtmlCell;
 import com.sencha.gxt.core.client.IdentityValueProvider;
-import com.sencha.gxt.core.client.ToStringValueProvider;
 import com.sencha.gxt.core.client.XTemplates;
 import com.sencha.gxt.core.client.XTemplates.Formatter;
 import com.sencha.gxt.core.client.XTemplates.FormatterFactories;
@@ -208,7 +207,6 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     });
 
     IdentityValueProvider<T> valueProvider = new IdentityValueProvider<T>();
-    ToStringValueProvider<T> stringProvider = new ToStringValueProvider<T>();
 
     DataProxy<PagingLoadConfig, PagingLoadResult<T>> proxy = new DataProxy<PagingLoadConfig, PagingLoadResult<T>>() {
       @Override
@@ -246,7 +244,6 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     loader.addLoadHandler(new LoadResultListStoreBinding<PagingLoadConfig, T, PagingLoadResult<T>>(store));
 
     CheckBoxSelectionModel<T> sm = new CheckBoxSelectionModel<T>(valueProvider);
-    ColumnConfig<T, ?> column = sm.getColumn();
 
     List<ColumnConfig<T, ?>> l = new ArrayList<ColumnConfig<T, ?>>();
     l.add(sm.getColumn());

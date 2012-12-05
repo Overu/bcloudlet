@@ -2,8 +2,9 @@ body {
   margin: 0;
 }
 
-div#resourcegrid > table > tbody > tr {
+div#resourcegrid > table > tbody > tr > td {
   vertical-align: middle;
+  background-image: url("") !important;
 }
 
 /* 
