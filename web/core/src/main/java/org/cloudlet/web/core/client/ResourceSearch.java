@@ -7,11 +7,13 @@ import com.google.gwt.event.logical.shared.BeforeSelectionEvent;
 import com.google.gwt.event.logical.shared.BeforeSelectionHandler;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.cell.core.client.form.ComboBoxCell;
 import com.sencha.gxt.core.client.IdentityValueProvider;
+import com.sencha.gxt.core.client.XTemplates;
 import com.sencha.gxt.data.shared.LabelProvider;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
@@ -28,8 +30,10 @@ import com.sencha.gxt.widget.core.client.form.ComboBox;
 import com.sencha.gxt.widget.core.client.toolbar.LabelToolItem;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
+import org.cloudlet.web.core.Book;
 import org.cloudlet.web.core.Feed;
 import org.cloudlet.web.core.Resource;
+import org.cloudlet.web.core.User;
 import org.cloudlet.web.core.service.FeedBean;
 
 import java.util.List;
@@ -46,6 +50,16 @@ public abstract class ResourceSearch<T extends Resource, F extends Feed<T>> exte
   interface ResourceStyle extends CssResource {
     String searchItem();
   }
+
+  interface Template extends XTemplates {
+    @XTemplate("<div class='{style.searchItem}'>{book.title}</div>")
+    SafeHtml render(Book book, ResourceStyle style);
+
+    @XTemplate("<div class='{style.searchItem}'>{user.name}</div>")
+    SafeHtml render(User user, ResourceStyle style);
+  }
+
+  protected static Template template = GWT.create(Template.class);
 
   @Inject
   ResourceManager resourceManager;
@@ -71,8 +85,6 @@ public abstract class ResourceSearch<T extends Resource, F extends Feed<T>> exte
 
   protected abstract AbstractCell<T> getCell(ResourceStyle style);
 
-  protected abstract LabelProvider<T> getSearchLable();
-
   protected abstract List<String> getSearchTitle();
 
   protected void initView() {
@@ -87,7 +99,7 @@ public abstract class ResourceSearch<T extends Resource, F extends Feed<T>> exte
 
       @Override
       public void load(final PagingLoadConfig loadConfig, final Callback<PagingLoadResult<T>, Throwable> callback) {
-        final MultivaluedMap<String, String> queryParameters = getPlace().getQueryParameters();
+        MultivaluedMap<String, String> queryParameters = getPlace().getQueryParameters();
         final QueryBuilder builder = QueryBuilder.get(queryParameters);
         List<String> titles = getSearchTitle();
         if (titles != null && titles.size() > 0) {
@@ -122,10 +134,16 @@ public abstract class ResourceSearch<T extends Resource, F extends Feed<T>> exte
 
     ListView<T, T> view = new ListView<T, T>(store, new IdentityValueProvider<T>(), getCell(b.css()));
 
-    ComboBoxCell<T> cell = new ComboBoxCell<T>(store, getSearchLable(), view);
+    ComboBoxCell<T> cell = new ComboBoxCell<T>(store, new LabelProvider<T>() {
+
+      @Override
+      public String getLabel(T item) {
+        return item.toString();
+      }
+    }, view);
     combo = new ComboBox<T>(cell);
     combo.setLoader(loader);
-    combo.setWidth(350);
+    combo.setWidth(400);
     combo.setHideTrigger(true);
     combo.setPageSize(5);
     combo.addBeforeSelectionHandler(new BeforeSelectionHandler<T>() {
@@ -141,7 +159,7 @@ public abstract class ResourceSearch<T extends Resource, F extends Feed<T>> exte
       }
     });
 
-    toolBar.add(new LabelToolItem("Search："));
+    toolBar.add(new LabelToolItem("Search:"));
     toolBar.add(combo);
     setWidget(toolBar);
   }

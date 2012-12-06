@@ -42,7 +42,6 @@ public class UserGrid extends ResourceGrid<User, UserFeed> {
   @Override
   protected AbstractSafeHtmlRenderer<User> getCell() {
     return new AbstractSafeHtmlRenderer<User>() {
-
       @Override
       public SafeHtml render(final User user) {
         return ResourceGrid.r.renderItem(user.getName(), getCoverUrl(null), ResourceGrid.resources.css());

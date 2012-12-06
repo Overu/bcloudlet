@@ -26,7 +26,6 @@ import com.sencha.gxt.core.client.util.Format;
 import com.sencha.gxt.core.client.util.ToggleGroup;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
-import com.sencha.gxt.data.shared.PropertyAccess;
 import com.sencha.gxt.data.shared.loader.DataProxy;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfigBean;
@@ -71,10 +70,6 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
   interface Renderer extends XTemplates {
     @XTemplate(source = "ResourceGrid.html")
     public SafeHtml renderItem(String name, String imageUrl, Style style);
-  }
-
-  interface ResourcePorperties<T> extends PropertyAccess<T> {
-    ModelKeyProvider<T> id();
   }
 
   interface Resources extends ClientBundle {
@@ -227,7 +222,7 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     DataProxy<FilterPagingLoadConfig, PagingLoadResult<T>> proxy = new DataProxy<FilterPagingLoadConfig, PagingLoadResult<T>>() {
       @Override
       public void load(final FilterPagingLoadConfig loadConfig, final Callback<PagingLoadResult<T>, Throwable> callback) {
-        final MultivaluedMap<String, String> queryParameters = getPlace().getQueryParameters();
+        MultivaluedMap<String, String> queryParameters = getPlace().getQueryParameters();
         final QueryBuilder builder = QueryBuilder.get(queryParameters);
         builder.filter(loadConfig);
         builder.sort(loadConfig);
@@ -241,7 +236,7 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
           public void onSuccess(final ResourcePlace<F> result) {
             List<T> books = result.getResource().getEntries();
             builder.clear();
-            callback.onSuccess(new PagingLoadResultBean<T>(books, result.getResource().getChildrenCount(), loadConfig.getOffset()));
+            callback.onSuccess(new PagingLoadResultBean<T>(books, result.getResource().getQueryCount().intValue(), loadConfig.getOffset()));
           }
         });
       }
@@ -360,10 +355,10 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
 
     HorizontalLayoutContainer hor2 = new HorizontalLayoutContainer();
     resourceSearch = initSearch();
-    hor2.add(buttonBar, new HorizontalLayoutData(resourceSearch == null ? 1 : 0.5, 1));
+    hor2.add(buttonBar, new HorizontalLayoutData(resourceSearch == null ? 1 : 0.4, 1));
     if (resourceSearch != null) {
       resourceSearch.setPack(BoxLayoutPack.END);
-      hor2.add(resourceSearch, new HorizontalLayoutData(0.5, 1));
+      hor2.add(resourceSearch, new HorizontalLayoutData(0.6, 1));
     }
 
     con = new VerticalLayoutContainer();
