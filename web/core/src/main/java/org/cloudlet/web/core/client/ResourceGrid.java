@@ -27,10 +27,10 @@ import com.sencha.gxt.core.client.util.ToggleGroup;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.data.shared.PropertyAccess;
-import com.sencha.gxt.data.shared.SortInfo;
 import com.sencha.gxt.data.shared.loader.DataProxy;
+import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfig;
+import com.sencha.gxt.data.shared.loader.FilterPagingLoadConfigBean;
 import com.sencha.gxt.data.shared.loader.LoadResultListStoreBinding;
-import com.sencha.gxt.data.shared.loader.PagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoadResultBean;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
@@ -51,6 +51,7 @@ import com.sencha.gxt.widget.core.client.grid.CheckBoxSelectionModel;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
+import com.sencha.gxt.widget.core.client.grid.filters.GridFilters;
 import com.sencha.gxt.widget.core.client.toolbar.LabelToolItem;
 import com.sencha.gxt.widget.core.client.toolbar.PagingToolBar;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
@@ -58,7 +59,6 @@ import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 import org.cloudlet.web.core.Feed;
 import org.cloudlet.web.core.Media;
 import org.cloudlet.web.core.Resource;
-import org.cloudlet.web.core.service.FeedBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,19 +78,34 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
   }
 
   interface Resources extends ClientBundle {
+    ImageResource add();
+
     ImageResource cover();
 
     @Source("ResourceGrid.css")
     Style css();
+
+    ImageResource delete();
+
+    ImageResource edit();
+
+    ImageResource refresh();
   }
 
   enum SelectButtonCar {
-    ADD("Add"), REFRESH("Refresh"), DELETE("Delete"), EDIT("Edit");
+    ADD("Add", resources.add()), REFRESH("Refresh", resources.refresh()), DELETE("Delete", resources.delete()), EDIT("Edit", resources
+        .edit());
 
     private String name;
+    private ImageResource image;
 
-    SelectButtonCar(String name) {
+    SelectButtonCar(String name, ImageResource image) {
       this.name = name;
+      this.image = image;
+    }
+
+    ImageResource getImage() {
+      return image;
     }
 
     String getName() {
@@ -143,8 +158,6 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
   }
 
   public final static String LIST = "list";
-  public final static String START = "start";
-  public final static String LIMIT = "limit";
 
   static Renderer r;
   static Resources resources;
@@ -152,14 +165,14 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
   @Inject
   ResourceManager resourceManager;
 
-  protected PagingLoader<PagingLoadConfig, PagingLoadResult<T>> loader;
-
+  protected PagingLoader<FilterPagingLoadConfig, PagingLoadResult<T>> loader;
   private boolean initialized = false;
   private VerticalLayoutContainer con;
   private Grid<T> grid;
   private ListView<T, T> listView;
   private T selectedItem;
   private ResourcePlace<F> place;
+
   private ResourceSearch<T, F> resourceSearch;
 
   static {
@@ -193,6 +206,9 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
 
   protected abstract void initColumn(List<ColumnConfig<T, ?>> l);
 
+  protected void initFilter(GridFilters<T> filters) {
+  }
+
   protected abstract ResourceSearch<T, F> initSearch();
 
   protected void initView() {
@@ -208,20 +224,14 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
 
     IdentityValueProvider<T> valueProvider = new IdentityValueProvider<T>();
 
-    DataProxy<PagingLoadConfig, PagingLoadResult<T>> proxy = new DataProxy<PagingLoadConfig, PagingLoadResult<T>>() {
+    DataProxy<FilterPagingLoadConfig, PagingLoadResult<T>> proxy = new DataProxy<FilterPagingLoadConfig, PagingLoadResult<T>>() {
       @Override
-      public void load(final PagingLoadConfig loadConfig, final Callback<PagingLoadResult<T>, Throwable> callback) {
+      public void load(final FilterPagingLoadConfig loadConfig, final Callback<PagingLoadResult<T>, Throwable> callback) {
         final MultivaluedMap<String, String> queryParameters = getPlace().getQueryParameters();
-        List<? extends SortInfo> sorts = loadConfig.getSortInfo();
-        if (sorts.size() > 0) {
-          StringBuilder sb = new StringBuilder();
-          for (SortInfo sort : sorts) {
-            sb.append(sort.getSortField()).append("|").append(sort.getSortDir().name());
-            queryParameters.add(FeedBean.SORT, sb.toString());
-          }
-        }
-        queryParameters.putSingle(LIMIT, String.valueOf(loadConfig.getLimit()));
-        queryParameters.putSingle(START, String.valueOf(loadConfig.getOffset()));
+        final QueryBuilder builder = QueryBuilder.get(queryParameters);
+        builder.filter(loadConfig);
+        builder.sort(loadConfig);
+        builder.limit(String.valueOf(loadConfig.getLimit()), String.valueOf(loadConfig.getOffset()));
         getPlace().load(new AsyncCallback<ResourcePlace<F>>() {
           @Override
           public void onFailure(final Throwable reason) {
@@ -230,18 +240,21 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
           @Override
           public void onSuccess(final ResourcePlace<F> result) {
             List<T> books = result.getResource().getEntries();
-            queryParameters.remove(LIMIT);
-            queryParameters.remove(START);
-            queryParameters.remove(FeedBean.SORT);
+            builder.clear();
             callback.onSuccess(new PagingLoadResultBean<T>(books, result.getResource().getChildrenCount(), loadConfig.getOffset()));
           }
         });
       }
     };
 
-    loader = new PagingLoader<PagingLoadConfig, PagingLoadResult<T>>(proxy);
+    loader = new PagingLoader<FilterPagingLoadConfig, PagingLoadResult<T>>(proxy) {
+      @Override
+      protected FilterPagingLoadConfig newLoadConfig() {
+        return new FilterPagingLoadConfigBean();
+      }
+    };
     loader.setRemoteSort(true);
-    loader.addLoadHandler(new LoadResultListStoreBinding<PagingLoadConfig, T, PagingLoadResult<T>>(store));
+    loader.addLoadHandler(new LoadResultListStoreBinding<FilterPagingLoadConfig, T, PagingLoadResult<T>>(store));
 
     CheckBoxSelectionModel<T> sm = new CheckBoxSelectionModel<T>(valueProvider);
 
@@ -253,6 +266,8 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     grid = new Grid<T>(store, cm);
     grid.setSelectionModel(sm);
     grid.getView().setForceFit(true);
+    grid.getView().setStripeRows(true);
+    grid.getView().setColumnLines(true);
     grid.setLoadMask(true);
     grid.setBorders(true);
     grid.setLoader(loader);
@@ -264,6 +279,10 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
         selectedItem = event.getSelectedItem();
       }
     });
+
+    GridFilters<T> filters = new GridFilters<T>(loader);
+    filters.initPlugin(grid);
+    initFilter(filters);
 
     ListViewCustomAppearance<T> appearance = new ListViewCustomAppearance<T>("." + style.thumbWrap(), style.over(), style.select()) {
 
@@ -297,7 +316,7 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     buttonBar.setPack(BoxLayoutPack.START);
 
     for (final SelectButtonCar car : SelectButtonCar.values()) {
-      final TextButton button = new TextButton(car.getName());
+      final TextButton button = new TextButton(car.getName(), car.getImage());
       button.addSelectHandler(new SelectHandler() {
 
         @Override

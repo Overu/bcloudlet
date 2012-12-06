@@ -8,6 +8,7 @@ import com.google.inject.Inject;
 import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.PropertyAccess;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
+import com.sencha.gxt.widget.core.client.grid.filters.GridFilters;
 
 import org.cloudlet.web.core.User;
 import org.cloudlet.web.core.UserFeed;
@@ -56,6 +57,11 @@ public class UserGrid extends ResourceGrid<User, UserFeed> {
     l.add(new ColumnConfig<User, String>(properties.phone(), 100, "Phone"));
     l.add(new ColumnConfig<User, String>(properties.state(), 50, "State"));
     l.add(new ColumnConfig<User, String>(properties.zip(), 65, "Zip Code"));
+  }
+
+  @Override
+  protected void initFilter(GridFilters<User> filters) {
+    filters.addFilter(new ResourceStringFilter<User>(properties.name()));
   }
 
   @Override

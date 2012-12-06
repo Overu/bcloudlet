@@ -88,21 +88,18 @@ public abstract class ResourceSearch<T extends Resource, F extends Feed<T>> exte
       @Override
       public void load(final PagingLoadConfig loadConfig, final Callback<PagingLoadResult<T>, Throwable> callback) {
         final MultivaluedMap<String, String> queryParameters = getPlace().getQueryParameters();
+        final QueryBuilder builder = QueryBuilder.get(queryParameters);
         List<String> titles = getSearchTitle();
         if (titles != null && titles.size() > 0) {
           for (String title : titles) {
-            StringBuilder sb = new StringBuilder();
             String text = combo.getText();
             if (text == null && text.equals("")) {
               continue;
             }
-            sb.append(title).append("|").append(text);
-            queryParameters.add(FeedBean.SEARCH, sb.toString());
+            builder.buildQuery(FeedBean.SEARCH, title, text);
           }
         }
-
-        queryParameters.putSingle(ResourceGrid.LIMIT, String.valueOf(loadConfig.getLimit()));
-        queryParameters.putSingle(ResourceGrid.START, String.valueOf(loadConfig.getOffset()));
+        builder.limit(String.valueOf(loadConfig.getLimit()), String.valueOf(loadConfig.getOffset()));
         getPlace().load(new AsyncCallback<ResourcePlace<F>>() {
           @Override
           public void onFailure(final Throwable reason) {
@@ -111,9 +108,7 @@ public abstract class ResourceSearch<T extends Resource, F extends Feed<T>> exte
           @Override
           public void onSuccess(final ResourcePlace<F> result) {
             List<T> books = result.getResource().getEntries();
-            queryParameters.remove(ResourceGrid.LIMIT);
-            queryParameters.remove(ResourceGrid.START);
-            queryParameters.remove(FeedBean.SEARCH);
+            builder.clear();
             callback.onSuccess(new PagingLoadResultBean<T>(books, result.getResource().getQueryCount().intValue(), loadConfig.getOffset()));
           }
         });
