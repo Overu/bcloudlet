@@ -60,8 +60,6 @@ public abstract class ResourceBean {
 
   private static final Logger logger = Logger.getLogger(ResourceBean.class.getName());
 
-  public static final String CHILDREN = "children";
-
   protected String title;
 
   @Context
@@ -97,7 +95,7 @@ public abstract class ResourceBean {
   public static final String CONTENT = "content";
 
   @Transient
-  @QueryParam(CHILDREN)
+  @QueryParam(Resource.CHILDREN)
   protected boolean loadChildren;
 
   @QueryParam(Resource.RENDITION)
