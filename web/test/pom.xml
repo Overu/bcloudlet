@@ -12,11 +12,8 @@
   <dependencies>
     <dependency>
       <groupId>org.glassfish.jersey.test-framework.providers</groupId>
-      <artifactId>jersey-test-framework-provider-bundle</artifactId>
-      <type>pom</type>
-      <scope>test</scope>
+      <artifactId>jersey-test-framework-provider-grizzly2</artifactId>
     </dependency>
-
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
