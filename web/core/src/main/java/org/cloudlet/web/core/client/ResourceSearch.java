@@ -101,15 +101,12 @@ public abstract class ResourceSearch<T extends Resource, F extends Feed<T>> exte
       public void load(final PagingLoadConfig loadConfig, final Callback<PagingLoadResult<T>, Throwable> callback) {
         MultivaluedMap<String, String> queryParameters = getPlace().getQueryParameters();
         final QueryBuilder builder = QueryBuilder.get(queryParameters);
-        List<String> titles = getSearchTitle();
-        if (titles != null && titles.size() > 0) {
-          for (String title : titles) {
-            String text = combo.getText();
-            if (text == null && text.equals("")) {
-              continue;
-            }
-            builder.buildQuery(FeedBean.SEARCH, title, text);
+        for (String title : getSearchTitle()) {
+          String text = combo.getText();
+          if (text == null && text.equals("")) {
+            continue;
           }
+          builder.buildQuery(FeedBean.SEARCH, title, text);
         }
         builder.limit(String.valueOf(loadConfig.getLimit()), String.valueOf(loadConfig.getOffset()));
         getPlace().load(new AsyncCallback<ResourcePlace<F>>() {

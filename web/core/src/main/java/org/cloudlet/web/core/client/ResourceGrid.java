@@ -224,8 +224,8 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
       public void load(final FilterPagingLoadConfig loadConfig, final Callback<PagingLoadResult<T>, Throwable> callback) {
         MultivaluedMap<String, String> queryParameters = getPlace().getQueryParameters();
         final QueryBuilder builder = QueryBuilder.get(queryParameters);
-        builder.filter(loadConfig);
-        builder.sort(loadConfig);
+        builder.filter(loadConfig.getFilters());
+        builder.sort(loadConfig.getSortInfo());
         builder.limit(String.valueOf(loadConfig.getLimit()), String.valueOf(loadConfig.getOffset()));
         getPlace().load(new AsyncCallback<ResourcePlace<F>>() {
           @Override
