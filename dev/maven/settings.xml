@@ -1,85 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
-	<pluginGroups>
-		<pluginGroup>org.codehaus.cargo</pluginGroup>
-		<pluginGroup>org.mortbay.jetty</pluginGroup>
-	</pluginGroups>
+  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <pluginGroups>
+    <pluginGroup>org.codehaus.cargo</pluginGroup>
+    <pluginGroup>org.mortbay.jetty</pluginGroup>
+  </pluginGroups>
 
-	<proxies>
-	</proxies>
+  <proxies>
+  </proxies>
 
-	<servers>
-		<server>
-			<id>repo-releases</id>
-			<username>username</username>
-			<password>password</password>
-		</server>
-		<server>
-			<id>repo-snapshots</id>
-			<username>username</username>
-			<password>password</password>
-		</server>
-		<server>
-			<id>sonatype-nexus-snapshots</id>
-			<username>username</username>
-			<password>password</password>
-		</server>
-		<server>
-			<id>tomcat-deploy</id>
-			<username>username</username>
-			<password>password</password>
-		</server>
-		<server>
-			<id>gae-deploy</id>
-			<username>username</username>
-			<password>password</password>
-		</server>
-	</servers>
+  <servers>
+    <server>
+      <id>repo-releases</id>
+      <username>admin</username>
+      <password>admin123</password>
+    </server>
+    <server>
+      <id>repo-snapshots</id>
+      <username>admin</username>
+      <password>admin123</password>
+    </server>
+    <server>
+      <id>tomcat-deploy</id>
+      <username>admin</username>
+      <password>admin123</password>
+    </server>
+  </servers>
 
   <mirrors>
     <mirror>
       <id>repo</id>
-      <mirrorOf>external:*,!goodow-sonatype-oss,!goodow-wave</mirrorOf>
+      <mirrorOf>central</mirrorOf>
       <name>Nexus Repo</name>
-      <url>http://dev.goodow.com:8081/nexus/content/groups/public</url>
+      <url>http://retechlive.xicp.net/nexus/content/groups/public</url>
     </mirror>
   </mirrors>
 
-	<profiles>
-		<profile>
-			<id>goodow</id>
-			<repositories>
-				<repository>
-					<id>goodow-sonatype-oss</id>
-					<url>https://oss.sonatype.org/content/groups/public</url>
-					<snapshots>
-						<enabled>true</enabled>
-						<updatePolicy>always</updatePolicy>
-						<checksumPolicy>fail</checksumPolicy>
-					</snapshots>
-					<releases>
-						<enabled>true</enabled>
-						<updatePolicy>always</updatePolicy>
-						<checksumPolicy>fail</checksumPolicy>
-					</releases>
-				</repository>
-				<!-- <repository> <id>central</id> <url>http://central</url> <snapshots> <enabled>true</enabled> <updatePolicy>always</updatePolicy> <checksumPolicy>fail</checksumPolicy> 
-					</snapshots> <releases> <enabled>true</enabled> <updatePolicy>always</updatePolicy> <checksumPolicy>fail</checksumPolicy> </releases> </repository> -->
-			</repositories>
-			<!-- <pluginRepositories> <pluginRepository> <id>central</id> <url>http://central</url> <snapshots> <enabled>true</enabled> <updatePolicy>always</updatePolicy> 
-				<checksumPolicy>fail</checksumPolicy> </snapshots> <releases> <enabled>true</enabled> <updatePolicy>always</updatePolicy> <checksumPolicy>fail</checksumPolicy> 
-				</releases> </pluginRepository> </pluginRepositories> -->
-			<properties>
-				<!-- <oAuthClientId.google>oAuthClientId</oAuthClientId.google> <oAuthClientSecret.google>oAuthClientSecret</oAuthClientSecret.google> <oAuthClientId.qq>oAuthClientId</oAuthClientId.qq> 
-					<oAuthClientSecret.qq>oAuthClientSecret</oAuthClientSecret.qq> -->
-			</properties>
-		</profile>
-	</profiles>
+  <profiles>
+    <profile>
+      <id>repo</id>
+      <repositories>
+        <repository>
+          <id>central</id>
+          <url>http://central</url>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+            <checksumPolicy>fail</checksumPolicy>
+          </snapshots>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+            <checksumPolicy>fail</checksumPolicy>
+          </releases>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>central</id>
+          <url>http://central</url>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+            <checksumPolicy>fail</checksumPolicy>
+          </snapshots>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+            <checksumPolicy>fail</checksumPolicy>
+          </releases>
+        </pluginRepository>
+      </pluginRepositories>
+      <properties>
+        <log.lvl>warn</log.lvl>
+        <hibernate.hbm2ddl.auto>validate</hibernate.hbm2ddl.auto>
+      </properties>
+    </profile>
+  </profiles>
 
-	<activeProfiles>
-		<activeProfile>goodow</activeProfile>
-	</activeProfiles>
-	<!-- <localRepository>${user.home}/.m2/repository</localRepository> -->
+  <activeProfiles>
+    <activeProfile>repo</activeProfile>
+  </activeProfiles>
+  <!-- <localRepository>/home/retechdev/.m2/repository</localRepository> -->
 </settings>
