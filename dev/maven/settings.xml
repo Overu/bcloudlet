@@ -82,5 +82,4 @@
   <activeProfiles>
     <activeProfile>repo</activeProfile>
   </activeProfiles>
-  <!-- <localRepository>/home/retechdev/.m2/repository</localRepository> -->
 </settings>
