@@ -39,7 +39,6 @@ public class BookGrid extends ResourceGrid<Book, BookFeed> {
   @Override
   protected AbstractSafeHtmlRenderer<Book> getCell() {
     return new AbstractSafeHtmlRenderer<Book>() {
-
       @Override
       public SafeHtml render(final Book book) {
         return ResourceGrid.r.renderItem(book.getTitle(), getCoverUrl(book.getCover()), ResourceGrid.resources.css());
@@ -54,7 +53,7 @@ public class BookGrid extends ResourceGrid<Book, BookFeed> {
       @Override
       public void render(com.google.gwt.cell.client.Cell.Context context, Media value, SafeHtmlBuilder sb) {
         StringBuilder imageUrl = new StringBuilder();
-        imageUrl.append("<div><img style='width: 65px;' src='").append(getCoverUrl(value)).append("'></div>");
+        imageUrl.append("<div><img style='width: 65px;height: 65px;' src='").append(getCoverUrl(value)).append("'></div>");
         sb.append(SafeHtmlUtils.fromSafeConstant(imageUrl.toString()));
       }
     });

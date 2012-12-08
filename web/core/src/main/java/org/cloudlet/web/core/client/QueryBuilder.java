@@ -56,10 +56,8 @@ public class QueryBuilder {
   }
 
   public void sort(List<? extends SortInfo> sorts) {
-    if (sorts.size() > 0) {
-      for (SortInfo sort : sorts) {
-        buildQuery(FeedBean.SORT, sort.getSortField(), sort.getSortDir().name());
-      }
+    for (SortInfo sort : sorts) {
+      buildQuery(FeedBean.SORT, sort.getSortField(), sort.getSortDir().name());
     }
   }
 

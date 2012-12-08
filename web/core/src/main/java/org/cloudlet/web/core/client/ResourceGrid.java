@@ -193,7 +193,7 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
   protected abstract AbstractSafeHtmlRenderer<T> getCell();
 
   protected String getCoverUrl(Media media) {
-    if (media == null) {
+    if (media == null || media.getTitle().equals("")) {
       return resources.cover().getSafeUri().asString();
     }
     return ResourcePlace.getMediaUrl(media);
