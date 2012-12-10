@@ -19,7 +19,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import org.cloudlet.web.core.server.DatabaseConnectionProvider;
 
 @Singleton
 public class DatabaseConnectionFilter implements Filter {

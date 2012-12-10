@@ -1,14 +1,14 @@
-package org.cloudlet.web.core.server;
-
+package org.cloudlet.web.core.servlet;
 
 import com.google.inject.name.Names;
 
 import org.apache.shiro.guice.web.ShiroWebModule;
+import org.cloudlet.web.core.server.JpaRealm;
 
 import javax.servlet.ServletContext;
 
-public class ShiroSecurityModule extends ShiroWebModule {
-  public ShiroSecurityModule(final ServletContext sc) {
+public class WebSecurityModule extends ShiroWebModule {
+  public WebSecurityModule(final ServletContext sc) {
     super(sc);
   }
 

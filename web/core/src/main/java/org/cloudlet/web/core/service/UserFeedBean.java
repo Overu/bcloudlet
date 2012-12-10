@@ -35,12 +35,11 @@ public class UserFeedBean extends PagingFeedBean<UserBean> {
     return super.createEntry(user);
   }
 
-  public UserBean findUserByUsername(final String userName) {
+  public UserBean findUserByName(final String name) {
     UserBean toRtn = null;
     try {
       toRtn =
-          em().createQuery("select u from com.goodow.web.security.server.domain.User u where u.userName = :userName", UserBean.class)
-              .setParameter("userName", userName).getSingleResult();
+          em().createQuery("select u from CoreUser u where u.name = :name", UserBean.class).setParameter("name", name).getSingleResult();
     } catch (NoResultException e) {
     }
     return toRtn;
@@ -82,12 +81,12 @@ public class UserFeedBean extends PagingFeedBean<UserBean> {
   }
 
   public void updatePassword(final String userName, final String newPwd) {
-    UserBean user = findUserByUsername(userName);
+    UserBean user = findUserByName(userName);
     if (user == null) {
       throw new UnknownAccountException("找不到用户名: " + userName);
     }
-    String hashedPwd = new SimpleHash(JpaRealm.ALGORITHM_NAME, newPwd.toCharArray(), ByteSource.Util.bytes(user.getPhone())).toHex();
-    user.setEmail(hashedPwd);
-    em().persist(user);
+    String hashedPwd = new SimpleHash(JpaRealm.ALGORITHM_NAME, newPwd, ByteSource.Util.bytes(newPwd)).toHex();
+    user.setPasswordHash(hashedPwd);
+    saveAndCommit(user);
   }
 }

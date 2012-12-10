@@ -120,13 +120,7 @@ public abstract class ResourceBean {
     rel.setSource(this);
     rel.setTarget(child);
     rel.setPath(child.getPath());
-    execute(new MethodInvocation() {
-      @Override
-      protected Object proceed() {
-        em().persist(rel);
-        return null;
-      };
-    });
+    saveAndCommit(rel);
     setChildrenCount(childrenCount + 1);
     save();
     return child;
@@ -383,13 +377,7 @@ public abstract class ResourceBean {
       path = id;
     }
 
-    execute(new MethodInvocation() {
-      @Override
-      protected Object proceed() {
-        transactionalSave();
-        return null;
-      };
-    });
+    saveAndCommit(this);
 
     // for (Method m : resource.getClass().getMethods()) {
     // if (m.getParameterTypes().length > 0) {
@@ -565,11 +553,17 @@ public abstract class ResourceBean {
       logger.severe(e.getMessage());
     }
     return null;
-  };
-
-  protected void transactionalSave() {
-    em().persist(this);
   }
+
+  protected void saveAndCommit(final Object rel) {
+    execute(new MethodInvocation() {
+      @Override
+      protected Object proceed() {
+        em().persist(rel);
+        return null;
+      };
+    });
+  };
 
   private RuntimeException transformException(Exception e) {
     if (e instanceof RuntimeException) {

@@ -1,4 +1,4 @@
-package org.cloudlet.web.core.server;
+package org.cloudlet.web.core.servlet;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;

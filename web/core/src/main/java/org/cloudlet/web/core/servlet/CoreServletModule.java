@@ -11,9 +11,6 @@ import com.google.web.bindery.requestfactory.shared.impl.ValueProxyCategory;
 
 import org.apache.shiro.guice.web.GuiceShiroFilter;
 import org.cloudlet.web.core.server.CoreResourceConfig;
-import org.cloudlet.web.core.server.DatabaseConnectionProvider;
-import org.cloudlet.web.core.server.OpenIdAuthServlet;
-import org.cloudlet.web.core.server.ShiroSecurityModule;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.servlet.ServletProperties;
 
@@ -46,7 +43,7 @@ public class CoreServletModule extends ServletModule {
     serve("/api/*").with(ServletContainer.class, jaxRsParams);
     bind(org.glassfish.jersey.servlet.ServletContainer.class).in(Singleton.class);
 
-    install(new ShiroSecurityModule(getServletContext()));
+    install(new WebSecurityModule(getServletContext()));
     logger.finest("installPersistModule end");
   }
 

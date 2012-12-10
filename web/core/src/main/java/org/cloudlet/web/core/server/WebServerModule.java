@@ -1,14 +1,9 @@
 package org.cloudlet.web.core.server;
 
-import static com.google.inject.matcher.Matchers.annotatedWith;
-import static com.google.inject.matcher.Matchers.any;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
-import com.google.inject.persist.finder.Finder;
 import com.google.inject.persist.jpa.JpaPersistModule;
 
-import org.aopalliance.intercept.MethodInterceptor;
 import org.cloudlet.web.core.CorePackage;
 import org.cloudlet.web.core.Root;
 import org.cloudlet.web.core.service.BookFeedBean;
@@ -43,9 +38,9 @@ public class WebServerModule extends AbstractModule {
     bind(GroupFeedBean.class).annotatedWith(Root.class).toProvider(GroupFeedProvider.class);
     bind(BookFeedBean.class).annotatedWith(Root.class).toProvider(BookFeedProvider.class);
 
-//    MethodInterceptor finderInterceptor = new JpaFinderProxy();
-//    requestInjection(finderInterceptor);
-//    bindInterceptor(any(), annotatedWith(Finder.class), finderInterceptor);
+    // MethodInterceptor finderInterceptor = new JpaFinderProxy();
+    // requestInjection(finderInterceptor);
+    // bindInterceptor(any(), annotatedWith(Finder.class), finderInterceptor);
     logger.finest("End configure " + getClass().getName());
   }
 }

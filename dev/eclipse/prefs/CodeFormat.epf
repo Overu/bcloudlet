@@ -15,7 +15,7 @@
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.formatter.comment.format_source_code=false
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.formatter.alignment_for_superinterfaces_in_type_declaration=16
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.formatter.indentation.size=2
-/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.formatter.lineSplit=100
+/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.formatter.lineSplit=140
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.formatter.alignment_for_conditional_expression=16
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.formatter.blank_lines_before_method=1
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.formatter.tabulation.char=space

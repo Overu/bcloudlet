@@ -7,11 +7,11 @@ import javax.persistence.PostLoad;
 
 public class InjectionListener {
 
-	@Inject
-	private static Injector injector;
+  @Inject
+  private static Injector injector;
 
-	@PostLoad
-	void onPostLoad(final Object domain) {
-		injector.injectMembers(domain);
-	}
+  @PostLoad
+  void onPostLoad(final Object domain) {
+    injector.injectMembers(domain);
+  }
 }

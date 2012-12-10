@@ -683,23 +683,6 @@
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.5</version>
-          <configuration>
-            <additionalClasspathElements>
-              <additionalClasspathElement>${project.build.sourceDirectory}</additionalClasspathElement>
-              <additionalClasspathElement>${project.build.testSourceDirectory}</additionalClasspathElement>
-            </additionalClasspathElements>
-            <useManifestOnlyJar>false</useManifestOnlyJar>
-            <forkMode>always</forkMode>
-
-            <!-- Folder for generated testing stuff -->
-            <systemProperties>
-              <property>
-                <name>gwt.args</name>
-                <value>-out
-                  ${project.build.directory}/${project.build.finalName}</value>
-              </property>
-            </systemProperties>
-          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>

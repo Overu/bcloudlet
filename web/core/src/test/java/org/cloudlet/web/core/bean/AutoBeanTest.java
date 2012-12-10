@@ -13,14 +13,14 @@
  */
 package org.cloudlet.web.core.bean;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
-
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.vm.AutoBeanFactorySource;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 
 import org.cloudlet.web.core.CoreAutoBeanFactory;
 import org.cloudlet.web.core.Repository;
@@ -47,7 +47,7 @@ public class AutoBeanTest {
     user.setDateCreated(new Date());
     user.setPhone("12345");
     user.setLeaf(true);
-    user.setOwner(user);
+    // user.setOwner(user);
     String userdata = AutoBeanCodex.encode(userBean).getPayload();
     System.out.println(userdata);
 
@@ -67,8 +67,8 @@ public class AutoBeanTest {
     Repository repo1 = decoded.as();
     List<Resource> c = repo1.getChildren();
     for (Resource r : c) {
-      User u = (User) r;
-      System.out.println(u.getPhone());
+      AutoBean b = AutoBeanUtils.getAutoBean(r);
+      System.out.println(b.getType());
     }
     assertNotSame(repo, repo1);
   }

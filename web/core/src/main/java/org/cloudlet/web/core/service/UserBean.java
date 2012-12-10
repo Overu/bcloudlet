@@ -27,6 +27,8 @@ public class UserBean extends ResourceBean implements Principal {
 
   private String state;
 
+  private String passwordHash;
+
   private String zip;
 
   public String getEmail() {
@@ -36,6 +38,13 @@ public class UserBean extends ResourceBean implements Principal {
   @Override
   public String getName() {
     return name;
+  }
+
+  /**
+   * @return the passwordHash
+   */
+  public String getPasswordHash() {
+    return passwordHash;
   }
 
   public String getPhone() {
@@ -62,6 +71,13 @@ public class UserBean extends ResourceBean implements Principal {
 
   public void setName(final String value) {
     this.name = value;
+  }
+
+  /**
+   * @param passwordHash the passwordHash to set
+   */
+  public void setPasswordHash(String passwordHash) {
+    this.passwordHash = passwordHash;
   }
 
   public UserBean setPhone(final String value) {

@@ -26,57 +26,52 @@ import java.util.Set;
 
 public class JpaRealm extends AuthorizingRealm {
 
-	public static final String ALGORITHM_NAME = Sha1Hash.ALGORITHM_NAME;
+  public static final String ALGORITHM_NAME = Sha1Hash.ALGORITHM_NAME;
 
-	private final Provider<UserFeedBean> userService;
+  private final Provider<UserFeedBean> userService;
 
-	@Inject
-	JpaRealm(@Root Provider<UserFeedBean> userService) {
-		this.userService = userService;
+  @Inject
+  JpaRealm(@Root Provider<UserFeedBean> userService) {
+    this.userService = userService;
 
-		HashedCredentialsMatcher matcher = new HashedCredentialsMatcher(ALGORITHM_NAME);
-		setCredentialsMatcher(matcher);
-	}
+    HashedCredentialsMatcher matcher = new HashedCredentialsMatcher(ALGORITHM_NAME);
+    setCredentialsMatcher(matcher);
+  }
 
-	@Override
-	protected AuthenticationInfo doGetAuthenticationInfo(final AuthenticationToken token) throws AuthenticationException {
-		UsernamePasswordToken upToken = (UsernamePasswordToken) token;
-		String userName = upToken.getUsername();
+  @Override
+  protected AuthenticationInfo doGetAuthenticationInfo(final AuthenticationToken token) throws AuthenticationException {
+    UsernamePasswordToken upToken = (UsernamePasswordToken) token;
+    String userName = upToken.getUsername();
 
-		// Null username is invalid
-		if (userName == null) {
-			throw new AccountException("Null usernames are not allowed by this realm.");
-		}
+    if (userName == null) {
+      throw new AccountException("Null usernames are not allowed by this realm.");
+    }
 
-		UserBean user = userService.get().findUserByUsername(userName);
-		if (user == null) {
-			return null;
-		}
-		SimpleAuthenticationInfo info = null;
-		info = new SimpleAuthenticationInfo(userName, user.getEmail().toCharArray(), getName());
+    UserBean user = userService.get().findUserByName(userName);
+    if (user == null) {
+      return null;
+    }
+    SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(userName, user.getPasswordHash(), getName());
+    info.setCredentialsSalt(ByteSource.Util.bytes(user.getPasswordHash()));
+    return info;
+  }
 
-		if (user.getPhone() != null) {
-			info.setCredentialsSalt(ByteSource.Util.bytes(user.getPhone()));
-		}
-		return info;
-	}
+  @Override
+  protected AuthorizationInfo doGetAuthorizationInfo(final PrincipalCollection principals) {
+    // null usernames are invalid
+    if (principals == null) {
+      throw new AuthorizationException("PrincipalCollection method argument cannot be null.");
+    }
 
-	@Override
-	protected AuthorizationInfo doGetAuthorizationInfo(final PrincipalCollection principals) {
-		// null usernames are invalid
-		if (principals == null) {
-			throw new AuthorizationException("PrincipalCollection method argument cannot be null.");
-		}
+    String userName = (String) getAvailablePrincipal(principals);
+    UserBean user = userService.get().findUserByName(userName);
 
-		String userName = (String) getAvailablePrincipal(principals);
-		UserBean user = userService.get().findUserByUsername(userName);
+    Set<String> roleNames = new LinkedHashSet<String>();
+    Set<String> permissions = new LinkedHashSet<String>();
 
-		Set<String> roleNames = new LinkedHashSet<String>();
-		Set<String> permissions = new LinkedHashSet<String>();
-
-		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roleNames);
-		info.setStringPermissions(permissions);
-		return info;
-	}
+    SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roleNames);
+    info.setStringPermissions(permissions);
+    return info;
+  }
 
 }
