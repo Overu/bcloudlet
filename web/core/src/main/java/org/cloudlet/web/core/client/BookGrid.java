@@ -53,7 +53,8 @@ public class BookGrid extends ResourceGrid<Book, BookFeed> {
       @Override
       public void render(com.google.gwt.cell.client.Cell.Context context, Media value, SafeHtmlBuilder sb) {
         StringBuilder imageUrl = new StringBuilder();
-        imageUrl.append("<div><img style='width: 65px;height: 65px;' src='").append(getCoverUrl(value)).append("'></div>");
+        imageUrl.append("<div style='text-align: center;'><img style='width: 65px;height: 65px;' src='").append(getCoverUrl(value)).append(
+            "'></div>");
         sb.append(SafeHtmlUtils.fromSafeConstant(imageUrl.toString()));
       }
     });
@@ -62,13 +63,9 @@ public class BookGrid extends ResourceGrid<Book, BookFeed> {
   }
 
   @Override
-  protected ResourceSearch<Book, BookFeed> initSearch() {
-    return bookSearch;
-  }
-
-  @Override
   protected void initView() {
     setHeadingHtml("Book Grid");
+    super.resourceSearch = bookSearch;
     super.initView();
   }
 }
