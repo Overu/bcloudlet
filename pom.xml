@@ -571,7 +571,7 @@
         <plugin>
           <groupId>net.kindleit</groupId>
           <artifactId>maven-gae-plugin</artifactId>
-          <version>0.9.3</version>
+          <version>0.9.5</version>
           <configuration>
             <port>8888</port>
             <monitorPort>4444</monitorPort>
