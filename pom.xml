@@ -10,7 +10,7 @@
   <properties>
     <!-- Convenience property to set the GWT version -->
     <jersey.version>2.0-m09-1</jersey.version>
-    <gwt.version>2.5.0-rc2</gwt.version>
+    <gwt.version>2.5.0</gwt.version>
     <guice.version>3.0</guice.version>
     <gin.version>2.0.0</gin.version>
 
@@ -20,8 +20,7 @@
     <datanucleus.version>3.0.2</datanucleus.version>
     <hibernate.version>4.1.0.Final</hibernate.version>
 
-    <gae.version>1.6.5</gae.version>
-    <gae-test.version>1.6.5</gae-test.version>
+    <gae.version>1.7.3</gae.version>
     <gae.home>${user.home}/.m2/repository/com/google/appengine/appengine-java-sdk/${gae.version}/appengine-java-sdk-${gae.version}</gae.home>
 
     <!-- GWT needs at least java 1.6 -->
@@ -351,19 +350,19 @@
       <dependency>
         <groupId>com.google.appengine</groupId>
         <artifactId>appengine-testing</artifactId>
-        <version>${gae-test.version}</version>
+        <version>${gae.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>com.google.appengine</groupId>
         <artifactId>appengine-api-stubs</artifactId>
-        <version>${gae-test.version}</version>
+        <version>${gae.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>com.google.appengine</groupId>
         <artifactId>appengine-api-labs</artifactId>
-        <version>${gae-test.version}</version>
+        <version>${gae.version}</version>
       </dependency>
 
       <!-- File Upload -->
@@ -670,7 +669,9 @@
             </additionalBuildcommands>
             <additionalProjectnatures>
               <projectnature>com.google.gwt.eclipse.core.gwtNature</projectnature>
+              <!-- 
               <projectnature>com.google.appengine.eclipse.core.gaeNature</projectnature>
+               -->
             </additionalProjectnatures>
           </configuration>
         </plugin>
@@ -696,6 +697,58 @@
               </property>
             </systemProperties>
           </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>2.3.2</version>
+          <configuration>
+            <excludes>
+              <exclude>**/client/**</exclude>
+              <exclude>**/super/**</exclude>
+              <exclude>**/rebind/**</exclude>
+              <exclude>**/*.java</exclude>
+              <exclude>**/*.gwt.xml</exclude>
+            </excludes>
+          </configuration>
+          <executions>
+            <execution>
+              <id>build client jar</id>
+              <phase>package</phase>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+              <configuration>
+                <classifier>client</classifier>
+                <includes>
+                  <include>**/client/**</include>
+                  <include>**/shared/**</include>
+                  <include>**/super/**</include>
+                  <include>**/rebind/**</include>
+                  <include>**/*.gwt.xml</include>
+                </includes>
+                <excludes>
+                  <exclude>**/shared/**/*.class</exclude>
+                </excludes>
+              </configuration>
+            </execution>
+            <execution>
+              <phase>package</phase>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+              <configuration>
+                <classifier>shared</classifier>
+                <includes>
+                  <include>**/shared/**</include>
+                </includes>
+                <excludes>
+                  <exclude>**/shared/**/*.java</exclude>
+                  <exclude>**/shared/**/*DeobfuscatorBuilder*.class</exclude>
+                </excludes>
+              </configuration>
+            </execution>
+          </executions>
         </plugin>
       </plugins>
     </pluginManagement>

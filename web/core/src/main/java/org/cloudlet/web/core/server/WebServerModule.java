@@ -43,9 +43,9 @@ public class WebServerModule extends AbstractModule {
     bind(GroupFeedBean.class).annotatedWith(Root.class).toProvider(GroupFeedProvider.class);
     bind(BookFeedBean.class).annotatedWith(Root.class).toProvider(BookFeedProvider.class);
 
-    MethodInterceptor finderInterceptor = new JpaFinderProxy();
-    requestInjection(finderInterceptor);
-    bindInterceptor(any(), annotatedWith(Finder.class), finderInterceptor);
+//    MethodInterceptor finderInterceptor = new JpaFinderProxy();
+//    requestInjection(finderInterceptor);
+//    bindInterceptor(any(), annotatedWith(Finder.class), finderInterceptor);
     logger.finest("End configure " + getClass().getName());
   }
 }

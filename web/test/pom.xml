@@ -91,10 +91,10 @@
     <dependency>
       <groupId>com.google.appengine</groupId>
       <artifactId>appengine-remote-api</artifactId>
-      <version>${gae-test.version}</version>
+      <version>${gae.version}</version>
       <scope>compile</scope>
     </dependency>
-    <!-- <dependency> <groupId>com.google.appengine</groupId> <artifactId>appengine-tools-sdk</artifactId> <version>${gae-test.version}</version> 
+    <!-- <dependency> <groupId>com.google.appengine</groupId> <artifactId>appengine-tools-sdk</artifactId> <version>${gae.version}</version> 
       <scope>compile</scope> </dependency> -->
     <dependency>
       <groupId>com.google.cloud</groupId>

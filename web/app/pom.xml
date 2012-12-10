@@ -85,6 +85,17 @@
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
       </plugin>
+      <plugin>
+        <groupId>net.kindleit</groupId>
+        <artifactId>maven-gae-plugin</artifactId>
+        <configuration>
+          <jvmFlags>
+            <jvmFlag>-Drdbms.server=local</jvmFlag>
+            <jvmFlag>-Drdbms.driver=com.mysql.jdbc.Driver</jvmFlag>
+            <jvmFlag>-Drdbms.url=jdbc:mysql://dev.retechcorp.com:3306/reader?useInformationSchema=true&amp;useUnicode=true&amp;characterEncoding=UTF8&amp;useServerPrepStmts=true&amp;user=root&amp;password=passw0rd</jvmFlag>
+          </jvmFlags>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
