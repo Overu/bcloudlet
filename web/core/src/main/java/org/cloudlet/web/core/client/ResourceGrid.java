@@ -44,6 +44,8 @@ import com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer.HorizontalLayoutData;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData;
+import com.sencha.gxt.widget.core.client.event.HeaderContextMenuEvent;
+import com.sencha.gxt.widget.core.client.event.HeaderContextMenuEvent.HeaderContextMenuHandler;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 import com.sencha.gxt.widget.core.client.grid.CheckBoxSelectionModel;
@@ -51,6 +53,9 @@ import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
 import com.sencha.gxt.widget.core.client.grid.filters.GridFilters;
+import com.sencha.gxt.widget.core.client.menu.Item;
+import com.sencha.gxt.widget.core.client.menu.Menu;
+import com.sencha.gxt.widget.core.client.menu.MenuItem;
 import com.sencha.gxt.widget.core.client.toolbar.LabelToolItem;
 import com.sencha.gxt.widget.core.client.toolbar.PagingToolBar;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
@@ -161,14 +166,14 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
   ResourceManager resourceManager;
 
   protected PagingLoader<FilterPagingLoadConfig, PagingLoadResult<T>> loader;
-  private boolean initialized = false;
+  protected ResourceSearch<T, F> resourceSearch;
   private VerticalLayoutContainer con;
-  private Grid<T> grid;
   private ListView<T, T> listView;
+  private Grid<T> grid;
+
+  private boolean initialized = false;
   private T selectedItem;
   private ResourcePlace<F> place;
-
-  private ResourceSearch<T, F> resourceSearch;
 
   static {
     r = GWT.create(Renderer.class);
@@ -203,8 +208,6 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
 
   protected void initFilter(GridFilters<T> filters) {
   }
-
-  protected abstract ResourceSearch<T, F> initSearch();
 
   protected void initView() {
     final Style style = resources.css();
@@ -252,9 +255,12 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     loader.addLoadHandler(new LoadResultListStoreBinding<FilterPagingLoadConfig, T, PagingLoadResult<T>>(store));
 
     CheckBoxSelectionModel<T> sm = new CheckBoxSelectionModel<T>(valueProvider);
+    ColumnConfig<T, T> checkColumn = sm.getColumn();
+    checkColumn.setMenuDisabled(false);
+    checkColumn.setWidth(35);
 
     List<ColumnConfig<T, ?>> l = new ArrayList<ColumnConfig<T, ?>>();
-    l.add(sm.getColumn());
+    l.add(checkColumn);
     initColumn(l);
     ColumnModel<T> cm = new ColumnModel<T>(l);
 
@@ -272,6 +278,34 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
       @Override
       public void onSelection(final SelectionEvent<T> event) {
         selectedItem = event.getSelectedItem();
+      }
+    });
+    grid.addHeaderContextMenuHandler(new HeaderContextMenuHandler() {
+
+      @Override
+      public void onHeaderContextMenu(HeaderContextMenuEvent event) {
+        int columnIndex = event.getColumnIndex();
+        if (columnIndex != 0) {
+          return;
+        }
+        final CheckBoxSelectionModel<T> selectionModel = (CheckBoxSelectionModel<T>) grid.getSelectionModel();
+        Menu menu = event.getMenu();
+        MenuItem item1 = new MenuItem("全选");
+        MenuItem item2 = new MenuItem("取消全选");
+        item1.addSelectionHandler(new SelectionHandler<Item>() {
+          @Override
+          public void onSelection(SelectionEvent<Item> event) {
+            selectionModel.setSelectAllChecked(true);
+          }
+        });
+        item2.addSelectionHandler(new SelectionHandler<Item>() {
+          @Override
+          public void onSelection(SelectionEvent<Item> event) {
+            selectionModel.setSelectAllChecked(false);
+          }
+        });
+        menu.add(item1);
+        menu.add(item2);
       }
     });
 
@@ -354,7 +388,6 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     hor1.add(viewBar, new HorizontalLayoutData(0.15, 1));
 
     HorizontalLayoutContainer hor2 = new HorizontalLayoutContainer();
-    resourceSearch = initSearch();
     hor2.add(buttonBar, new HorizontalLayoutData(resourceSearch == null ? 1 : 0.4, 1));
     if (resourceSearch != null) {
       resourceSearch.setPack(BoxLayoutPack.END);
