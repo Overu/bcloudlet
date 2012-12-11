@@ -164,10 +164,13 @@ public abstract class FeedBean<E extends ResourceBean> extends ResourceBean {
   private StringBuilder count() {
     StringBuilder limitQuery = new StringBuilder();
     if (search != null && search.size() > 0) {
+      limitQuery.append(" and (");
       for (String s : search) {
         String[] split = s.split("\\|");
-        limitQuery.append(" and").append(" f.").append(split[0]).append(" like '").append(split[1]).append("%'");
+        limitQuery.append("f.").append(split[0]).append(" like '").append(split[1]).append("%'").append(" or ");
       }
+      limitQuery.delete(limitQuery.lastIndexOf(" or "), limitQuery.length());
+      limitQuery.append(")");
     }
     return limitQuery;
   }
