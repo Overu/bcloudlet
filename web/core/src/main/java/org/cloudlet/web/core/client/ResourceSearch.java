@@ -143,6 +143,7 @@ public abstract class ResourceSearch<T extends Resource, F extends Feed<T>> exte
     combo.setWidth(400);
     combo.setHideTrigger(true);
     combo.setPageSize(5);
+    combo.setMinChars(1);
     combo.addBeforeSelectionHandler(new BeforeSelectionHandler<T>() {
 
       @Override

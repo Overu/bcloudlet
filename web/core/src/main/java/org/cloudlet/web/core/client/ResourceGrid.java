@@ -71,6 +71,20 @@ import javax.ws.rs.core.MultivaluedMap;
 
 public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extends ContentPanel implements ResourceWidget<F> {
 
+  enum ColumnItemCar {
+    SELECTALL("selectAll"), DESELECTALL("deselectAll");
+
+    private String name;
+
+    ColumnItemCar(String name) {
+      this.name = name;
+    }
+
+    String getName() {
+      return name;
+    }
+  }
+
   @FormatterFactories(@FormatterFactory(factory = ShortenFactory.class, name = "shorten"))
   interface Renderer extends XTemplates {
     @XTemplate(source = "ResourceGrid.html")
@@ -166,7 +180,7 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
   ResourceManager resourceManager;
 
   protected PagingLoader<FilterPagingLoadConfig, PagingLoadResult<T>> loader;
-  protected ResourceSearch<T, F> resourceSearch;
+  private ResourceSearch<T, F> resourceSearch;
   private VerticalLayoutContainer con;
   private ListView<T, T> listView;
   private Grid<T> grid;
@@ -186,13 +200,21 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     return place;
   }
 
+  public ResourceSearch<T, F> getResourceSearch() {
+    return resourceSearch;
+  }
+
   @Override
   public void setPlace(ResourcePlace<F> place) {
     this.place = place;
-    if (resourceSearch != null) {
-      resourceSearch.setPlace(place);
+    if (getResourceSearch() != null) {
+      getResourceSearch().setPlace(place);
     }
     refresh();
+  }
+
+  public void setResourceSearch(ResourceSearch<T, F> resourceSearch) {
+    this.resourceSearch = resourceSearch;
   }
 
   protected abstract AbstractSafeHtmlRenderer<T> getCell();
@@ -281,7 +303,6 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
       }
     });
     grid.addHeaderContextMenuHandler(new HeaderContextMenuHandler() {
-
       @Override
       public void onHeaderContextMenu(HeaderContextMenuEvent event) {
         int columnIndex = event.getColumnIndex();
@@ -290,22 +311,25 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
         }
         final CheckBoxSelectionModel<T> selectionModel = (CheckBoxSelectionModel<T>) grid.getSelectionModel();
         Menu menu = event.getMenu();
-        MenuItem item1 = new MenuItem("全选");
-        MenuItem item2 = new MenuItem("取消全选");
-        item1.addSelectionHandler(new SelectionHandler<Item>() {
-          @Override
-          public void onSelection(SelectionEvent<Item> event) {
-            selectionModel.setSelectAllChecked(true);
-          }
-        });
-        item2.addSelectionHandler(new SelectionHandler<Item>() {
-          @Override
-          public void onSelection(SelectionEvent<Item> event) {
-            selectionModel.setSelectAllChecked(false);
-          }
-        });
-        menu.add(item1);
-        menu.add(item2);
+        for (final ColumnItemCar columnItem : ColumnItemCar.values()) {
+          MenuItem item = new MenuItem(columnItem.getName());
+          item.addSelectionHandler(new SelectionHandler<Item>() {
+            @Override
+            public void onSelection(SelectionEvent<Item> event) {
+              switch (columnItem) {
+                case DESELECTALL:
+                  selectionModel.setSelectAllChecked(false);
+                  break;
+                case SELECTALL:
+                  selectionModel.setSelectAllChecked(true);
+                  break;
+                default:
+                  break;
+              }
+            }
+          });
+          menu.add(item);
+        }
       }
     });
 
@@ -388,10 +412,10 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     hor1.add(viewBar, new HorizontalLayoutData(0.15, 1));
 
     HorizontalLayoutContainer hor2 = new HorizontalLayoutContainer();
-    hor2.add(buttonBar, new HorizontalLayoutData(resourceSearch == null ? 1 : 0.4, 1));
-    if (resourceSearch != null) {
-      resourceSearch.setPack(BoxLayoutPack.END);
-      hor2.add(resourceSearch, new HorizontalLayoutData(0.6, 1));
+    hor2.add(buttonBar, new HorizontalLayoutData(getResourceSearch() == null ? 1 : 0.4, 1));
+    if (getResourceSearch() != null) {
+      getResourceSearch().setPack(BoxLayoutPack.END);
+      hor2.add(getResourceSearch(), new HorizontalLayoutData(0.6, 1));
     }
 
     con = new VerticalLayoutContainer();

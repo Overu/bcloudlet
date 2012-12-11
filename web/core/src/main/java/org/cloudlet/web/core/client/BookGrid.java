@@ -65,7 +65,7 @@ public class BookGrid extends ResourceGrid<Book, BookFeed> {
   @Override
   protected void initView() {
     setHeadingHtml("Book Grid");
-    super.resourceSearch = bookSearch;
+    setResourceSearch(bookSearch);
     super.initView();
   }
 }
