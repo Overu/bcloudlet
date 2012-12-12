@@ -2,7 +2,6 @@ package org.cloudlet.web.core.service;
 
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.crypto.hash.SimpleHash;
-import org.apache.shiro.util.ByteSource;
 import org.cloudlet.web.core.UserFeed;
 import org.cloudlet.web.core.server.JpaRealm;
 
@@ -85,7 +84,7 @@ public class UserFeedBean extends PagingFeedBean<UserBean> {
     if (user == null) {
       throw new UnknownAccountException("找不到用户名: " + userName);
     }
-    String hashedPwd = new SimpleHash(JpaRealm.ALGORITHM_NAME, newPwd, ByteSource.Util.bytes(newPwd)).toHex();
+    String hashedPwd = new SimpleHash(JpaRealm.ALGORITHM_NAME, newPwd).toHex();
     user.setPasswordHash(hashedPwd);
     saveAndCommit(user);
   }
