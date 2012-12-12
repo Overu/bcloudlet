@@ -8,7 +8,7 @@ file_export_version=3.0
 /instance/org.eclipse.jdt.ui/sp_cleanup.format_source_code=true
 /instance/org.eclipse.jdt.ui/sp_cleanup.on_save_use_additional_actions=true
 /instance/org.eclipse.jdt.ui/editor_save_participant_org.eclipse.jdt.ui.postsavelistener.cleanup=true
-/instance/org.eclipse.jdt.ui/sp_cleanup.organize_imports=true
+/instance/org.eclipse.jdt.ui/sp_cleanup.organize_imports=false
 
 # 类成员排序
 /instance/org.eclipse.jdt.ui/sp_cleanup.sort_members=true

@@ -16,7 +16,6 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.crypto.hash.Sha1Hash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.util.ByteSource;
 import org.cloudlet.web.core.Root;
 import org.cloudlet.web.core.service.UserBean;
 import org.cloudlet.web.core.service.UserFeedBean;
@@ -52,7 +51,6 @@ public class JpaRealm extends AuthorizingRealm {
       return null;
     }
     SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(userName, user.getPasswordHash(), getName());
-    info.setCredentialsSalt(ByteSource.Util.bytes(user.getPasswordHash()));
     return info;
   }
 
