@@ -473,6 +473,21 @@
           <version>1.2.1</version>
         </plugin>
 
+        <plugin>
+          <groupId>org.apache.tomcat.maven</groupId>
+          <artifactId>tomcat7-maven-plugin</artifactId>
+          <version>2.0</version>
+          <configuration>
+            <server>tomcat-deploy</server>
+            <warFile>${project.build.directory}/${project.build.finalName}.war</warFile>
+            <warDirectory>${project.build.directory}/${project.build.finalName}</warDirectory>
+            <charset>UTF-8</charset>
+            <uriEncoding>UTF-8</uriEncoding>
+            <url>http://retechlive.xicp.net/manager/text</url>
+            <failOnError>true</failOnError>
+            <detail>true</detail>
+          </configuration>
+        </plugin>
         <!-- GWT Maven Plugin -->
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -782,7 +797,6 @@
     </repository>
     <!-- <repository> <id>thirdparty</id> <url>http://dev.retechcorp.com:8081/nexus/content/repositories/thirdparty</url> </repository> -->
   </repositories>
-
   <modules>
     <module>web</module>
     <module>examples</module>
