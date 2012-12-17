@@ -15,8 +15,6 @@ import org.cloudlet.web.core.Book;
 import org.cloudlet.web.core.BookFeed;
 import org.cloudlet.web.core.Media;
 
-import java.util.List;
-
 public class BookGrid extends ResourceGrid<Book, BookFeed> {
 
   interface BookPorperties extends PropertyAccess<Book> {
@@ -36,14 +34,8 @@ public class BookGrid extends ResourceGrid<Book, BookFeed> {
   }
 
   @Override
-  protected SafeHtml initListSafeHtml(Book t) {
-    return ResourceGrid.r.renderItem(t.getTitle(), getCoverUrl(t.getCover()), ResourceGrid.resources.css());
-  }
-
-  @Override
-  protected void initColumn(List<ColumnConfig<Book, ?>> l) {
-    ColumnConfig<Book, Media> coverColumn = new ColumnConfig<Book, Media>(properties.cover(), 8, "Cover");
-    coverColumn.setCell(new AbstractCell<Media>() {
+  protected void initColumn() {
+    columnConfigProvider(properties.cover(), 8, "Cover", new AbstractCell<Media>() {
       @Override
       public void render(com.google.gwt.cell.client.Cell.Context context, Media value, SafeHtmlBuilder sb) {
         StringBuffer imageUrl = new StringBuffer();
@@ -52,8 +44,12 @@ public class BookGrid extends ResourceGrid<Book, BookFeed> {
         sb.append(SafeHtmlUtils.fromSafeConstant(imageUrl.toString()));
       }
     });
-    l.add(coverColumn);
-    l.add(new ColumnConfig<Book, String>(properties.title(), 100, "Title"));
+    columnConfigProvider(properties.title(), 100, "Title");
+  }
+
+  @Override
+  protected SafeHtml initListSafeHtml(Book t) {
+    return ResourceGrid.r.renderItem(t.getTitle(), getCoverUrl(t.getCover()), ResourceGrid.resources.css());
   }
 
   @Override

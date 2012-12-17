@@ -6,13 +6,10 @@ import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.PropertyAccess;
-import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.filters.GridFilters;
 
 import org.cloudlet.web.core.User;
 import org.cloudlet.web.core.UserFeed;
-
-import java.util.List;
 
 public class UserGrid extends ResourceGrid<User, UserFeed> {
 
@@ -39,22 +36,22 @@ public class UserGrid extends ResourceGrid<User, UserFeed> {
   }
 
   @Override
-  protected SafeHtml initListSafeHtml(User t) {
-    return ResourceGrid.r.renderItem(t.getName(), getCoverUrl(null), ResourceGrid.resources.css());
-  }
-
-  @Override
-  protected void initColumn(List<ColumnConfig<User, ?>> l) {
-    l.add(new ColumnConfig<User, String>(properties.name(), 100, "Sender"));
-    l.add(new ColumnConfig<User, String>(properties.email(), 165, "Email"));
-    l.add(new ColumnConfig<User, String>(properties.phone(), 100, "Phone"));
-    l.add(new ColumnConfig<User, String>(properties.state(), 50, "State"));
-    l.add(new ColumnConfig<User, String>(properties.zip(), 65, "Zip Code"));
+  protected void initColumn() {
+    columnConfigProvider(properties.name(), 100, "Sender");
+    columnConfigProvider(properties.email(), 165, "Email");
+    columnConfigProvider(properties.phone(), 100, "Phone");
+    columnConfigProvider(properties.state(), 50, "State");
+    columnConfigProvider(properties.zip(), 65, "Zip Code");
   }
 
   @Override
   protected void initFilter(GridFilters<User> filters) {
     filters.addFilter(new ResourceStringFilter<User>(properties.name()));
+  }
+
+  @Override
+  protected SafeHtml initListSafeHtml(User t) {
+    return ResourceGrid.r.renderItem(t.getName(), getCoverUrl(null), ResourceGrid.resources.css());
   }
 
   @Override

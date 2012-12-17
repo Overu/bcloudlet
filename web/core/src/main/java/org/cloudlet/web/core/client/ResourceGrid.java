@@ -1,5 +1,7 @@
 package org.cloudlet.web.core.client;
 
+import com.google.gwt.cell.client.AbstractCell;
+import com.google.gwt.cell.client.Cell;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -17,6 +19,7 @@ import com.google.inject.Inject;
 
 import com.sencha.gxt.cell.core.client.SimpleSafeHtmlCell;
 import com.sencha.gxt.core.client.IdentityValueProvider;
+import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.core.client.XTemplates;
 import com.sencha.gxt.core.client.XTemplates.Formatter;
 import com.sencha.gxt.core.client.XTemplates.FormatterFactories;
@@ -184,6 +187,7 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
   private VerticalLayoutContainer con;
   private ListView<T, T> listView;
   private Grid<T> grid;
+  private List<ColumnConfig<T, ?>> l;
 
   private boolean initialized = false;
   private T selectedItem;
@@ -217,6 +221,19 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     this.resourceSearch = resourceSearch;
   }
 
+  protected <N> ColumnConfig<T, N> columnConfigProvider(ValueProvider<T, N> valueProvider, int width, String header) {
+    return columnConfigProvider(valueProvider, width, header, null);
+  }
+
+  protected <N> ColumnConfig<T, N> columnConfigProvider(ValueProvider<T, N> valueProvider, int width, String header, Cell<N> cell) {
+    ColumnConfig<T, N> column = new ColumnConfig<T, N>(valueProvider, width, header);
+    if (cell != null) {
+      column.setCell(cell);
+    }
+    l.add(column);
+    return column;
+  }
+
   protected String getCoverUrl(Media media) {
     if (media == null || media.getTitle().equals("")) {
       return resources.cover().getSafeUri().asString();
@@ -224,12 +241,12 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     return ResourcePlace.getMediaUrl(media);
   }
 
-  protected abstract SafeHtml initListSafeHtml(T t);
-
-  protected abstract void initColumn(List<ColumnConfig<T, ?>> l);
+  protected abstract void initColumn();
 
   protected void initFilter(GridFilters<T> filters) {
   }
+
+  protected abstract SafeHtml initListSafeHtml(T t);
 
   protected void initView() {
     final Style style = resources.css();
@@ -281,9 +298,9 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     checkColumn.setMenuDisabled(false);
     checkColumn.setWidth(35);
 
-    List<ColumnConfig<T, ?>> l = new ArrayList<ColumnConfig<T, ?>>();
+    l = new ArrayList<ColumnConfig<T, ?>>();
     l.add(checkColumn);
-    initColumn(l);
+    initColumn();
     ColumnModel<T> cm = new ColumnModel<T>(l);
 
     grid = new Grid<T>(store, cm);
