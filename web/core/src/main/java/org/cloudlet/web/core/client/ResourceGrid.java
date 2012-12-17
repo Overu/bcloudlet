@@ -217,14 +217,14 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     this.resourceSearch = resourceSearch;
   }
 
-  protected abstract AbstractSafeHtmlRenderer<T> getCell();
-
   protected String getCoverUrl(Media media) {
     if (media == null || media.getTitle().equals("")) {
       return resources.cover().getSafeUri().asString();
     }
     return ResourcePlace.getMediaUrl(media);
   }
+
+  protected abstract SafeHtml initListSafeHtml(T t);
 
   protected abstract void initColumn(List<ColumnConfig<T, ?>> l);
 
@@ -354,7 +354,13 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
     };
 
     listView = new ListView<T, T>(store, valueProvider, appearance);
-    listView.setCell(new SimpleSafeHtmlCell<T>(getCell()));
+    listView.setCell(new SimpleSafeHtmlCell<T>(new AbstractSafeHtmlRenderer<T>() {
+
+      @Override
+      public SafeHtml render(T object) {
+        return initListSafeHtml(object);
+      }
+    }));
     listView.getSelectionModel().addSelectionHandler(new SelectionHandler<T>() {
 
       @Override

@@ -2,7 +2,6 @@ package org.cloudlet.web.core.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.text.shared.AbstractSafeHtmlRenderer;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.ValueProvider;
@@ -40,13 +39,8 @@ public class UserGrid extends ResourceGrid<User, UserFeed> {
   }
 
   @Override
-  protected AbstractSafeHtmlRenderer<User> getCell() {
-    return new AbstractSafeHtmlRenderer<User>() {
-      @Override
-      public SafeHtml render(final User user) {
-        return ResourceGrid.r.renderItem(user.getName(), getCoverUrl(null), ResourceGrid.resources.css());
-      }
-    };
+  protected SafeHtml initListSafeHtml(User t) {
+    return ResourceGrid.r.renderItem(t.getName(), getCoverUrl(null), ResourceGrid.resources.css());
   }
 
   @Override

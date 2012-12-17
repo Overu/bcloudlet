@@ -5,7 +5,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
-import com.google.gwt.text.shared.AbstractSafeHtmlRenderer;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.ValueProvider;
@@ -37,13 +36,8 @@ public class BookGrid extends ResourceGrid<Book, BookFeed> {
   }
 
   @Override
-  protected AbstractSafeHtmlRenderer<Book> getCell() {
-    return new AbstractSafeHtmlRenderer<Book>() {
-      @Override
-      public SafeHtml render(final Book book) {
-        return ResourceGrid.r.renderItem(book.getTitle(), getCoverUrl(book.getCover()), ResourceGrid.resources.css());
-      }
-    };
+  protected SafeHtml initListSafeHtml(Book t) {
+    return ResourceGrid.r.renderItem(t.getTitle(), getCoverUrl(t.getCover()), ResourceGrid.resources.css());
   }
 
   @Override
@@ -52,7 +46,7 @@ public class BookGrid extends ResourceGrid<Book, BookFeed> {
     coverColumn.setCell(new AbstractCell<Media>() {
       @Override
       public void render(com.google.gwt.cell.client.Cell.Context context, Media value, SafeHtmlBuilder sb) {
-        StringBuilder imageUrl = new StringBuilder();
+        StringBuffer imageUrl = new StringBuffer();
         imageUrl.append("<div style='text-align: center;'><img style='width: 65px;height: 65px;' src='").append(getCoverUrl(value)).append(
             "'></div>");
         sb.append(SafeHtmlUtils.fromSafeConstant(imageUrl.toString()));
