@@ -161,8 +161,8 @@ public abstract class FeedBean<E extends ResourceBean> extends ResourceBean {
     queryCount = countEntries();
   }
 
-  private StringBuilder count() {
-    StringBuilder limitQuery = new StringBuilder();
+  private StringBuffer count() {
+    StringBuffer limitQuery = new StringBuffer();
     if (search != null && search.size() > 0) {
       limitQuery.append(" and (");
       for (String s : search) {
@@ -175,8 +175,8 @@ public abstract class FeedBean<E extends ResourceBean> extends ResourceBean {
     return limitQuery;
   }
 
-  private StringBuilder limit() {
-    StringBuilder countQuery = new StringBuilder();
+  private StringBuffer limit() {
+    StringBuffer countQuery = new StringBuffer();
     if (sort != null && sort.size() > 0) {
       countQuery.append(" order by");
       for (String s : sort) {
@@ -187,5 +187,4 @@ public abstract class FeedBean<E extends ResourceBean> extends ResourceBean {
     }
     return countQuery;
   }
-
 }
