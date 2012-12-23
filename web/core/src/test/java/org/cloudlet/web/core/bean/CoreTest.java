@@ -20,7 +20,7 @@ import org.cloudlet.web.test.WebTest;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.TestProperties;
 
-public class CoreTest extends WebTest {
+public abstract class CoreTest extends WebTest {
 
   @Inject
   CoreResourceConfig config;

@@ -2,8 +2,6 @@ package org.cloudlet.web.core.bean;
 
 import com.google.inject.Inject;
 
-import static org.junit.Assert.fail;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.UnauthenticatedException;
@@ -40,8 +38,8 @@ public class JpaRealmTest extends CoreTest {
       user = userService.newEntry();
       user.setName(userName);
       userService.createEntry(user);
-      userService.updatePassword(userName, pwd);
     }
+    userService.updatePassword(userName, pwd);
     UsernamePasswordToken token = new UsernamePasswordToken(userName, pwd);
     Subject subject = SecurityUtils.getSubject();
     try {
@@ -57,7 +55,6 @@ public class JpaRealmTest extends CoreTest {
     } finally {
       subject.logout();
     }
-
     // No problems, continue on as expected...
   }
 
@@ -68,7 +65,6 @@ public class JpaRealmTest extends CoreTest {
     } catch (UnauthenticatedException e) {
       return;
     }
-    fail("should not reach here");
   }
 
 }
