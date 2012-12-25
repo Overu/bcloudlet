@@ -9,7 +9,7 @@
   <artifactId>org.cloudlet.web.app</artifactId>
   <packaging>war</packaging>
   <properties>
-    <m2eclipse.wtp.contextRoot>/web</m2eclipse.wtp.contextRoot>
+    <m2eclipse.wtp.contextRoot>/</m2eclipse.wtp.contextRoot>
   </properties>
   <dependencies>
     <dependency>
