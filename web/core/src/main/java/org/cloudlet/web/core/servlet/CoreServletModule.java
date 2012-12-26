@@ -19,8 +19,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 public class CoreServletModule extends ServletModule {
-  @AutoBeanFactory.Category(value = {
-      EntityProxyCategory.class, ValueProxyCategory.class, BaseProxyCategory.class})
+  @AutoBeanFactory.Category(value = { EntityProxyCategory.class, ValueProxyCategory.class, BaseProxyCategory.class })
   @AutoBeanFactory.NoWrap(EntityProxyId.class)
   interface Factory extends AutoBeanFactory {
   }
