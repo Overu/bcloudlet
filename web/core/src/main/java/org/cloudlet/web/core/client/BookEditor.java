@@ -4,8 +4,9 @@ import com.google.gwt.core.shared.GWT;
 import com.google.gwt.editor.client.SimpleBeanEditorDriver;
 import com.google.inject.Inject;
 
-import com.sencha.gxt.widget.core.client.container.MarginData;
+import com.sencha.gxt.core.client.util.Margins;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
+import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData;
 import com.sencha.gxt.widget.core.client.event.SubmitCompleteEvent;
 import com.sencha.gxt.widget.core.client.event.SubmitCompleteEvent.SubmitCompleteHandler;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
@@ -57,17 +58,16 @@ public class BookEditor extends ResourceEditor<Book> {
     setHeadingText("编辑图书");
 
     VerticalLayoutContainer p = new VerticalLayoutContainer();
-    p.setLayoutData(new MarginData(8));
 
     // TODO hide resourceType
     // resourceType.setName(Resource.RESOURCE_TYPE);
     // p.add(resourceType);
 
     source.setName(Book.SOURCE);
-    p.add(new FieldLabel(source, "来源"));
+    p.add(new FieldLabel(source, "来源"), new VerticalLayoutData(1, -1, new Margins(10, 0, 10, 0)));
 
     cover.setName(Book.COVER);
-    p.add(new FieldLabel(cover, "封面"));
+    p.add(new FieldLabel(cover, "封面"), new VerticalLayoutData(1, -1, new Margins(10, 0, 10, 0)));
 
     title.setName(Resource.TITLE);
     title.setAllowBlank(false);

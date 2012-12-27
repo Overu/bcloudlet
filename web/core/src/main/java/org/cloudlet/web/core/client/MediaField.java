@@ -15,9 +15,11 @@ package org.cloudlet.web.core.client;
 
 import com.google.inject.Inject;
 
+import com.sencha.gxt.core.client.util.Margins;
 import com.sencha.gxt.widget.core.client.button.TextButton;
+import com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer;
+import com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer.HorizontalLayoutData;
 import com.sencha.gxt.widget.core.client.container.SimpleContainer;
-import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.form.AdapterField;
 import com.sencha.gxt.widget.core.client.form.FileUploadField;
 
@@ -32,7 +34,7 @@ public class MediaField extends AdapterField<Media> {
   TextButton uploadButton;
 
   @Inject
-  protected VerticalLayoutContainer layoutContainer;
+  protected HorizontalLayoutContainer layoutContainer;
 
   private Media media;
 
@@ -71,7 +73,7 @@ public class MediaField extends AdapterField<Media> {
   protected void initView() {
     getWidget().setWidget(layoutContainer);
     fileField.setAllowBlank(false);
-    layoutContainer.add(fileField);
+    layoutContainer.add(fileField, new HorizontalLayoutData(200, 1, new Margins(0, 8, 0, 0)));
     uploadButton.setText("Upload");
     layoutContainer.add(uploadButton);
   }
