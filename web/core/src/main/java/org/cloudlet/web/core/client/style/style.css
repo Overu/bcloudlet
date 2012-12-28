@@ -2,9 +2,37 @@ body {
   margin: 0;
 }
 
-div#resourcegrid > table > tbody > tr > td {
+div#resourcegrid>table>tbody>tr>td {
   vertical-align: middle;
   background-image: url("") !important;
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+}
+
+input#login_email, input#login_password {
+  padding-left: 38px;
+  height: 29px;
+  border: 1px solid white;
+  box-shadow: inset 0 1px 4px rgba(125, 125, 125, .65);
+  background: transparent;
+  border-radius: 6px;
+  -webkit-box-sizing: border-box;
+  width: 100%;
+  position: relative;
+  z-index: 3;
+}
+
+input#login_email:FOCUS, input#login_password:FOCUS {
+  border-color: #8080FF;
+  box-shadow: inset 0 1px 4px rgba(125, 125, 125, .65),0 0 14px rgba(94, 82, 235, .45);
+  outline: none;
+}
+
+input#login_email:FOCUS + label, input#login_password:FOCUS + label {
+  opacity: .5;
 }
 
 /* 

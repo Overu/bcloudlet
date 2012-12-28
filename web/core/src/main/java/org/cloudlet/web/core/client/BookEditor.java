@@ -64,14 +64,14 @@ public class BookEditor extends ResourceEditor<Book> {
     // p.add(resourceType);
 
     source.setName(Book.SOURCE);
-    p.add(new FieldLabel(source, "来源"), new VerticalLayoutData(1, -1, new Margins(10, 0, 10, 0)));
+    p.add(new FieldLabel(source, "来源"), new VerticalLayoutData(1, -1, new Margins(10, 0, 10, 10)));
 
     cover.setName(Book.COVER);
-    p.add(new FieldLabel(cover, "封面"), new VerticalLayoutData(1, -1, new Margins(10, 0, 10, 0)));
+    p.add(new FieldLabel(cover, "封面"), new VerticalLayoutData(1, -1, new Margins(10, 0, 10, 10)));
 
     title.setName(Resource.TITLE);
     title.setAllowBlank(false);
-    p.add(new FieldLabel(title, "Title"));
+    p.add(new FieldLabel(title, "Title"), new VerticalLayoutData(500, -1, new Margins(10, 0, 10, 10)));
 
     form.add(p);
     form.addSubmitCompleteHandler(new SubmitCompleteHandler() {
@@ -90,6 +90,7 @@ public class BookEditor extends ResourceEditor<Book> {
 
     form.setEncoding(Encoding.MULTIPART);
     setWidget(form);
+    setBodyBorder(false);
   }
 
   @Override
