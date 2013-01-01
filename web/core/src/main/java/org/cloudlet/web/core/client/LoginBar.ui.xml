@@ -85,7 +85,6 @@
     }
     
     .oauth>div {
-      -webkit-box-shadow: inset 0 -1px 0 white, 0 1px 6px rgba(0, 0, 0, .3);
       background-color: #FFF9E2;
       border-bottom: 2px solid #EFEBDA;
       border-bottom-left-radius: 5px;
@@ -93,15 +92,15 @@
       box-shadow: inset 0 -1px 0 white, 0 1px 6px rgba(0, 0, 0, .3);
     }
     
+    @sprite 
     .oauth>div>div {
+      gwt-image: "oauthosprite";
       width: 114px !important;
       height: 36px !important;
       margin: 5px;
     }
     
-    @sprite 
     .part1 {
-      gwt-image: "oauthosprite";
       background-position: -456px 0 !important;
     }
     
@@ -109,9 +108,7 @@
       background-position: -456px -40px !important;
     }
     
-    @sprite 
     .part2 {
-      gwt-image: "oauthosprite";
       background-position: left top !important;
     }
     
@@ -119,9 +116,7 @@
       background-position: 0 -40px !important;
     }
     
-    @sprite 
     .part3 {
-      gwt-image: "oauthosprite";
       background-position: -342px 0 !important;
     }
     
@@ -129,9 +124,7 @@
       background-position: -342px -40px !important;
     }
     
-    @sprite 
     .part4 {
-      gwt-image: "oauthosprite";
       background-position: -228px 0 !important;
     }
     
@@ -146,7 +139,9 @@
       margin-right: 9px;
     }
     
+    @sprite 
     .loginform>div {
+      gwt-image: "loginbg";
       position: relative;
       width: 140px;
       display: inline-block;
@@ -154,15 +149,11 @@
       width: 140px !important;
     }
     
-    @sprite 
     .loginform>div:FIRST-CHILD {
-      gwt-image: "loginbg";
       background-position: left -8px !important;
     }
     
-    @sprite 
     .loginform>div:LAST-CHILD {
-      gwt-image: "loginbg";
       background-position: left -43px !important;
     }
     
@@ -174,7 +165,7 @@
       z-index: 2;
       color: #BCBCBC;
       cursor: text;
-      -webkit-transition: all .16s ease-in-out;
+      -webkit-transition: opacity .16s ease-in-out;
       -webkit-user-select: none;
     }
   </ui:style>
@@ -187,8 +178,8 @@
       <div class="{style.menubar}">
         <ul style="float: right;">
           <li class="{style.login}">
-            <strong ui:field="loginElm" class="{style.btnstrong}">
-              登录
+            <strong class="{style.btnstrong}">
+              <div ui:field="loginElm">登录</div>
               <div class="{style.oauth}">
                 <div>
                   <div ui:field="sinaElm" class="{style.part1}"></div>
@@ -203,13 +194,13 @@
             <strong class="{style.btnstrong}">注册</strong>
           </li>
         </ul>
-        <div class="{style.loginform}">
+        <div id="logininput" class="{style.loginform}">
           <div>
-            <input id="login_email" type="text" />
+            <input type="text" ui:field="emailElm" />
             <label>email</label>
           </div>
           <div>
-            <input id="login_password" type="text" />
+            <input type="password" ui:field="passwordElm" />
             <label>password</label>
           </div>
         </div>
