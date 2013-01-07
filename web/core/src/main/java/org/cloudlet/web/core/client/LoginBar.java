@@ -2,6 +2,7 @@ package org.cloudlet.web.core.client;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.Style;
@@ -13,8 +14,11 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.RowHoverEvent;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
+import com.google.gwt.user.client.impl.DOMImpl;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -27,7 +31,7 @@ public class LoginBar extends Composite {
   interface Binder extends UiBinder<Widget, LoginBar> {
   }
 
-  enum EventBind {
+  enum EventType {
     SINA {
       @Override
       public void f(Event event, LoginBar loginBar) {
@@ -71,7 +75,18 @@ public class LoginBar extends Composite {
       }
     };
 
+    private Element elm;
+
     public abstract void f(Event event, LoginBar loginBar);
+
+    public Element getElm() {
+      return elm;
+    }
+
+    public EventType bindElm(Element elm) {
+      this.elm = elm;
+      return this;
+    }
   }
 
   private static Binder binder = GWT.create(Binder.class);
@@ -93,21 +108,21 @@ public class LoginBar extends Composite {
 
   public LoginBar() {
     initWidget(binder.createAndBindUi(this));
-    bindClickEvent(sinaElm, EventBind.SINA);
-    bindClickEvent(renrenElm, EventBind.RENREN);
-    bindClickEvent(qqElm, EventBind.QQ);
-    bindClickEvent(doubanElm, EventBind.DOUBAN);
-    bindClickEvent(loginElm, EventBind.LOGIN);
-    bindKeyUpEvent(emailElm, EventBind.EMAIL);
-    bindKeyUpEvent(passwordElm, EventBind.PASSWORD);
+    bindClickEvent(EventType.SINA.bindElm(sinaElm));
+    bindClickEvent(EventType.RENREN.bindElm(renrenElm));
+    bindClickEvent(EventType.QQ.bindElm(qqElm));
+    bindClickEvent(EventType.DOUBAN.bindElm(doubanElm));
+    bindClickEvent(EventType.LOGIN.bindElm(loginElm));
+    bindKeyUpEvent(EventType.EMAIL.bindElm(emailElm));
+    bindKeyUpEvent(EventType.PASSWORD.bindElm(passwordElm));
   }
 
-  public void bindClickEvent(Element elm, final EventBind oauth) {
-    bindEvent(elm, oauth, Event.ONCLICK);
+  public void bindClickEvent(final EventType oauth) {
+    bindEvent(oauth, Event.ONCLICK);
   }
 
-  public void bindKeyUpEvent(Element elm, final EventBind oauth) {
-    bindEvent(elm, oauth, Event.ONKEYUP);
+  public void bindKeyUpEvent(final EventType oauth) {
+    bindEvent(oauth, Event.ONKEYUP);
   }
 
   protected void hideLabel(InputElement inputElm) {
@@ -122,9 +137,9 @@ public class LoginBar extends Composite {
     }
   }
 
-  private void bindEvent(Element elm, final EventBind oauth, final int eventBus) {
-    DOM.sinkEvents(elm.<com.google.gwt.user.client.Element> cast(), eventBus);
-    DOM.setEventListener(elm.<com.google.gwt.user.client.Element> cast(), new EventListener() {
+  private void bindEvent(final EventType oauth, final int eventBus) {
+    DOM.sinkEvents(oauth.getElm().<com.google.gwt.user.client.Element> cast(), eventBus);
+    DOM.setEventListener(oauth.getElm().<com.google.gwt.user.client.Element> cast(), new EventListener() {
       @Override
       public void onBrowserEvent(final Event event) {
         if (DOM.eventGetType(event) == eventBus) {
