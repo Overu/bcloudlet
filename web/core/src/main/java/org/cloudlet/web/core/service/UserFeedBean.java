@@ -28,8 +28,8 @@ public class UserFeedBean extends PagingFeedBean<UserBean> {
 
   @Override
   @POST
-  @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public UserBean createEntry(UserBean user) {
     return super.createEntry(user);
   }
@@ -56,7 +56,7 @@ public class UserFeedBean extends PagingFeedBean<UserBean> {
 
   @Override
   @GET
-  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml"})
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml" })
   public UserFeedBean load() {
     doLoad();
     return this;
@@ -71,8 +71,8 @@ public class UserFeedBean extends PagingFeedBean<UserBean> {
   }
 
   @PUT
-  @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public UserFeedBean update(UserFeedBean feed) {
     readFrom(feed);
     save();

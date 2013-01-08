@@ -6,6 +6,9 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.inject.client.AsyncProvider;
 import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONBoolean;
+import com.google.gwt.json.client.JSONNull;
+import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
@@ -57,6 +60,8 @@ public class Resource extends Place {
   public static final String PARENT_TYPE = "parentType";
 
   public static final String PARENT_ID = "parentId";
+
+  public static final String QUERY_COUNT = "queryCount";
 
   @Inject
   Provider<Resource> placeProvider;
@@ -223,12 +228,37 @@ public class Resource extends Place {
     return getString(ID);
   }
 
+  public List<Resource> getList(String prop) {
+    List<Resource> result = new ArrayList<Resource>();
+    JSONValue value = data.get(prop);
+    if (value != null && value.isArray() != null) {
+      JSONArray array = value.isArray();
+      for (int i = 0; i < array.size(); i++) {
+        JSONValue v = array.get(i);
+        JSONObject obj = v.isObject();
+        String path = obj.get(PATH).isString().stringValue();
+        Resource child = getChild(path);
+        child.data = obj;
+        result.add(child);
+      }
+    }
+    return result;
+  }
+
   public Resource getParent() {
     return parent;
   }
 
   public String getPath() {
     return getString(PATH);
+  }
+
+  public Long getQueryCount() {
+    Object result = getValue(QUERY_COUNT);
+    if (result != null && result instanceof Double) {
+      return ((Double) result).longValue();
+    }
+    return null;
   }
 
   public MultivaluedMap<String, String> getQueryParameters() {
@@ -323,6 +353,19 @@ public class Resource extends Place {
       }
     }
     return builder;
+  }
+
+  public Object getValue(String propName) {
+    JSONValue value = data.get(propName);
+    if (value instanceof JSONString) {
+      return value.isString().stringValue();
+    } else if (value instanceof JSONBoolean) {
+      return value.isBoolean().booleanValue();
+    } else if (value instanceof JSONNumber) {
+      return value.isNumber().doubleValue();
+    } else {
+      return null;
+    }
   }
 
   public Object getWidget() {
@@ -482,14 +525,31 @@ public class Resource extends Place {
   }
 
   public void setString(String propName, String value) {
-    if (data == null) {
-      data = new JSONObject();
-    }
     data.put(propName, new JSONString(value));
   }
 
   public void setTitle(String title) {
     setString(TITLE, title);
+  }
+
+  public void setValue(String propName, Boolean value) {
+    data.put(propName, JSONBoolean.getInstance(value));
+  }
+
+  public void setValue(String propName, Number value) {
+    data.put(propName, new JSONNumber(value.doubleValue()));
+  }
+
+  public void setValue(String propName, Object value) {
+    if (value == null) {
+      data.put(propName, JSONNull.getInstance());
+    } else if (value instanceof Number) {
+      setValue(propName, (Number) value);
+    } else if (value instanceof Boolean) {
+      setValue(propName, (Boolean) value);
+    } else {
+      setString(propName, value.toString());
+    }
   }
 
   public void setWidget(Object widget) {
@@ -525,8 +585,8 @@ public class Resource extends Place {
   private void appendWidget(IsWidget widget, final WidgetContainer panel, final AsyncCallback<IsWidget> callback) {
     setWidget(widget);
     panel.acceptWidget(widget);
-    if (widget instanceof ResourceWidget) {
-      final ResourceWidget rw = (ResourceWidget) widget;
+    if (widget instanceof TakesResource) {
+      final TakesResource takesRes = (TakesResource) widget;
       get(new AsyncCallback<Resource>() {
         @Override
         public void onFailure(Throwable caught) {
@@ -534,7 +594,7 @@ public class Resource extends Place {
 
         @Override
         public void onSuccess(Resource result) {
-          rw.setResource(Resource.this);
+          takesRes.setValue(Resource.this);
         }
       });
     }

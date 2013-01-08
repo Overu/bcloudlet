@@ -14,7 +14,7 @@ import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 
 import org.cloudlet.web.core.Root;
 
-public class ResourceExplorer extends BorderLayoutContainer implements WidgetContainer, ResourceWidget {
+public class ResourceExplorer extends BorderLayoutContainer implements WidgetContainer, TakesResource {
 
   SimpleContainer center;
 
@@ -29,7 +29,7 @@ public class ResourceExplorer extends BorderLayoutContainer implements WidgetCon
     setMonitorWindowResize(true);
 
     this.placeTree = placeTree;
-    placeTree.setResource(root);
+    placeTree.setValue(root);
 
     StringBuffer sb = new StringBuffer();
     sb.append("<div id='demo-theme'></div><div id=demo-title>Retech Explorer Demo</div>");
@@ -67,14 +67,14 @@ public class ResourceExplorer extends BorderLayoutContainer implements WidgetCon
   }
 
   @Override
-  public Resource getResource() {
+  public Resource getValue() {
     return resource;
   }
 
   @Override
-  public void setResource(Resource place) {
+  public void setValue(Resource place) {
     this.resource = place;
-    placeTree.setResource(place);
+    placeTree.setValue(place);
   }
 
   @Override

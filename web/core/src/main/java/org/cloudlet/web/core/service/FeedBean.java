@@ -11,7 +11,11 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.NoResultException;
 import javax.persistence.Transient;
 import javax.persistence.TypedQuery;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -114,6 +118,14 @@ public abstract class FeedBean<E extends ResourceBean> extends ResourceBean {
 
   @XmlTransient
   public abstract Class<E> getEntryType();
+
+  @GET
+  @Path("_list")
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml" })
+  @XmlTransient
+  public ResourceBean getList() {
+    return load();
+  }
 
   @Override
   public Object getPropertyValue(String path) {

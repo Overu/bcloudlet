@@ -18,7 +18,7 @@ import com.sencha.gxt.widget.core.client.tree.Tree;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ResourceTree extends BorderLayoutContainer implements ResourceWidget {
+public class ResourceTree extends BorderLayoutContainer implements TakesResource {
   class JSONFeedReader implements DataReader<List<Resource>, Resource> {
     @Override
     public List<Resource> read(final Object loadConfig, final Resource resource) {
@@ -48,12 +48,12 @@ public class ResourceTree extends BorderLayoutContainer implements ResourceWidge
   private Resource root;
 
   @Override
-  public Resource getResource() {
+  public Resource getValue() {
     return root;
   }
 
   @Override
-  public void setResource(Resource place) {
+  public void setValue(Resource place) {
     this.root = place;
 
   }
