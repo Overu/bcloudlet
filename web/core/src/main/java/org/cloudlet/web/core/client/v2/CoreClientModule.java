@@ -63,9 +63,9 @@ public class CoreClientModule extends AbstractGinModule {
 
       Registry.setWidget(CorePackage.REPOSITORY, Resource.CONTAINER, explorer);
 
-      Registry.setWidget(CorePackage.USERFEED, "new", userEditor);
+      Registry.setWidget(CorePackage.USERFEED, "", userGrid);
 
-      Registry.setWidget(CorePackage.USERFEED, "_list", userGrid);
+      Registry.setWidget(CorePackage.USERFEED, "new", userEditor);
 
       BaseResources.INSTANCE();
       main = new SimplePanel();

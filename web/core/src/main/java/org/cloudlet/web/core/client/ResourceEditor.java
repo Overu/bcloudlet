@@ -38,9 +38,6 @@ public abstract class ResourceEditor<T extends Resource> extends ContentPanel im
   CoreAutoBeanFactory factory;
 
   @Inject
-  protected ResourceProxy<ResourcePlace<T>> proxy;
-
-  @Inject
   ResourceManager resourceManager;
 
   private boolean initialized = false;
