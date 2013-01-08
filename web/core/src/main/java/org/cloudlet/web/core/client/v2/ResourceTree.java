@@ -34,7 +34,7 @@ public class ResourceTree extends BorderLayoutContainer implements TakesResource
       }
       List<Resource> children = resource.getEntries();
       for (Resource child : children) {
-        result.add(child.getHome());
+        result.add(child);
       }
       return result;
     }
@@ -69,7 +69,7 @@ public class ResourceTree extends BorderLayoutContainer implements TakesResource
     ModelKeyProvider<Resource> keyProvider = new ModelKeyProvider<Resource>() {
       @Override
       public String getKey(final Resource item) {
-        StringBuilder b = item.getUriBuilder();
+        StringBuilder b = item.getUriBuilder(false);
         return b.toString();
       }
     };
@@ -80,9 +80,8 @@ public class ResourceTree extends BorderLayoutContainer implements TakesResource
     loader = new TreeLoader<Resource>(new DataProxy<Resource, Resource>() {
       @Override
       public void load(Resource resource, final Callback<Resource, Throwable> callback) {
-        Resource host = resource.getParent();
-        host.getQueryParameters().addFirst(Resource.CHILDREN, "true");
-        host.load(new AsyncCallback<Resource>() {
+        resource.getQueryParameters().addFirst(Resource.CHILDREN, "true");
+        resource.load(new AsyncCallback<Resource>() {
           @Override
           public void onFailure(Throwable caught) {
             callback.onFailure(caught);
@@ -98,7 +97,7 @@ public class ResourceTree extends BorderLayoutContainer implements TakesResource
     }, reader) {
       @Override
       public boolean hasChildren(final Resource resource) {
-        return resource.getParent().hasChildren();
+        return resource.hasChildren();
       }
     };
     loader.addLoadHandler(new ChildTreeStoreBinding<Resource>(store));
@@ -125,13 +124,13 @@ public class ResourceTree extends BorderLayoutContainer implements TakesResource
     tree.getSelectionModel().addSelectionHandler(new SelectionHandler<Resource>() {
       @Override
       public void onSelection(final SelectionEvent<Resource> event) {
-        resourceManager.goTo(event.getSelectedItem());
-        tree.getSelectionModel().deselectAll();
+        resourceManager.goTo(event.getSelectedItem().getHome());
+        // tree.getSelectionModel().deselectAll();
       }
     });
 
     add(tree, new VerticalLayoutData(1, 1));
-    store.add(root.getHome());
+    store.add(root);
   }
 
   @Override
