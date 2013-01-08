@@ -79,16 +79,11 @@ public class Resource extends Place {
 
   private MultivaluedMap<String, String> queryParameters;
 
-  //
-  // public void addChild(ResourcePlace place) {
-  // children.put(place.getPath(), place);
-  // }
-
   private Map<String, Resource> renditions;
 
   private Object containerWidget;
 
-  private boolean rendition;
+  private String rendition;
 
   public Resource createChild(String path) {
     Resource result = placeProvider.get();
@@ -104,9 +99,9 @@ public class Resource extends Place {
 
   public void execute(final RequestBuilder.Method method, final AsyncCallback<Resource> callback) {
     try {
-      String data = null;
+      String body = null;
       if (RequestBuilder.POST.equals(method) || RequestBuilder.PUT.equals(method)) {
-        data = generateData();
+        body = generateData();
       }
       final StringBuilder url = getUriBuilder();
       url.insert(0, "api");
@@ -115,7 +110,7 @@ public class Resource extends Place {
       if (RequestBuilder.POST.equals(method) || RequestBuilder.PUT.equals(method)) {
         builder.setHeader("Content-Type", "application/json");
       }
-      builder.sendRequest(data, new RequestCallback() {
+      builder.sendRequest(body, new RequestCallback() {
 
         @Override
         public void onError(Request request, Throwable exception) {
@@ -188,6 +183,9 @@ public class Resource extends Place {
   }
 
   public Resource getChild(String path, boolean create) {
+    if (isRendition()) {
+      return getParent().getChild(path, create);
+    }
     getRenditions();// ensure renditions are initialized;
     Resource result = getChildren().get(path);
     if (result == null && create) {
@@ -260,6 +258,9 @@ public class Resource extends Place {
   }
 
   public String getPath() {
+    if (isRendition()) {
+      return rendition;
+    }
     return getString(PATH);
   }
 
@@ -305,7 +306,7 @@ public class Resource extends Place {
           Object widget = widgets.get(kind);
           Resource rendition = getChild(kind);
           rendition.setTitle(kind);// TODO localize rendition title
-          rendition.setRendition(true);
+          rendition.setRendition(kind);
           rendition.setWidget(widget);
           renditions.put(kind, rendition);
           if (SELF.equals(kind)) {
@@ -349,11 +350,13 @@ public class Resource extends Place {
       builder = new StringBuilder("/");
     } else {
       builder = getParent().getUriBuilder(false);
-      String path = getPath();
-      if (path != null) {
-        if (builder.length() > 1) {
-          builder.append("/");
-        }
+      if (builder.length() > 1) {
+        builder.append("/");
+      }
+      if (rendition != null) {
+        builder.append(rendition);
+      } else {
+        String path = getPath();
         builder.append(path);
       }
     }
@@ -399,7 +402,7 @@ public class Resource extends Place {
   }
 
   public boolean isRendition() {
-    return rendition;
+    return rendition != null;
   }
 
   public void load(AsyncCallback<Resource> callback) {
@@ -534,7 +537,7 @@ public class Resource extends Place {
     this.queryParameters = queryParameters;
   }
 
-  public void setRendition(boolean rendition) {
+  public void setRendition(String rendition) {
     this.rendition = rendition;
   }
 
