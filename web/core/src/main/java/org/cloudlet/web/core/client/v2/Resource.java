@@ -53,7 +53,7 @@ public class Resource extends Place {
 
   public static final String CONTAINER = "/";
 
-  public static final String SELF = "_";
+  public static final String SELF = "";
 
   public static final String RESOURCE_TYPE = "resourceType";
 
@@ -88,6 +88,8 @@ public class Resource extends Place {
 
   private Object containerWidget;
 
+  private boolean rendition;
+
   public Resource createChild(String path) {
     Resource result = placeProvider.get();
     result.setPath(path);
@@ -106,7 +108,7 @@ public class Resource extends Place {
       if (RequestBuilder.POST.equals(method) || RequestBuilder.PUT.equals(method)) {
         data = generateData();
       }
-      final StringBuilder url = RequestBuilder.POST.equals(method) ? getParent().getUriBuilder() : getUriBuilder();
+      final StringBuilder url = getUriBuilder();
       url.insert(0, "api");
       RequestBuilder builder = new RequestBuilder(method, url.toString());
       builder.setHeader("Accept", "application/json");
@@ -224,6 +226,14 @@ public class Resource extends Place {
     return entries;
   }
 
+  public Resource getHome() {
+    if (isRendition()) {
+      return this;
+    } else {
+      return getRenditions().get(SELF);
+    }
+  }
+
   public String getId() {
     return getString(ID);
   }
@@ -295,8 +305,13 @@ public class Resource extends Place {
           Object widget = widgets.get(kind);
           Resource rendition = getChild(kind);
           rendition.setTitle(kind);// TODO localize rendition title
+          rendition.setRendition(true);
           rendition.setWidget(widget);
           renditions.put(kind, rendition);
+          if (SELF.equals(kind)) {
+            rendition.setTitle(getTitle());
+            rendition.setResourceType(getResourceType());
+          }
         }
       }
     }
@@ -336,10 +351,10 @@ public class Resource extends Place {
       builder = getParent().getUriBuilder(false);
       String path = getPath();
       if (path != null) {
-        builder.append(path);
-        if (!isRendition()) {
+        if (builder.length() > 1) {
           builder.append("/");
         }
+        builder.append(path);
       }
     }
 
@@ -384,8 +399,7 @@ public class Resource extends Place {
   }
 
   public boolean isRendition() {
-    String path = getPath();
-    return path != null && path.startsWith(SELF);
+    return rendition;
   }
 
   public void load(AsyncCallback<Resource> callback) {
@@ -518,6 +532,10 @@ public class Resource extends Place {
 
   public void setQueryParameters(MultivaluedMap<String, String> queryParameters) {
     this.queryParameters = queryParameters;
+  }
+
+  public void setRendition(boolean rendition) {
+    this.rendition = rendition;
   }
 
   public void setResourceType(String value) {

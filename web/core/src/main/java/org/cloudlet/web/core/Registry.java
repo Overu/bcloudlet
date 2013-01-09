@@ -1,6 +1,5 @@
 package org.cloudlet.web.core;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,11 +24,13 @@ public class Registry {
     return null;
   }
 
-  public static final Map<String, Object> getWidgets(String resourceType) {
-    if (!widgets.containsKey(resourceType)) {
-      return Collections.EMPTY_MAP;
+  public static final Map<String, Object> getWidgets(String type) {
+    Map<String, Object> typedWidgets = widgets.get(type);
+    if (typedWidgets == null) {
+      typedWidgets = new HashMap<String, Object>();
+      widgets.put(type, typedWidgets);
     }
-    return widgets.get(resourceType);
+    return typedWidgets;
   }
 
   public static void register(String name, Class<? extends Resource> resourceType) {
@@ -41,12 +42,7 @@ public class Registry {
   }
 
   public static final void setWidget(String type, String rendition, Object widget) {
-    Map<String, Object> typedWidgets = widgets.get(type);
-    if (typedWidgets == null) {
-      typedWidgets = new HashMap<String, Object>();
-      widgets.put(type, typedWidgets);
-    }
-    typedWidgets.put(rendition, widget);
+    getWidgets(type).put(rendition, widget);
   }
 
 }

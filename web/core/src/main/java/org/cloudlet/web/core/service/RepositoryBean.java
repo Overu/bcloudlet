@@ -21,13 +21,13 @@ public final class RepositoryBean extends ResourceBean {
   }
 
   @Override
-  public String getTitle() {
-    return "Repository";
+  public String getResourceType() {
+    return Repository.TYPE;
   }
 
   @Override
-  public String getResourceType() {
-    return Repository.TYPE;
+  public String getTitle() {
+    return "Repository";
   }
 
   @Override
