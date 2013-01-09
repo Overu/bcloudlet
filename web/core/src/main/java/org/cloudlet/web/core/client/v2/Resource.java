@@ -319,6 +319,16 @@ public class Resource extends Place {
     return renditions;
   }
 
+  public Resource getResource(String path) {
+    JSONObject object = data.get(path).isObject();
+    if (object == null) {
+      return null;
+    }
+    Resource resource = placeProvider.get();
+    resource.data = object;
+    return resource;
+  }
+
   public String getResourceType() {
     return getString(RESOURCE_TYPE);
   }

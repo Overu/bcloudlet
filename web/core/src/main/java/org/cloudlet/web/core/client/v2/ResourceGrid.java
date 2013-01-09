@@ -235,11 +235,12 @@ public abstract class ResourceGrid extends ContentPanel implements TakesResource
     return column;
   }
 
-  protected String getCoverUrl(Media media) {
+  protected String getCoverUrl(Resource media) {
     if (media == null || media.getTitle().equals("")) {
       return resources.cover().getSafeUri().asString();
     }
-    return ResourcePlace.getMediaUrl(media);
+    String url = "api" + media.getString("uri") + "/" + media.getString("id");
+    return url;
   }
 
   protected abstract void initColumn();
@@ -336,14 +337,14 @@ public abstract class ResourceGrid extends ContentPanel implements TakesResource
             @Override
             public void onSelection(SelectionEvent<Item> event) {
               switch (columnItem) {
-              case DESELECTALL:
-                selectionModel.setSelectAllChecked(false);
-                break;
-              case SELECTALL:
-                selectionModel.setSelectAllChecked(true);
-                break;
-              default:
-                break;
+                case DESELECTALL:
+                  selectionModel.setSelectAllChecked(false);
+                  break;
+                case SELECTALL:
+                  selectionModel.setSelectAllChecked(true);
+                  break;
+                default:
+                  break;
               }
             }
           });
@@ -473,52 +474,52 @@ public abstract class ResourceGrid extends ContentPanel implements TakesResource
 
   private void selectBase(SelectButtonCar car) {
     switch (car) {
-    case ADD:
-      Resource place = getValue().getRendition(UserFeedEditor.NEW);
-      resourceManager.goTo(place);
-      break;
-    case REFRESH:
-      refresh();
-      break;
-    case DELETE:
-      if (selectedItem == null || selectedItem.equals("")) {
-        return;
-      }
-      selectedItem.delete(new AsyncCallback<Resource>() {
-        @Override
-        public void onFailure(Throwable caught) {
+      case ADD:
+        Resource place = getValue().getRendition(UserFeedEditor.NEW);
+        resourceManager.goTo(place);
+        break;
+      case REFRESH:
+        refresh();
+        break;
+      case DELETE:
+        if (selectedItem == null || selectedItem.equals("")) {
+          return;
         }
+        selectedItem.delete(new AsyncCallback<Resource>() {
+          @Override
+          public void onFailure(Throwable caught) {
+          }
 
-        @Override
-        public void onSuccess(Resource result) {
-          refresh();
+          @Override
+          public void onSuccess(Resource result) {
+            refresh();
+          }
+        });
+        break;
+      case EDIT:
+        if (selectedItem == null) {
+          return;
         }
-      });
-      break;
-    case EDIT:
-      if (selectedItem == null) {
-        return;
-      }
-      resourceManager.goTo(selectedItem);
-      break;
-    default:
-      break;
+        resourceManager.goTo(selectedItem);
+        break;
+      default:
+        break;
     }
   }
 
   private void selectView(ViewButtonCar car) {
     switch (car) {
-    case TABLE:
-      con.remove(grid);
-      con.add(listView, new VerticalLayoutData(1, 1));
-      listView.setSize("100%", "100%");
-      break;
-    case GRID:
-      con.remove(listView);
-      con.add(grid, new VerticalLayoutData(1, 1));
-      break;
-    default:
-      break;
+      case TABLE:
+        con.remove(grid);
+        con.add(listView, new VerticalLayoutData(1, 1));
+        listView.setSize("100%", "100%");
+        break;
+      case GRID:
+        con.remove(listView);
+        con.add(grid, new VerticalLayoutData(1, 1));
+        break;
+      default:
+        break;
     }
     con.onResize();
   }

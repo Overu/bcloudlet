@@ -116,6 +116,7 @@ public class ResourceTree extends BorderLayoutContainer implements TakesResource
       @Override
       public void setValue(final Resource object, final String value) {
         object.setTitle(value);
+
       }
     }, new GrayTreeAppearance());
 
