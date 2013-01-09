@@ -40,6 +40,9 @@ public class CoreClientModule extends AbstractGinModule {
     @Inject
     UserGrid userGrid;
 
+    @Inject
+    BookGrid bookGrid;
+
     SimplePanel main;
 
     @Inject
@@ -64,8 +67,10 @@ public class CoreClientModule extends AbstractGinModule {
       Registry.setWidget(CorePackage.REPOSITORY, Resource.CONTAINER, explorer);
 
       Registry.setWidget(CorePackage.USERFEED, "", userGrid);
-
       Registry.setWidget(CorePackage.USERFEED, "new", userEditor);
+
+      Registry.setWidget(CorePackage.BOOKFEED, "", bookGrid);
+      Registry.setWidget(CorePackage.BOOKFEED, "new", userEditor);
 
       BaseResources.INSTANCE();
       main = new SimplePanel();
