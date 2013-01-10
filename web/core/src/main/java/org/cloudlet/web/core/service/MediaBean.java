@@ -1,6 +1,7 @@
 package org.cloudlet.web.core.service;
 
 import org.apache.commons.io.IOUtils;
+import org.cloudlet.web.core.CorePackage;
 import org.cloudlet.web.core.Media;
 
 import java.io.BufferedInputStream;
@@ -25,11 +26,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = Media.TYPE)
-@XmlType(name = Media.TYPE)
-@Entity(name = Media.TYPE)
-@Table(name = Media.TYPE)
+@XmlRootElement(name = MediaBean.TYPE)
+@XmlType(name = MediaBean.TYPE)
+@Entity(name = MediaBean.TYPE)
+@Table(name = MediaBean.TYPE)
 public class MediaBean extends ResourceBean {
+
+  public static final String TYPE = CorePackage.PREFIX + "Media";
 
   private String mimeType;
 

@@ -1,7 +1,6 @@
 package org.cloudlet.web.core.service;
 
 import org.cloudlet.web.core.CorePackage;
-import org.cloudlet.web.core.User;
 
 import java.security.Principal;
 

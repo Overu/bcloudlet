@@ -22,8 +22,6 @@ import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 import com.sencha.gxt.widget.core.client.form.AdapterField;
 import com.sencha.gxt.widget.core.client.form.FileUploadField;
 
-import org.cloudlet.web.core.Media;
-
 public class MediaField extends AdapterField<Resource> {
 
   @Inject

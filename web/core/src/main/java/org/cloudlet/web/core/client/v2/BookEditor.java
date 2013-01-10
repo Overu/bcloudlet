@@ -13,7 +13,7 @@ import com.sencha.gxt.widget.core.client.form.FormPanel.Encoding;
 import com.sencha.gxt.widget.core.client.form.FormPanel.Method;
 import com.sencha.gxt.widget.core.client.form.TextField;
 
-import org.cloudlet.web.core.Book;
+import org.cloudlet.web.core.service.BookBean;
 import org.cloudlet.web.core.service.ResourceBean;
 
 public class BookEditor extends ResourceEditor {
@@ -45,10 +45,10 @@ public class BookEditor extends ResourceEditor {
     // resourceType.setName(Resource.RESOURCE_TYPE);
     // p.add(resourceType);
 
-    source.setName(Book.SOURCE);
+    source.setName(BookBean.SOURCE);
     p.add(new FieldLabel(source, "来源"), new VerticalLayoutData(1, -1, new Margins(10, 0, 10, 10)));
 
-    cover.setName(Book.COVER);
+    cover.setName(BookBean.COVER);
     p.add(new FieldLabel(cover, "封面"), new VerticalLayoutData(1, -1, new Margins(10, 0, 10, 10)));
 
     title.setName(ResourceBean.TITLE);

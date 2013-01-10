@@ -6,8 +6,6 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.inject.Inject;
 
-import org.cloudlet.web.core.Media;
-
 public class BookGrid extends ResourceGrid {
 
   @Inject

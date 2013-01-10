@@ -1,6 +1,6 @@
 package org.cloudlet.web.core.service;
 
-import org.cloudlet.web.core.Group;
+import org.cloudlet.web.core.CorePackage;
 
 import java.security.Principal;
 
@@ -12,12 +12,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = Group.TYPE)
-@XmlType(name = Group.TYPE)
-@Entity(name = Group.TYPE)
-@Table(name = Group.TYPE)
+@XmlRootElement(name = GroupBean.TYPE)
+@XmlType(name = GroupBean.TYPE)
+@Entity(name = GroupBean.TYPE)
+@Table(name = GroupBean.TYPE)
 public class GroupBean extends ResourceBean implements Principal {
-
+  public static final String TYPE = CorePackage.PREFIX + "Group";
   protected String name;
 
   @OneToOne
@@ -47,7 +47,7 @@ public class GroupBean extends ResourceBean implements Principal {
 
   @Override
   public String getResourceType() {
-    return Group.TYPE;
+    return TYPE;
   }
 
   public void setName(String name) {
