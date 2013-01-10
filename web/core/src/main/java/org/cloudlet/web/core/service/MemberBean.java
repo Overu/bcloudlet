@@ -1,6 +1,6 @@
 package org.cloudlet.web.core.service;
 
-import org.cloudlet.web.core.Member;
+import org.cloudlet.web.core.CorePackage;
 import org.cloudlet.web.core.Role;
 
 import java.util.logging.Logger;
@@ -13,13 +13,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = Member.TYPE)
-@XmlType(name = Member.TYPE)
-@Entity(name = Member.TYPE)
-@Table(name = Member.TYPE)
+@XmlRootElement(name = MemberBean.TYPE)
+@XmlType(name = MemberBean.TYPE)
+@Entity(name = MemberBean.TYPE)
+@Table(name = MemberBean.TYPE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class MemberBean extends ResourceBean {
-
+  public static final String TYPE = CorePackage.PREFIX + "Member";
   public static Logger logger = Logger.getLogger(MemberBean.class.getName());
 
   private String roleName;
@@ -27,6 +27,11 @@ public class MemberBean extends ResourceBean {
   private String roleType;
 
   private Role role;
+
+  @Override
+  public String getResourceType() {
+    return TYPE;
+  }
 
   @XmlTransient
   public Role getRole() {
@@ -42,11 +47,6 @@ public class MemberBean extends ResourceBean {
 
   public String getRoleType() {
     return roleType;
-  }
-
-  @Override
-  public String getResourceType() {
-    return Member.TYPE;
   }
 
   public void setRole(Role role) {

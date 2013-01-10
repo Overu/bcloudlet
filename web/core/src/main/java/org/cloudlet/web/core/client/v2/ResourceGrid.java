@@ -63,7 +63,6 @@ import com.sencha.gxt.widget.core.client.toolbar.PagingToolBar;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
 import org.cloudlet.web.core.client.QueryBuilder;
-import org.cloudlet.web.core.client.UserFeedEditor;
 import org.cloudlet.web.core.service.FeedBean;
 
 import java.util.ArrayList;

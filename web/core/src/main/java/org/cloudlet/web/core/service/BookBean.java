@@ -1,6 +1,6 @@
 package org.cloudlet.web.core.service;
 
-import org.cloudlet.web.core.Book;
+import org.cloudlet.web.core.CorePackage;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
@@ -10,13 +10,19 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = Book.TYPE)
-@XmlType(name = Book.TYPE)
-@Entity(name = Book.TYPE)
-@Table(name = Book.TYPE)
+@XmlRootElement(name = BookBean.TYPE)
+@XmlType(name = BookBean.TYPE)
+@Entity(name = BookBean.TYPE)
+@Table(name = BookBean.TYPE)
 @DefaultField(key = "title", value = "图书")
 public class BookBean extends ResourceBean {
+  public static final String SECTIONS = "sections";
 
+  public static final String TYPE = CorePackage.PREFIX + "Book";
+
+  public static final String COVER = "cover";
+
+  public static final String SOURCE = "source";
   @OneToOne
   private MediaBean cover;
 
@@ -30,7 +36,7 @@ public class BookBean extends ResourceBean {
 
   @Override
   public String getResourceType() {
-    return Book.TYPE;
+    return TYPE;
   }
 
   @Path("source")
@@ -41,12 +47,12 @@ public class BookBean extends ResourceBean {
   @Override
   public void readMedia(MultivaluedMap<String, MediaBean> params) {
     super.readMedia(params);
-    MediaBean cover = params.getFirst(Book.COVER);
+    MediaBean cover = params.getFirst(COVER);
     if (cover != null) {
       this.cover = cover;
       cover.setParent(this);
     }
-    MediaBean source = params.getFirst(Book.SOURCE);
+    MediaBean source = params.getFirst(SOURCE);
     if (source != null) {
       this.source = source;
       source.setParent(this);

@@ -5,13 +5,7 @@ import java.util.Map;
 
 public class Registry {
 
-  private static Map<String, Class<? extends Resource>> nameToClassMap = new HashMap<String, Class<? extends Resource>>();
-
   public static Map<String, Map<String, Object>> widgets = new HashMap<String, Map<String, Object>>();
-
-  public static Class<? extends Resource> getResourceType(String name) {
-    return nameToClassMap.get(name);
-  }
 
   public static final Object getWidget(String type, String rendition) {
     if (rendition == null) {
@@ -31,10 +25,6 @@ public class Registry {
       widgets.put(type, typedWidgets);
     }
     return typedWidgets;
-  }
-
-  public static void register(String name, Class<? extends Resource> resourceType) {
-    nameToClassMap.put(name, resourceType);
   }
 
   public static final void setWidget(Class<?> cls, String rendition, Object widget) {

@@ -1,6 +1,6 @@
 package org.cloudlet.web.core.service;
 
-import org.cloudlet.web.core.Repository;
+import org.cloudlet.web.core.CorePackage;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -8,12 +8,14 @@ import javax.ws.rs.Path;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = Repository.TYPE)
-@XmlType(name = Repository.TYPE)
-@Entity(name = Repository.TYPE)
-@Table(name = Repository.TYPE)
+@XmlRootElement(name = RepositoryBean.TYPE)
+@XmlType(name = RepositoryBean.TYPE)
+@Entity(name = RepositoryBean.TYPE)
+@Table(name = RepositoryBean.TYPE)
 @Path("/")
 public final class RepositoryBean extends ResourceBean {
+
+  public static final String TYPE = CorePackage.PREFIX + "Repository";
 
   @Override
   public String getPath() {
@@ -22,7 +24,7 @@ public final class RepositoryBean extends ResourceBean {
 
   @Override
   public String getResourceType() {
-    return Repository.TYPE;
+    return TYPE;
   }
 
   @Override

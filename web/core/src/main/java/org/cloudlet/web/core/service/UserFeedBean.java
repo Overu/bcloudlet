@@ -2,7 +2,7 @@ package org.cloudlet.web.core.service;
 
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.crypto.hash.SimpleHash;
-import org.cloudlet.web.core.UserFeed;
+import org.cloudlet.web.core.CorePackage;
 import org.cloudlet.web.core.server.JpaRealm;
 
 import javax.persistence.Entity;
@@ -18,13 +18,14 @@ import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = UserFeed.TYPE)
-@XmlType(name = UserFeed.TYPE)
-@Entity(name = UserFeed.TYPE)
-@Table(name = UserFeed.TYPE)
+@XmlRootElement(name = UserFeedBean.TYPE)
+@XmlType(name = UserFeedBean.TYPE)
+@Entity(name = UserFeedBean.TYPE)
+@Table(name = UserFeedBean.TYPE)
 @Path("users")
 @DefaultField(key = "title", value = "系统用户")
 public class UserFeedBean extends PagingFeedBean<UserBean> {
+  public static final String TYPE = CorePackage.PREFIX + "UserFeed";
 
   @Override
   @POST
@@ -51,7 +52,7 @@ public class UserFeedBean extends PagingFeedBean<UserBean> {
 
   @Override
   public String getResourceType() {
-    return UserFeed.TYPE;
+    return TYPE;
   }
 
   @Override

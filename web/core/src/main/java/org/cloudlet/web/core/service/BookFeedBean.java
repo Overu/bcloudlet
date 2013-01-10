@@ -1,6 +1,6 @@
 package org.cloudlet.web.core.service;
 
-import org.cloudlet.web.core.BookFeed;
+import org.cloudlet.web.core.CorePackage;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -13,14 +13,14 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = BookFeed.TYPE)
-@XmlType(name = BookFeed.TYPE)
-@Entity(name = BookFeed.TYPE)
-@Table(name = BookFeed.TYPE)
+@XmlRootElement(name = BookFeedBean.TYPE)
+@XmlType(name = BookFeedBean.TYPE)
+@Entity(name = BookFeedBean.TYPE)
+@Table(name = BookFeedBean.TYPE)
 @Path("books")
 @DefaultField(key = "title", value = "图书")
 public class BookFeedBean extends PagingFeedBean<BookBean> {
-
+  public static final String TYPE = CorePackage.PREFIX + "BookFeed";
   public static final String MY_BOOKS = "myBooks";
 
   public static final String STARRED = "starred";
@@ -29,8 +29,8 @@ public class BookFeedBean extends PagingFeedBean<BookBean> {
 
   @Override
   @POST
-  @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public BookBean createEntry(BookBean book) {
     return super.createEntry(book);
   }
@@ -42,7 +42,7 @@ public class BookFeedBean extends PagingFeedBean<BookBean> {
 
   @Override
   public String getResourceType() {
-    return BookFeed.TYPE;
+    return TYPE;
   }
 
   @Override

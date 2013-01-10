@@ -10,7 +10,6 @@ import org.apache.commons.fileupload.RequestContext;
 import org.apache.commons.fileupload.util.Streams;
 import org.apache.commons.io.IOUtils;
 import org.cloudlet.web.core.Registry;
-import org.cloudlet.web.core.Resource;
 import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -486,13 +485,13 @@ public abstract class ResourceBean {
 
   protected ResourceBean createFrom(MultivaluedMap<String, String> params) {
     String resourceType = params.getFirst(RESOURCE_TYPE);
-    Class<?> type = Registry.getResourceType(resourceType);
-    if (type != null) {
-      ImplementedBy impl = type.getAnnotation(ImplementedBy.class);
-      Class<? extends ResourceBean> resType = (Class<? extends ResourceBean>) impl.value();
-      ResourceBean result = create(resType);
-      return result;
-    }
+    // Class<?> type = Registry.getResourceType(resourceType);
+    // if (type != null) {
+    // ImplementedBy impl = type.getAnnotation(ImplementedBy.class);
+    // Class<? extends ResourceBean> resType = (Class<? extends ResourceBean>) impl.value();
+    // ResourceBean result = create(resType);
+    // return result;
+    // }
     return null;
   }
 
