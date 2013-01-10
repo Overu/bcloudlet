@@ -23,7 +23,7 @@ public class BookSearch extends ResourceSearch {
   @Override
   protected List<String> getSearchTitle() {
     ArrayList<String> titles = new ArrayList<String>();
-    titles.add("title");
+    titles.add(CorePackage.TITLE);
     return titles;
   }
 

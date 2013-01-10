@@ -6,6 +6,8 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.inject.Inject;
 
+import org.cloudlet.web.core.shared.CorePackage;
+
 public class BookGrid extends ResourceGrid {
 
   @Inject
@@ -13,7 +15,7 @@ public class BookGrid extends ResourceGrid {
 
   @Override
   protected void initColumn() {
-    columnConfigProvider(new ResourceValueProvider("cover"), 8, "Cover", new AbstractCell<Resource>() {
+    columnConfigProvider(new ResourceValueProvider(CorePackage.COVER), 8, "Cover", new AbstractCell<Resource>() {
       @Override
       public void render(com.google.gwt.cell.client.Cell.Context context, Resource value, SafeHtmlBuilder sb) {
         StringBuffer imageUrl = new StringBuffer();
@@ -22,12 +24,12 @@ public class BookGrid extends ResourceGrid {
         sb.append(SafeHtmlUtils.fromSafeConstant(imageUrl.toString()));
       }
     });
-    columnConfigProvider(new StringValueProvider("title"), 100, "Title");
+    columnConfigProvider(new StringValueProvider(CorePackage.TITLE), 100, "Title");
   }
 
   @Override
   protected SafeHtml initListSafeHtml(Resource t) {
-    return ResourceGrid.r.renderItem(t.getTitle(), getCoverUrl(t.getResource("cover")), ResourceGrid.resources.css());
+    return ResourceGrid.r.renderItem(t.getTitle(), getCoverUrl(t.getResource(CorePackage.COVER)), ResourceGrid.resources.css());
   }
 
   @Override

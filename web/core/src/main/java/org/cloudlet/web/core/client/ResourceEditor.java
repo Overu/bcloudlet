@@ -12,6 +12,8 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 import com.sencha.gxt.widget.core.client.form.FormPanelHelper;
 import com.sencha.gxt.widget.core.client.form.IsField;
 
+import org.cloudlet.web.core.shared.CorePackage;
+
 public class ResourceEditor extends ContentPanel implements Editor<Resource>, TakesResource {
 
   private boolean initialized = false;
@@ -25,7 +27,7 @@ public class ResourceEditor extends ContentPanel implements Editor<Resource>, Ta
     for (IsField field : FormPanelHelper.getFields(this)) {
       if (field instanceof Component) {
         Component comp = (Component) field;
-        String path = comp.getData("path");
+        String path = comp.getData(CorePackage.PATH);
         if (path != null) {
           String value = resource.getString(path);
           field.setValue(value);
@@ -38,7 +40,7 @@ public class ResourceEditor extends ContentPanel implements Editor<Resource>, Ta
     for (IsField field : FormPanelHelper.getFields(this)) {
       if (field instanceof Component) {
         Component comp = (Component) field;
-        String path = comp.getData("path");
+        String path = comp.getData(CorePackage.PATH);
         Object value = field.getValue();
         resource.setValue(path, value);
       }
