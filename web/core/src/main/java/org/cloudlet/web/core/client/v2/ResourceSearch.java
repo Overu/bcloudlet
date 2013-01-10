@@ -49,8 +49,8 @@ public abstract class ResourceSearch extends SimpleContainer implements TakesRes
   }
 
   interface Template extends XTemplates {
-    @XTemplate("<div class='{style.searchItem}'>{resource.title}</div>")
-    SafeHtml render(Resource resource, ResourceStyle style);
+    @XTemplate("<div class='{style.searchItem}'>{resource}</div>")
+    SafeHtml render(String resource, ResourceStyle style);
   }
 
   protected static Template template = GWT.create(Template.class);
@@ -110,7 +110,7 @@ public abstract class ResourceSearch extends SimpleContainer implements TakesRes
 
           @Override
           public void onSuccess(final Resource result) {
-            List<Resource> books = result.getEntries();
+            List<Resource> books = result.getList("entries");
             builder.clear();
             callback.onSuccess(new PagingLoadResultBean<Resource>(books, result.getQueryCount().intValue(), loadConfig.getOffset()));
           }

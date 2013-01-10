@@ -13,7 +13,7 @@ public class BookSearch extends ResourceSearch {
     return new AbstractCell<Resource>() {
       @Override
       public void render(com.google.gwt.cell.client.Cell.Context context, Resource value, SafeHtmlBuilder sb) {
-        sb.append(template.render(value, style));
+        sb.append(template.render(value.getString(Resource.TITLE), style));
       }
     };
   }
