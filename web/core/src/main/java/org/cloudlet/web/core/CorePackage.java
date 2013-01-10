@@ -1,5 +1,7 @@
 package org.cloudlet.web.core;
 
+import org.cloudlet.web.core.service.UserBean;
+
 public class CorePackage {
 
   public static final String PREFIX = "Core";
@@ -30,7 +32,7 @@ public class CorePackage {
 
   public static void init() {
     Registry.register(Repository.TYPE, Repository.class);
-    Registry.register(User.TYPE, User.class);
+    Registry.register(UserBean.TYPE, User.class);
     Registry.register(UserFeed.TYPE, UserFeed.class);
     Registry.register(Group.TYPE, Group.class);
     Registry.register(GroupFeed.TYPE, GroupFeed.class);

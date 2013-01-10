@@ -8,6 +8,9 @@ import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.Verti
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
 import com.sencha.gxt.widget.core.client.form.TextField;
 
+import org.cloudlet.web.core.service.ResourceBean;
+import org.cloudlet.web.core.service.UserBean;
+
 public class UserEditor extends ResourceEditor {
 
   @Inject
@@ -37,11 +40,11 @@ public class UserEditor extends ResourceEditor {
     p.setLayoutData(new MarginData(8));
 
     path.setAllowBlank(false);
-    path.setData("path", "path");
+    path.setData(ResourceBean.PATH, ResourceBean.PATH);
     p.add(new FieldLabel(path, "Name"), new VerticalLayoutData(1, -1));
 
     email.setAllowBlank(false);
-    email.setData("path", "email");
+    email.setData("path", UserBean.EMAIL);
     p.add(new FieldLabel(email, "Email"), new VerticalLayoutData(1, -1));
 
     p.add(new FieldLabel(title, "Phone"), new VerticalLayoutData(1, -1));

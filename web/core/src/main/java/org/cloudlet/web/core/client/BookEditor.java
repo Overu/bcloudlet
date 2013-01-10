@@ -16,7 +16,7 @@ import com.sencha.gxt.widget.core.client.form.FormPanel.Method;
 import com.sencha.gxt.widget.core.client.form.TextField;
 
 import org.cloudlet.web.core.Book;
-import org.cloudlet.web.core.Resource;
+import org.cloudlet.web.core.service.ResourceBean;
 
 public class BookEditor extends ResourceEditor<Book> {
 
@@ -69,7 +69,7 @@ public class BookEditor extends ResourceEditor<Book> {
     cover.setName(Book.COVER);
     p.add(new FieldLabel(cover, "封面"), new VerticalLayoutData(1, -1, new Margins(10, 0, 10, 10)));
 
-    title.setName(Resource.TITLE);
+    title.setName(ResourceBean.TITLE);
     title.setAllowBlank(false);
     p.add(new FieldLabel(title, "Title"), new VerticalLayoutData(500, -1, new Margins(10, 0, 10, 10)));
 

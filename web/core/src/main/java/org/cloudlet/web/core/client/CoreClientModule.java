@@ -19,9 +19,9 @@ import org.cloudlet.web.core.CorePackage;
 import org.cloudlet.web.core.Registry;
 import org.cloudlet.web.core.Repository;
 import org.cloudlet.web.core.Root;
-import org.cloudlet.web.core.User;
 import org.cloudlet.web.core.UserFeed;
 import org.cloudlet.web.core.client.style.BaseResources;
+import org.cloudlet.web.core.service.UserBean;
 
 import java.util.logging.Logger;
 
@@ -82,7 +82,7 @@ public class CoreClientModule extends AbstractGinModule {
     private void start() {
       CorePackage.init();
       Registry.setWidget(Repository.TYPE, "", explorer);
-      Registry.setWidget(User.TYPE, "", userEditor);
+      Registry.setWidget(UserBean.TYPE, "", userEditor);
       Registry.setWidget(UserFeed.TYPE, UserFeedEditor.NEW, userFeedEditor);
       Registry.setWidget(UserFeed.TYPE, ResourceGrid.LIST, userGrid);
 

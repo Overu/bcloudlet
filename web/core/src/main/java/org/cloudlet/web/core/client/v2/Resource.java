@@ -22,6 +22,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import org.cloudlet.web.core.Registry;
+import org.cloudlet.web.core.service.ResourceBean;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,29 +38,7 @@ public class Resource extends Place {
 
   private static final Logger logger = Logger.getLogger(Resource.class.getName());
 
-  public static final String ID = "id";
-
-  public static final String TITLE = "title";
-
-  public static final String PATH = "path";
-
-  public static final String URI = "uri";
-
-  public static final String VERSION = "version";
-
-  public static final String CHILDREN = "children";
-
-  public static final String CHILDREN_COUNT = "childrenCount";
-
   public static final String CONTAINER = "/";
-
-  public static final String SELF = "";
-
-  public static final String RESOURCE_TYPE = "resourceType";
-
-  public static final String PARENT_TYPE = "parentType";
-
-  public static final String PARENT_ID = "parentId";
 
   public static final String QUERY_COUNT = "queryCount";
 
@@ -205,35 +184,16 @@ public class Resource extends Place {
     return containerWidget;
   }
 
-  public List<Resource> getEntries() {
-    if (entries == null) {
-      entries = new ArrayList<Resource>();
-      JSONValue value = data.get("children");
-      if (value != null && value.isArray() != null) {
-        JSONArray array = value.isArray();
-        for (int i = 0; i < array.size(); i++) {
-          JSONValue v = array.get(i);
-          JSONObject obj = v.isObject();
-          String path = obj.get(PATH).isString().stringValue();
-          Resource child = getChild(path);
-          child.data = obj;
-          entries.add(child);
-        }
-      }
-    }
-    return entries;
-  }
-
   public Resource getHome() {
     if (isRendition()) {
       return this;
     } else {
-      return getRenditions().get(SELF);
+      return getRenditions().get(ResourceBean.SELF);
     }
   }
 
   public String getId() {
-    return getString(ID);
+    return getString(ResourceBean.ID);
   }
 
   public List<Resource> getList(String prop) {
@@ -244,7 +204,7 @@ public class Resource extends Place {
       for (int i = 0; i < array.size(); i++) {
         JSONValue v = array.get(i);
         JSONObject obj = v.isObject();
-        String path = obj.get(PATH).isString().stringValue();
+        String path = obj.get(ResourceBean.PATH).isString().stringValue();
         Resource child = getChild(path);
         child.data = obj;
         result.add(child);
@@ -261,7 +221,7 @@ public class Resource extends Place {
     if (isRendition()) {
       return rendition;
     }
-    return getString(PATH);
+    return getString(ResourceBean.PATH);
   }
 
   public Long getQueryCount() {
@@ -296,8 +256,8 @@ public class Resource extends Place {
       String resourceType = getResourceType();
       if (resourceType != null) {
         Map<String, Object> widgets = Registry.getWidgets(resourceType);
-        if (!widgets.containsKey(SELF)) {
-          widgets.put(SELF, new SimplePanel());
+        if (!widgets.containsKey(ResourceBean.SELF)) {
+          widgets.put(ResourceBean.SELF, new SimplePanel());
         }
         for (String kind : widgets.keySet()) {
           if (CONTAINER.equals(kind)) {
@@ -309,7 +269,7 @@ public class Resource extends Place {
           rendition.setRendition(kind);
           rendition.setWidget(widget);
           renditions.put(kind, rendition);
-          if (SELF.equals(kind)) {
+          if (ResourceBean.SELF.equals(kind)) {
             rendition.setTitle(getTitle());
             rendition.setResourceType(getResourceType());
           }
@@ -330,7 +290,7 @@ public class Resource extends Place {
   }
 
   public String getResourceType() {
-    return getString(RESOURCE_TYPE);
+    return getString(ResourceBean.RESOURCE_TYPE);
   }
 
   public String getString(String propName) {
@@ -343,7 +303,7 @@ public class Resource extends Place {
   }
 
   public String getTitle() {
-    return getString(TITLE);
+    return getString(ResourceBean.TITLE);
   }
 
   public String getUri() {
@@ -404,7 +364,7 @@ public class Resource extends Place {
     if (isRendition()) {
       return false;
     }
-    JSONValue count = data.get(CHILDREN_COUNT);
+    JSONValue count = data.get(ResourceBean.CHILDREN_COUNT);
     if (count != null) {
       return count.isNumber().doubleValue() > 0;
     }
@@ -526,7 +486,7 @@ public class Resource extends Place {
   }
 
   public void save(AsyncCallback<Resource> callback) {
-    boolean isEdit = data.get(ID).isString() != null;
+    boolean isEdit = data.get(ResourceBean.ID).isString() != null;
     RequestBuilder.Method method = isEdit ? RequestBuilder.POST : RequestBuilder.PUT;
     execute(method, callback);
   }
@@ -540,7 +500,7 @@ public class Resource extends Place {
   }
 
   public void setPath(String path) {
-    setString(PATH, path);
+    setString(ResourceBean.PATH, path);
   }
 
   public void setQueryParameters(MultivaluedMap<String, String> queryParameters) {
@@ -552,7 +512,7 @@ public class Resource extends Place {
   }
 
   public void setResourceType(String value) {
-    setString(RESOURCE_TYPE, value);
+    setString(ResourceBean.RESOURCE_TYPE, value);
   }
 
   public void setString(String propName, String value) {
@@ -560,7 +520,7 @@ public class Resource extends Place {
   }
 
   public void setTitle(String title) {
-    setString(TITLE, title);
+    setString(ResourceBean.TITLE, title);
   }
 
   public void setValue(String propName, Boolean value) {

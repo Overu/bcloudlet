@@ -18,6 +18,7 @@ import com.sencha.gxt.widget.core.client.tree.Tree;
 import org.cloudlet.web.core.Registry;
 import org.cloudlet.web.core.Resource;
 import org.cloudlet.web.core.Root;
+import org.cloudlet.web.core.service.ResourceBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class ResourceTree<T extends Resource> extends BorderLayoutContainer impl
       String resourceType = resource.getResourceType();
       Map<String, Object> widgets = Registry.getWidgets(resourceType);
       for (String kind : widgets.keySet()) {
-        if (Resource.SELF.equals(kind)) {
+        if (ResourceBean.SELF.equals(kind)) {
           continue;
         }
         Object widget = widgets.get(kind);
@@ -49,8 +50,8 @@ public class ResourceTree<T extends Resource> extends BorderLayoutContainer impl
         for (Resource child : children) {
           ResourcePlace childPlace = place.getHost().getChild(child.getPath());
           childPlace.setResource(child);
-          ResourcePlace self = childPlace.getRendition(Resource.SELF);
-          self.getQueryParameters().addFirst(Resource.CHILDREN, "true");
+          ResourcePlace self = childPlace.getRendition(ResourceBean.SELF);
+          self.getQueryParameters().addFirst(ResourceBean.CHILDREN, "true");
           result.add(self);
         }
       }
@@ -145,8 +146,8 @@ public class ResourceTree<T extends Resource> extends BorderLayoutContainer impl
     });
 
     add(tree, new VerticalLayoutData(1, 1));
-    ResourcePlace home = root.getRendition(Resource.SELF);
-    home.getQueryParameters().addFirst(Resource.CHILDREN, "true");
+    ResourcePlace home = root.getRendition(ResourceBean.SELF);
+    home.getQueryParameters().addFirst(ResourceBean.CHILDREN, "true");
     store.add(home);
   }
 

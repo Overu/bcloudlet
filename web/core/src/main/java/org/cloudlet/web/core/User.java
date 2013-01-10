@@ -7,13 +7,6 @@ import org.cloudlet.web.core.service.UserBean;
 @ImplementedBy(UserBean.class)
 public interface User extends Resource {
 
-  String TYPE = CorePackage.PREFIX + "User";
-  String EMAIL = "email";
-  String NAME = "name";
-  String PHONE = "phone";
-  String STATE = "state";
-  String ZIP = "zip";
-
   String getEmail();
 
   String getName();

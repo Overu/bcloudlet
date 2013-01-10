@@ -60,6 +60,28 @@ public abstract class ResourceBean {
 
   private static final Logger logger = Logger.getLogger(ResourceBean.class.getName());
 
+  public static final String ID = "id";
+
+  public static final String TITLE = "title";
+
+  public static final String PATH = "path";
+
+  public static final String URI = "uri";
+
+  public static final String VERSION = "version";
+
+  public static final String RENDITION = "rendition";
+
+  public static final String CHILDREN = "children";
+
+  public static final String SELF = "";
+
+  public static final String RESOURCE_TYPE = "resourceType";
+
+  public static final String PARENT_TYPE = "parentType";
+
+  public static final String PARENT_ID = "parentId";
+
   protected String title;
 
   @Context
@@ -78,7 +100,7 @@ public abstract class ResourceBean {
   protected UserBean owner;
 
   @Type(type = "resource")
-  @Columns(columns = {@Column(name = "parentType"), @Column(name = "parentId")})
+  @Columns(columns = { @Column(name = "parentType"), @Column(name = "parentId") })
   protected ResourceBean parent;
 
   public static final String CHILDREN_COUNT = "childrenCount";
@@ -88,17 +110,15 @@ public abstract class ResourceBean {
   @Transient
   private List<ResourceBean> children;
 
-  public static final String SELF = "";
-
   protected String content;
 
   public static final String CONTENT = "content";
 
   @Transient
-  @QueryParam(Resource.CHILDREN)
+  @QueryParam(CHILDREN)
   protected boolean loadChildren;
 
-  @QueryParam(Resource.RENDITION)
+  @QueryParam(RENDITION)
   @Transient
   protected String renditionKind;
 
@@ -132,8 +152,8 @@ public abstract class ResourceBean {
   }
 
   @POST
-  @Consumes({MediaType.MULTIPART_FORM_DATA})
-  @Produces({MediaType.APPLICATION_JSON})
+  @Consumes({ MediaType.MULTIPART_FORM_DATA })
+  @Produces({ MediaType.APPLICATION_JSON })
   public ResourceBean createFromMultipartFormData(@Context UriInfo uriInfo, @HeaderParam("Content-Length") final Integer contentLength,
       @HeaderParam("Content-Type") final String contentType, final InputStream inputStream) {
     ResourceBean result = null;
@@ -270,10 +290,10 @@ public abstract class ResourceBean {
   }
 
   public Object getPropertyValue(String name) {
-    if (Resource.TITLE.equals(name)) {
+    if (TITLE.equals(name)) {
       return title;
     }
-    if (Resource.PATH.equals(name)) {
+    if (PATH.equals(name)) {
       return path;
     }
     return null;
@@ -323,7 +343,7 @@ public abstract class ResourceBean {
   }
 
   @GET
-  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml"})
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml" })
   public ResourceBean load() {
     doLoad();
     return this;
@@ -353,8 +373,8 @@ public abstract class ResourceBean {
   }
 
   public void readParams(MultivaluedMap<String, String> params) {
-    String path = params.getFirst(Resource.PATH);
-    String title = params.getFirst(Resource.TITLE);
+    String path = params.getFirst(PATH);
+    String title = params.getFirst(TITLE);
     if (path != null) {
       this.path = path;
     }
@@ -435,9 +455,9 @@ public abstract class ResourceBean {
   }
 
   public void setPropertyValue(String name, String value) {
-    if (Resource.TITLE.equals(name)) {
+    if (TITLE.equals(name)) {
       title = value;
-    } else if (Resource.PATH.equals(name)) {
+    } else if (PATH.equals(name)) {
       path = value;
     } else if (CHILDREN_COUNT.equals(name)) {
       childrenCount = value == null ? 0 : Long.valueOf(value);
@@ -465,7 +485,7 @@ public abstract class ResourceBean {
   }
 
   protected ResourceBean createFrom(MultivaluedMap<String, String> params) {
-    String resourceType = params.getFirst(Resource.RESOURCE_TYPE);
+    String resourceType = params.getFirst(RESOURCE_TYPE);
     Class<?> type = Registry.getResourceType(resourceType);
     if (type != null) {
       ImplementedBy impl = type.getAnnotation(ImplementedBy.class);
