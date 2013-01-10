@@ -4,78 +4,78 @@ public interface CorePackage {
 
   String PREFIX = "Core";
 
-  String BOOK = PREFIX + "Book";
-  String GROUP = PREFIX + "Group";
-  String GROUP_FEED = PREFIX + "GroupFeed";
-  String BOOK_FEED = PREFIX + "BookFeed";
-  String MEDIA = PREFIX + "Media";
-  String MEMBER = PREFIX + "Member";
-  String MEMBER_FEED = PREFIX + "MemberFeed";
-  String REPOSITORY = PREFIX + "Repository";
-  String SECTION = PREFIX + "Section";
-  String USER = PREFIX + "User";
-  String USER_FEED = PREFIX + "UserFeed";
+  String Book = PREFIX + "Book";
+  String Group = PREFIX + "Group";
+  String GroupFeed = PREFIX + "GroupFeed";
+  String BookFeed = PREFIX + "BookFeed";
+  String Media = PREFIX + "Media";
+  String Member = PREFIX + "Member";
+  String MemberFeed = PREFIX + "MemberFeed";
+  String Repository = PREFIX + "Repository";
+  String Section = PREFIX + "Section";
+  String User = PREFIX + "User";
+  String UserFeed = PREFIX + "UserFeed";
 
-  public static final String CONTENT = "content";
+  String CONTENT = "content";
 
-  public static final String CHILDREN_COUNT = "childrenCount";
+  String CHILDREN_COUNT = "childrenCount";
 
-  public static final String CONTAINER = "/";
+  String CONTAINER = "/";
 
-  public static final String QUERY_COUNT = "queryCount";
+  String QUERY_COUNT = "queryCount";
 
-  public static final String ENTRIES = "entries";
+  String ENTRIES = "entries";
 
-  public static final String LIST = "list";
+  String LIST = "list";
 
-  public static final String NEW = "new";
+  String NEW = "new";
 
-  public final static String SEARCH = "search";
+  String SEARCH = "search";
 
-  public static final String SORT = "sort";
+  String SORT = "sort";
 
-  public static final String ZIP = "zip";
+  String ZIP = "zip";
 
-  public static final String STATE = "state";
+  String STATE = "state";
 
-  public static final String PHONE = "phone";
+  String PHONE = "phone";
 
-  public static final String NAME = "name";
+  String NAME = "name";
 
-  public static final String EMAIL = "email";
+  String EMAIL = "email";
 
-  public static final String RECOMMENDED = "recommended";
+  String RECOMMENDED = "recommended";
 
-  public static final String STARRED = "starred";
+  String STARRED = "starred";
 
-  public static final String MY_BOOKS = "myBooks";
+  String MY_BOOKS = "myBooks";
 
-  public static final String SOURCE = "source";
+  String SOURCE = "source";
 
-  public static final String COVER = "cover";
+  String COVER = "cover";
 
-  public static final String SECTIONS = "sections";
+  String SECTIONS = "sections";
 
-  public static final String PARENT_ID = "parentId";
+  String PARENT_ID = "parentId";
 
-  public static final String PARENT_TYPE = "parentType";
+  String PARENT_TYPE = "parentType";
 
-  public static final String RESOURCE_TYPE = "resourceType";
+  String RESOURCE_TYPE = "resourceType";
 
-  public static final String SELF = "";
+  String SELF = "";
 
-  public static final String CHILDREN = "children";
+  String CHILDREN = "children";
 
-  public static final String RENDITION = "rendition";
+  String RENDITION = "rendition";
 
-  public static final String VERSION = "version";
+  String VERSION = "version";
 
-  public static final String URI = "uri";
+  String URI = "uri";
 
-  public static final String PATH = "path";
+  String PATH = "path";
 
-  public static final String TITLE = "title";
+  String TITLE = "title";
 
-  public static final String ID = "id";
+  String ID = "id";
 
 }

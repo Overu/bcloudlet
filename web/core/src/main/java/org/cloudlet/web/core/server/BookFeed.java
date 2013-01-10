@@ -13,10 +13,10 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.BOOK_FEED)
-@XmlType(name = CorePackage.BOOK_FEED)
-@Entity(name = CorePackage.BOOK_FEED)
-@Table(name = CorePackage.BOOK_FEED)
+@XmlRootElement(name = CorePackage.BookFeed)
+@XmlType(name = CorePackage.BookFeed)
+@Entity(name = CorePackage.BookFeed)
+@Table(name = CorePackage.BookFeed)
 @Path("books")
 @DefaultField(key = "title", value = "图书")
 public class BookFeed extends PagingFeed<Book> {
@@ -36,7 +36,7 @@ public class BookFeed extends PagingFeed<Book> {
 
   @Override
   public String getResourceType() {
-    return CorePackage.BOOK_FEED;
+    return CorePackage.BookFeed;
   }
 
   @Override

@@ -8,10 +8,10 @@ import javax.ws.rs.Path;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.GROUP_FEED)
-@XmlType(name = CorePackage.GROUP_FEED)
-@Entity(name = CorePackage.GROUP_FEED)
-@Table(name = CorePackage.GROUP_FEED)
+@XmlRootElement(name = CorePackage.GroupFeed)
+@XmlType(name = CorePackage.GroupFeed)
+@Entity(name = CorePackage.GroupFeed)
+@Table(name = CorePackage.GroupFeed)
 @Path("groups")
 @DefaultField(key = "title", value = "用户组")
 public class GroupFeed extends PagingFeed<Group> {
@@ -22,7 +22,7 @@ public class GroupFeed extends PagingFeed<Group> {
 
   @Override
   public String getResourceType() {
-    return CorePackage.GROUP_FEED;
+    return CorePackage.GroupFeed;
   }
 
 }

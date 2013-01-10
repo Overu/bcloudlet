@@ -14,7 +14,7 @@ public class RepositoryProvider implements Provider<Repository> {
   public Repository get() {
     Repository repo = null;
     try {
-      repo = WebPlatform.get().getEntityManager().createQuery("from " + CorePackage.REPOSITORY, Repository.class).getSingleResult();
+      repo = WebPlatform.get().getEntityManager().createQuery("from " + CorePackage.Repository, Repository.class).getSingleResult();
     } catch (NoResultException e) {
       repo = new Repository();
       WebPlatform.get().injectMembers(repo);

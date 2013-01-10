@@ -13,10 +13,10 @@ import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.USER)
-@XmlType(name = CorePackage.USER)
-@Entity(name = CorePackage.USER)
-@Table(name = CorePackage.USER)
+@XmlRootElement(name = CorePackage.User)
+@XmlType(name = CorePackage.User)
+@Entity(name = CorePackage.User)
+@Table(name = CorePackage.User)
 public class User extends Resource implements Principal {
 
   private String name;
@@ -53,7 +53,7 @@ public class User extends Resource implements Principal {
 
   @Override
   public String getResourceType() {
-    return CorePackage.USER;
+    return CorePackage.User;
   }
 
   public String getState() {

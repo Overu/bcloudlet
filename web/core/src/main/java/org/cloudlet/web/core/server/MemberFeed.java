@@ -9,10 +9,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.MEMBER_FEED)
-@XmlType(name = CorePackage.MEMBER_FEED)
-@Entity(name = CorePackage.MEMBER_FEED)
-@Table(name = CorePackage.MEMBER_FEED)
+@XmlRootElement(name = CorePackage.MemberFeed)
+@XmlType(name = CorePackage.MemberFeed)
+@Entity(name = CorePackage.MemberFeed)
+@Table(name = CorePackage.MemberFeed)
 public class MemberFeed extends Feed<Member> {
   @Override
   @XmlTransient
@@ -22,7 +22,7 @@ public class MemberFeed extends Feed<Member> {
 
   @Override
   public String getResourceType() {
-    return CorePackage.MEMBER_FEED;
+    return CorePackage.MemberFeed;
   }
 
 }

@@ -8,10 +8,10 @@ import javax.ws.rs.Path;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.REPOSITORY)
-@XmlType(name = CorePackage.REPOSITORY)
-@Entity(name = CorePackage.REPOSITORY)
-@Table(name = CorePackage.REPOSITORY)
+@XmlRootElement(name = CorePackage.Repository)
+@XmlType(name = CorePackage.Repository)
+@Entity(name = CorePackage.Repository)
+@Table(name = CorePackage.Repository)
 @Path("/")
 public final class Repository extends Resource {
 
@@ -22,7 +22,7 @@ public final class Repository extends Resource {
 
   @Override
   public String getResourceType() {
-    return CorePackage.REPOSITORY;
+    return CorePackage.Repository;
   }
 
   @Override

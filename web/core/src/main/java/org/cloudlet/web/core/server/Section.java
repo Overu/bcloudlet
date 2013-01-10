@@ -8,14 +8,14 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.SECTION)
-@XmlType(name = CorePackage.SECTION)
-@Entity(name = CorePackage.SECTION)
-@Table(name = CorePackage.SECTION)
+@XmlRootElement(name = CorePackage.Section)
+@XmlType(name = CorePackage.Section)
+@Entity(name = CorePackage.Section)
+@Table(name = CorePackage.Section)
 public class Section extends Resource {
   @Override
   public String getResourceType() {
-    return CorePackage.SECTION;
+    return CorePackage.Section;
   }
 
 }

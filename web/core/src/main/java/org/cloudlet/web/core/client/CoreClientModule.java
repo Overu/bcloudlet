@@ -66,13 +66,13 @@ public class CoreClientModule extends AbstractGinModule {
 
     private void start() {
 
-      Registry.setWidget(CorePackage.REPOSITORY, CorePackage.CONTAINER, explorer);
+      Registry.setWidget(CorePackage.Repository, CorePackage.CONTAINER, explorer);
 
-      Registry.setWidget(CorePackage.USER_FEED, "", userGrid);
-      Registry.setWidget(CorePackage.USER_FEED, "new", userEditor);
+      Registry.setWidget(CorePackage.UserFeed, "", userGrid);
+      Registry.setWidget(CorePackage.UserFeed, "new", userEditor);
 
-      Registry.setWidget(CorePackage.BOOK_FEED, "", bookGrid);
-      Registry.setWidget(CorePackage.BOOK_FEED, "new", bookEditor);
+      Registry.setWidget(CorePackage.BookFeed, "", bookGrid);
+      Registry.setWidget(CorePackage.BookFeed, "new", bookEditor);
 
       BaseResources.INSTANCE();
       main = new SimplePanel();
@@ -91,7 +91,7 @@ public class CoreClientModule extends AbstractGinModule {
   @Provides
   @Singleton
   public Resource getHomePage(final Resource root) {
-    root.setResourceType(CorePackage.REPOSITORY);
+    root.setResourceType(CorePackage.Repository);
     root.setTitle("Repository");
     return root;
   }

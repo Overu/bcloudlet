@@ -10,10 +10,10 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.BOOK)
-@XmlType(name = CorePackage.BOOK)
-@Entity(name = CorePackage.BOOK)
-@Table(name = CorePackage.BOOK)
+@XmlRootElement(name = CorePackage.Book)
+@XmlType(name = CorePackage.Book)
+@Entity(name = CorePackage.Book)
+@Table(name = CorePackage.Book)
 @DefaultField(key = "title", value = "图书")
 public class Book extends Resource {
 
@@ -30,7 +30,7 @@ public class Book extends Resource {
 
   @Override
   public String getResourceType() {
-    return CorePackage.BOOK;
+    return CorePackage.Book;
   }
 
   @Path("source")

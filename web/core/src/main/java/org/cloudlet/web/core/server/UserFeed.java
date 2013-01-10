@@ -17,10 +17,10 @@ import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.USER_FEED)
-@XmlType(name = CorePackage.USER_FEED)
-@Entity(name = CorePackage.USER_FEED)
-@Table(name = CorePackage.USER_FEED)
+@XmlRootElement(name = CorePackage.UserFeed)
+@XmlType(name = CorePackage.UserFeed)
+@Entity(name = CorePackage.UserFeed)
+@Table(name = CorePackage.UserFeed)
 @Path("users")
 @DefaultField(key = "title", value = "系统用户")
 public class UserFeed extends PagingFeed<User> {
@@ -48,7 +48,7 @@ public class UserFeed extends PagingFeed<User> {
 
   @Override
   public String getResourceType() {
-    return CorePackage.USER_FEED;
+    return CorePackage.UserFeed;
   }
 
   @Override

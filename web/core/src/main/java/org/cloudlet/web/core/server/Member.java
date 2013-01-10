@@ -13,10 +13,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.MEMBER)
-@XmlType(name = CorePackage.MEMBER)
-@Entity(name = CorePackage.MEMBER)
-@Table(name = CorePackage.MEMBER)
+@XmlRootElement(name = CorePackage.Member)
+@XmlType(name = CorePackage.Member)
+@Entity(name = CorePackage.Member)
+@Table(name = CorePackage.Member)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Member extends Resource {
   public static Logger logger = Logger.getLogger(Member.class.getName());
@@ -29,7 +29,7 @@ public class Member extends Resource {
 
   @Override
   public String getResourceType() {
-    return CorePackage.MEMBER;
+    return CorePackage.Member;
   }
 
   @XmlTransient

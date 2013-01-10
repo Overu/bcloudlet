@@ -25,10 +25,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.MEDIA)
-@XmlType(name = CorePackage.MEDIA)
-@Entity(name = CorePackage.MEDIA)
-@Table(name = CorePackage.MEDIA)
+@XmlRootElement(name = CorePackage.Media)
+@XmlType(name = CorePackage.Media)
+@Entity(name = CorePackage.Media)
+@Table(name = CorePackage.Media)
 public class Media extends Resource {
 
   private String mimeType;
@@ -60,7 +60,7 @@ public class Media extends Resource {
 
   @Override
   public String getResourceType() {
-    return CorePackage.MEDIA;
+    return CorePackage.Media;
   }
 
   public InputStream openStream() {

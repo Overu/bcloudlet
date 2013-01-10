@@ -12,10 +12,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.GROUP)
-@XmlType(name = CorePackage.GROUP)
-@Entity(name = CorePackage.GROUP)
-@Table(name = CorePackage.GROUP)
+@XmlRootElement(name = CorePackage.Group)
+@XmlType(name = CorePackage.Group)
+@Entity(name = CorePackage.Group)
+@Table(name = CorePackage.Group)
 public class Group extends Resource implements Principal {
 
   protected String name;
@@ -47,7 +47,7 @@ public class Group extends Resource implements Principal {
 
   @Override
   public String getResourceType() {
-    return CorePackage.GROUP;
+    return CorePackage.Group;
   }
 
   public void setName(String name) {
