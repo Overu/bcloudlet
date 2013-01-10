@@ -125,6 +125,7 @@ public class ResourceTree extends BorderLayoutContainer implements TakesResource
     tree.getSelectionModel().addSelectionHandler(new SelectionHandler<Resource>() {
       @Override
       public void onSelection(final SelectionEvent<Resource> event) {
+
         resourceManager.goTo(event.getSelectedItem().getHome());
         // tree.getSelectionModel().deselectAll();
       }

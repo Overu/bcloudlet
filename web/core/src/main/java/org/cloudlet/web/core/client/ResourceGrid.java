@@ -334,14 +334,14 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
             @Override
             public void onSelection(SelectionEvent<Item> event) {
               switch (columnItem) {
-                case DESELECTALL:
-                  selectionModel.setSelectAllChecked(false);
-                  break;
-                case SELECTALL:
-                  selectionModel.setSelectAllChecked(true);
-                  break;
-                default:
-                  break;
+              case DESELECTALL:
+                selectionModel.setSelectAllChecked(false);
+                break;
+              case SELECTALL:
+                selectionModel.setSelectAllChecked(true);
+                break;
+              default:
+                break;
               }
             }
           });
@@ -470,52 +470,52 @@ public abstract class ResourceGrid<T extends Resource, F extends Feed<T>> extend
 
   private void selectBase(SelectButtonCar car) {
     switch (car) {
-      case ADD:
-        ResourcePlace place = getPlace().getRendition(UserFeedEditor.NEW);
-        resourceManager.goTo(place);
-        break;
-      case REFRESH:
-        refresh();
-        break;
-      case DELETE:
-        if (selectedItem == null || selectedItem.equals("")) {
-          return;
+    case ADD:
+      ResourcePlace place = getPlace().getRendition(UserFeedEditor.NEW);
+      resourceManager.goTo(place);
+      break;
+    case REFRESH:
+      refresh();
+      break;
+    case DELETE:
+      if (selectedItem == null || selectedItem.equals("")) {
+        return;
+      }
+      resourceManager.getPlace(selectedItem).delete(new AsyncCallback<ResourcePlace<T>>() {
+        @Override
+        public void onFailure(Throwable caught) {
         }
-        resourceManager.getPlace(selectedItem).delete(new AsyncCallback<ResourcePlace<T>>() {
-          @Override
-          public void onFailure(Throwable caught) {
-          }
 
-          @Override
-          public void onSuccess(ResourcePlace<T> result) {
-            refresh();
-          }
-        });
-        break;
-      case EDIT:
-        if (selectedItem == null) {
-          return;
+        @Override
+        public void onSuccess(ResourcePlace<T> result) {
+          refresh();
         }
-        resourceManager.goTo(selectedItem);
-        break;
-      default:
-        break;
+      });
+      break;
+    case EDIT:
+      if (selectedItem == null) {
+        return;
+      }
+      resourceManager.goTo(selectedItem);
+      break;
+    default:
+      break;
     }
   }
 
   private void selectView(ViewButtonCar car) {
     switch (car) {
-      case TABLE:
-        con.remove(grid);
-        con.add(listView, new VerticalLayoutData(1, 1));
-        listView.setSize("100%", "100%");
-        break;
-      case GRID:
-        con.remove(listView);
-        con.add(grid, new VerticalLayoutData(1, 1));
-        break;
-      default:
-        break;
+    case TABLE:
+      con.remove(grid);
+      con.add(listView, new VerticalLayoutData(1, 1));
+      listView.setSize("100%", "100%");
+      break;
+    case GRID:
+      con.remove(listView);
+      con.add(grid, new VerticalLayoutData(1, 1));
+      break;
+    default:
+      break;
     }
     con.onResize();
   }
