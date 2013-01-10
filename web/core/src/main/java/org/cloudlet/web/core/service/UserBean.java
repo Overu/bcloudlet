@@ -1,5 +1,6 @@
 package org.cloudlet.web.core.service;
 
+import org.cloudlet.web.core.CorePackage;
 import org.cloudlet.web.core.User;
 
 import java.security.Principal;
@@ -13,12 +14,17 @@ import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = User.TYPE)
-@XmlType(name = User.TYPE)
-@Entity(name = User.TYPE)
-@Table(name = User.TYPE)
+@XmlRootElement(name = UserBean.TYPE)
+@XmlType(name = UserBean.TYPE)
+@Entity(name = UserBean.TYPE)
+@Table(name = UserBean.TYPE)
 public class UserBean extends ResourceBean implements Principal {
-
+  public static final String TYPE = CorePackage.PREFIX + "User";
+  public static final String EMAIL = "email";
+  public static final String NAME = "name";
+  public static final String PHONE = "phone";
+  public static final String STATE = "state";
+  public static final String ZIP = "zip";
   private String name;
 
   private String email;
@@ -53,7 +59,7 @@ public class UserBean extends ResourceBean implements Principal {
 
   @Override
   public String getResourceType() {
-    return User.TYPE;
+    return TYPE;
   }
 
   public String getState() {
@@ -94,8 +100,8 @@ public class UserBean extends ResourceBean implements Principal {
   }
 
   @PUT
-  @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public UserBean update(UserBean data) {
     readFrom(data);
     save();

@@ -62,10 +62,9 @@ import com.sencha.gxt.widget.core.client.toolbar.LabelToolItem;
 import com.sencha.gxt.widget.core.client.toolbar.PagingToolBar;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
-import org.cloudlet.web.core.Media;
 import org.cloudlet.web.core.client.QueryBuilder;
-import org.cloudlet.web.core.client.ResourcePlace;
 import org.cloudlet.web.core.client.UserFeedEditor;
+import org.cloudlet.web.core.service.FeedBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -279,7 +278,7 @@ public abstract class ResourceGrid extends ContentPanel implements TakesResource
 
               @Override
               public void onSuccess(final Resource result) {
-                List<Resource> books = result.getList("entries");
+                List<Resource> books = result.getList(FeedBean.ENTRIES);
                 builder.clear();
                 callback.onSuccess(new PagingLoadResultBean<Resource>(books, result.getQueryCount().intValue(), loadConfig.getOffset()));
               }
@@ -337,14 +336,14 @@ public abstract class ResourceGrid extends ContentPanel implements TakesResource
             @Override
             public void onSelection(SelectionEvent<Item> event) {
               switch (columnItem) {
-                case DESELECTALL:
-                  selectionModel.setSelectAllChecked(false);
-                  break;
-                case SELECTALL:
-                  selectionModel.setSelectAllChecked(true);
-                  break;
-                default:
-                  break;
+              case DESELECTALL:
+                selectionModel.setSelectAllChecked(false);
+                break;
+              case SELECTALL:
+                selectionModel.setSelectAllChecked(true);
+                break;
+              default:
+                break;
               }
             }
           });
@@ -474,52 +473,52 @@ public abstract class ResourceGrid extends ContentPanel implements TakesResource
 
   private void selectBase(SelectButtonCar car) {
     switch (car) {
-      case ADD:
-        Resource place = getValue().getRendition(UserFeedEditor.NEW);
-        resourceManager.goTo(place);
-        break;
-      case REFRESH:
-        refresh();
-        break;
-      case DELETE:
-        if (selectedItem == null || selectedItem.equals("")) {
-          return;
+    case ADD:
+      Resource place = getValue().getRendition(UserFeedEditor.NEW);
+      resourceManager.goTo(place);
+      break;
+    case REFRESH:
+      refresh();
+      break;
+    case DELETE:
+      if (selectedItem == null || selectedItem.equals("")) {
+        return;
+      }
+      selectedItem.delete(new AsyncCallback<Resource>() {
+        @Override
+        public void onFailure(Throwable caught) {
         }
-        selectedItem.delete(new AsyncCallback<Resource>() {
-          @Override
-          public void onFailure(Throwable caught) {
-          }
 
-          @Override
-          public void onSuccess(Resource result) {
-            refresh();
-          }
-        });
-        break;
-      case EDIT:
-        if (selectedItem == null) {
-          return;
+        @Override
+        public void onSuccess(Resource result) {
+          refresh();
         }
-        resourceManager.goTo(selectedItem);
-        break;
-      default:
-        break;
+      });
+      break;
+    case EDIT:
+      if (selectedItem == null) {
+        return;
+      }
+      resourceManager.goTo(selectedItem);
+      break;
+    default:
+      break;
     }
   }
 
   private void selectView(ViewButtonCar car) {
     switch (car) {
-      case TABLE:
-        con.remove(grid);
-        con.add(listView, new VerticalLayoutData(1, 1));
-        listView.setSize("100%", "100%");
-        break;
-      case GRID:
-        con.remove(listView);
-        con.add(grid, new VerticalLayoutData(1, 1));
-        break;
-      default:
-        break;
+    case TABLE:
+      con.remove(grid);
+      con.add(listView, new VerticalLayoutData(1, 1));
+      listView.setSize("100%", "100%");
+      break;
+    case GRID:
+      con.remove(listView);
+      con.add(grid, new VerticalLayoutData(1, 1));
+      break;
+    default:
+      break;
     }
     con.onResize();
   }

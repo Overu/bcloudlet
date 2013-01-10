@@ -5,28 +5,6 @@ import java.util.List;
 
 public interface Resource {
 
-  String ID = "id";
-
-  String TITLE = "title";
-
-  String PATH = "path";
-
-  String URI = "uri";
-
-  String VERSION = "version";
-
-  String RENDITION = "rendition";
-
-  String CHILDREN = "children";
-
-  String SELF = "";
-
-  String RESOURCE_TYPE = "resourceType";
-
-  String PARENT_TYPE = "parentType";
-
-  String PARENT_ID = "parentId";
-
   List<Resource> getChildren();
 
   int getChildrenCount();

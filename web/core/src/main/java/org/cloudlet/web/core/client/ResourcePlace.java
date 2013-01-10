@@ -22,6 +22,7 @@ import org.cloudlet.web.core.CoreAutoBeanFactory;
 import org.cloudlet.web.core.Media;
 import org.cloudlet.web.core.Registry;
 import org.cloudlet.web.core.Resource;
+import org.cloudlet.web.core.service.ResourceBean;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +33,12 @@ import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
 public class ResourcePlace<T extends Resource> extends Place {
+
+  public static String getMediaUrl(Media media) {
+    String uri = media.getUri();
+    String url = "api" + uri + "/" + media.getTitle();
+    return url;
+  }
 
   @Inject
   Provider<ResourceManager> manager;
@@ -62,12 +69,12 @@ public class ResourcePlace<T extends Resource> extends Place {
 
   private Map<String, ResourcePlace<T>> renditions;
 
-  private MultivaluedMap<String, String> queryParameters;
-
   //
   // public void addChild(ResourcePlace<? extends Resource> place) {
   // children.put(place.getPath(), place);
   // }
+
+  private MultivaluedMap<String, String> queryParameters;
 
   private ResourcePlace<? extends Resource> host;
 
@@ -153,10 +160,10 @@ public class ResourcePlace<T extends Resource> extends Place {
         paramMap.add(paramName, paramValue);
       }
 
-      String renditionKind = paramMap.getFirst(Resource.RENDITION);
+      String renditionKind = paramMap.getFirst(ResourceBean.RENDITION);
       if (renditionKind != null) {
         result = result.getRendition(renditionKind);
-        paramMap.remove(Resource.RENDITION);
+        paramMap.remove(ResourceBean.RENDITION);
       }
       result.setQueryParameters(paramMap);
     }
@@ -226,7 +233,7 @@ public class ResourcePlace<T extends Resource> extends Place {
       result.setRendition(kind);
       result.setTitle(kind);
       result.host = this;
-      if (Resource.SELF.equals(kind)) {
+      if (ResourceBean.SELF.equals(kind)) {
         result.setResource(this.resource);
       }
       getRenditions().put(kind, result);
@@ -279,7 +286,7 @@ public class ResourcePlace<T extends Resource> extends Place {
     if (includeParams) {
       boolean first = true;
       if (rendition != null && rendition.length() > 0) {
-        first = appendParam(builder, Resource.RENDITION, rendition, first);
+        first = appendParam(builder, ResourceBean.RENDITION, rendition, first);
       }
       for (String key : getQueryParameters().keySet()) {
         List<String> values = getQueryParameters().get(key);
@@ -319,7 +326,7 @@ public class ResourcePlace<T extends Resource> extends Place {
 
   public void readResource(String data) {
     JSONObject json = JSONParser.parse(data).isObject();
-    String typeName = json.get(Resource.RESOURCE_TYPE).isString().stringValue();
+    String typeName = json.get(ResourceBean.RESOURCE_TYPE).isString().stringValue();
     Class<T> resourceType = (Class<T>) Registry.getResourceType(typeName);
     if (resourceType == null) {
       resourceType = getResourceType();
@@ -529,12 +536,6 @@ public class ResourcePlace<T extends Resource> extends Place {
     if (callback != null) {
       callback.onSuccess(widget);
     }
-  }
-
-  public static String getMediaUrl(Media media) {
-    String uri = media.getUri();
-    String url = "api" + uri + "/" + media.getTitle();
-    return url;
   }
 
 }

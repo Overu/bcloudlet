@@ -1,7 +1,5 @@
-package org.cloudlet.web.core.client;
+package org.cloudlet.web.core.client.v2;
 
-import com.google.gwt.core.shared.GWT;
-import com.google.gwt.editor.client.SimpleBeanEditorDriver;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.util.Margins;
@@ -18,10 +16,7 @@ import com.sencha.gxt.widget.core.client.form.TextField;
 import org.cloudlet.web.core.Book;
 import org.cloudlet.web.core.service.ResourceBean;
 
-public class BookEditor extends ResourceEditor<Book> {
-
-  interface Driver extends SimpleBeanEditorDriver<Book, BookEditor> {
-  }
+public class BookEditor extends ResourceEditor {
 
   @Inject
   FormPanel form;
@@ -38,19 +33,6 @@ public class BookEditor extends ResourceEditor<Book> {
 
   @Inject
   ImageField cover;
-
-  private static Driver driver = GWT.create(Driver.class);
-
-  @Override
-  public Class<Book> getResourceType() {
-    return Book.class;
-  }
-
-  @SuppressWarnings("unchecked")
-  @Override
-  protected Driver getDriver() {
-    return driver;
-  }
 
   @Override
   protected void initView() {
@@ -81,9 +63,9 @@ public class BookEditor extends ResourceEditor<Book> {
         int begin = html.indexOf(">");
         int end = html.lastIndexOf("<");
         String json = html.substring(begin + 1, end);
-        ResourcePlace result = getPlace();
-        result.readResource(json);
-        ResourcePlace place = result.getParent().getRendition(UserGrid.LIST);
+        Resource result = getValue();
+        result.read(json);
+        Resource place = result.getParent().getRendition(UserGrid.LIST);
         resourceManager.goTo(place);
       }
     });
@@ -94,14 +76,13 @@ public class BookEditor extends ResourceEditor<Book> {
   }
 
   @Override
-  protected void save() {
-    Book book = getPlace().getResource();
+  protected void save(Resource book) {
     form.setMethod(Method.POST);
     StringBuilder uri;
     if (book.getId() == null) {
-      uri = getPlace().getParent().getUriBuilder();
+      uri = book.getParent().getUriBuilder();
     } else {
-      uri = getPlace().getUriBuilder();
+      uri = book.getUriBuilder();
     }
     uri.insert(0, "api");
     form.setAction(uri.toString());
