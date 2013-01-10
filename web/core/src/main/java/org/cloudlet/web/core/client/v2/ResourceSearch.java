@@ -49,8 +49,8 @@ public abstract class ResourceSearch extends SimpleContainer implements TakesRes
   }
 
   interface Template extends XTemplates {
-    @XTemplate("<div class='{style.searchItem}'>{resource.title}</div>")
-    SafeHtml render(Resource resource, ResourceStyle style);
+    @XTemplate("<div class='{style.searchItem}'>{resource}</div>")
+    SafeHtml render(String resource, ResourceStyle style);
   }
 
   protected static Template template = GWT.create(Template.class);
