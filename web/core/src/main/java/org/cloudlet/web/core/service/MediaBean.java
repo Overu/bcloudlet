@@ -2,7 +2,6 @@ package org.cloudlet.web.core.service;
 
 import org.apache.commons.io.IOUtils;
 import org.cloudlet.web.core.CorePackage;
-import org.cloudlet.web.core.Media;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -63,7 +62,7 @@ public class MediaBean extends ResourceBean {
 
   @Override
   public String getResourceType() {
-    return Media.TYPE;
+    return TYPE;
   }
 
   public InputStream openStream() {
