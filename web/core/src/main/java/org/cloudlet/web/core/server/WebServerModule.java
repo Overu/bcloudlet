@@ -4,17 +4,17 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import com.google.inject.persist.jpa.JpaPersistModule;
 
+import org.cloudlet.web.core.BookFeed;
+import org.cloudlet.web.core.BookFeedProvider;
 import org.cloudlet.web.core.CorePackage;
+import org.cloudlet.web.core.GroupFeed;
+import org.cloudlet.web.core.GroupFeedProvider;
+import org.cloudlet.web.core.Repository;
+import org.cloudlet.web.core.RepositoryProvider;
 import org.cloudlet.web.core.Root;
-import org.cloudlet.web.core.service.BookFeedBean;
-import org.cloudlet.web.core.service.BookFeedProvider;
-import org.cloudlet.web.core.service.GroupFeedBean;
-import org.cloudlet.web.core.service.GroupFeedProvider;
-import org.cloudlet.web.core.service.RepositoryBean;
-import org.cloudlet.web.core.service.RepositoryProvider;
-import org.cloudlet.web.core.service.UserFeedBean;
-import org.cloudlet.web.core.service.UserFeedProvider;
-import org.cloudlet.web.core.service.WebPlatform;
+import org.cloudlet.web.core.UserFeed;
+import org.cloudlet.web.core.UserFeedProvider;
+import org.cloudlet.web.core.WebPlatform;
 
 import java.util.logging.Logger;
 
@@ -33,10 +33,10 @@ public class WebServerModule extends AbstractModule {
 
     bind(CorePackage.class).asEagerSingleton();
     bind(WebPlatform.class).asEagerSingleton();
-    bind(RepositoryBean.class).toProvider(RepositoryProvider.class);
-    bind(UserFeedBean.class).annotatedWith(Root.class).toProvider(UserFeedProvider.class);
-    bind(GroupFeedBean.class).annotatedWith(Root.class).toProvider(GroupFeedProvider.class);
-    bind(BookFeedBean.class).annotatedWith(Root.class).toProvider(BookFeedProvider.class);
+    bind(Repository.class).toProvider(RepositoryProvider.class);
+    bind(UserFeed.class).annotatedWith(Root.class).toProvider(UserFeedProvider.class);
+    bind(GroupFeed.class).annotatedWith(Root.class).toProvider(GroupFeedProvider.class);
+    bind(BookFeed.class).annotatedWith(Root.class).toProvider(BookFeedProvider.class);
 
     // MethodInterceptor finderInterceptor = new JpaFinderProxy();
     // requestInjection(finderInterceptor);

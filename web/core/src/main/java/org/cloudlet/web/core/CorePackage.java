@@ -1,6 +1,5 @@
 package org.cloudlet.web.core;
 
-import org.cloudlet.web.core.service.UserBean;
 
 public class CorePackage {
 

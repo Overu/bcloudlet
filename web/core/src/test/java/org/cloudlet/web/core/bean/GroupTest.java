@@ -4,13 +4,13 @@ import static org.junit.Assert.assertEquals;
 
 import com.google.inject.Inject;
 
+import org.cloudlet.web.core.Group;
+import org.cloudlet.web.core.GroupFeed;
+import org.cloudlet.web.core.Media;
+import org.cloudlet.web.core.Repository;
 import org.cloudlet.web.core.Root;
-import org.cloudlet.web.core.service.GroupBean;
-import org.cloudlet.web.core.service.GroupFeedBean;
-import org.cloudlet.web.core.service.MediaBean;
-import org.cloudlet.web.core.service.RepositoryBean;
-import org.cloudlet.web.core.service.UserBean;
-import org.cloudlet.web.core.service.UserFeedBean;
+import org.cloudlet.web.core.User;
+import org.cloudlet.web.core.UserFeed;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -23,20 +23,20 @@ import javax.xml.bind.Marshaller;
 public class GroupTest extends CoreTest {
 
 	@Inject
-	RepositoryBean repo;
+	Repository repo;
 
 	@Root
 	@Inject
-	GroupFeedBean groups;
+	GroupFeed groups;
 
 	@Root
 	@Inject
-	UserFeedBean users;
+	UserFeed users;
 
 	@Test
 	public void testSubResource() throws JAXBException {
 		System.out.println(UUID.randomUUID().toString());
-		GroupBean group = groups.getEntry("mygroup");
+		Group group = groups.getEntry("mygroup");
 		if (group == null) {
 			group = groups.newEntry();
 			group.setPath("mygroup");
@@ -47,7 +47,7 @@ public class GroupTest extends CoreTest {
 		users.load();
 		long total = users.getChildrenCount();
 		for (int i = 1; i <= 10; i++) {
-			UserBean user = users.newEntry();
+			User user = users.newEntry();
 			long count = total + i;
 			user.setName("User " + count);
 			user.setPath("user" + count);
@@ -60,8 +60,8 @@ public class GroupTest extends CoreTest {
 		repo.loadChildren();
 		repo.load();
 
-		JAXBContext jc = JAXBContext.newInstance(RepositoryBean.class, GroupFeedBean.class, UserFeedBean.class, UserBean.class,
-				MediaBean.class);
+		JAXBContext jc = JAXBContext.newInstance(Repository.class, GroupFeed.class, UserFeed.class, User.class,
+				Media.class);
 		Marshaller marshaller = jc.createMarshaller();
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		marshaller.marshal(repo, os);

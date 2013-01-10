@@ -4,9 +4,8 @@
   <inherits name='com.sencha.gxt.ui.GXT' />
   <inherits name='com.sencha.gxt.theme.gray.Gray' />
 
-  <extend-configuration-property name="gin.module" value="org.cloudlet.web.core.client.v2.CoreClientModule" />
+  <extend-configuration-property name="gin.module" value="org.cloudlet.web.core.client.CoreClientModule" />
 
-  <source path="" includes="*.java" />
   <source path='client' />
   <super-source path="super" />
 </module>

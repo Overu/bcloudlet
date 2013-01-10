@@ -2,10 +2,10 @@ package org.cloudlet.web.core.bean;
 
 import com.google.inject.Inject;
 
-import org.cloudlet.web.core.service.GroupFeedBean;
-import org.cloudlet.web.core.service.RepositoryBean;
-import org.cloudlet.web.core.service.UserBean;
-import org.cloudlet.web.core.service.UserFeedBean;
+import org.cloudlet.web.core.GroupFeed;
+import org.cloudlet.web.core.Repository;
+import org.cloudlet.web.core.User;
+import org.cloudlet.web.core.UserFeed;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -19,22 +19,22 @@ import javax.xml.bind.Marshaller;
 public class JAXBTest extends CoreTest {
 
   @Inject
-  RepositoryBean repo;
+  Repository repo;
 
   @Inject
-  UserFeedBean users;
+  UserFeed users;
 
   @Inject
-  GroupFeedBean groups;
+  GroupFeed groups;
 
   @Test
   public void testJAXB() throws JAXBException {
-    UserBean user = new UserBean();
+    User user = new User();
     user.setName("user1");
-    List<UserBean> userList = new ArrayList<UserBean>();
+    List<User> userList = new ArrayList<User>();
     userList.add(user);
     users.setEntries(userList);
-    JAXBContext jc = JAXBContext.newInstance(UserFeedBean.class, UserBean.class);
+    JAXBContext jc = JAXBContext.newInstance(UserFeed.class, User.class);
     Marshaller marshaller = jc.createMarshaller();
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     marshaller.marshal(users, os);
