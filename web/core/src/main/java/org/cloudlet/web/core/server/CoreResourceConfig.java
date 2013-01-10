@@ -6,7 +6,6 @@ import com.google.inject.Injector;
 import com.google.inject.persist.PersistService;
 
 import org.cloudlet.web.boot.server.BootModule;
-import org.cloudlet.web.core.Repository;
 import org.cloudlet.web.core.provider.XmlResourceBinder;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;

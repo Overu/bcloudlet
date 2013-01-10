@@ -30,7 +30,7 @@ import com.sencha.gxt.widget.core.client.form.ComboBox;
 import com.sencha.gxt.widget.core.client.toolbar.LabelToolItem;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
-import org.cloudlet.web.core.Feed;
+import org.cloudlet.web.core.shared.CorePackage;
 
 import java.util.List;
 
@@ -99,7 +99,7 @@ public abstract class ResourceSearch extends SimpleContainer implements TakesRes
           if (text == null && text.equals("")) {
             continue;
           }
-          builder.buildQuery(Feed.SEARCH, title, text);
+          builder.buildQuery(CorePackage.SEARCH, title, text);
         }
         builder.limit(String.valueOf(loadConfig.getLimit()), String.valueOf(loadConfig.getOffset()));
         getValue().load(new AsyncCallback<Resource>() {

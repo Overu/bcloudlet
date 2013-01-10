@@ -7,9 +7,9 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.subject.Subject;
-import org.cloudlet.web.core.Root;
-import org.cloudlet.web.core.User;
-import org.cloudlet.web.core.UserFeed;
+import org.cloudlet.web.core.server.User;
+import org.cloudlet.web.core.server.UserFeed;
+import org.cloudlet.web.core.shared.Root;
 import org.junit.Before;
 import org.junit.Test;
 

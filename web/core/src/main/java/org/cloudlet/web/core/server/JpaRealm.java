@@ -16,9 +16,7 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.crypto.hash.Sha1Hash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.cloudlet.web.core.Root;
-import org.cloudlet.web.core.User;
-import org.cloudlet.web.core.UserFeed;
+import org.cloudlet.web.core.shared.Root;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

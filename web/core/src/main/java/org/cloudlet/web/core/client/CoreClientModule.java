@@ -13,9 +13,9 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-import org.cloudlet.web.core.CorePackage;
-import org.cloudlet.web.core.Root;
 import org.cloudlet.web.core.client.style.BaseResources;
+import org.cloudlet.web.core.shared.CorePackage;
+import org.cloudlet.web.core.shared.Root;
 
 import java.util.logging.Logger;
 
@@ -66,13 +66,13 @@ public class CoreClientModule extends AbstractGinModule {
 
     private void start() {
 
-      Registry.setWidget(CorePackage.REPOSITORY, Resource.CONTAINER, explorer);
+      Registry.setWidget(CorePackage.REPOSITORY, CorePackage.CONTAINER, explorer);
 
-      Registry.setWidget(CorePackage.USERFEED, "", userGrid);
-      Registry.setWidget(CorePackage.USERFEED, "new", userEditor);
+      Registry.setWidget(CorePackage.USER_FEED, "", userGrid);
+      Registry.setWidget(CorePackage.USER_FEED, "new", userEditor);
 
-      Registry.setWidget(CorePackage.BOOKFEED, "", bookGrid);
-      Registry.setWidget(CorePackage.BOOKFEED, "new", bookEditor);
+      Registry.setWidget(CorePackage.BOOK_FEED, "", bookGrid);
+      Registry.setWidget(CorePackage.BOOK_FEED, "new", bookEditor);
 
       BaseResources.INSTANCE();
       main = new SimplePanel();

@@ -3,7 +3,7 @@ package org.cloudlet.web.core.client;
 import com.sencha.gxt.data.shared.SortInfo;
 import com.sencha.gxt.data.shared.loader.FilterConfig;
 
-import org.cloudlet.web.core.Feed;
+import org.cloudlet.web.core.shared.CorePackage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,7 @@ public class QueryBuilder {
     for (FilterConfig filter : filters) {
       String field = filter.getField();
       String test = filter.getValue();
-      buildQuery(Feed.SEARCH, field, test);
+      buildQuery(CorePackage.SEARCH, field, test);
     }
   }
 
@@ -57,7 +57,7 @@ public class QueryBuilder {
 
   public void sort(List<? extends SortInfo> sorts) {
     for (SortInfo sort : sorts) {
-      buildQuery(Feed.SORT, sort.getSortField(), sort.getSortDir().name());
+      buildQuery(CorePackage.SORT, sort.getSortField(), sort.getSortDir().name());
     }
   }
 

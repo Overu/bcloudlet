@@ -2,10 +2,10 @@ package org.cloudlet.web.core.bean;
 
 import com.google.inject.Inject;
 
-import org.cloudlet.web.core.GroupFeed;
-import org.cloudlet.web.core.Repository;
-import org.cloudlet.web.core.User;
-import org.cloudlet.web.core.UserFeed;
+import org.cloudlet.web.core.server.GroupFeed;
+import org.cloudlet.web.core.server.Repository;
+import org.cloudlet.web.core.server.User;
+import org.cloudlet.web.core.server.UserFeed;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;

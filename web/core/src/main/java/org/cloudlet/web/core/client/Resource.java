@@ -21,7 +21,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import org.cloudlet.web.core.Content;
+import org.cloudlet.web.core.shared.CorePackage;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,10 +36,6 @@ import javax.ws.rs.core.MultivaluedMap;
 public class Resource extends Place {
 
   private static final Logger logger = Logger.getLogger(Resource.class.getName());
-
-  public static final String CONTAINER = "/";
-
-  public static final String QUERY_COUNT = "queryCount";
 
   @Inject
   Provider<Resource> placeProvider;
@@ -187,12 +183,12 @@ public class Resource extends Place {
     if (isRendition()) {
       return this;
     } else {
-      return getRenditions().get(Content.SELF);
+      return getRenditions().get(CorePackage.SELF);
     }
   }
 
   public String getId() {
-    return getString(Content.ID);
+    return getString(CorePackage.ID);
   }
 
   public List<Resource> getList(String prop) {
@@ -203,7 +199,7 @@ public class Resource extends Place {
       for (int i = 0; i < array.size(); i++) {
         JSONValue v = array.get(i);
         JSONObject obj = v.isObject();
-        String path = obj.get(Content.PATH).isString().stringValue();
+        String path = obj.get(CorePackage.PATH).isString().stringValue();
         Resource child = getChild(path);
         child.data = obj;
         result.add(child);
@@ -220,11 +216,11 @@ public class Resource extends Place {
     if (isRendition()) {
       return rendition;
     }
-    return getString(Content.PATH);
+    return getString(CorePackage.PATH);
   }
 
   public Long getQueryCount() {
-    Object result = getValue(QUERY_COUNT);
+    Object result = getValue(CorePackage.QUERY_COUNT);
     if (result != null && result instanceof Double) {
       return ((Double) result).longValue();
     }
@@ -255,11 +251,11 @@ public class Resource extends Place {
       String resourceType = getResourceType();
       if (resourceType != null) {
         Map<String, Object> widgets = Registry.getWidgets(resourceType);
-        if (!widgets.containsKey(Content.SELF)) {
-          widgets.put(Content.SELF, new SimplePanel());
+        if (!widgets.containsKey(CorePackage.SELF)) {
+          widgets.put(CorePackage.SELF, new SimplePanel());
         }
         for (String kind : widgets.keySet()) {
-          if (CONTAINER.equals(kind)) {
+          if (CorePackage.CONTAINER.equals(kind)) {
             continue;
           }
           Object widget = widgets.get(kind);
@@ -268,7 +264,7 @@ public class Resource extends Place {
           rendition.setRendition(kind);
           rendition.setWidget(widget);
           renditions.put(kind, rendition);
-          if (Content.SELF.equals(kind)) {
+          if (CorePackage.SELF.equals(kind)) {
             rendition.setTitle(getTitle());
             rendition.setResourceType(getResourceType());
           }
@@ -289,7 +285,7 @@ public class Resource extends Place {
   }
 
   public String getResourceType() {
-    return getString(Content.RESOURCE_TYPE);
+    return getString(CorePackage.RESOURCE_TYPE);
   }
 
   public String getString(String propName) {
@@ -302,7 +298,7 @@ public class Resource extends Place {
   }
 
   public String getTitle() {
-    return getString(Content.TITLE);
+    return getString(CorePackage.TITLE);
   }
 
   public String getUri() {
@@ -363,7 +359,7 @@ public class Resource extends Place {
     if (isRendition()) {
       return false;
     }
-    JSONValue count = data.get(Content.CHILDREN_COUNT);
+    JSONValue count = data.get(CorePackage.CHILDREN_COUNT);
     if (count != null) {
       return count.isNumber().doubleValue() > 0;
     }
@@ -426,7 +422,7 @@ public class Resource extends Place {
         });
         return;
       } else {
-        String kind = isRendition() ? getPath() : CONTAINER;
+        String kind = isRendition() ? getPath() : CorePackage.CONTAINER;
         widget = Registry.getWidget(resourceType, kind);
         if (widget == null) {
           if (callback != null) {
@@ -485,7 +481,7 @@ public class Resource extends Place {
   }
 
   public void save(AsyncCallback<Resource> callback) {
-    boolean isEdit = data.get(Content.ID).isString() != null;
+    boolean isEdit = data.get(CorePackage.ID).isString() != null;
     RequestBuilder.Method method = isEdit ? RequestBuilder.POST : RequestBuilder.PUT;
     execute(method, callback);
   }
@@ -499,7 +495,7 @@ public class Resource extends Place {
   }
 
   public void setPath(String path) {
-    setString(Content.PATH, path);
+    setString(CorePackage.PATH, path);
   }
 
   public void setQueryParameters(MultivaluedMap<String, String> queryParameters) {
@@ -511,7 +507,7 @@ public class Resource extends Place {
   }
 
   public void setResourceType(String value) {
-    setString(Content.RESOURCE_TYPE, value);
+    setString(CorePackage.RESOURCE_TYPE, value);
   }
 
   public void setString(String propName, String value) {
@@ -519,7 +515,7 @@ public class Resource extends Place {
   }
 
   public void setTitle(String title) {
-    setString(Content.TITLE, title);
+    setString(CorePackage.TITLE, title);
   }
 
   public void setValue(String propName, Boolean value) {

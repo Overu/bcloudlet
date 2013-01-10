@@ -3,7 +3,7 @@ package org.cloudlet.web.core.client;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 
-import org.cloudlet.web.core.Content;
+import org.cloudlet.web.core.shared.CorePackage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ public class BookSearch extends ResourceSearch {
     return new AbstractCell<Resource>() {
       @Override
       public void render(com.google.gwt.cell.client.Cell.Context context, Resource value, SafeHtmlBuilder sb) {
-        sb.append(template.render(value.getString(Content.TITLE), style));
+        sb.append(template.render(value.getString(CorePackage.TITLE), style));
       }
     };
   }

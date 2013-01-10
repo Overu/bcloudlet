@@ -12,7 +12,7 @@ import com.sencha.gxt.widget.core.client.container.HtmlLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.MarginData;
 import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 
-import org.cloudlet.web.core.Root;
+import org.cloudlet.web.core.shared.Root;
 
 public class ResourceExplorer extends BorderLayoutContainer implements WidgetContainer, TakesResource {
 

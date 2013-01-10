@@ -4,13 +4,13 @@ import static org.junit.Assert.assertEquals;
 
 import com.google.inject.Inject;
 
-import org.cloudlet.web.core.Group;
-import org.cloudlet.web.core.GroupFeed;
-import org.cloudlet.web.core.Media;
-import org.cloudlet.web.core.Repository;
-import org.cloudlet.web.core.Root;
-import org.cloudlet.web.core.User;
-import org.cloudlet.web.core.UserFeed;
+import org.cloudlet.web.core.server.Group;
+import org.cloudlet.web.core.server.GroupFeed;
+import org.cloudlet.web.core.server.Media;
+import org.cloudlet.web.core.server.Repository;
+import org.cloudlet.web.core.server.User;
+import org.cloudlet.web.core.server.UserFeed;
+import org.cloudlet.web.core.shared.Root;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;

@@ -4,7 +4,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import org.cloudlet.web.core.Feed;
+import org.cloudlet.web.core.shared.CorePackage;
 
 import java.util.List;
 
@@ -41,7 +41,7 @@ public class BookFeedEditor extends ResourceEditor {
 
   private void createEditors() {
     Resource feed = getValue();
-    List<Resource> entries = feed.getList(Feed.ENTRIES);
+    List<Resource> entries = feed.getList(CorePackage.ENTRIES);
     if (entries != null) {
       clear();
       for (Resource entry : entries) {
