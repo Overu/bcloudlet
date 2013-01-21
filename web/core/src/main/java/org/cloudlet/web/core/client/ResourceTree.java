@@ -28,8 +28,8 @@ public class ResourceTree extends BorderLayoutContainer implements TakesResource
     @Override
     public List<Resource> read(final Object loadConfig, final Resource resource) {
       List<Resource> result = new ArrayList<Resource>();
-      for (Resource rendition : resource.getRenditions().values()) {
-        if (CorePackage.SELF.equals(rendition.getPath())) {
+      for (Resource rendition : resource.getRenditionList()) {
+        if (CorePackage.SELF.equals(rendition.getToken())) {
           continue;
         }
         result.add(rendition);
@@ -71,8 +71,9 @@ public class ResourceTree extends BorderLayoutContainer implements TakesResource
     ModelKeyProvider<Resource> keyProvider = new ModelKeyProvider<Resource>() {
       @Override
       public String getKey(final Resource item) {
-        StringBuilder b = item.getUriBuilder(false);
-        return b.toString();
+        return Integer.toString(item.hashCode());
+        // StringBuilder b = item.getUriBuilder(false);
+        // return b.toString();
       }
     };
     store = new TreeStore<Resource>(keyProvider);

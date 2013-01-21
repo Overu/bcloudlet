@@ -39,17 +39,20 @@ public class UserEditor extends ResourceEditor {
     p.setLayoutData(new MarginData(8));
 
     path.setAllowBlank(false);
-    path.setData(CorePackage.PATH, CorePackage.PATH);
+    setPath(path, CorePackage.PATH);
     p.add(new FieldLabel(path, "Name"), new VerticalLayoutData(1, -1));
 
     email.setAllowBlank(false);
-    email.setData("path", CorePackage.EMAIL);
+    setPath(email, CorePackage.EMAIL);
     p.add(new FieldLabel(email, "Email"), new VerticalLayoutData(1, -1));
 
+    setPath(title, CorePackage.TITLE);
     p.add(new FieldLabel(title, "Phone"), new VerticalLayoutData(1, -1));
 
+    setPath(state, CorePackage.STATE);
     p.add(new FieldLabel(state, "State"), new VerticalLayoutData(1, -1));
 
+    setPath(zip, CorePackage.ZIP);
     p.add(new FieldLabel(zip, "Zip"), new VerticalLayoutData(1, -1));
     setWidget(p);
   }

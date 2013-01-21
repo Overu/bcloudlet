@@ -29,6 +29,7 @@ public class CoreServletModule extends ServletModule {
   @Override
   protected void configureServlets() {
     logger.finest("installPersistModule begin");
+    // filter("/*").through(MirrorFilter.class);
     filter("/*").through(PersistFilter.class);
 
     requestStaticInjection(DatabaseConnectionProvider.class);

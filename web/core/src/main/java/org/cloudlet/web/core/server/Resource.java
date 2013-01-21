@@ -89,10 +89,6 @@ public abstract class Resource {
   @QueryParam(CorePackage.CHILDREN)
   protected boolean loadChildren;
 
-  @QueryParam(CorePackage.RENDITION)
-  @Transient
-  protected String renditionKind;
-
   public <T extends Resource> T create(Class<T> type) {
     T result = WebPlatform.get().getInstance(type);
     result.setParent(this);
@@ -270,11 +266,6 @@ public abstract class Resource {
     return null;
   }
 
-  @XmlTransient
-  public String getRenditionKind() {
-    return renditionKind;
-  }
-
   public abstract String getResourceType();
 
   public String getTitle() {
@@ -433,10 +424,6 @@ public abstract class Resource {
     } else if (CorePackage.CHILDREN_COUNT.equals(name)) {
       childrenCount = value == null ? 0 : Long.valueOf(value);
     }
-  }
-
-  public void setRenditionKind(String renditionKind) {
-    this.renditionKind = renditionKind;
   }
 
   public void setResourceType(String type) {

@@ -57,11 +57,11 @@ public class Resource extends Place {
 
   private Object containerWidget;
 
-  private String rendition;
+  private String token;
 
   public Resource createChild(String path) {
     Resource result = placeProvider.get();
-    result.setPath(path);
+    result.setToken(path);
     result.setParent(this);
     getChildren().put(path, result);
     return result;
@@ -77,7 +77,7 @@ public class Resource extends Place {
       if (RequestBuilder.POST.equals(method) || RequestBuilder.PUT.equals(method)) {
         body = generateData();
       }
-      final StringBuilder url = getUriBuilder();
+      final StringBuilder url = method.equals(RequestBuilder.POST) ? getParent().getUriBuilder() : getUriBuilder();
       url.insert(0, "api");
       RequestBuilder builder = new RequestBuilder(method, url.toString());
       builder.setHeader("Accept", "application/json");
@@ -157,10 +157,10 @@ public class Resource extends Place {
   }
 
   public Resource getChild(String path, boolean create) {
-    if (isRendition()) {
+    if (isLeaf()) {
       return getParent().getChild(path, create);
     }
-    getRenditions();// ensure renditions are initialized;
+    getRenditions(); // ensure renditions are initialized;
     Resource result = getChildren().get(path);
     if (result == null && create) {
       result = createChild(path);
@@ -180,15 +180,25 @@ public class Resource extends Place {
   }
 
   public Resource getHome() {
-    if (isRendition()) {
+    if (isLeaf()) {
       return this;
-    } else {
-      return getRenditions().get(CorePackage.SELF);
     }
+    return getRendition(CorePackage.SELF);
   }
 
   public String getId() {
     return getString(CorePackage.ID);
+  }
+
+  public Object getLeafWidget() {
+    if (parent == null) {
+      return null;
+    }
+    String resurceType = parent.getResourceType();
+    if (resurceType == null) {
+      return null;
+    }
+    return Registry.getWidget(resurceType, token);
   }
 
   public List<Resource> getList(String prop) {
@@ -213,9 +223,6 @@ public class Resource extends Place {
   }
 
   public String getPath() {
-    if (isRendition()) {
-      return rendition;
-    }
     return getString(CorePackage.PATH);
   }
 
@@ -235,43 +242,23 @@ public class Resource extends Place {
   }
 
   public Resource getRendition(String kind) {
-    if (isRendition()) {
-      return getParent().getRenditions().get(kind);
-    } else {
-      return getRenditions().get(kind);
+    if (isLeaf()) {
+      return getParent().getRendition(kind);
     }
+    getRenditions();
+    if (renditions != null) {
+      return renditions.get(kind);
+    }
+    return null;
   }
 
-  public Map<String, Resource> getRenditions() {
-    if (isRendition()) {
-      return Collections.EMPTY_MAP;
-    }
+  public List<Resource> getRenditionList() {
+    getRenditions();
+    List<Resource> result = new ArrayList<Resource>();
     if (renditions == null) {
-      renditions = new HashMap<String, Resource>();
-      String resourceType = getResourceType();
-      if (resourceType != null) {
-        Map<String, Object> widgets = Registry.getWidgets(resourceType);
-        if (!widgets.containsKey(CorePackage.SELF)) {
-          widgets.put(CorePackage.SELF, new SimplePanel());
-        }
-        for (String kind : widgets.keySet()) {
-          if (CorePackage.CONTAINER.equals(kind)) {
-            continue;
-          }
-          Object widget = widgets.get(kind);
-          Resource rendition = getChild(kind);
-          rendition.setTitle(kind);// TODO localize rendition title
-          rendition.setRendition(kind);
-          rendition.setWidget(widget);
-          renditions.put(kind, rendition);
-          if (CorePackage.SELF.equals(kind)) {
-            rendition.setTitle(getTitle());
-            rendition.setResourceType(getResourceType());
-          }
-        }
-      }
+      result.addAll(renditions.values());
     }
-    return renditions;
+    return result;
   }
 
   public Resource getResource(String path) {
@@ -301,6 +288,10 @@ public class Resource extends Place {
     return getString(CorePackage.TITLE);
   }
 
+  public String getToken() {
+    return token;
+  }
+
   public String getUri() {
     return getUriBuilder().toString();
   }
@@ -318,11 +309,13 @@ public class Resource extends Place {
       if (builder.length() > 1) {
         builder.append("/");
       }
-      if (rendition != null) {
-        builder.append(rendition);
+      if (token != null) {
+        builder.append(token);
       } else {
         String path = getPath();
-        builder.append(path);
+        if (path != null) {
+          builder.append(path);
+        }
       }
     }
 
@@ -356,7 +349,7 @@ public class Resource extends Place {
   }
 
   public boolean hasChildren() {
-    if (isRendition()) {
+    if (isLeaf()) {
       return false;
     }
     JSONValue count = data.get(CorePackage.CHILDREN_COUNT);
@@ -366,8 +359,8 @@ public class Resource extends Place {
     return true;
   }
 
-  public boolean isRendition() {
-    return rendition != null;
+  public boolean isLeaf() {
+    return getLeafWidget() != null;
   }
 
   public void load(AsyncCallback<Resource> callback) {
@@ -422,8 +415,10 @@ public class Resource extends Place {
         });
         return;
       } else {
-        String kind = isRendition() ? getPath() : CorePackage.CONTAINER;
-        widget = Registry.getWidget(resourceType, kind);
+        widget = getLeafWidget();
+        if (widget == null) {
+          widget = Registry.getWidget(resourceType, CorePackage.CONTAINER);
+        }
         if (widget == null) {
           if (callback != null) {
             // skip to render child resource
@@ -481,8 +476,8 @@ public class Resource extends Place {
   }
 
   public void save(AsyncCallback<Resource> callback) {
-    boolean isEdit = data.get(CorePackage.ID).isString() != null;
-    RequestBuilder.Method method = isEdit ? RequestBuilder.POST : RequestBuilder.PUT;
+    boolean isNew = getId() == null;
+    RequestBuilder.Method method = isNew ? RequestBuilder.POST : RequestBuilder.PUT;
     execute(method, callback);
   }
 
@@ -502,10 +497,6 @@ public class Resource extends Place {
     this.queryParameters = queryParameters;
   }
 
-  public void setRendition(String rendition) {
-    this.rendition = rendition;
-  }
-
   public void setResourceType(String value) {
     setString(CorePackage.RESOURCE_TYPE, value);
   }
@@ -516,6 +507,10 @@ public class Resource extends Place {
 
   public void setTitle(String title) {
     setString(CorePackage.TITLE, title);
+  }
+
+  public void setToken(String token) {
+    this.token = token;
   }
 
   public void setValue(String propName, Boolean value) {
@@ -587,5 +582,37 @@ public class Resource extends Place {
     if (callback != null) {
       callback.onSuccess(widget);
     }
+  }
+
+  private Map<String, Resource> getRenditions() {
+    if (isLeaf()) {
+      return Collections.EMPTY_MAP;
+    }
+    if (renditions == null) {
+      String resourceType = getResourceType();
+      if (resourceType != null) {
+        renditions = new HashMap<String, Resource>();
+        Map<String, Object> widgets = Registry.getWidgets(resourceType);
+        if (!widgets.containsKey(CorePackage.SELF)) {
+          widgets.put(CorePackage.SELF, new SimplePanel());
+        }
+        for (String kind : widgets.keySet()) {
+          if (CorePackage.CONTAINER.equals(kind)) {
+            continue;
+          }
+          Object widget = widgets.get(kind);
+          Resource rendition = getChild(kind);
+          rendition.setTitle(kind);// TODO localize rendition title
+          rendition.setToken(kind);
+          rendition.setWidget(widget);
+          renditions.put(kind, rendition);
+          if (CorePackage.SELF.equals(kind)) {
+            rendition.setTitle(getTitle());
+            rendition.setResourceType(getResourceType());
+          }
+        }
+      }
+    }
+    return renditions;
   }
 }

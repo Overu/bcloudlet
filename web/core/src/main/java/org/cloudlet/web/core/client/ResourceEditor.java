@@ -40,17 +40,27 @@ public class ResourceEditor extends ContentPanel implements Editor<Resource>, Ta
     for (IsField field : FormPanelHelper.getFields(this)) {
       if (field instanceof Component) {
         Component comp = (Component) field;
-        String path = comp.getData(CorePackage.PATH);
-        Object value = field.getValue();
-        resource.setValue(path, value);
+        String path = getPath(comp);
+        if (path != null) {
+          Object value = field.getValue();
+          resource.setValue(path, value);
+        }
       }
     }
     return this.resource;
   }
 
+  public String getPath(Component comp) {
+    return comp.getData(CorePackage.PATH);
+  }
+
   @Override
   public Resource getValue() {
     return resource;
+  }
+
+  public void setPath(Component comp, String value) {
+    comp.setData(CorePackage.PATH, value);
   }
 
   @Override
@@ -84,7 +94,7 @@ public class ResourceEditor extends ContentPanel implements Editor<Resource>, Ta
 
       @Override
       public void onSuccess(final Resource result) {
-        Resource listView = result.getRendition("_list");
+        Resource listView = result.getRendition(CorePackage.SELF);
         resourceManager.goTo(listView);
       }
     });

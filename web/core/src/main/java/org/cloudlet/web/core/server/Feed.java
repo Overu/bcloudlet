@@ -6,13 +6,14 @@ import com.sencha.gxt.data.shared.SortInfo;
 
 import org.cloudlet.web.core.shared.CorePackage;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.MappedSuperclass;
 import javax.persistence.NoResultException;
 import javax.persistence.Transient;
 import javax.persistence.TypedQuery;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -117,6 +118,8 @@ public abstract class Feed<E extends Resource> extends Resource {
     return queryCount;
   }
 
+  @Path(CorePackage.NEW)
+  @GET
   public E newEntry() {
     return create(getEntryType());
   }
@@ -137,15 +140,7 @@ public abstract class Feed<E extends Resource> extends Resource {
   @Override
   protected void doLoad() {
     super.doLoad();
-    if (CorePackage.NEW.equals(renditionKind)) {
-      entries = new ArrayList<E>();
-      E entry = newEntry();
-      entries.add(entry);
-    } else if (CorePackage.LIST.equals(renditionKind)) {
-      doLoadEntries();
-    } else {
-      doLoadEntries();
-    }
+    doLoadEntries();
   }
 
   protected void doLoadEntries() {
