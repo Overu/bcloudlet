@@ -106,7 +106,7 @@ public class Resource extends Place {
               callback.onSuccess(Resource.this);
             }
           } else if (callback != null) {
-            callback.onFailure(new RuntimeException("GET " + url.toString() + "\r\nInvalid status code " + statusCode));
+            callback.onFailure(new RuntimeException(method + " " + url.toString() + "\r\nInvalid status code " + statusCode));
           }
         }
 
@@ -183,7 +183,7 @@ public class Resource extends Place {
     if (isLeaf()) {
       return this;
     }
-    return getRendition(CorePackage.SELF);
+    return getRendition(CorePackage.HOME);
   }
 
   public String getId() {
@@ -255,7 +255,7 @@ public class Resource extends Place {
   public List<Resource> getRenditionList() {
     getRenditions();
     List<Resource> result = new ArrayList<Resource>();
-    if (renditions == null) {
+    if (renditions != null) {
       result.addAll(renditions.values());
     }
     return result;
@@ -593,8 +593,8 @@ public class Resource extends Place {
       if (resourceType != null) {
         renditions = new HashMap<String, Resource>();
         Map<String, Object> widgets = Registry.getWidgets(resourceType);
-        if (!widgets.containsKey(CorePackage.SELF)) {
-          widgets.put(CorePackage.SELF, new SimplePanel());
+        if (!widgets.containsKey(CorePackage.HOME)) {
+          widgets.put(CorePackage.HOME, new SimplePanel());
         }
         for (String kind : widgets.keySet()) {
           if (CorePackage.CONTAINER.equals(kind)) {
@@ -606,7 +606,7 @@ public class Resource extends Place {
           rendition.setToken(kind);
           rendition.setWidget(widget);
           renditions.put(kind, rendition);
-          if (CorePackage.SELF.equals(kind)) {
+          if (CorePackage.HOME.equals(kind)) {
             rendition.setTitle(getTitle());
             rendition.setResourceType(getResourceType());
           }

@@ -94,7 +94,7 @@ public class ResourceEditor extends ContentPanel implements Editor<Resource>, Ta
 
       @Override
       public void onSuccess(final Resource result) {
-        Resource listView = result.getRendition(CorePackage.SELF);
+        Resource listView = result.getRendition(CorePackage.HOME);
         resourceManager.goTo(listView);
       }
     });

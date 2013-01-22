@@ -62,7 +62,7 @@ public interface CorePackage {
 
   String RESOURCE_TYPE = "resourceType";
 
-  String SELF = "";
+  String HOME = "home";
 
   String CHILDREN = "children";
 

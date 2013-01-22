@@ -29,7 +29,7 @@ public class ResourceTree extends BorderLayoutContainer implements TakesResource
     public List<Resource> read(final Object loadConfig, final Resource resource) {
       List<Resource> result = new ArrayList<Resource>();
       for (Resource rendition : resource.getRenditionList()) {
-        if (CorePackage.SELF.equals(rendition.getToken())) {
+        if (CorePackage.HOME.equals(rendition.getToken())) {
           continue;
         }
         result.add(rendition);

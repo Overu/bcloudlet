@@ -25,6 +25,9 @@ public class CoreClientModule extends AbstractGinModule {
   public static class Launcher implements PlaceChangeEvent.Handler {
 
     @Inject
+    LoginBar loginBar;
+
+    @Inject
     EventBus eventBus;
 
     @Inject
@@ -68,15 +71,16 @@ public class CoreClientModule extends AbstractGinModule {
 
       Registry.setWidget(CorePackage.Repository, CorePackage.CONTAINER, explorer);
 
-      Registry.setWidget(CorePackage.UserFeed, "", userGrid);
-      Registry.setWidget(CorePackage.UserFeed, "new", userEditor);
+      Registry.setWidget(CorePackage.UserFeed, CorePackage.HOME, userGrid);
+      Registry.setWidget(CorePackage.UserFeed, CorePackage.NEW, userEditor);
 
-      Registry.setWidget(CorePackage.BookFeed, "", bookGrid);
-      Registry.setWidget(CorePackage.BookFeed, "new", bookEditor);
+      Registry.setWidget(CorePackage.BookFeed, CorePackage.HOME, bookGrid);
+      Registry.setWidget(CorePackage.BookFeed, CorePackage.NEW, bookEditor);
 
       BaseResources.INSTANCE();
       main = new SimplePanel();
       main.getElement().setId("main");
+      RootPanel.get().add(loginBar);
       RootPanel.get().add(main);
 
       eventBus.addHandler(PlaceChangeEvent.TYPE, this);
