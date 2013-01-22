@@ -20,8 +20,6 @@ public interface CorePackage {
 
   String CHILDREN_COUNT = "childrenCount";
 
-  String CONTAINER = "/";
-
   String QUERY_COUNT = "queryCount";
 
   String ENTRIES = "entries";
@@ -62,11 +60,9 @@ public interface CorePackage {
 
   String RESOURCE_TYPE = "resourceType";
 
-  String HOME = "home";
+  String HOME = "";
 
   String CHILDREN = "children";
-
-  String RENDITION = "rendition";
 
   String VERSION = "version";
 

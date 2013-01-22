@@ -17,14 +17,12 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import org.cloudlet.web.core.shared.CorePackage;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,11 +47,7 @@ public class Resource extends Place {
 
   private Map<String, Resource> children;
 
-  private List<Resource> entries;
-
   private MultivaluedMap<String, String> queryParameters;
-
-  private Map<String, Resource> renditions;
 
   private Object containerWidget;
 
@@ -157,10 +151,6 @@ public class Resource extends Place {
   }
 
   public Resource getChild(String path, boolean create) {
-    if (isLeaf()) {
-      return getParent().getChild(path, create);
-    }
-    getRenditions(); // ensure renditions are initialized;
     Resource result = getChildren().get(path);
     if (result == null && create) {
       result = createChild(path);
@@ -179,26 +169,12 @@ public class Resource extends Place {
     return containerWidget;
   }
 
-  public Resource getHome() {
-    if (isLeaf()) {
-      return this;
-    }
-    return getRendition(CorePackage.HOME);
+  public Object getHomeWidget() {
+    return Registry.getWidget(getResourceType(), CorePackage.HOME);
   }
 
   public String getId() {
     return getString(CorePackage.ID);
-  }
-
-  public Object getLeafWidget() {
-    if (parent == null) {
-      return null;
-    }
-    String resurceType = parent.getResourceType();
-    if (resurceType == null) {
-      return null;
-    }
-    return Registry.getWidget(resurceType, token);
   }
 
   public List<Resource> getList(String prop) {
@@ -241,24 +217,15 @@ public class Resource extends Place {
     return queryParameters;
   }
 
-  public Resource getRendition(String kind) {
-    if (isLeaf()) {
-      return getParent().getRendition(kind);
+  public Object getReferencedWidget() {
+    if (parent == null) {
+      return null;
     }
-    getRenditions();
-    if (renditions != null) {
-      return renditions.get(kind);
+    String resurceType = parent.getResourceType();
+    if (resurceType == null) {
+      return null;
     }
-    return null;
-  }
-
-  public List<Resource> getRenditionList() {
-    getRenditions();
-    List<Resource> result = new ArrayList<Resource>();
-    if (renditions != null) {
-      result.addAll(renditions.values());
-    }
-    return result;
+    return Registry.getWidget(resurceType, token);
   }
 
   public Resource getResource(String path) {
@@ -349,18 +316,11 @@ public class Resource extends Place {
   }
 
   public boolean hasChildren() {
-    if (isLeaf()) {
-      return false;
-    }
     JSONValue count = data.get(CorePackage.CHILDREN_COUNT);
     if (count != null) {
       return count.isNumber().doubleValue() > 0;
     }
     return true;
-  }
-
-  public boolean isLeaf() {
-    return getLeafWidget() != null;
   }
 
   public void load(AsyncCallback<Resource> callback) {
@@ -378,7 +338,6 @@ public class Resource extends Place {
   public void read(String jsonText) {
     // TODO clear data
     data = JSONParser.parse(jsonText).isObject();
-    entries = null;
   }
 
   public void render(final AcceptsOneWidget panel) {
@@ -415,9 +374,9 @@ public class Resource extends Place {
         });
         return;
       } else {
-        widget = getLeafWidget();
+        widget = getReferencedWidget();
         if (widget == null) {
-          widget = Registry.getWidget(resourceType, CorePackage.CONTAINER);
+          widget = getHomeWidget();
         }
         if (widget == null) {
           if (callback != null) {
@@ -584,35 +543,4 @@ public class Resource extends Place {
     }
   }
 
-  private Map<String, Resource> getRenditions() {
-    if (isLeaf()) {
-      return Collections.EMPTY_MAP;
-    }
-    if (renditions == null) {
-      String resourceType = getResourceType();
-      if (resourceType != null) {
-        renditions = new HashMap<String, Resource>();
-        Map<String, Object> widgets = Registry.getWidgets(resourceType);
-        if (!widgets.containsKey(CorePackage.HOME)) {
-          widgets.put(CorePackage.HOME, new SimplePanel());
-        }
-        for (String kind : widgets.keySet()) {
-          if (CorePackage.CONTAINER.equals(kind)) {
-            continue;
-          }
-          Object widget = widgets.get(kind);
-          Resource rendition = getChild(kind);
-          rendition.setTitle(kind);// TODO localize rendition title
-          rendition.setToken(kind);
-          rendition.setWidget(widget);
-          renditions.put(kind, rendition);
-          if (CorePackage.HOME.equals(kind)) {
-            rendition.setTitle(getTitle());
-            rendition.setResourceType(getResourceType());
-          }
-        }
-      }
-    }
-    return renditions;
-  }
 }

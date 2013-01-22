@@ -9,6 +9,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -34,19 +35,19 @@ public class CoreClientModule extends AbstractGinModule {
     PlaceHistoryHandler historyHandler;
 
     @Inject
-    ResourceExplorer explorer;
+    Provider<ResourceExplorer> explorer;
 
     @Inject
-    UserEditor userEditor;
+    Provider<UserEditor> userEditor;
 
     @Inject
-    UserGrid userGrid;
+    Provider<UserFeedExplorer> userFeed;
 
     @Inject
-    BookEditor bookEditor;
+    Provider<BookEditor> bookEditor;
 
     @Inject
-    BookGrid bookGrid;
+    Provider<BookFeedExplorer> bookFeed;
 
     SimplePanel main;
 
@@ -69,12 +70,12 @@ public class CoreClientModule extends AbstractGinModule {
 
     private void start() {
 
-      Registry.setWidget(CorePackage.Repository, CorePackage.CONTAINER, explorer);
+      Registry.setWidget(CorePackage.Repository, CorePackage.HOME, explorer);
 
-      Registry.setWidget(CorePackage.UserFeed, CorePackage.HOME, userGrid);
+      Registry.setWidget(CorePackage.UserFeed, CorePackage.HOME, userFeed);
       Registry.setWidget(CorePackage.UserFeed, CorePackage.NEW, userEditor);
 
-      Registry.setWidget(CorePackage.BookFeed, CorePackage.HOME, bookGrid);
+      Registry.setWidget(CorePackage.BookFeed, CorePackage.HOME, bookFeed);
       Registry.setWidget(CorePackage.BookFeed, CorePackage.NEW, bookEditor);
 
       BaseResources.INSTANCE();
@@ -95,8 +96,8 @@ public class CoreClientModule extends AbstractGinModule {
   @Provides
   @Singleton
   public Resource getHomePage(final Resource root) {
-    root.setResourceType(CorePackage.Repository);
-    root.setTitle("Repository");
+    // root.setResourceType(CorePackage.Repository);
+    // root.setTitle("Repository");
     return root;
   }
 

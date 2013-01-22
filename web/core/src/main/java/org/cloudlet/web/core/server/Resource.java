@@ -239,14 +239,6 @@ public abstract class Resource {
     return content;
   }
 
-  @GET
-  @Path(CorePackage.HOME)
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml" })
-  @XmlTransient
-  public Resource getHome() {
-    return load();
-  }
-
   public String getId() {
     return id;
   }

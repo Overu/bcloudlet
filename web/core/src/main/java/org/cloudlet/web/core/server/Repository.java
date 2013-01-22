@@ -17,7 +17,7 @@ public final class Repository extends Resource {
 
   @Override
   public String getPath() {
-    return "";
+    return null;
   }
 
   @Override
