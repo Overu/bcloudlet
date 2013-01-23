@@ -35,6 +35,21 @@ public class CoreClientModule extends AbstractGinModule {
     PlaceHistoryHandler historyHandler;
 
     @Inject
+    Provider<ResourceExplorer> explorer;
+
+    @Inject
+    Provider<UserEditor> userEditor;
+
+    @Inject
+    Provider<UserFeedExplorer> userFeed;
+
+    @Inject
+    Provider<BookEditor> bookEditor;
+
+    @Inject
+    Provider<BookFeedExplorer> bookFeed;
+
+    @Inject
     IndexPanel indexPanel;
 
     SimplePanel main;
@@ -57,6 +72,14 @@ public class CoreClientModule extends AbstractGinModule {
     }
 
     private void start() {
+
+      Registry.setWidget(CorePackage.Repository, CorePackage.HOME, explorer);
+
+      Registry.setWidget(CorePackage.UserFeed, CorePackage.HOME, userFeed);
+      Registry.setWidget(CorePackage.UserFeed, CorePackage.NEW, userEditor);
+
+      Registry.setWidget(CorePackage.BookFeed, CorePackage.HOME, bookFeed);
+      Registry.setWidget(CorePackage.BookFeed, CorePackage.NEW, bookEditor);
 
       BaseResources.INSTANCE();
       main = new SimplePanel();
