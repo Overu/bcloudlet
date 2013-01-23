@@ -23,7 +23,7 @@ public class ResourceExplorer extends BorderLayoutContainer implements WidgetCon
   private Resource resource;
 
   @Inject
-  public ResourceExplorer(final ResourceTree treeView, @Root Resource root) {
+  public ResourceExplorer(final LoginView loginView, final ResourceTree treeView, @Root Resource root) {
     Window.enableScrolling(false);
     setPixelSize(Window.getClientWidth(), Window.getClientHeight());
     setMonitorWindowResize(true);
