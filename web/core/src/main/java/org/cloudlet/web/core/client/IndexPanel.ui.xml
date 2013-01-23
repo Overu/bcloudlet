@@ -72,6 +72,10 @@
     
     .postionul>li:HOVER {
     }
+    
+    .active {
+      color: blue!important;
+    }
   </ui:style>
 
   <ui:image field="gotop" />
