@@ -37,6 +37,8 @@ public class IndexPanel extends Composite {
   }
 
   interface IndexStyle extends CssResource {
+    String active();
+
     String gotop();
 
     String gotopshow();
@@ -60,10 +62,17 @@ public class IndexPanel extends Composite {
   @Inject
   private LoginBar loginBar;
 
-  private DelayedTask scrollTask;
+  private DelayedTask gotoTask;
+  private DelayedTask navTask;
+
+  private List<PositionNav> pns;
+  private int navMix;
+  private int navMax;
+  private Element currentli;
+
   private int scrollTop;
+
   private boolean gotoShowing;
-  List<PositionNav> pns;
 
   public IndexPanel() {
     this.initWidget(binder.createAndBindUi(this));
@@ -111,24 +120,22 @@ public class IndexPanel extends Composite {
 
       LIElement li = Document.get().createLIElement().cast();
       li.setInnerHTML(elm.getId());
-      ul.appendChild(li);
       bindEvent(li, Event.ONCLICK, new Function() {
         @Override
         public void f(Event e) {
           root.getElement().setScrollTop(absoluteTop);
         }
       });
+      ul.appendChild(li);
 
       pns.add(new PositionNav(absoluteTop, li));
     }
-  }
-
-  private void refresh() {
+    currentli = pns.get(0).getElm();
+    currentli.addClassName(style.active());
   }
 
   private void start() {
     root.add(loginBar);
-    initPostion();
 
     goTop.addStyleName(style.gotop());
     goTop.addDomHandler(new ClickHandler() {
@@ -138,7 +145,7 @@ public class IndexPanel extends Composite {
       }
     }, ClickEvent.getType());
 
-    scrollTask = new DelayedTask() {
+    gotoTask = new DelayedTask() {
       @Override
       public void onExecute() {
         if (!gotoShowing && scrollTop >= 800) {
@@ -151,11 +158,37 @@ public class IndexPanel extends Composite {
       }
     };
 
+    navTask = new DelayedTask() {
+
+      @Override
+      public void onExecute() {
+        if (scrollTop >= navMix && scrollTop <= navMax) {
+          return;
+        }
+        currentli.removeClassName(style.active());
+        int i = 0;
+        while (i < pns.size()) {
+          PositionNav nav = pns.get(i);
+          navMix = nav.getScrollTop() - OFFSET;
+          navMax = ((i == (pns.size() - 1)) ? root.getElement().getScrollHeight() : pns.get(i + 1).getScrollTop()) - OFFSET;
+          if (scrollTop >= navMix && scrollTop <= navMax) {
+            currentli = nav.getElm();
+            break;
+          }
+          i++;
+        }
+        currentli.addClassName(style.active());
+      }
+    };
+
+    initPostion();
+
     root.addDomHandler(new ScrollHandler() {
       @Override
       public void onScroll(ScrollEvent event) {
         scrollTop = event.getRelativeElement().getScrollTop();
-        scrollTask.delay(50);
+        gotoTask.delay(100);
+        navTask.delay(10);
       }
     }, ScrollEvent.getType());
   }
