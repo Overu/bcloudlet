@@ -159,7 +159,6 @@ public class IndexPanel extends Composite {
     };
 
     navTask = new DelayedTask() {
-
       @Override
       public void onExecute() {
         if (scrollTop >= navMix && scrollTop <= navMax) {
@@ -188,7 +187,7 @@ public class IndexPanel extends Composite {
       public void onScroll(ScrollEvent event) {
         scrollTop = event.getRelativeElement().getScrollTop();
         gotoTask.delay(100);
-        navTask.delay(10);
+        navTask.delay(30);
       }
     }, ScrollEvent.getType());
   }
