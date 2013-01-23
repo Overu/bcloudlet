@@ -64,7 +64,7 @@ public class BookEditor extends ResourceEditor {
         String json = html.substring(begin + 1, end);
         Resource result = getValue();
         result.read(json);
-        Resource place = result.getParent().getRendition(UserGrid.LIST);
+        Resource place = result.getParent();
         resourceManager.goTo(place);
       }
     });

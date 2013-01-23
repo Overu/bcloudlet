@@ -12,8 +12,11 @@ ul {
   margin: 0;
 }
 
-div#logininput>div>input {
-  padding-left: 38px;
+div[myinput] {
+  position: relative;
+}
+
+div[myinput]>input {
   height: 29px;
   border: 1px solid white;
   box-shadow: inset 0 1px 4px rgba(125, 125, 125, .65);
@@ -29,13 +32,24 @@ div#logininput>div>input {
   font-weight: 700;
 }
 
-div#logininput>div>input:FOCUS {
+div[myinput]>input:FOCUS {
   border-color: #8080FF;
   box-shadow: inset 0 1px 4px rgba(125, 125, 125, .65), 0 0 14px rgba(94, 82, 235, .45);
   outline: none;
 }
 
-div#logininput>div>input:FOCUS+label {
+div[myinput]>input+label {
+  top: 5px;
+  display: block;
+  position: absolute;
+  z-index: 2;
+  color: #BCBCBC;
+  cursor: text;
+  -webkit-transition: opacity .16s ease-in-out;
+  -webkit-user-select: none;
+}
+
+div[myinput]>input:FOCUS+label {
   opacity: .5;
 }
 

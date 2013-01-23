@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-  <ui:style>
+  <ui:style type="org.cloudlet.web.core.client.LoginBar.LoginStyle">
     .root {
       position: fixed;
       top: 0px;
@@ -14,16 +14,51 @@
       box-shadow: literal('0 -1px 0 #FEFCFC inset, 0 0 4px rgba(0, 0, 0, .15)');
     }
     
+    .shade {
+      position: absolute;
+      top: 38px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 99990;
+      background-color: #E6E6E6;
+    }
+    
+    .hide {
+      display: none;
+    }
+    
     .wrapper {
-      width: 1170px;
       position: relative;
-      margin: 0 auto;
+      margin-right: 150px;
+    }
+    
+    @sprite 
+    .logo {
+      gwt-image: "logo";
+      position: absolute;
+      left: 50%;
+      margin-left: -40px;
+      top: 5px;
     }
     
     .menubar {
       position: absolute;
       right: 0;
       top: 4px;
+    }
+    
+    .search {
+      float: left;
+      margin-right: 40px;
+    }
+    
+    .search>input {
+      padding-left: 12px;
+    }
+    
+    .search>input+label {
+      left: 12px;
     }
     
     .login,.signup {
@@ -60,10 +95,6 @@
       text-shadow: 0 1px rgba(255, 255, 255, 1);
     }
     
-    .login>strong:HOVER>div {
-      display: block;
-    }
-    
     .signup>strong {
       color: white;
       text-shadow: 0 -1px 0 #350000;
@@ -77,23 +108,72 @@
       text-shadow: 0 -1px rgba(34, 25, 25, .3);
     }
     
-    .oauth {
+    .popuplogin {
       position: absolute;
-      display: none;
+      top: 69px;
+      background: #FDFDFD;
+      border: 1px #DDDBDB solid;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+      padding: 20px;
+      width: 500px;
+      margin-left: -300px;
+      left: 50%;
+    }
+    
+    .fontstyle {
+      font-size: 18px;
+      line-height: 30px;
+      color: #6D6867;
+      font-family: 'Microsoft Yahei';
+    }
+    
+    .hstyle {
+      margin: 0 -20px 20px;
+      padding: 0 15px 20px;
+      border-bottom: 1px #E2A499 solid;
+    }
+    
+    .loginform {
+      float: left;
+      width: 230px;
+      margin: 0 40px 0 20px;
+    }
+    
+    @sprite 
+    .loginform>div {
+      gwt-image: "loginbg";
+      height: 29px !important;
+      width: 230px !important;
+      margin-bottom: 15px;
+    }
+    
+    .loginform>div>input {
+      padding-left: 38px;
+    }
+    
+    .loginform>div>input+label {
+      left: 38px;
+    }
+    
+    .loginform>div:FIRST-CHILD {
+      background-position: left -8px !important;
+    }
+    
+    .loginform>div:FIRST-CHILD+div {
+      background-position: left -43px !important;
+    }
+    
+    .oauth {
+      float: left;
+      margin: 0;
+      padding-left: 36px;
+      border-left: 1px #CCC solid;
       top: 28px;
       left: -2px;
     }
     
-    .oauth>div {
-      background-color: #FFF9E2;
-      border-bottom: 2px solid #EFEBDA;
-      border-bottom-left-radius: 5px;
-      border-bottom-right-radius: 5px;
-      box-shadow: inset 0 -1px 0 white, 0 1px 6px rgba(0, 0, 0, .3);
-    }
-    
     @sprite 
-    .oauth>div>div {
+    .oauth>div {
       gwt-image: "oauthosprite";
       width: 114px !important;
       height: 36px !important;
@@ -131,80 +211,52 @@
     .part4:HOVER {
       background-position: -228px -40px !important;
     }
-    
-    .loginform {
-      float: left;
-      width: 288px;
-      background-color: white;
-      margin-right: 9px;
-    }
-    
-    @sprite 
-    .loginform>div {
-      gwt-image: "loginbg";
-      position: relative;
-      width: 140px;
-      display: inline-block;
-      height: 29px !important;
-      width: 140px !important;
-    }
-    
-    .loginform>div:FIRST-CHILD {
-      background-position: left -8px !important;
-    }
-    
-    .loginform>div:LAST-CHILD {
-      background-position: left -43px !important;
-    }
-    
-    .loginform>div>label {
-      top: 5px;
-      left: 38px;
-      display: block;
-      position: absolute;
-      z-index: 2;
-      color: #BCBCBC;
-      cursor: text;
-      -webkit-transition: opacity .16s ease-in-out;
-      -webkit-user-select: none;
-    }
   </ui:style>
 
   <ui:image field="oauthosprite" />
   <ui:image field="loginbg" />
+  <ui:image field="logo" />
 
   <g:HTMLPanel addStyleNames="{style.root}">
     <div class="{style.wrapper}">
+      <div class="{style.logo}"></div>
       <div class="{style.menubar}">
+        <div myinput="" class="{style.search}">
+          <input type="text" ui:field="searchElm" />
+          <label>search</label>
+        </div>
         <ul style="float: right;">
           <li class="{style.login}">
-            <strong class="{style.btnstrong}">
-              <div ui:field="loginElm">登录</div>
-              <div class="{style.oauth}">
-                <div>
-                  <div ui:field="sinaElm" class="{style.part1}"></div>
-                  <div ui:field="renrenElm" class="{style.part2}"></div>
-                  <div ui:field="qqElm" class="{style.part3}"></div>
-                  <div ui:field="doubanElm" class="{style.part4}"></div>
-                </div>
-              </div>
-            </strong>
+            <strong ui:field="pupupLogin" class="{style.btnstrong}">登录</strong>
           </li>
           <li class="{style.signup}">
             <strong class="{style.btnstrong}">注册</strong>
           </li>
         </ul>
-        <div id="logininput" class="{style.loginform}">
-          <div>
-            <input type="text" ui:field="emailElm" />
-            <label>email</label>
-          </div>
-          <div>
-            <input type="password" ui:field="passwordElm" />
-            <label>password</label>
-          </div>
-        </div>
       </div>
     </div>
+    <g:HTMLPanel ui:field="popupPanel" addStyleNames="{style.popuplogin}">
+      <h3 class="{style.hstyle} {style.fontstyle}">登录</h3>
+      <div class="{style.loginform}">
+        <div myinput="">
+          <input type="text" ui:field="emailElm" />
+          <label>email</label>
+        </div>
+        <div myinput="">
+          <input type="password" ui:field="passwordElm" />
+          <label>password</label>
+        </div>
+        <li class="{style.login}" style="margin-top: 15px;">
+          <strong ui:field="loginElm" class="{style.btnstrong}">登录</strong>
+        </li>
+      </div>
+      <div class="{style.oauth}">
+        <h4 class="{style.fontstyle}" style="margin: 0px;">使用合作平台登录</h4>
+        <div ui:field="sinaElm" class="{style.part1}"></div>
+        <div ui:field="renrenElm" class="{style.part2}"></div>
+        <div ui:field="qqElm" class="{style.part3}"></div>
+        <div ui:field="doubanElm" class="{style.part4}"></div>
+      </div>
+    </g:HTMLPanel>
   </g:HTMLPanel>
 </ui:UiBinder>

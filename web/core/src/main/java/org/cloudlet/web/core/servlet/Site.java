@@ -1,0 +1,41 @@
+package org.cloudlet.web.core.servlet;
+
+public class Site {
+
+  private String id;
+
+  private String url;
+
+  private String mirror;
+
+  public Site(String id, String url, String mirror) {
+    this.id = id;
+    this.url = url;
+    this.mirror = mirror;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public String getMirror() {
+    return mirror;
+  }
+
+  public String getUrl() {
+    return url;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public void setMirror(String mirror) {
+    this.mirror = mirror;
+  }
+
+  public void setUrl(String url) {
+    this.url = url;
+  }
+
+}

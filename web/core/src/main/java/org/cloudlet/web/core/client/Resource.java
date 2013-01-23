@@ -17,14 +17,12 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import org.cloudlet.web.core.shared.CorePackage;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,19 +47,15 @@ public class Resource extends Place {
 
   private Map<String, Resource> children;
 
-  private List<Resource> entries;
-
   private MultivaluedMap<String, String> queryParameters;
-
-  private Map<String, Resource> renditions;
 
   private Object containerWidget;
 
-  private String rendition;
+  private String token;
 
   public Resource createChild(String path) {
     Resource result = placeProvider.get();
-    result.setPath(path);
+    result.setToken(path);
     result.setParent(this);
     getChildren().put(path, result);
     return result;
@@ -77,7 +71,7 @@ public class Resource extends Place {
       if (RequestBuilder.POST.equals(method) || RequestBuilder.PUT.equals(method)) {
         body = generateData();
       }
-      final StringBuilder url = getUriBuilder();
+      final StringBuilder url = method.equals(RequestBuilder.POST) ? getParent().getUriBuilder() : getUriBuilder();
       url.insert(0, "api");
       RequestBuilder builder = new RequestBuilder(method, url.toString());
       builder.setHeader("Accept", "application/json");
@@ -106,7 +100,7 @@ public class Resource extends Place {
               callback.onSuccess(Resource.this);
             }
           } else if (callback != null) {
-            callback.onFailure(new RuntimeException("GET " + url.toString() + "\r\nInvalid status code " + statusCode));
+            callback.onFailure(new RuntimeException(method + " " + url.toString() + "\r\nInvalid status code " + statusCode));
           }
         }
 
@@ -157,10 +151,6 @@ public class Resource extends Place {
   }
 
   public Resource getChild(String path, boolean create) {
-    if (isRendition()) {
-      return getParent().getChild(path, create);
-    }
-    getRenditions();// ensure renditions are initialized;
     Resource result = getChildren().get(path);
     if (result == null && create) {
       result = createChild(path);
@@ -179,12 +169,8 @@ public class Resource extends Place {
     return containerWidget;
   }
 
-  public Resource getHome() {
-    if (isRendition()) {
-      return this;
-    } else {
-      return getRenditions().get(CorePackage.SELF);
-    }
+  public Object getHomeWidget() {
+    return Registry.getWidget(getResourceType(), CorePackage.HOME);
   }
 
   public String getId() {
@@ -213,9 +199,6 @@ public class Resource extends Place {
   }
 
   public String getPath() {
-    if (isRendition()) {
-      return rendition;
-    }
     return getString(CorePackage.PATH);
   }
 
@@ -234,44 +217,15 @@ public class Resource extends Place {
     return queryParameters;
   }
 
-  public Resource getRendition(String kind) {
-    if (isRendition()) {
-      return getParent().getRenditions().get(kind);
-    } else {
-      return getRenditions().get(kind);
+  public Object getReferencedWidget() {
+    if (parent == null) {
+      return null;
     }
-  }
-
-  public Map<String, Resource> getRenditions() {
-    if (isRendition()) {
-      return Collections.EMPTY_MAP;
+    String resurceType = parent.getResourceType();
+    if (resurceType == null) {
+      return null;
     }
-    if (renditions == null) {
-      renditions = new HashMap<String, Resource>();
-      String resourceType = getResourceType();
-      if (resourceType != null) {
-        Map<String, Object> widgets = Registry.getWidgets(resourceType);
-        if (!widgets.containsKey(CorePackage.SELF)) {
-          widgets.put(CorePackage.SELF, new SimplePanel());
-        }
-        for (String kind : widgets.keySet()) {
-          if (CorePackage.CONTAINER.equals(kind)) {
-            continue;
-          }
-          Object widget = widgets.get(kind);
-          Resource rendition = getChild(kind);
-          rendition.setTitle(kind);// TODO localize rendition title
-          rendition.setRendition(kind);
-          rendition.setWidget(widget);
-          renditions.put(kind, rendition);
-          if (CorePackage.SELF.equals(kind)) {
-            rendition.setTitle(getTitle());
-            rendition.setResourceType(getResourceType());
-          }
-        }
-      }
-    }
-    return renditions;
+    return Registry.getWidget(resurceType, token);
   }
 
   public Resource getResource(String path) {
@@ -301,6 +255,10 @@ public class Resource extends Place {
     return getString(CorePackage.TITLE);
   }
 
+  public String getToken() {
+    return token;
+  }
+
   public String getUri() {
     return getUriBuilder().toString();
   }
@@ -318,11 +276,13 @@ public class Resource extends Place {
       if (builder.length() > 1) {
         builder.append("/");
       }
-      if (rendition != null) {
-        builder.append(rendition);
+      if (token != null) {
+        builder.append(token);
       } else {
         String path = getPath();
-        builder.append(path);
+        if (path != null) {
+          builder.append(path);
+        }
       }
     }
 
@@ -356,18 +316,11 @@ public class Resource extends Place {
   }
 
   public boolean hasChildren() {
-    if (isRendition()) {
-      return false;
-    }
     JSONValue count = data.get(CorePackage.CHILDREN_COUNT);
     if (count != null) {
       return count.isNumber().doubleValue() > 0;
     }
     return true;
-  }
-
-  public boolean isRendition() {
-    return rendition != null;
   }
 
   public void load(AsyncCallback<Resource> callback) {
@@ -385,7 +338,6 @@ public class Resource extends Place {
   public void read(String jsonText) {
     // TODO clear data
     data = JSONParser.parse(jsonText).isObject();
-    entries = null;
   }
 
   public void render(final AcceptsOneWidget panel) {
@@ -422,8 +374,10 @@ public class Resource extends Place {
         });
         return;
       } else {
-        String kind = isRendition() ? getPath() : CorePackage.CONTAINER;
-        widget = Registry.getWidget(resourceType, kind);
+        widget = getReferencedWidget();
+        if (widget == null) {
+          widget = getHomeWidget();
+        }
         if (widget == null) {
           if (callback != null) {
             // skip to render child resource
@@ -481,8 +435,8 @@ public class Resource extends Place {
   }
 
   public void save(AsyncCallback<Resource> callback) {
-    boolean isEdit = data.get(CorePackage.ID).isString() != null;
-    RequestBuilder.Method method = isEdit ? RequestBuilder.POST : RequestBuilder.PUT;
+    boolean isNew = getId() == null;
+    RequestBuilder.Method method = isNew ? RequestBuilder.POST : RequestBuilder.PUT;
     execute(method, callback);
   }
 
@@ -502,10 +456,6 @@ public class Resource extends Place {
     this.queryParameters = queryParameters;
   }
 
-  public void setRendition(String rendition) {
-    this.rendition = rendition;
-  }
-
   public void setResourceType(String value) {
     setString(CorePackage.RESOURCE_TYPE, value);
   }
@@ -516,6 +466,10 @@ public class Resource extends Place {
 
   public void setTitle(String title) {
     setString(CorePackage.TITLE, title);
+  }
+
+  public void setToken(String token) {
+    this.token = token;
   }
 
   public void setValue(String propName, Boolean value) {
@@ -588,4 +542,5 @@ public class Resource extends Place {
       callback.onSuccess(widget);
     }
   }
+
 }

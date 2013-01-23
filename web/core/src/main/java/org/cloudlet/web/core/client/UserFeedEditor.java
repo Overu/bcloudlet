@@ -10,8 +10,6 @@ import java.util.List;
 
 public class UserFeedEditor extends ResourceEditor {
 
-  public static final String NEW = "new";
-
   @Inject
   private Provider<UserEditor> editorProvider;
 

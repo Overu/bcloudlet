@@ -28,19 +28,12 @@ public class ResourceTree extends BorderLayoutContainer implements TakesResource
     @Override
     public List<Resource> read(final Object loadConfig, final Resource resource) {
       List<Resource> result = new ArrayList<Resource>();
-      for (Resource rendition : resource.getRenditions().values()) {
-        if (CorePackage.SELF.equals(rendition.getPath())) {
-          continue;
-        }
-        result.add(rendition);
-      }
       List<Resource> children = resource.getList(CorePackage.CHILDREN);
       for (Resource child : children) {
         result.add(child);
       }
       return result;
     }
-
   }
 
   @Inject
@@ -64,15 +57,15 @@ public class ResourceTree extends BorderLayoutContainer implements TakesResource
   @Override
   public void setValue(Resource place) {
     this.root = place;
-
   }
 
   protected void initView() {
     ModelKeyProvider<Resource> keyProvider = new ModelKeyProvider<Resource>() {
       @Override
       public String getKey(final Resource item) {
-        StringBuilder b = item.getUriBuilder(false);
-        return b.toString();
+        return Integer.toString(item.hashCode());
+        // StringBuilder b = item.getUriBuilder(false);
+        // return b.toString();
       }
     };
     store = new TreeStore<Resource>(keyProvider);
@@ -111,14 +104,13 @@ public class ResourceTree extends BorderLayoutContainer implements TakesResource
       }
 
       @Override
-      public String getValue(final Resource object) {
-        return object.getTitle();
+      public String getValue(final Resource res) {
+        return res.getTitle();
       }
 
       @Override
-      public void setValue(final Resource object, final String value) {
-        object.setTitle(value);
-
+      public void setValue(final Resource res, final String value) {
+        res.setTitle(value);
       }
     }, new GrayTreeAppearance());
 
@@ -127,8 +119,7 @@ public class ResourceTree extends BorderLayoutContainer implements TakesResource
     tree.getSelectionModel().addSelectionHandler(new SelectionHandler<Resource>() {
       @Override
       public void onSelection(final SelectionEvent<Resource> event) {
-
-        resourceManager.goTo(event.getSelectedItem().getHome());
+        resourceManager.goTo(event.getSelectedItem());
         // tree.getSelectionModel().deselectAll();
       }
     });

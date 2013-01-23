@@ -23,13 +23,13 @@ public class ResourceExplorer extends BorderLayoutContainer implements WidgetCon
   private Resource resource;
 
   @Inject
-  public ResourceExplorer(final LoginView loginView, final ResourceTree placeTree, @Root Resource root) {
+  public ResourceExplorer(final ResourceTree treeView, @Root Resource root) {
     Window.enableScrolling(false);
     setPixelSize(Window.getClientWidth(), Window.getClientHeight());
     setMonitorWindowResize(true);
 
-    this.placeTree = placeTree;
-    placeTree.setValue(root);
+    this.placeTree = treeView;
+    treeView.setValue(root);
 
     // StringBuffer sb = new StringBuffer();
     // sb.append("<div id='demo-theme'></div><div id=demo-title>Retech Explorer Demo</div>");
@@ -40,7 +40,7 @@ public class ResourceExplorer extends BorderLayoutContainer implements WidgetCon
 
     ContentPanel west = new ContentPanel();
     west.setBodyBorder(true);
-    west.setWidget(placeTree);
+    west.setWidget(treeView);
 
     center = new SimpleContainer();
 

@@ -472,7 +472,7 @@ public abstract class ResourceGrid extends ContentPanel implements TakesResource
   private void selectBase(SelectButtonCar car) {
     switch (car) {
     case ADD:
-      Resource place = getValue().getRendition(UserFeedEditor.NEW);
+      Resource place = getValue().getChild(CorePackage.NEW);
       resourceManager.goTo(place);
       break;
     case REFRESH:

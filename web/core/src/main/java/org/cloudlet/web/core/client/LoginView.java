@@ -1,13 +1,19 @@
 package org.cloudlet.web.core.client;
 
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Label;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.core.client.util.Margins;
+import com.sencha.gxt.core.client.util.Padding;
+import com.sencha.gxt.core.client.util.Rectangle;
 import com.sencha.gxt.widget.core.client.ContentPanel;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.BoxLayoutContainer.BoxLayoutData;
 import com.sencha.gxt.widget.core.client.container.BoxLayoutContainer.BoxLayoutPack;
 import com.sencha.gxt.widget.core.client.container.HBoxLayoutContainer;
+import com.sencha.gxt.widget.core.client.container.HBoxLayoutContainer.HBoxLayoutAlign;
+import com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData;
@@ -28,50 +34,39 @@ public class LoginView extends SimpleContainer {
   FormPanel form;
 
   protected void initView() {
-    HBoxLayoutContainer c = new HBoxLayoutContainer();
-    c.setPack(BoxLayoutPack.CENTER);
-    c.setSize("100%", "100%");
+    HBoxLayoutContainer p1 = new HBoxLayoutContainer();
+    p1.setPadding(new Padding(5));
+    p1.setHBoxLayoutAlign(HBoxLayoutAlign.TOP);
 
-    ContentPanel cp = new ContentPanel();
-    cp.setLayoutData(new BoxLayoutData(new Margins(100, 0, 0, 0)));
-    cp.setHeadingText("Log in");
-    cp.setWidth(350);
-    cp.setBodyStyle("background: none; padding: 5px");
+    form.add(p1);
 
-    FieldSet fieldSet = new FieldSet();
-    fieldSet.setHeadingText("User Log in");
-    fieldSet.setCollapsible(false);
-    cp.add(fieldSet);
-
-    VerticalLayoutContainer p = new VerticalLayoutContainer();
-
-    form.add(p);
-    fieldSet.add(form);
+    p1.add(new HTML("Retech"));
+    BoxLayoutData flex = new BoxLayoutData(new Margins(0, 5, 0, 0));
+    flex.setFlex(1);
+    p1.add(new Label(), flex);
 
     final TextField userName = new TextField();
     userName.setAllowBlank(false);
     userName.setEmptyText("Enter your Username...");
-    p.add(new FieldLabel(userName, "Username"), new VerticalLayoutData(1, -1));
+    p1.add(new FieldLabel(userName, "Username"), new BoxLayoutData(new Margins(0, 15, 0, 0)));
 
     PasswordField passWord = new PasswordField();
     passWord.setAllowBlank(false);
-    p.add(new FieldLabel(passWord, "Password"), new VerticalLayoutData(1, -1));
+    p1.add(new FieldLabel(passWord, "Password"), new BoxLayoutData(new Margins(0, 15, 0, 0)));
 
-    cp.addButton(new TextButton("Log in", new SelectHandler() {
+    p1.add(new TextButton("Log in", new SelectHandler() {
       @Override
       public void onSelect(SelectEvent event) {
         Info.display("Log in", userName.getText());
       }
-    }));
-    cp.addButton(new TextButton("Reset", new SelectHandler() {
+    }), new BoxLayoutData(new Margins(0, 15, 0, 0)));
+    p1.add(new TextButton("Reset", new SelectHandler() {
       @Override
       public void onSelect(SelectEvent event) {
         form.reset();
       }
-    }));
-
-    c.add(cp);
-    setWidget(c);
+    }), new BoxLayoutData(new Margins(0, 15, 0, 0)));
+    setWidget(form);
   }
 
   @Override

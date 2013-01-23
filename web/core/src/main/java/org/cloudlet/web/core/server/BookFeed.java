@@ -53,11 +53,6 @@ public class BookFeed extends PagingFeed<Book> {
 
   @Override
   protected void doLoadEntries() {
-    if (CorePackage.STARRED.equals(renditionKind)) {
-    } else if (CorePackage.RECOMMENDED.equals(renditionKind)) {
-    } else if (CorePackage.MY_BOOKS.equals(renditionKind)) {
-    } else {
-      super.doLoadEntries();
-    }
+    super.doLoadEntries();
   }
 }
