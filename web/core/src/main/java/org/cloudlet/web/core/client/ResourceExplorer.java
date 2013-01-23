@@ -23,7 +23,7 @@ public class ResourceExplorer extends BorderLayoutContainer implements WidgetCon
   private Resource resource;
 
   @Inject
-  public ResourceExplorer(final ResourceTree placeTree, @Root Resource root) {
+  public ResourceExplorer(final LoginView loginView, final ResourceTree placeTree, @Root Resource root) {
     Window.enableScrolling(false);
     setPixelSize(Window.getClientWidth(), Window.getClientHeight());
     setMonitorWindowResize(true);
@@ -31,12 +31,12 @@ public class ResourceExplorer extends BorderLayoutContainer implements WidgetCon
     this.placeTree = placeTree;
     placeTree.setValue(root);
 
-    StringBuffer sb = new StringBuffer();
-    sb.append("<div id='demo-theme'></div><div id=demo-title>Retech Explorer Demo</div>");
-    HtmlLayoutContainer northPanel = new HtmlLayoutContainer(sb.toString());
-    northPanel.setStateful(false);
-    northPanel.setId("demo-header");
-    northPanel.addStyleName("x-small-editor");
+    // StringBuffer sb = new StringBuffer();
+    // sb.append("<div id='demo-theme'></div><div id=demo-title>Retech Explorer Demo</div>");
+    // HtmlLayoutContainer northPanel = new HtmlLayoutContainer(sb.toString());
+    // northPanel.setStateful(false);
+    // northPanel.setId("demo-header");
+    // northPanel.addStyleName("x-small-editor");
 
     ContentPanel west = new ContentPanel();
     west.setBodyBorder(true);
@@ -44,7 +44,7 @@ public class ResourceExplorer extends BorderLayoutContainer implements WidgetCon
 
     center = new SimpleContainer();
 
-    BorderLayoutData northData = new BorderLayoutData(70);
+    BorderLayoutData northData = new BorderLayoutData(30);
     northData.setMargins(new Margins(5));
 
     BorderLayoutData westData = new BorderLayoutData(150);
@@ -52,7 +52,7 @@ public class ResourceExplorer extends BorderLayoutContainer implements WidgetCon
 
     MarginData centerData = new MarginData(0, 5, 4, 0);
 
-    setNorthWidget(northPanel, northData);
+    setNorthWidget(loginView, northData);
     setWestWidget(west, westData);
     setCenterWidget(center, centerData);
   }
