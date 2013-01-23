@@ -34,6 +34,9 @@ public class CoreClientModule extends AbstractGinModule {
     @Inject
     PlaceHistoryHandler historyHandler;
 
+    @Inject
+    IndexPanel indexPanel;
+
     SimplePanel main;
 
     @Inject
