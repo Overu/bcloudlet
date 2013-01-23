@@ -5,14 +5,17 @@ import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.place.shared.PlaceHistoryMapper;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 import org.cloudlet.web.core.client.style.BaseResources;
+import org.cloudlet.web.core.shared.CorePackage;
 import org.cloudlet.web.core.shared.Root;
 
 import java.util.logging.Logger;
@@ -20,7 +23,7 @@ import java.util.logging.Logger;
 public class CoreClientModule extends AbstractGinModule {
 
   @Singleton
-  public static class Launcher extends Initializer implements PlaceChangeEvent.Handler {
+  public static class Launcher implements PlaceChangeEvent.Handler {
 
     @Inject
     LoginBar loginBar;
@@ -33,14 +36,25 @@ public class CoreClientModule extends AbstractGinModule {
 
     SimplePanel main;
 
+    @Inject
+    public Launcher() {
+
+      new Timer() {
+        @Override
+        public void run() {
+          start();
+        }
+      }.schedule(1);
+    }
+
     @Override
     public void onPlaceChange(final PlaceChangeEvent event) {
       Resource place = (Resource) event.getNewPlace();
       place.render(main);
     }
 
-    @Override
-    protected void init() {
+    private void start() {
+
       BaseResources.INSTANCE();
       main = new SimplePanel();
       main.getElement().setId("main");
