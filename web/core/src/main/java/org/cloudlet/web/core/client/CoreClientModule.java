@@ -1,21 +1,20 @@
 package org.cloudlet.web.core.client;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.place.shared.PlaceHistoryMapper;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 import org.cloudlet.web.core.client.style.BaseResources;
-import org.cloudlet.web.core.shared.CorePackage;
 import org.cloudlet.web.core.shared.Root;
 
 import java.util.logging.Logger;
@@ -23,7 +22,7 @@ import java.util.logging.Logger;
 public class CoreClientModule extends AbstractGinModule {
 
   @Singleton
-  public static class Launcher implements PlaceChangeEvent.Handler {
+  public static class Launcher extends Initializer implements PlaceChangeEvent.Handler {
 
     @Inject
     EventBus eventBus;
@@ -31,33 +30,7 @@ public class CoreClientModule extends AbstractGinModule {
     @Inject
     PlaceHistoryHandler historyHandler;
 
-    @Inject
-    Provider<ResourceExplorer> explorer;
-
-    @Inject
-    Provider<UserEditor> userEditor;
-
-    @Inject
-    Provider<UserFeedExplorer> userFeed;
-
-    @Inject
-    Provider<BookEditor> bookEditor;
-
-    @Inject
-    Provider<BookFeedExplorer> bookFeed;
-
     SimplePanel main;
-
-    @Inject
-    public Launcher() {
-
-      new Timer() {
-        @Override
-        public void run() {
-          start();
-        }
-      }.schedule(1);
-    }
 
     @Override
     public void onPlaceChange(final PlaceChangeEvent event) {
@@ -65,24 +38,19 @@ public class CoreClientModule extends AbstractGinModule {
       place.render(main);
     }
 
-    private void start() {
-
-      Registry.setWidget(CorePackage.Repository, CorePackage.HOME, explorer);
-
-      Registry.setWidget(CorePackage.UserFeed, CorePackage.HOME, userFeed);
-      Registry.setWidget(CorePackage.UserFeed, CorePackage.NEW, userEditor);
-
-      Registry.setWidget(CorePackage.BookFeed, CorePackage.HOME, bookFeed);
-      Registry.setWidget(CorePackage.BookFeed, CorePackage.NEW, bookEditor);
-
+    @Override
+    protected void init() {
       BaseResources.INSTANCE();
       main = new SimplePanel();
       main.getElement().setId("main");
       RootPanel.get().add(main);
-
       eventBus.addHandler(PlaceChangeEvent.TYPE, this);
-
-      historyHandler.handleCurrentHistory();
+      Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+        @Override
+        public void execute() {
+          historyHandler.handleCurrentHistory();
+        }
+      });
     }
   }
 
