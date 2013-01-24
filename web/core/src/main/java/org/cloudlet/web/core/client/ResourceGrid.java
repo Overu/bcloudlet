@@ -10,12 +10,10 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.safecss.shared.SafeStyles;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.text.shared.AbstractSafeHtmlRenderer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.cell.core.client.SimpleSafeHtmlCell;
@@ -48,9 +46,6 @@ import com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer.HorizontalLayoutData;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData;
-import com.sencha.gxt.widget.core.client.event.ColumnMoveEvent;
-import com.sencha.gxt.widget.core.client.event.HeaderContextMenuEvent;
-import com.sencha.gxt.widget.core.client.event.HeaderContextMenuEvent.HeaderContextMenuHandler;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 import com.sencha.gxt.widget.core.client.grid.CheckBoxSelectionModel;
@@ -58,9 +53,6 @@ import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.grid.Grid;
 import com.sencha.gxt.widget.core.client.grid.filters.GridFilters;
-import com.sencha.gxt.widget.core.client.menu.Item;
-import com.sencha.gxt.widget.core.client.menu.Menu;
-import com.sencha.gxt.widget.core.client.menu.MenuItem;
 import com.sencha.gxt.widget.core.client.toolbar.LabelToolItem;
 import com.sencha.gxt.widget.core.client.toolbar.PagingToolBar;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
@@ -110,8 +102,7 @@ public abstract class ResourceGrid extends ContentPanel implements TakesResource
   }
 
   enum SelectButtonCar {
-    ADD("Add", resources.add()), REFRESH("Refresh", resources.refresh()), DELETE("Delete", resources.delete()), EDIT("Edit", resources
-        .edit());
+    ADD("新建", resources.add()), REFRESH("刷新", resources.refresh()), DELETE("刪除", resources.delete()), EDIT("编辑", resources.edit());
 
     private String name;
     private ImageResource image;
@@ -407,7 +398,7 @@ public abstract class ResourceGrid extends ContentPanel implements TakesResource
       buttonBar.add(button);
     }
 
-    final PagingToolBar toolBar = new PagingToolBar(5);
+    final PagingToolBar toolBar = new PagingToolBar(10);
     toolBar.getElement().getStyle().setProperty("borderBottom", "none");
     toolBar.bind(loader);
 
@@ -474,52 +465,52 @@ public abstract class ResourceGrid extends ContentPanel implements TakesResource
 
   private void selectBase(SelectButtonCar car) {
     switch (car) {
-      case ADD:
-        Resource place = getValue().getChild(CorePackage.NEW);
-        resourceManager.goTo(place);
-        break;
-      case REFRESH:
-        refresh();
-        break;
-      case DELETE:
-        if (selectedItem == null || selectedItem.equals("")) {
-          return;
+    case ADD:
+      Resource place = getValue().getChild(CorePackage.NEW);
+      resourceManager.goTo(place);
+      break;
+    case REFRESH:
+      refresh();
+      break;
+    case DELETE:
+      if (selectedItem == null || selectedItem.equals("")) {
+        return;
+      }
+      selectedItem.delete(new AsyncCallback<Resource>() {
+        @Override
+        public void onFailure(Throwable caught) {
         }
-        selectedItem.delete(new AsyncCallback<Resource>() {
-          @Override
-          public void onFailure(Throwable caught) {
-          }
 
-          @Override
-          public void onSuccess(Resource result) {
-            refresh();
-          }
-        });
-        break;
-      case EDIT:
-        if (selectedItem == null) {
-          return;
+        @Override
+        public void onSuccess(Resource result) {
+          refresh();
         }
-        resourceManager.goTo(selectedItem);
-        break;
-      default:
-        break;
+      });
+      break;
+    case EDIT:
+      if (selectedItem == null) {
+        return;
+      }
+      resourceManager.goTo(selectedItem);
+      break;
+    default:
+      break;
     }
   }
 
   private void selectView(ViewButtonCar car) {
     switch (car) {
-      case TABLE:
-        con.remove(grid);
-        con.add(listView, new VerticalLayoutData(1, 1));
-        listView.setSize("100%", "100%");
-        break;
-      case GRID:
-        con.remove(listView);
-        con.add(grid, new VerticalLayoutData(1, 1));
-        break;
-      default:
-        break;
+    case TABLE:
+      con.remove(grid);
+      con.add(listView, new VerticalLayoutData(1, 1));
+      listView.setSize("100%", "100%");
+      break;
+    case GRID:
+      con.remove(listView);
+      con.add(grid, new VerticalLayoutData(1, 1));
+      break;
+    default:
+      break;
     }
     con.onResize();
   }

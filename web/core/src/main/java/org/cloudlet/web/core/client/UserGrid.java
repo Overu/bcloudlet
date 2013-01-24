@@ -14,11 +14,11 @@ public class UserGrid extends ResourceGrid {
 
   @Override
   protected void initColumn() {
-    columnConfigProvider(new StringValueProvider(CorePackage.PATH), 100, "Sender");
-    columnConfigProvider(new StringValueProvider(CorePackage.EMAIL), 165, "Email");
-    columnConfigProvider(new StringValueProvider(CorePackage.PHONE), 100, "Phone");
-    columnConfigProvider(new StringValueProvider(CorePackage.STATE), 50, "State");
-    columnConfigProvider(new StringValueProvider(CorePackage.ZIP), 65, "Zip Code");
+    columnConfigProvider(new StringValueProvider(CorePackage.NAME), 100, "用户名");
+    columnConfigProvider(new StringValueProvider(CorePackage.EMAIL), 165, "郵箱");
+    columnConfigProvider(new StringValueProvider(CorePackage.PHONE), 100, "电话");
+    columnConfigProvider(new StringValueProvider(CorePackage.STATE), 50, "地区");
+    columnConfigProvider(new StringValueProvider(CorePackage.ZIP), 65, "郵編");
   }
 
   @Override

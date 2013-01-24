@@ -4,6 +4,7 @@ public interface CorePackage {
 
   String PREFIX = "Core";
 
+  String BookTag = PREFIX + "Tag";
   String Book = PREFIX + "Book";
   String Group = PREFIX + "Group";
   String GroupFeed = PREFIX + "GroupFeed";
@@ -71,6 +72,26 @@ public interface CorePackage {
   String PATH = "path";
 
   String TITLE = "title";
+
+  String AUTHOR = "author";
+
+  String COPYRIGHT = "copyright";
+  String FEATURED = "featured";
+  String PROMOTED = "promoted";
+  String HOT = "hot";
+  String CATEGORIZED = "categorized";
+  String PRICE = "price";
+  String PROMOTION_PRICE = "promotionPrice";
+
+  String DATE_PUBLISHED = "datePublished";
+
+  String DATE_UPDATED = "dateUpdated";
+
+  String SERIAL_NUMBER = "serialNumber";
+
+  String SIZE = "size";
+
+  String TAG_1 = "tag1";
 
   String ID = "id";
 

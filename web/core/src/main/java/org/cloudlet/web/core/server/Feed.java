@@ -59,13 +59,16 @@ public abstract class Feed<E extends Resource> extends Resource {
 
   public List<E> findEntries(int start, int limit) {
     Class<E> entryType = getEntryType();
-    TypedQuery<E> query =
-        em().createQuery("from " + entryType.getName() + " f where f.parent=:parent" + count().append(limit()), entryType);
+    StringBuilder sql = new StringBuilder("from ").append(entryType.getName()).append(" f where f.parent=:parent");
+    initQueryConditions(sql);
+    sql.append(count()).append(limit());
+    TypedQuery<E> query = em().createQuery(sql.toString(), entryType);
     if (start >= 0 && limit >= 0) {
       query.setFirstResult(start);
       query.setMaxResults(limit);
     }
     query.setParameter("parent", this);
+    initQueryParams(query);
     return query.getResultList();
   }
 
@@ -146,6 +149,12 @@ public abstract class Feed<E extends Resource> extends Resource {
   protected void doLoadEntries() {
     entries = findEntries(0, -1);
     queryCount = countEntries();
+  }
+
+  protected void initQueryConditions(StringBuilder sql) {
+  }
+
+  protected void initQueryParams(TypedQuery<E> query) {
   }
 
   private StringBuffer count() {

@@ -4,7 +4,9 @@ import org.cloudlet.web.core.shared.CorePackage;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -20,6 +22,10 @@ import javax.xml.bind.annotation.XmlType;
 @Path("books")
 @DefaultField(key = "title", value = "图书")
 public class BookFeed extends PagingFeed<Book> {
+
+  private boolean featured;
+
+  private boolean promoted;
 
   @Override
   @POST
@@ -39,6 +45,14 @@ public class BookFeed extends PagingFeed<Book> {
     return CorePackage.BookFeed;
   }
 
+  @GET
+  @Path(CorePackage.FEATURED)
+  public BookFeed loadFeaturedBooks() {
+    featured = true;
+    doLoad();
+    return this;
+  }
+
   @Override
   public Book newEntry() {
     Book result = new Book();
@@ -54,5 +68,21 @@ public class BookFeed extends PagingFeed<Book> {
   @Override
   protected void doLoadEntries() {
     super.doLoadEntries();
+  }
+
+  @Override
+  protected void initQueryConditions(StringBuilder sql) {
+    super.initQueryConditions(sql);
+    if (featured) {
+      sql.append(" and f.featured=true");
+    }
+    if (promoted) {
+      sql.append(" and f.promoted=true");
+    }
+  }
+
+  @Override
+  protected void initQueryParams(TypedQuery<Book> query) {
+    super.initQueryParams(query);
   }
 }

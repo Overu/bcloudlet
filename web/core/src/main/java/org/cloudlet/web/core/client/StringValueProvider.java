@@ -17,7 +17,11 @@ public class StringValueProvider implements ValueProvider<Resource, String> {
 
   @Override
   public String getValue(Resource resource) {
-    return resource.getString(propName);
+    Object value = resource.getValue(propName);
+    if (value instanceof String || value == null) {
+      return (String) value;
+    }
+    return value.toString();
   }
 
   @Override

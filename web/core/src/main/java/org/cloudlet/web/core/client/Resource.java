@@ -298,7 +298,15 @@ public class Resource extends Place {
     return builder;
   }
 
-  public Object getValue(String propName) {
+  public Object getValue(String path) {
+    if (!path.contains(".")) {
+      return getValueByName(path);
+    }
+    String[] paths = path.split("\\.");
+    return getValueByPaths(paths);
+  }
+
+  public Object getValueByName(String propName) {
     JSONValue value = data.get(propName);
     if (value instanceof JSONString) {
       return value.isString().stringValue();
@@ -309,6 +317,20 @@ public class Resource extends Place {
     } else {
       return null;
     }
+  }
+
+  public Object getValueByPaths(String[] segments) {
+    Resource parent = this;
+    for (int i = 0; i < segments.length - 1; i++) {
+      parent = parent.getResource(segments[i]);
+      if (parent == null) {
+        break;
+      }
+    }
+    if (parent != null) {
+      return parent.getValueByName(segments[segments.length - 1]);
+    }
+    return null;
   }
 
   public Object getWidget() {

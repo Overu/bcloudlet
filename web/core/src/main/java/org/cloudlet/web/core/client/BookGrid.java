@@ -15,7 +15,7 @@ public class BookGrid extends ResourceGrid {
 
   @Override
   protected void initColumn() {
-    columnConfigProvider(new ResourceValueProvider(CorePackage.COVER), 8, "Cover", new AbstractCell<Resource>() {
+    columnConfigProvider(new ResourceValueProvider(CorePackage.COVER), 40, "封面", new AbstractCell<Resource>() {
       @Override
       public void render(com.google.gwt.cell.client.Cell.Context context, Resource value, SafeHtmlBuilder sb) {
         StringBuffer imageUrl = new StringBuffer();
@@ -24,7 +24,12 @@ public class BookGrid extends ResourceGrid {
         sb.append(SafeHtmlUtils.fromSafeConstant(imageUrl.toString()));
       }
     });
-    columnConfigProvider(new StringValueProvider(CorePackage.TITLE), 100, "Title");
+    columnConfigProvider(new StringValueProvider(CorePackage.TITLE), 200, "书名");
+    columnConfigProvider(new StringValueProvider(CorePackage.AUTHOR), 100, "作者");
+    columnConfigProvider(new IntegerValueProvider(CorePackage.PRICE), 30, "价格");
+    columnConfigProvider(new StringValueProvider(CorePackage.PROMOTED), 20, "促销");
+    columnConfigProvider(new StringValueProvider(CorePackage.TAG_1 + "." + CorePackage.TITLE), 30, "分类");
+    columnConfigProvider(new StringValueProvider(CorePackage.DATE_PUBLISHED), 30, "出版日期");
   }
 
   @Override
