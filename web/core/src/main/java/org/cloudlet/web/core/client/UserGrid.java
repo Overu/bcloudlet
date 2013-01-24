@@ -14,7 +14,7 @@ public class UserGrid extends ResourceGrid {
 
   @Override
   protected void initColumn() {
-    columnConfigProvider(new StringValueProvider(CorePackage.NAME), 100, "Sender");
+    columnConfigProvider(new StringValueProvider(CorePackage.PATH), 100, "Sender");
     columnConfigProvider(new StringValueProvider(CorePackage.EMAIL), 165, "Email");
     columnConfigProvider(new StringValueProvider(CorePackage.PHONE), 100, "Phone");
     columnConfigProvider(new StringValueProvider(CorePackage.STATE), 50, "State");

@@ -10,10 +10,12 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safecss.shared.SafeStyles;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.text.shared.AbstractSafeHtmlRenderer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import com.sencha.gxt.cell.core.client.SimpleSafeHtmlCell;
@@ -46,6 +48,7 @@ import com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer.HorizontalLayoutData;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData;
+import com.sencha.gxt.widget.core.client.event.ColumnMoveEvent;
 import com.sencha.gxt.widget.core.client.event.HeaderContextMenuEvent;
 import com.sencha.gxt.widget.core.client.event.HeaderContextMenuEvent.HeaderContextMenuHandler;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
@@ -295,8 +298,8 @@ public abstract class ResourceGrid extends ContentPanel implements TakesResource
 
     CheckBoxSelectionModel<Resource> sm = new CheckBoxSelectionModel<Resource>(valueProvider);
     ColumnConfig<Resource, Resource> checkColumn = sm.getColumn();
-    checkColumn.setMenuDisabled(false);
-    checkColumn.setWidth(35);
+    // checkColumn.setMenuDisabled(false);
+    // checkColumn.setWidth(35);
 
     l = new ArrayList<ColumnConfig<Resource, ?>>();
     l.add(checkColumn);
@@ -319,36 +322,36 @@ public abstract class ResourceGrid extends ContentPanel implements TakesResource
         selectedItem = event.getSelectedItem();
       }
     });
-    grid.addHeaderContextMenuHandler(new HeaderContextMenuHandler() {
-      @Override
-      public void onHeaderContextMenu(HeaderContextMenuEvent event) {
-        int columnIndex = event.getColumnIndex();
-        if (columnIndex != 0) {
-          return;
-        }
-        final CheckBoxSelectionModel<Resource> selectionModel = (CheckBoxSelectionModel<Resource>) grid.getSelectionModel();
-        Menu menu = event.getMenu();
-        for (final ColumnItemCar columnItem : ColumnItemCar.values()) {
-          MenuItem item = new MenuItem(columnItem.getName());
-          item.addSelectionHandler(new SelectionHandler<Item>() {
-            @Override
-            public void onSelection(SelectionEvent<Item> event) {
-              switch (columnItem) {
-              case DESELECTALL:
-                selectionModel.setSelectAllChecked(false);
-                break;
-              case SELECTALL:
-                selectionModel.setSelectAllChecked(true);
-                break;
-              default:
-                break;
-              }
-            }
-          });
-          menu.add(item);
-        }
-      }
-    });
+    // grid.addHeaderContextMenuHandler(new HeaderContextMenuHandler() {
+    // @Override
+    // public void onHeaderContextMenu(HeaderContextMenuEvent event) {
+    // int columnIndex = event.getColumnIndex();
+    // if (columnIndex != 0) {
+    // return;
+    // }
+    // final CheckBoxSelectionModel<Resource> selectionModel = (CheckBoxSelectionModel<Resource>) grid.getSelectionModel();
+    // Menu menu = event.getMenu();
+    // for (final ColumnItemCar columnItem : ColumnItemCar.values()) {
+    // MenuItem item = new MenuItem(columnItem.getName());
+    // item.addSelectionHandler(new SelectionHandler<Item>() {
+    // @Override
+    // public void onSelection(SelectionEvent<Item> event) {
+    // switch (columnItem) {
+    // case DESELECTALL:
+    // selectionModel.setSelectAllChecked(false);
+    // break;
+    // case SELECTALL:
+    // selectionModel.setSelectAllChecked(true);
+    // break;
+    // default:
+    // break;
+    // }
+    // }
+    // });
+    // menu.add(item);
+    // }
+    // }
+    // });
 
     GridFilters<Resource> filters = new GridFilters<Resource>(loader);
     filters.initPlugin(grid);
@@ -471,52 +474,52 @@ public abstract class ResourceGrid extends ContentPanel implements TakesResource
 
   private void selectBase(SelectButtonCar car) {
     switch (car) {
-    case ADD:
-      Resource place = getValue().getChild(CorePackage.NEW);
-      resourceManager.goTo(place);
-      break;
-    case REFRESH:
-      refresh();
-      break;
-    case DELETE:
-      if (selectedItem == null || selectedItem.equals("")) {
-        return;
-      }
-      selectedItem.delete(new AsyncCallback<Resource>() {
-        @Override
-        public void onFailure(Throwable caught) {
+      case ADD:
+        Resource place = getValue().getChild(CorePackage.NEW);
+        resourceManager.goTo(place);
+        break;
+      case REFRESH:
+        refresh();
+        break;
+      case DELETE:
+        if (selectedItem == null || selectedItem.equals("")) {
+          return;
         }
+        selectedItem.delete(new AsyncCallback<Resource>() {
+          @Override
+          public void onFailure(Throwable caught) {
+          }
 
-        @Override
-        public void onSuccess(Resource result) {
-          refresh();
+          @Override
+          public void onSuccess(Resource result) {
+            refresh();
+          }
+        });
+        break;
+      case EDIT:
+        if (selectedItem == null) {
+          return;
         }
-      });
-      break;
-    case EDIT:
-      if (selectedItem == null) {
-        return;
-      }
-      resourceManager.goTo(selectedItem);
-      break;
-    default:
-      break;
+        resourceManager.goTo(selectedItem);
+        break;
+      default:
+        break;
     }
   }
 
   private void selectView(ViewButtonCar car) {
     switch (car) {
-    case TABLE:
-      con.remove(grid);
-      con.add(listView, new VerticalLayoutData(1, 1));
-      listView.setSize("100%", "100%");
-      break;
-    case GRID:
-      con.remove(listView);
-      con.add(grid, new VerticalLayoutData(1, 1));
-      break;
-    default:
-      break;
+      case TABLE:
+        con.remove(grid);
+        con.add(listView, new VerticalLayoutData(1, 1));
+        listView.setSize("100%", "100%");
+        break;
+      case GRID:
+        con.remove(listView);
+        con.add(grid, new VerticalLayoutData(1, 1));
+        break;
+      default:
+        break;
     }
     con.onResize();
   }

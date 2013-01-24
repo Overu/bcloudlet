@@ -1,5 +1,14 @@
+@external .abc;
+
 body {
   margin: 0;
+}
+
+.abc {
+}
+
+div[class=x-grid-row-checker] {
+  width: 15px!important;
 }
 
 div#resourcegrid>table>tbody>tr>td {
