@@ -1,19 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
-	<listener>
-		<listener-class>org.cloudlet.web.boot.server.BootServletContextListener</listener-class>
-	</listener>
-	<filter>
-		<filter-name>guiceFilter</filter-name>
-		<filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>guiceFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-	<mime-mapping>
-		<extension>manifest</extension>
-		<mime-type>text/cache-manifest</mime-type>
-	</mime-mapping>
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+  <listener>
+    <listener-class>org.cloudlet.web.boot.server.BootServletContextListener</listener-class>
+  </listener>
+  <filter>
+    <filter-name>guiceFilter</filter-name>
+    <filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>guiceFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <mime-mapping>
+    <extension>manifest</extension>
+    <mime-type>text/cache-manifest</mime-type>
+  </mime-mapping>
+  <servlet>
+    <servlet-name>mobile.jsp</servlet-name>
+    <jsp-file>/WEB-INF/pages/mobile.jsp</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>desktop.jsp</servlet-name>
+    <jsp-file>/WEB-INF/pages/desktop.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>mobile.jsp</servlet-name>
+    <url-pattern>/mobile</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>desktop.jsp</servlet-name>
+    <url-pattern>/desktop</url-pattern>
+  </servlet-mapping>
 </web-app>
