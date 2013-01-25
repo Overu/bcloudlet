@@ -438,7 +438,7 @@ public abstract class ResourceGrid extends ContentPanel implements TakesResource
 
     con = new VerticalLayoutContainer();
     con.add(hor2, new VerticalLayoutData(1, 34));
-    con.add(hor1, new VerticalLayoutData(1, 27));
+    con.add(hor1, new VerticalLayoutData(1, 35));
     selectView(ViewButtonCar.GRID);
 
     setWidget(con);
@@ -465,52 +465,52 @@ public abstract class ResourceGrid extends ContentPanel implements TakesResource
 
   private void selectBase(SelectButtonCar car) {
     switch (car) {
-    case ADD:
-      Resource place = getValue().getChild(CorePackage.NEW);
-      resourceManager.goTo(place);
-      break;
-    case REFRESH:
-      refresh();
-      break;
-    case DELETE:
-      if (selectedItem == null || selectedItem.equals("")) {
-        return;
-      }
-      selectedItem.delete(new AsyncCallback<Resource>() {
-        @Override
-        public void onFailure(Throwable caught) {
+      case ADD:
+        Resource place = getValue().getChild(CorePackage.NEW);
+        resourceManager.goTo(place);
+        break;
+      case REFRESH:
+        refresh();
+        break;
+      case DELETE:
+        if (selectedItem == null || selectedItem.equals("")) {
+          return;
         }
+        selectedItem.delete(new AsyncCallback<Resource>() {
+          @Override
+          public void onFailure(Throwable caught) {
+          }
 
-        @Override
-        public void onSuccess(Resource result) {
-          refresh();
+          @Override
+          public void onSuccess(Resource result) {
+            refresh();
+          }
+        });
+        break;
+      case EDIT:
+        if (selectedItem == null) {
+          return;
         }
-      });
-      break;
-    case EDIT:
-      if (selectedItem == null) {
-        return;
-      }
-      resourceManager.goTo(selectedItem);
-      break;
-    default:
-      break;
+        resourceManager.goTo(selectedItem);
+        break;
+      default:
+        break;
     }
   }
 
   private void selectView(ViewButtonCar car) {
     switch (car) {
-    case TABLE:
-      con.remove(grid);
-      con.add(listView, new VerticalLayoutData(1, 1));
-      listView.setSize("100%", "100%");
-      break;
-    case GRID:
-      con.remove(listView);
-      con.add(grid, new VerticalLayoutData(1, 1));
-      break;
-    default:
-      break;
+      case TABLE:
+        con.remove(grid);
+        con.add(listView, new VerticalLayoutData(1, 1));
+        listView.setSize("100%", "100%");
+        break;
+      case GRID:
+        con.remove(listView);
+        con.add(grid, new VerticalLayoutData(1, 1));
+        break;
+      default:
+        break;
     }
     con.onResize();
   }

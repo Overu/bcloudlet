@@ -140,19 +140,19 @@ public class BookTest extends CoreTest {
           if (str.length() == 0) {
             continue;
           }
-          java.util.Date date = new java.util.Date(java.util.Date.parse(str));
-          switch (d.getEvent()) {
-          case CREATION:
-            break;
-          case PUBLICATION:
-            book.setDatePublished(date);
-            break;
-          case MODIFICATION:
-            book.setDateUpdated(date);
-            break;
-          default:
-            break;
-          }
+          // java.util.Date date = new java.util.Date(java.util.Date.parse(str));
+          // switch (d.getEvent()) {
+          // case CREATION:
+          // break;
+          // case PUBLICATION:
+          // book.setDatePublished(date);
+          // break;
+          // case MODIFICATION:
+          // book.setDateUpdated(date);
+          // break;
+          // default:
+          // break;
+          // }
         }
         // book.setContentStream(new
         // ByteArrayInputStream("Good work".getBytes()));
