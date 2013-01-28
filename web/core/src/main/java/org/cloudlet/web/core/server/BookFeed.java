@@ -10,6 +10,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -19,7 +20,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = CorePackage.BookFeed)
 @Entity(name = CorePackage.BookFeed)
 @Table(name = CorePackage.BookFeed)
-@Path("books")
+@Path(CorePackage.BOOKS)
 @DefaultField(key = "title", value = "图书")
 public class BookFeed extends PagingFeed<Book> {
 
@@ -35,6 +36,30 @@ public class BookFeed extends PagingFeed<Book> {
     return super.createEntry(book);
   }
 
+  @GET
+  @Path(CorePackage.FEATURED)
+  public BookFeed findFeaturedBooks() {
+    featured = true;
+    doLoad();
+    return this;
+  }
+
+  @GET
+  @Path(CorePackage.PROMOTED)
+  public BookFeed findPromotedBooks() {
+    promoted = true;
+    doLoad();
+    return this;
+  }
+
+  @GET
+  @Path(CorePackage.TAGGED)
+  public BookFeed findTaggedBooks(@QueryParam("tag") String tag) {
+    featured = true;
+    doLoad();
+    return this;
+  }
+
   @Override
   public Class<Book> getEntryType() {
     return Book.class;
@@ -43,14 +68,6 @@ public class BookFeed extends PagingFeed<Book> {
   @Override
   public String getResourceType() {
     return CorePackage.BookFeed;
-  }
-
-  @GET
-  @Path(CorePackage.FEATURED)
-  public BookFeed loadFeaturedBooks() {
-    featured = true;
-    doLoad();
-    return this;
   }
 
   @Override
@@ -85,4 +102,5 @@ public class BookFeed extends PagingFeed<Book> {
   protected void initQueryParams(TypedQuery<Book> query) {
     super.initQueryParams(query);
   }
+
 }

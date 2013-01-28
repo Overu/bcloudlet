@@ -19,6 +19,8 @@ public interface CorePackage {
 
   String CONTENT = "content";
 
+  String BOOKS = "books";
+
   String CHILDREN_COUNT = "childrenCount";
 
   String QUERY_COUNT = "queryCount";
@@ -79,7 +81,7 @@ public interface CorePackage {
   String FEATURED = "featured";
   String PROMOTED = "promoted";
   String HOT = "hot";
-  String CATEGORIZED = "categorized";
+  String TAGGED = "tagged";
   String PRICE = "price";
   String PROMOTION_PRICE = "promotionPrice";
 

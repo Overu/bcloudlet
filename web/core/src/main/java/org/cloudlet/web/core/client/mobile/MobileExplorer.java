@@ -12,6 +12,7 @@ import org.cloudlet.web.core.client.Resource;
 import org.cloudlet.web.core.client.ResourceManager;
 import org.cloudlet.web.core.client.TakesResource;
 import org.cloudlet.web.core.client.WidgetContainer;
+import org.cloudlet.web.core.shared.CorePackage;
 
 public class MobileExplorer extends FlowPanel implements TakesResource, WidgetContainer {
 
@@ -21,23 +22,17 @@ public class MobileExplorer extends FlowPanel implements TakesResource, WidgetCo
 
   private SimplePanel child;
 
+  private static final String[] bookFilters = { CorePackage.FEATURED, CorePackage.PROMOTED, CorePackage.TAGGED };
+
+  private FlowPanel nav;
+
   @Inject
-  public MobileExplorer(ResourceManager rm, SimplePanel nav, SimplePanel child) {
+  public MobileExplorer(ResourceManager rm, FlowPanel nav, SimplePanel child) {
     this.resourceManager = rm;
+    this.nav = nav;
     this.child = child;
     add(nav);
     add(child);
-
-    Button books = new Button("Books");
-    nav.add(books);
-
-    books.addClickHandler(new ClickHandler() {
-      @Override
-      public void onClick(ClickEvent event) {
-        Resource books = resource.getChild("books");
-        resourceManager.goTo(books);
-      }
-    });
   }
 
   @Override
@@ -53,6 +48,19 @@ public class MobileExplorer extends FlowPanel implements TakesResource, WidgetCo
   @Override
   public void setValue(Resource value) {
     this.resource = value;
+    nav.clear();
+    Resource books = resource.getChild(CorePackage.BOOKS);
+    for (String filter : bookFilters) {
+      final Resource filteredBooks = books.getChild(filter);
+      Button filteredBtn = new Button(filter);
+      nav.add(filteredBtn);
+      filteredBtn.addClickHandler(new ClickHandler() {
+        @Override
+        public void onClick(ClickEvent event) {
+          resourceManager.goTo(filteredBooks);
+        }
+      });
+    }
   }
 
 }
