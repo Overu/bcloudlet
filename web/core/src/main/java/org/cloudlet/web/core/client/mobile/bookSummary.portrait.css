@@ -1,0 +1,38 @@
+@CHARSET "UTF-8";
+
+.root {
+  width: 50%;
+}
+
+.root:nth-child\(4n\+2\) {
+  background: rgb(254, 254, 254)!important;
+}
+
+.root:nth-child\(4n\+1\) {
+  background: rgb(254, 254, 254)!important;
+}
+
+.root:nth-child\(6n\+1\) {
+  background: inherit;
+}
+
+.root:nth-child\(6n\+2\) {
+  background: inherit;
+}
+
+.root:nth-child\(6n\+3\) {
+  background: inherit;
+}
+
+
+.root1 {
+  width: 100%;
+}
+
+.root1:nth-child\(2n\+1\) {
+  background: rgb(254, 254, 254);
+}
+
+.root1:nth-child\(2n\+2\) {
+  background: inherit;
+}

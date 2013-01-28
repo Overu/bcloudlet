@@ -1,4 +1,4 @@
-package org.cloudlet.web.core.client;
+package org.cloudlet.web.core.client.mobile;
 
 import com.google.gwt.inject.client.AbstractGinModule;
 

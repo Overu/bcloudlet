@@ -3,7 +3,7 @@
   <source path='client' />
   <source path='shared' />
 
-  <extend-configuration-property name="gin.module" value="org.cloudlet.web.core.client.MobileClientModule" />
+  <extend-configuration-property name="gin.module" value="org.cloudlet.web.core.client.mobile.MobileClientModule" />
 
   <!-- Default Locale. -->
   <extend-property name="locale" values="zh" />
