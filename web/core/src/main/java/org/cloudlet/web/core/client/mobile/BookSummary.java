@@ -11,12 +11,16 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import org.cloudlet.web.core.client.Resource;
+import org.cloudlet.web.core.client.ResourceGrid;
 import org.cloudlet.web.core.client.TakesResource;
 import org.cloudlet.web.core.shared.CorePackage;
 
@@ -24,10 +28,13 @@ public class BookSummary extends Composite implements TakesResource {
 
   @Shared
   public interface BookSummaryStyle extends CssResource {
+    String base();
+
+    String more();
+
     String root();
 
     String root1();
-
   }
 
   public interface Bundle extends ClientBundle {
@@ -52,11 +59,24 @@ public class BookSummary extends Composite implements TakesResource {
     StyleInjector.injectAtEnd(portraitCss);
   }
 
+  public static BookSummary more() {
+    BookSummary bookSummary = new BookSummary();
+    bookSummary.rightPanel.removeFromParent();
+    bookSummary.leftPanel.removeFromParent();
+    HTML w = new HTML("点击获取更多");
+    w.addStyleName(INSTANCE.landscape().more());
+    bookSummary.root.add(w);
+    return bookSummary;
+  }
+
   @UiField
   FlowPanel root;
 
   @UiField(provided = true)
   Image bookImage;
+
+  @UiField
+  HTMLPanel leftPanel;
 
   @UiField
   HTMLPanel rightPanel;
@@ -69,17 +89,18 @@ public class BookSummary extends Composite implements TakesResource {
 
   @UiField
   Label descLabel;
-
   @UiField
   DivElement discountedPrice;
+
   @UiField
   DivElement originalPrice;
 
   private Resource book;
 
   public BookSummary() {
-    bookImage = new Image(); // TODO set default book cover
+    bookImage = new Image(ResourceGrid.resources.cover());
     Widget widget = uiBinder.createAndBindUi(this);
+    setLandscape(INSTANCE.landscape().base());
     initWidget(widget);
   }
 

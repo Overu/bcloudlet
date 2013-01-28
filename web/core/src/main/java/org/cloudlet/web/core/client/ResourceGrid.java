@@ -66,6 +66,21 @@ import javax.ws.rs.core.MultivaluedMap;
 
 public abstract class ResourceGrid extends ContentPanel implements TakesResource {
 
+  public interface Resources extends ClientBundle {
+    ImageResource add();
+
+    ImageResource cover();
+
+    @Source("ResourceGrid.css")
+    Style css();
+
+    ImageResource delete();
+
+    ImageResource edit();
+
+    ImageResource refresh();
+  }
+
   enum ColumnItemCar {
     SELECTALL("selectAll"), DESELECTALL("deselectAll");
 
@@ -84,21 +99,6 @@ public abstract class ResourceGrid extends ContentPanel implements TakesResource
   interface Renderer extends XTemplates {
     @XTemplate(source = "ResourceGrid.html")
     public SafeHtml renderItem(String name, String imageUrl, Style style);
-  }
-
-  interface Resources extends ClientBundle {
-    ImageResource add();
-
-    ImageResource cover();
-
-    @Source("ResourceGrid.css")
-    Style css();
-
-    ImageResource delete();
-
-    ImageResource edit();
-
-    ImageResource refresh();
   }
 
   enum SelectButtonCar {
@@ -168,7 +168,7 @@ public abstract class ResourceGrid extends ContentPanel implements TakesResource
   public final static String LIST = "list";
 
   static Renderer r;
-  static Resources resources;
+  public static Resources resources;
 
   @Inject
   ResourceManager resourceManager;

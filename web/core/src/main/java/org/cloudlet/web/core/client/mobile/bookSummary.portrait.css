@@ -1,15 +1,21 @@
 @CHARSET "UTF-8";
 
+.base {
+}
+
+.more {
+}
+
 .root {
   width: 50%;
 }
 
 .root:nth-child\(4n\+2\) {
-  background: rgb(254, 254, 254)!important;
+  background: rgb(216, 216, 216)!important;
 }
 
 .root:nth-child\(4n\+1\) {
-  background: rgb(254, 254, 254)!important;
+  background: rgb(216, 216, 216)!important;
 }
 
 .root:nth-child\(6n\+1\) {

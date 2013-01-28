@@ -5,6 +5,7 @@ import com.sencha.gxt.data.shared.loader.FilterConfig;
 
 import org.cloudlet.web.core.shared.CorePackage;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +43,20 @@ public class QueryBuilder {
     }
   }
 
+  public String encode(String strIn, String targetCode) {
+    String strOut;
+    if (strIn == null || strIn.equals("")) {
+      return strIn;
+    }
+    try {
+      strOut = new String(strIn.getBytes(), targetCode);
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
+      return null;
+    }
+    return strOut;
+  }
+
   public void filter(List<FilterConfig> filters) {
     for (FilterConfig filter : filters) {
       String field = filter.getField();
@@ -62,10 +77,11 @@ public class QueryBuilder {
   }
 
   private void setParam(String type, String value, boolean isSingle) {
+    String encodeStr = encode(value, "GBK");
     if (isSingle) {
-      params.putSingle(type, value);
+      params.putSingle(type, encodeStr);
     } else {
-      params.add(type, value);
+      params.add(type, encodeStr);
     }
     fields.add(type);
   }

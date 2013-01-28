@@ -22,7 +22,7 @@ public class MobileExplorer extends FlowPanel implements TakesResource, WidgetCo
 
   private SimplePanel child;
 
-  private static final String[] bookFilters = { CorePackage.FEATURED, CorePackage.PROMOTED, CorePackage.TAGGED };
+  private static final String[] bookFilters = {CorePackage.FEATURED, CorePackage.PROMOTED, CorePackage.TAGGED};
 
   private FlowPanel nav;
 
