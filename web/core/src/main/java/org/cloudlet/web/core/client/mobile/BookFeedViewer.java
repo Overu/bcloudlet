@@ -6,6 +6,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.inject.Inject;
 
 import org.cloudlet.web.core.client.Resource;
+import org.cloudlet.web.core.client.ResourceManager;
 import org.cloudlet.web.core.client.TakesResource;
 import org.cloudlet.web.core.shared.CorePackage;
 
@@ -20,6 +21,12 @@ public abstract class BookFeedViewer extends FlowPanel implements TakesResource 
   private int display = 10;
 
   private BookSummary more;
+
+  @Inject
+  private ResourceManager resourceManager;
+
+  @Inject
+  private BookDetail bookDetail;
 
   public BookFeedViewer() {
     more = BookSummary.more();
@@ -51,10 +58,19 @@ public abstract class BookFeedViewer extends FlowPanel implements TakesResource 
       if (i >= books.size()) {
         break;
       }
+      final Resource book = books.get(i);
       BookSummary summaryView = new BookSummary();
       summaryView.setLandscape(BookSummary.INSTANCE.landscape().root());
-      summaryView.setValue(books.get(i));
+      summaryView.setValue(book);
       add(summaryView);
+      summaryView.addDomHandler(new ClickHandler() {
+
+        @Override
+        public void onClick(ClickEvent event) {
+          bookDetail.setValue(book);
+          resourceManager.goTo(book.getParent().getParent().getChild(CorePackage.EDIT));
+        }
+      }, ClickEvent.getType());
     }
     if (display >= books.size()) {
       return;

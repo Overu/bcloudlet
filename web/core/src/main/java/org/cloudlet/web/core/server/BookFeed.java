@@ -30,10 +30,18 @@ public class BookFeed extends PagingFeed<Book> {
 
   @Override
   @POST
-  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
   public Book createEntry(Book book) {
     return super.createEntry(book);
+  }
+
+  @GET
+  @Path(CorePackage.EDIT)
+  public BookFeed editBook() {
+    featured = true;
+    doLoad();
+    return this;
   }
 
   @GET

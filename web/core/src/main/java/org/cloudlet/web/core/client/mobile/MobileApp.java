@@ -20,6 +20,8 @@ public class MobileApp extends Initializer {
   Provider<TaggedBookList> tagged;
   @Inject
   Provider<PromotedBookList> promotedBookList;
+  @Inject
+  Provider<BookDetail> bookDetail;
 
   @Override
   protected void init() {
@@ -27,5 +29,6 @@ public class MobileApp extends Initializer {
     Registry.setWidget(CorePackage.BookFeed, CorePackage.FEATURED, recommended);
     Registry.setWidget(CorePackage.BookFeed, CorePackage.TAGGED, tagged);
     Registry.setWidget(CorePackage.BookFeed, CorePackage.PROMOTED, promotedBookList);
+    Registry.setWidget(CorePackage.BookFeed, CorePackage.EDIT, bookDetail);
   }
 }

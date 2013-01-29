@@ -62,5 +62,4 @@ public class MobileExplorer extends FlowPanel implements TakesResource, WidgetCo
       });
     }
   }
-
 }

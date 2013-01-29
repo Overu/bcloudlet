@@ -97,4 +97,6 @@ public interface CorePackage {
 
   String ID = "id";
 
+  String EDIT = "edit";
+
 }

@@ -16,8 +16,6 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import org.cloudlet.web.core.client.Resource;
 import org.cloudlet.web.core.client.ResourceGrid;
