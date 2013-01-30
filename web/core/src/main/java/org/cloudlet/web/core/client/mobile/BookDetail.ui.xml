@@ -36,6 +36,11 @@
       border-top: 1px outset #979797;
       margin: 14PX;
       padding: 20px;
+      overflow: hidden;
+    }
+    
+    .author>table>tbody>tr>td {
+      white-space: nowrap;
     }
     
     .root>div:last-child {
@@ -57,7 +62,9 @@
   <g:HTMLPanel addStyleNames="{style.root}">
     <g:HTMLPanel addStyleNames="{style.left}">
       <g:Image ui:field="bookImage" addStyleNames="{style.image}"></g:Image>
-      <div><g:Button ui:field="buyButton">buy</g:Button></div>
+      <div>
+        <g:Button ui:field="buyButton">buy</g:Button>
+      </div>
       <div class="{style.author}">
         <table>
           <tr>

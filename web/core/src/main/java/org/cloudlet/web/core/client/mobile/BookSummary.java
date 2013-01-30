@@ -17,12 +17,13 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.cloudlet.web.core.client.CompositeView;
 import org.cloudlet.web.core.client.Resource;
 import org.cloudlet.web.core.client.ResourceGrid;
 import org.cloudlet.web.core.client.TakesResource;
 import org.cloudlet.web.core.shared.CorePackage;
 
-public class BookSummary extends Composite implements TakesResource {
+public class BookSummary extends CompositeView implements TakesResource {
 
   @Shared
   public interface BookSummaryStyle extends CssResource {
@@ -96,10 +97,7 @@ public class BookSummary extends Composite implements TakesResource {
   private Resource book;
 
   public BookSummary() {
-    bookImage = new Image(ResourceGrid.resources.cover());
-    Widget widget = uiBinder.createAndBindUi(this);
     setLandscape(INSTANCE.landscape().base());
-    initWidget(widget);
   }
 
   @Override
@@ -145,5 +143,15 @@ public class BookSummary extends Composite implements TakesResource {
   public void setValue(final Resource book) {
     this.book = book;
     refresh();
+  }
+
+  @Override
+  protected Widget initView() {
+    bookImage = new Image(ResourceGrid.resources.cover());
+    return uiBinder.createAndBindUi(this);
+  }
+
+  @Override
+  protected void start() {
   }
 }

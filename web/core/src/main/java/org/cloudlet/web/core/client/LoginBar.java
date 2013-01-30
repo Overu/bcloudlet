@@ -9,17 +9,16 @@ import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class LoginBar extends Composite {
+import org.cloudlet.web.core.client.EventGenerator.Function;
+
+public class LoginBar extends CompositeView {
 
   interface Binder extends UiBinder<Widget, LoginBar> {
   }
@@ -82,24 +81,29 @@ public class LoginBar extends Composite {
       }
     };
 
-    private Element elm;
-
-    public EventType bindElm(Element elm) {
-      this.elm = elm;
-      return this;
-    }
-
     public abstract void f(Event event, LoginBar loginBar);
-
-    public Element getElm() {
-      return elm;
-    }
   }
 
   interface LoginStyle extends CssResource {
     String hide();
 
     String shade();
+  }
+
+  private static class EmunFunction implements Function {
+
+    public static LoginBar loginBar;
+
+    private EventType type;
+
+    public EmunFunction(EventType type) {
+      this.type = type;
+    }
+
+    @Override
+    public void f(Event e) {
+      type.f(e, loginBar);
+    }
   }
 
   private static Binder binder = GWT.create(Binder.class);
@@ -129,31 +133,12 @@ public class LoginBar extends Composite {
 
   private SimplePanel shadePanel;
 
-  public LoginBar() {
-    initWidget(binder.createAndBindUi(this));
-
-    popupPanel.addStyleName(style.hide());
-
-    shadePanel = new SimplePanel();
-    shadePanel.addStyleName(style.shade());
-
-    bindClickEvent(EventType.SINA.bindElm(sinaElm));
-    bindClickEvent(EventType.RENREN.bindElm(renrenElm));
-    bindClickEvent(EventType.QQ.bindElm(qqElm));
-    bindClickEvent(EventType.DOUBAN.bindElm(doubanElm));
-    bindClickEvent(EventType.LOGIN.bindElm(loginElm));
-    bindClickEvent(EventType.POPUPLOGIN.bindElm(pupupLogin));
-    bindKeyUpEvent(EventType.EMAIL.bindElm(emailElm));
-    bindKeyUpEvent(EventType.PASSWORD.bindElm(passwordElm));
-    bindKeyUpEvent(EventType.SEARCH.bindElm(searchElm));
+  public void bindClickEvent(Element elm, EmunFunction ef) {
+    EventGenerator.onClick(elm, ef);
   }
 
-  public void bindClickEvent(final EventType oauth) {
-    bindEvent(oauth, Event.ONCLICK);
-  }
-
-  public void bindKeyUpEvent(final EventType oauth) {
-    bindEvent(oauth, Event.ONKEYUP);
+  public void bindKeyUpEvent(Element elm, EmunFunction ef) {
+    EventGenerator.onKeyUp(elm, ef);
   }
 
   protected void hideLabel(InputElement inputElm) {
@@ -168,15 +153,28 @@ public class LoginBar extends Composite {
     }
   }
 
-  private void bindEvent(final EventType oauth, final int eventBus) {
-    DOM.sinkEvents(oauth.getElm().<com.google.gwt.user.client.Element> cast(), eventBus);
-    DOM.setEventListener(oauth.getElm().<com.google.gwt.user.client.Element> cast(), new EventListener() {
-      @Override
-      public void onBrowserEvent(final Event event) {
-        if (DOM.eventGetType(event) == eventBus) {
-          oauth.f(event, LoginBar.this);
-        }
-      }
-    });
+  @Override
+  protected Widget initView() {
+    return binder.createAndBindUi(this);
+  }
+
+  @Override
+  protected void start() {
+    EmunFunction.loginBar = this;
+
+    popupPanel.addStyleName(style.hide());
+
+    shadePanel = new SimplePanel();
+    shadePanel.addStyleName(style.shade());
+
+    bindClickEvent(sinaElm, new EmunFunction(EventType.SINA));
+    bindClickEvent(renrenElm, new EmunFunction(EventType.RENREN));
+    bindClickEvent(qqElm, new EmunFunction(EventType.QQ));
+    bindClickEvent(doubanElm, new EmunFunction(EventType.DOUBAN));
+    bindClickEvent(loginElm, new EmunFunction(EventType.LOGIN));
+    bindClickEvent(pupupLogin, new EmunFunction(EventType.POPUPLOGIN));
+    bindKeyUpEvent(emailElm, new EmunFunction(EventType.EMAIL));
+    bindKeyUpEvent(passwordElm, new EmunFunction(EventType.PASSWORD));
+    bindKeyUpEvent(searchElm, new EmunFunction(EventType.SEARCH));
   }
 }

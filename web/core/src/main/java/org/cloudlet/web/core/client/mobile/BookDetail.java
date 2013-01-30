@@ -16,12 +16,13 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Singleton;
 
+import org.cloudlet.web.core.client.CompositeView;
 import org.cloudlet.web.core.client.Resource;
 import org.cloudlet.web.core.client.ResourceGrid;
 import org.cloudlet.web.core.shared.CorePackage;
 
 @Singleton
-public class BookDetail extends Composite {
+public class BookDetail extends CompositeView {
 
   interface Binder extends UiBinder<Widget, BookDetail> {
   }
@@ -39,28 +40,6 @@ public class BookDetail extends Composite {
   TableCellElement authorElm;
 
   private Resource book;
-
-  public BookDetail() {
-    buyButton = new Button();
-    bookImage = new Image(ResourceGrid.resources.cover());
-
-    buyButton.addClickHandler(new ClickHandler() {
-
-      @Override
-      public void onClick(ClickEvent event) {
-        Window.alert("buy!");
-      }
-    });
-
-    initWidget(binder.createAndBindUi(this));
-    new Timer() {
-
-      @Override
-      public void run() {
-        start();
-      }
-    }.schedule(1);
-  }
 
   public Resource getValue() {
     if (book == null) {
@@ -82,7 +61,23 @@ public class BookDetail extends Composite {
     refresh();
   }
 
+  @Override
+  protected Widget initView() {
+    buyButton = new Button();
+    bookImage = new Image(ResourceGrid.resources.cover());
+    return binder.createAndBindUi(this);
+  }
+
+  @Override
   protected void start() {
+    buyButton.addClickHandler(new ClickHandler() {
+
+      @Override
+      public void onClick(ClickEvent event) {
+        Window.alert("buy!");
+      }
+    });
+
     StringBuffer buffer = new StringBuffer();
 
     for (int i = 0; i < 10; i++) {
