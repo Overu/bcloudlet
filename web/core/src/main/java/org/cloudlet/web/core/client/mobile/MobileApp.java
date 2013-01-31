@@ -22,10 +22,12 @@ public class MobileApp extends Initializer {
   Provider<PromotedBookList> promotedBookList;
   @Inject
   Provider<BookDetail> bookDetail;
+  @Inject
+  Provider<HeaderView> headerView;
 
   @Override
   protected void init() {
-    Registry.setWidget(CorePackage.Repository, CorePackage.HOME, explorer);
+    Registry.setWidget(CorePackage.Repository, CorePackage.HOME, headerView);
     Registry.setWidget(CorePackage.BookFeed, CorePackage.FEATURED, recommended);
     Registry.setWidget(CorePackage.BookFeed, CorePackage.TAGGED, tagged);
     Registry.setWidget(CorePackage.BookFeed, CorePackage.PROMOTED, promotedBookList);
