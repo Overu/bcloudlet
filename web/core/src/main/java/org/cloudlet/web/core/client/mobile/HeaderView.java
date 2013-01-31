@@ -43,7 +43,7 @@ public class HeaderView extends CompositeView implements SelectionHandler<Intege
   @UiField
   HeaderViewStyle style;
 
-  private Integer oldInteger;
+  private Integer oldIndex = -1;
 
   @Override
   public HandlerRegistration addSelectionHandler(SelectionHandler<Integer> handler) {
@@ -53,9 +53,12 @@ public class HeaderView extends CompositeView implements SelectionHandler<Intege
   @Override
   public void onSelection(SelectionEvent<Integer> event) {
     Integer newIndex = event.getSelectedItem();
+    if (newIndex.equals(oldIndex)) {
+      return;
+    }
     setSelection(newIndex, true);
-    setSelection(oldInteger, false);
-    oldInteger = newIndex;
+    setSelection(oldIndex, false);
+    oldIndex = newIndex;
     switch (newIndex) {
       case 1:
         // Window.alert("index");
@@ -99,12 +102,7 @@ public class HeaderView extends CompositeView implements SelectionHandler<Intege
     EventGenerator.onKeyUp(searchTextElm, new Function() {
       @Override
       public void f(Event e) {
-        String value = searchTextElm.getValue();
-        if (value.length() == 0) {
-          aElm.removeClassName(style.inputting());
-          return;
-        }
-        if (value.length() > 0) {
+        if (searchTextElm.getValue().length() > 0) {
           aElm.addClassName(style.inputting());
         }
       }
@@ -144,7 +142,7 @@ public class HeaderView extends CompositeView implements SelectionHandler<Intege
   }
 
   private void setSelection(Integer i, boolean isAdd) {
-    if (i == null) {
+    if (i == -1) {
       return;
     }
     Element elm = navUlElm.getChild(i).<Element> cast();
