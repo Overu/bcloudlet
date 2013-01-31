@@ -102,6 +102,9 @@ public class HeaderView extends CompositeView implements SelectionHandler<Intege
     EventGenerator.onKeyUp(searchTextElm, new Function() {
       @Override
       public void f(Event e) {
+        if (aElm.getClassName().endsWith(style.inputting())) {
+          return;
+        }
         if (searchTextElm.getValue().length() > 0) {
           aElm.addClassName(style.inputting());
         }
@@ -110,6 +113,9 @@ public class HeaderView extends CompositeView implements SelectionHandler<Intege
     EventGenerator.onFocus(searchTextElm, new Function() {
       @Override
       public void f(Event e) {
+        if (aElm.getClassName().endsWith(style.inputting())) {
+          return;
+        }
         aElm.addClassName(style.inputting());
       }
     });
