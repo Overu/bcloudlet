@@ -5,9 +5,6 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class EventGenerator {
 
   public static class BindFunction {

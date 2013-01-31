@@ -27,7 +27,7 @@ public class MobileApp extends Initializer {
 
   @Override
   protected void init() {
-    Registry.setWidget(CorePackage.Repository, CorePackage.HOME, headerView);
+    Registry.setWidget(CorePackage.Repository, CorePackage.HOME, explorer);
     Registry.setWidget(CorePackage.BookFeed, CorePackage.FEATURED, recommended);
     Registry.setWidget(CorePackage.BookFeed, CorePackage.TAGGED, tagged);
     Registry.setWidget(CorePackage.BookFeed, CorePackage.PROMOTED, promotedBookList);
