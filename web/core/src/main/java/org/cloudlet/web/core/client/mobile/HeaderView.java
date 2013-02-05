@@ -1,10 +1,14 @@
 package org.cloudlet.web.core.client.mobile;
 
+import com.google.gwt.animation.client.Animation;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.InputElement;
+import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.UListElement;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -21,6 +25,47 @@ import org.cloudlet.web.core.client.EventGenerator;
 import org.cloudlet.web.core.client.EventGenerator.Function;
 
 public class HeaderView extends CompositeView implements SelectionHandler<Integer>, HasSelectionHandlers<Integer> {
+
+  public class SpanAnimation extends Animation {
+
+    private boolean isShow = false;
+
+    public boolean isShow() {
+      return isShow;
+    }
+
+    public void showOrHide(boolean isShow) {
+      cancel();
+      this.isShow = isShow;
+      run(500);
+    }
+
+    @Override
+    protected void onComplete() {
+      super.onComplete();
+      Style style = searchButton.getStyle();
+      if (isShow) {
+        style.clearOpacity();
+      } else {
+        style.clearOpacity();
+        style.setDisplay(Display.NONE);
+      }
+    }
+
+    @Override
+    protected void onStart() {
+      super.onStart();
+      if (isShow) {
+        searchButton.getStyle().setDisplay(Display.BLOCK);
+      }
+    }
+
+    @Override
+    protected void onUpdate(double progress) {
+      searchButton.getStyle().setOpacity(isShow ? progress : 1.0 - progress);
+    }
+
+  }
 
   interface Binder extends UiBinder<Widget, HeaderView> {
   }
@@ -39,6 +84,8 @@ public class HeaderView extends CompositeView implements SelectionHandler<Intege
   UListElement navUlElm;
   @UiField
   InputElement searchTextElm;
+  @UiField
+  SpanElement searchButton;
 
   @UiField
   HeaderViewStyle style;
@@ -91,6 +138,7 @@ public class HeaderView extends CompositeView implements SelectionHandler<Intege
   @Override
   protected void start() {
     final Element aElm = searchTextElm.getParentElement();
+    final SpanAnimation spanAnimation = new SpanAnimation();
 
     EventGenerator.onClick(logoElm, new Function() {
       @Override
@@ -102,11 +150,11 @@ public class HeaderView extends CompositeView implements SelectionHandler<Intege
     EventGenerator.onKeyUp(searchTextElm, new Function() {
       @Override
       public void f(Event e) {
-        if (aElm.getClassName().endsWith(style.inputting())) {
-          return;
-        }
-        if (searchTextElm.getValue().length() > 0) {
-          aElm.addClassName(style.inputting());
+        String test = searchTextElm.getValue();
+        if (!spanAnimation.isShow() && test.length() > 0) {
+          spanAnimation.showOrHide(true);
+        } else if (test.equals("")) {
+          spanAnimation.showOrHide(false);
         }
       }
     });
