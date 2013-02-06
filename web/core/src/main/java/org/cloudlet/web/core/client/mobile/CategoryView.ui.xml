@@ -1,0 +1,88 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+  <ui:style type="org.cloudlet.web.core.client.mobile.CategoryView.CategoryViewStyle">
+    .root {
+      padding: 0;
+      width: 228px;
+      margin-bottom: 10px;
+      border: 1px solid #ebe8e3;
+      background: #fff;
+    }
+    
+    .title {
+      padding: 0 14px;
+      margin: 5px;
+      background: #ff6216;
+      color: #fff;
+      font-size: 16px;
+      border-radius: 3px;
+      font-family: 'microsoft yahei';
+      height: 30px;
+      font-weight: 400;
+      line-height: 30px;
+    }
+    
+    .title {
+      padding: 0 14px;
+      margin: 5px;
+      background: #ff6216;
+      color: #fff;
+      font-size: 16px;
+      border-radius: 3px;
+      font-family: 'microsoft yahei';
+      height: 30px;
+      font-weight: 400;
+      line-height: 30px;
+    }
+    
+    .content {
+      font-family: arial, helvetica, sans-serif;
+      font-size: 12px;
+      text-align: left;
+      padding: 9px 10px 5px;
+    }
+    
+    .content>ul {
+      list-style-type: none;
+    }
+    
+    .content>ul::after {
+      clear: both;
+      content: '.';
+      display: block;
+      height: 0;
+      overflow: hidden;
+      visibility: hidden;
+    }
+    
+    .content>ul>li {
+      float: left;
+      width: 104px;
+      height: 16px;
+      line-height: 16px;
+      margin-bottom: 10px;
+    }
+    
+    .content>ul>li>a {
+      display: block;
+      margin-left: 10px;
+      padding-left: 10px;
+      border-left: 2px solid #eee;
+      color: #666;
+      cursor: pointer;
+    }
+    
+    .content>ul>li>a:HOVER,.active {
+      border-color: #ff6a04 !important;
+      color: #ff6a04 !important;
+    }
+  </ui:style>
+
+  <g:HTMLPanel addStyleNames="{style.root}">
+    <h2 class="{style.title}">图书分类</h2>
+    <div class="{style.content}">
+      <ul ui:field="category"></ul>
+    </div>
+  </g:HTMLPanel>
+</ui:UiBinder> 
