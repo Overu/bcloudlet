@@ -1,5 +1,6 @@
 package org.cloudlet.web.core.client.mobile;
 
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -24,6 +25,18 @@ public class MobileApp extends Initializer {
   Provider<BookDetail> bookDetail;
   @Inject
   Provider<HeaderView> headerView;
+  @Inject
+  Provider<CategoryView> categoryView;
+  @Inject
+  Provider<BillBoardView> billBoardView;
+  @Inject
+  Provider<SliderView> sliderView;
+  @Inject
+  Provider<RecommendBox> recommendBox;
+  @Inject
+  Provider<UpdataBox> updataBox;
+  @Inject
+  Provider<SaleBox> saleBox;
 
   @Override
   protected void init() {
