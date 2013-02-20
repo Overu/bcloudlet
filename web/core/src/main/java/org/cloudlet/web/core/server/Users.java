@@ -1,11 +1,8 @@
 package org.cloudlet.web.core.server;
 
-import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.crypto.hash.SimpleHash;
 import org.cloudlet.web.core.shared.CorePackage;
 
 import javax.persistence.Entity;
-import javax.persistence.NoResultException;
 import javax.persistence.Table;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -17,28 +14,19 @@ import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.UserFeed)
-@XmlType(name = CorePackage.UserFeed)
-@Entity(name = CorePackage.UserFeed)
-@Table(name = CorePackage.UserFeed)
+@XmlRootElement(name = CorePackage.Users)
+@XmlType(name = CorePackage.Users)
+@Entity(name = CorePackage.Users)
+@Table(name = CorePackage.Users)
 @Path("users")
-@DefaultField(key = "title", value = "系统用户")
-public class UserFeed extends PagingFeed<User> {
+public class Users extends Feed<User> {
+
   @Override
   @POST
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public User createEntry(User user) {
     return super.createEntry(user);
-  }
-
-  public User findUserByName(final String name) {
-    User toRtn = null;
-    try {
-      toRtn = em().createQuery("select u from CoreUser u where u.name = :name", User.class).setParameter("name", name).getSingleResult();
-    } catch (NoResultException e) {
-    }
-    return toRtn;
   }
 
   @Override
@@ -48,20 +36,25 @@ public class UserFeed extends PagingFeed<User> {
 
   @Override
   public String getResourceType() {
-    return CorePackage.UserFeed;
+    return CorePackage.Users;
+  }
+
+  @Override
+  public Class<UserService> getServiceType() {
+    return UserService.class;
   }
 
   @Override
   @GET
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml" })
-  public UserFeed load() {
+  public Users load() {
     doLoad();
     return this;
   }
 
   @Override
   public User newEntry() {
-    User user = super.newEntry();
+    User user = new User();
     user.setName("abc");
     user.setEmail("abc@mycompany.com");
     return user;
@@ -70,19 +63,10 @@ public class UserFeed extends PagingFeed<User> {
   @PUT
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public UserFeed update(UserFeed feed) {
+  public Users update(Users feed) {
     readFrom(feed);
-    save();
+    update();
     return this;
   }
 
-  public void updatePassword(final String userName, final String newPwd) {
-    User user = findUserByName(userName);
-    if (user == null) {
-      throw new UnknownAccountException("找不到用户名: " + userName);
-    }
-    String hashedPwd = new SimpleHash(JpaRealm.ALGORITHM_NAME, newPwd).toHex();
-    user.setPasswordHash(hashedPwd);
-    saveAndCommit(user);
-  }
 }

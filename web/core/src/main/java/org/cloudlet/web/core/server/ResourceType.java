@@ -36,8 +36,8 @@ public class ResourceType implements UserType {
     if (o1 == null || o2 == null) {
       return false;
     }
-    final Resource p1 = (Resource) o1;
-    final Resource p2 = (Resource) o2;
+    final Content p1 = (Content) o1;
+    final Content p2 = (Content) o2;
     return p1.getClass() == p2.getClass() && p1.getId().equals(p2.getId());
   }
 
@@ -70,7 +70,7 @@ public class ResourceType implements UserType {
       StringType.INSTANCE.nullSafeSet(st, null, index, session);
       StringType.INSTANCE.nullSafeSet(st, null, index + 1, session);
     } else {
-      Resource resource = (Resource) value;
+      Content resource = (Content) value;
       StringType.INSTANCE.nullSafeSet(st, resource.getResourceType(), index, session);
       StringType.INSTANCE.nullSafeSet(st, resource.getId(), index + 1, session);
     }
@@ -83,12 +83,12 @@ public class ResourceType implements UserType {
 
   @Override
   public Class<?> returnedClass() {
-    return Resource.class;
+    return Content.class;
   }
 
   @Override
   public int[] sqlTypes() {
-    return new int[] {StringType.INSTANCE.sqlType(), StringType.INSTANCE.sqlType()};
+    return new int[] { StringType.INSTANCE.sqlType(), StringType.INSTANCE.sqlType() };
   }
 
 }

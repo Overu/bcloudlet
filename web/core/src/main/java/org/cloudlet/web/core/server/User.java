@@ -17,10 +17,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = CorePackage.User)
 @Entity(name = CorePackage.User)
 @Table(name = CorePackage.User)
-public class User extends Resource implements Principal {
-
+public class User extends Entry implements Principal {
   private String name;
-
   private String email;
 
   private String phone;
@@ -54,6 +52,11 @@ public class User extends Resource implements Principal {
   @Override
   public String getResourceType() {
     return CorePackage.User;
+  }
+
+  @Override
+  public Class<UserService> getServiceType() {
+    return UserService.class;
   }
 
   public String getState() {
@@ -98,7 +101,7 @@ public class User extends Resource implements Principal {
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public User update(User data) {
     readFrom(data);
-    save();
+    update();
     return data;
   }
 

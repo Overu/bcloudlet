@@ -4,7 +4,6 @@ import org.cloudlet.web.core.shared.CorePackage;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -14,31 +13,31 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.BookFeed)
-@XmlType(name = CorePackage.BookFeed)
-@Entity(name = CorePackage.BookFeed)
-@Table(name = CorePackage.BookFeed)
+@XmlRootElement(name = CorePackage.Books)
+@XmlType(name = CorePackage.Books)
+@Entity(name = CorePackage.Books)
+@Table(name = CorePackage.Books)
 @Path(CorePackage.BOOKS)
-@DefaultField(key = "title", value = "图书")
-public class BookFeed extends PagingFeed<Book> {
+public class Books extends Feed<Book> {
 
-  private boolean featured;
+  protected boolean featured;
 
-  private boolean promoted;
+  protected boolean promoted;
 
   @Override
   @POST
-  @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Book createEntry(Book book) {
     return super.createEntry(book);
   }
 
   @GET
   @Path(CorePackage.EDIT)
-  public BookFeed editBook() {
+  public Books editBook() {
     featured = true;
     doLoad();
     return this;
@@ -46,7 +45,7 @@ public class BookFeed extends PagingFeed<Book> {
 
   @GET
   @Path(CorePackage.FEATURED)
-  public BookFeed findFeaturedBooks() {
+  public Books findFeaturedBooks() {
     featured = true;
     doLoad();
     return this;
@@ -54,7 +53,7 @@ public class BookFeed extends PagingFeed<Book> {
 
   @GET
   @Path(CorePackage.PROMOTED)
-  public BookFeed findPromotedBooks() {
+  public Books findPromotedBooks() {
     promoted = true;
     doLoad();
     return this;
@@ -62,7 +61,7 @@ public class BookFeed extends PagingFeed<Book> {
 
   @GET
   @Path(CorePackage.TAGGED)
-  public BookFeed findTaggedBooks(@QueryParam("tag") String tag) {
+  public Books findTaggedBooks(@QueryParam("tag") String tag) {
     featured = true;
     doLoad();
     return this;
@@ -74,8 +73,23 @@ public class BookFeed extends PagingFeed<Book> {
   }
 
   @Override
+  @XmlTransient
   public String getResourceType() {
-    return CorePackage.BookFeed;
+    return CorePackage.Books;
+  }
+
+  @Override
+  @XmlTransient
+  public Class<BookService> getServiceType() {
+    return BookService.class;
+  }
+
+  public boolean isFeatured() {
+    return featured;
+  }
+
+  public boolean isPromoted() {
+    return promoted;
   }
 
   @Override
@@ -85,30 +99,17 @@ public class BookFeed extends PagingFeed<Book> {
     return result;
   }
 
+  public void setFeatured(boolean featured) {
+    this.featured = featured;
+  }
+
+  public void setPromoted(boolean promoted) {
+    this.promoted = promoted;
+  }
+
   @Override
   protected Book createFrom(MultivaluedMap<String, String> params) {
     return newEntry();
-  }
-
-  @Override
-  protected void doLoadEntries() {
-    super.doLoadEntries();
-  }
-
-  @Override
-  protected void initQueryConditions(StringBuilder sql) {
-    super.initQueryConditions(sql);
-    if (featured) {
-      sql.append(" and f.featured=true");
-    }
-    if (promoted) {
-      sql.append(" and f.promoted=true");
-    }
-  }
-
-  @Override
-  protected void initQueryParams(TypedQuery<Book> query) {
-    super.initQueryParams(query);
   }
 
 }

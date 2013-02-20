@@ -29,13 +29,13 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = CorePackage.Media)
 @Entity(name = CorePackage.Media)
 @Table(name = CorePackage.Media)
-public class Media extends Resource {
+public class Media extends Entry {
 
   private String mimeType;
 
   @Override
-  public Resource getByPath(String path) {
-    throw new UnsupportedOperationException();
+  public Entry getChild(String path) {
+    throw null;
   }
 
   @XmlTransient
@@ -61,6 +61,12 @@ public class Media extends Resource {
   @Override
   public String getResourceType() {
     return CorePackage.Media;
+  }
+
+  @Override
+  @XmlTransient
+  public Class<MediaService> getServiceType() {
+    return MediaService.class;
   }
 
   public InputStream openStream() {

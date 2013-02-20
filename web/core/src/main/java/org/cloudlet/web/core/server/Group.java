@@ -16,25 +16,23 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = CorePackage.Group)
 @Entity(name = CorePackage.Group)
 @Table(name = CorePackage.Group)
-public class Group extends Resource implements Principal {
+public class Group extends Entry implements Principal {
 
   protected String name;
 
   @OneToOne
-  protected GroupFeed groups;
+  protected Groups groups;
 
   @OneToOne
   protected MemberFeed members;
 
   @Path("groups")
-  @DefaultField(key = "title", value = "用户组")
   @XmlTransient
-  public GroupFeed getGroups() {
+  public Groups getGroups() {
     return groups;
   }
 
   @Path("members")
-  @DefaultField(key = "title", value = "成员")
   @XmlTransient
   public MemberFeed getMembers() {
     return members;
@@ -48,6 +46,11 @@ public class Group extends Resource implements Principal {
   @Override
   public String getResourceType() {
     return CorePackage.Group;
+  }
+
+  @Override
+  public Class<GroupService> getServiceType() {
+    return GroupService.class;
   }
 
   public void setName(String name) {

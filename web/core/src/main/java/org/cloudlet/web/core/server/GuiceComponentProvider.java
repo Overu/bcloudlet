@@ -13,21 +13,21 @@ import java.util.logging.Logger;
 
 public class GuiceComponentProvider implements ComponentProvider {
 
-  private class GuiceFactory<T extends Resource> implements Factory<T> {
+  private class RepositoryFactory implements Factory<Repository> {
 
-    private Class<T> clz;
+    private final RepositoryService repoSvc;
 
-    private GuiceFactory(Class<T> clz) {
-      this.clz = clz;
+    public RepositoryFactory() {
+      repoSvc = WebPlatform.get().getInstance(RepositoryService.class);
     }
 
     @Override
-    public void dispose(T instance) {
+    public void dispose(Repository instance) {
     }
 
     @Override
-    public T provide() {
-      T resource = WebPlatform.get().getInstance(clz);
+    public Repository provide() {
+      Repository resource = repoSvc.getRoot();
       resourceContext.initResource(resource);
       return resource;
     }
@@ -48,14 +48,14 @@ public class GuiceComponentProvider implements ComponentProvider {
     }
 
     LOGGER.info("Bind " + component);
-    if (!Resource.class.isAssignableFrom(component)) {
+    if (!Repository.class.isAssignableFrom(component)) {
       LOGGER.warning("Out of Guice's control " + component);
       return false;
     }
 
     // TODO register intercepters
     DynamicConfiguration dc = Injections.getConfiguration(locator);
-    final ServiceBindingBuilder bindingBuilder = Injections.newFactoryBinder(new GuiceFactory(component));
+    final ServiceBindingBuilder bindingBuilder = Injections.newFactoryBinder(new RepositoryFactory());
     bindingBuilder.to(component);
     for (Class contract : providerContracts) {
       bindingBuilder.to(contract);

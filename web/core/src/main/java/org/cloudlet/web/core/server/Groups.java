@@ -4,17 +4,18 @@ import org.cloudlet.web.core.shared.CorePackage;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.GroupFeed)
-@XmlType(name = CorePackage.GroupFeed)
-@Entity(name = CorePackage.GroupFeed)
-@Table(name = CorePackage.GroupFeed)
+@XmlRootElement(name = CorePackage.Groups)
+@XmlType(name = CorePackage.Groups)
+@Entity(name = CorePackage.Groups)
+@Table(name = CorePackage.Groups)
 @Path("groups")
-@DefaultField(key = "title", value = "用户组")
-public class GroupFeed extends PagingFeed<Group> {
+public class Groups extends Feed<Group> {
+
   @Override
   public Class<Group> getEntryType() {
     return Group.class;
@@ -22,7 +23,12 @@ public class GroupFeed extends PagingFeed<Group> {
 
   @Override
   public String getResourceType() {
-    return CorePackage.GroupFeed;
+    return CorePackage.Groups;
+  }
+
+  @Override
+  public Class<GroupService> getServiceType() {
+    return GroupService.class;
   }
 
 }

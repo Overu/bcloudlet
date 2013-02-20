@@ -1,7 +1,7 @@
 package org.cloudlet.web.core.provider;
 
+import org.cloudlet.web.core.server.Content;
 import org.cloudlet.web.core.server.Feed;
-import org.cloudlet.web.core.server.Resource;
 import org.cloudlet.web.core.shared.CorePackage;
 import org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider;
 
@@ -27,7 +27,7 @@ import javax.xml.stream.XMLStreamWriter;
 @Produces("application/ios+xml")
 @Consumes("application/ios+xml")
 @Singleton
-public class XmlResourceProvider extends AbstractMessageReaderWriterProvider<Resource> {
+public class XmlResourceProvider extends AbstractMessageReaderWriterProvider<Content> {
 
   @Override
   public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
@@ -40,13 +40,13 @@ public class XmlResourceProvider extends AbstractMessageReaderWriterProvider<Res
   }
 
   @Override
-  public Resource readFrom(Class<Resource> type, Type genericType, Annotation[] annotations, MediaType mediaType,
+  public Content readFrom(Class<Content> type, Type genericType, Annotation[] annotations, MediaType mediaType,
       MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException, WebApplicationException {
     return null;
   }
 
   @Override
-  public void writeTo(Resource t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,
+  public void writeTo(Content t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,
       MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException, WebApplicationException {
     try {
       XMLStreamWriter writer = XMLOutputFactory.newFactory().createXMLStreamWriter(entityStream);
@@ -60,29 +60,20 @@ public class XmlResourceProvider extends AbstractMessageReaderWriterProvider<Res
     }
   }
 
-  private void writeResource(XMLStreamWriter writer, Resource resource) throws XMLStreamException {
+  private void writeResource(XMLStreamWriter writer, Content resource) throws XMLStreamException {
     writer.writeStartElement(resource.getResourceType());
     if (resource.getTitle() != null) {
       writer.writeAttribute(CorePackage.TITLE, resource.getTitle());
     }
     writer.writeAttribute(CorePackage.PATH, resource.getPath());
     writer.writeAttribute(CorePackage.URI, resource.getUri());
-    if (resource.getContent() != null) {
-      writer.writeCharacters(resource.getContent());
+    if (resource.getBody() != null) {
+      writer.writeCharacters(resource.getBody());
     }
-    Collection<Resource> rels = resource.getChildren();
+    Collection<? extends Content> rels = resource.getChildren();
     if (rels != null && !rels.isEmpty()) {
-      for (Resource rel : rels) {
+      for (Content rel : rels) {
         writeResource(writer, rel);
-      }
-    }
-    if (resource instanceof Feed) {
-      Feed feed = (Feed) resource;
-      List<Resource> entries = feed.getEntries();
-      if (entries != null && !entries.isEmpty()) {
-        for (Resource entry : entries) {
-          writeResource(writer, entry);
-        }
       }
     }
     writer.writeEndElement();

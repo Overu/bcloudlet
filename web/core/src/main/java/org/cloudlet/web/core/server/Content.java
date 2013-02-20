@@ -14,28 +14,23 @@ import org.hibernate.annotations.TypeDef;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 import javax.persistence.Column;
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityListeners;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.NoResultException;
 import javax.persistence.Transient;
-import javax.persistence.TypedQuery;
 import javax.persistence.Version;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -50,12 +45,12 @@ import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-@TypeDef(name = "resource", typeClass = ResourceType.class)
+@TypeDef(name = CorePackage.CONTENT, typeClass = ResourceType.class)
 @MappedSuperclass
 @EntityListeners(InjectionListener.class)
-public abstract class Resource {
+public abstract class Content {
 
-  private static final Logger logger = Logger.getLogger(Resource.class.getName());
+  private static final Logger logger = Logger.getLogger(Content.class.getName());
 
   @Context
   @Transient
@@ -74,46 +69,25 @@ public abstract class Resource {
   @ManyToOne
   protected User owner;
 
-  @Type(type = "resource")
+  @Type(type = CorePackage.CONTENT)
   @Columns(columns = { @Column(name = "parentType"), @Column(name = "parentId") })
-  protected Resource parent;
+  protected Content parent;
 
-  protected long childrenCount;
+  protected long totalChildren;
 
   @Transient
-  private List<Resource> children;
+  private List<? extends Content> children;
 
-  protected String content;
+  protected String body;
 
   @Transient
   @QueryParam(CorePackage.CHILDREN)
   protected boolean loadChildren;
 
-  public <T extends Resource> T create(Class<T> type) {
-    T result = WebPlatform.get().getInstance(type);
-    result.setParent(this);
-    return result;
-  }
-
-  @SuppressWarnings("unchecked")
   @Transient
-  public Resource createChild(Resource child) {
-    // check if child path conflicts
-    child.setParent(this);
-    child.save();
+  private Service service;
 
-    final Relationship rel = new Relationship();
-    rel.setId(UUID.randomUUID().toString());
-    rel.setSource(this);
-    rel.setTarget(child);
-    rel.setPath(child.getPath());
-    saveAndCommit(rel);
-    setChildrenCount(childrenCount + 1);
-    save();
-    return child;
-  }
-
-  public Resource createFromInputStream(@Context UriInfo uriInfo, @QueryParam("path") Integer contentLength,
+  public Content createFromInputStream(@Context UriInfo uriInfo, @QueryParam("path") Integer contentLength,
       @HeaderParam("Content-Type") String contentType, InputStream inputStream) {
     return null;
   }
@@ -121,9 +95,9 @@ public abstract class Resource {
   @POST
   @Consumes({ MediaType.MULTIPART_FORM_DATA })
   @Produces({ MediaType.APPLICATION_JSON })
-  public Resource createFromMultipartFormData(@Context UriInfo uriInfo, @HeaderParam("Content-Length") final Integer contentLength,
+  public Content createFromMultipartFormData(@Context UriInfo uriInfo, @HeaderParam("Content-Length") final Integer contentLength,
       @HeaderParam("Content-Type") final String contentType, final InputStream inputStream) {
-    Resource result = null;
+    Content result = null;
     MultivaluedMap<String, String> params = uriInfo.getQueryParameters();
     try {
       FileUpload fileUpload = new FileUpload();
@@ -158,12 +132,12 @@ public abstract class Resource {
             String strValue = Streams.asString(in, "UTF-8");
             params.add(key, strValue);
           } else {
-            Media media = WebPlatform.get().getInstance(Media.class);
+            Media media = new Media();
             media.read(in);
             media.setPath(key);
             media.setTitle(value.getName());
             media.setMimeType(value.getContentType());
-            media.save();
+            media.update();
             files.add(key, media);
           }
         } finally {
@@ -174,7 +148,7 @@ public abstract class Resource {
       if (result != null) {
         result.readParams(params);
         result.readMedia(files);
-        result.save();
+        result.update();
       }
     } catch (Exception e) {
       // VirusFoundException, VirusFoundException will be handled by
@@ -191,21 +165,16 @@ public abstract class Resource {
     return result;
   }
 
-  @SuppressWarnings("unchecked")
   @DELETE
-  public void delete() {
-    execute(new MethodInvocation() {
-      @Override
-      protected Object proceed() {
-        em().remove(Resource.this);
-        return null;
-      }
-    });
+  public abstract void delete();
+
+  public String getBody() {
+    return body;
   }
 
   @Path("{path}")
-  public Resource getByPath(@PathParam("path") String path) {
-    Resource result = doGetByPath(path);
+  public <T extends Content> T getChild(@PathParam("path") String path) {
+    T result = findChild(path);
     if (result != null) {
       if (resourceContext != null) {
         resourceContext.initResource(result);
@@ -214,29 +183,9 @@ public abstract class Resource {
     return result;
   }
 
-  public Resource getChild(String path) {
-    try {
-      TypedQuery<Relationship> query =
-          em().createQuery("from " + Relationship.class.getName() + " rel where rel.source=:source and rel.path=:path", Relationship.class);
-      query.setParameter("source", this);
-      query.setParameter("path", path);
-      return query.getSingleResult().getTarget();
-    } catch (NoResultException e) {
-      return null;
-    }
-  }
-
   @XmlElement
-  public List<Resource> getChildren() {
+  public List<? extends Content> getChildren() {
     return children;
-  }
-
-  public long getChildrenCount() {
-    return childrenCount;
-  }
-
-  public String getContent() {
-    return content;
   }
 
   public String getId() {
@@ -248,7 +197,7 @@ public abstract class Resource {
   }
 
   @XmlTransient
-  public Resource getParent() {
+  public Content getParent() {
     return parent;
   }
 
@@ -268,8 +217,25 @@ public abstract class Resource {
 
   public abstract String getResourceType();
 
+  @XmlTransient
+  public Service getService() {
+    if (service == null) {
+      service = WebPlatform.get().getInstance(getServiceType());
+    }
+    return service;
+  }
+
+  @XmlTransient
+  public Class<? extends Service> getServiceType() {
+    return Service.class;
+  }
+
   public String getTitle() {
     return title;
+  }
+
+  public long getTotalChildren() {
+    return totalChildren;
   }
 
   @XmlElement
@@ -301,28 +267,19 @@ public abstract class Resource {
   }
 
   public boolean hasChildren() {
-    return childrenCount > 0;
+    return totalChildren > 0;
   }
 
   @GET
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml" })
-  public Resource load() {
-    doLoad();
+  public Content load() {
+    if (loadChildren) {
+      children = doLoad();
+    }
     return this;
   }
 
-  public void loadChildren() {
-    TypedQuery<Relationship> query =
-        em().createQuery("from " + Relationship.class.getName() + " rel where rel.source=:source", Relationship.class);
-    query.setParameter("source", this);
-    List<Relationship> rels = query.getResultList();
-    children = new ArrayList<Resource>(rels.size());
-    for (Relationship rel : rels) {
-      children.add(rel.getTarget());
-    }
-  }
-
-  public void readFrom(Resource delta) {
+  public void readFrom(Content delta) {
     if (delta.title != null) {
       this.title = delta.title;
     }
@@ -345,59 +302,12 @@ public abstract class Resource {
     }
   }
 
-  public Resource save() {
-    if (path != null && parent != null) {
-      Resource exist = parent.getByPath(path);
-      if (exist != null && (id == null || !exist.equals(this))) {
-        throw new EntityExistsException("A child with path=" + path + " already exists");
-      }
-    }
-    if (id == null) {
-      id = UUID.randomUUID().toString();
-    }
-    if (path == null) {
-      path = id;
-    }
-
-    saveAndCommit(this);
-
-    // for (Method m : resource.getClass().getMethods()) {
-    // if (m.getParameterTypes().length > 0) {
-    // continue;
-    // }
-    // Path p = m.getAnnotation(Path.class);
-    // Class<?> rt = m.getReturnType();
-    // if (p != null && Resource.class.isAssignableFrom(rt)) {
-    // Class<Resource> childType = (Class<Resource>) rt;
-    // Resource result = ClassUtil.newInstance(childType);
-    // result.setPath(p.value());
-    // DefaultFields fields = m.getAnnotation(DefaultFields.class);
-    // if (fields != null) {
-    // for (DefaultField field : fields.value()) {
-    // result.setPropertyValue(field.key(), field.value());
-    // }
-    // } else {
-    // DefaultField field = m.getAnnotation(DefaultField.class);
-    // if (field != null) {
-    // result.setPropertyValue(field.key(), field.value());
-    // }
-    // }
-    // resource.createChild(result);
-    // }
-    // }
-    return this;
+  public void setBody(String body) {
+    this.body = body;
   }
 
-  public void setChildren(List<Resource> children) {
+  public void setChildren(List<? extends Content> children) {
     this.children = children;
-  }
-
-  public void setChildrenCount(long totalResults) {
-    this.childrenCount = totalResults;
-  }
-
-  public void setContent(String content) {
-    this.content = content;
   }
 
   public void setId(String id) {
@@ -408,7 +318,7 @@ public abstract class Resource {
     this.owner = owner;
   }
 
-  public void setParent(Resource parent) {
+  public void setParent(Content parent) {
     this.parent = parent;
   }
 
@@ -422,7 +332,7 @@ public abstract class Resource {
     } else if (CorePackage.PATH.equals(name)) {
       path = value;
     } else if (CorePackage.CHILDREN_COUNT.equals(name)) {
-      childrenCount = value == null ? 0 : Long.valueOf(value);
+      totalChildren = value == null ? 0 : Long.valueOf(value);
     }
   }
 
@@ -434,6 +344,10 @@ public abstract class Resource {
     this.title = title;
   }
 
+  public void setTotalChildren(long totalResults) {
+    this.totalChildren = totalResults;
+  }
+
   public void setUri(String value) {
     // do nothing
   }
@@ -442,7 +356,10 @@ public abstract class Resource {
     this.version = version;
   }
 
-  protected Resource createFrom(MultivaluedMap<String, String> params) {
+  @PUT
+  public abstract Content update();
+
+  protected Content createFrom(MultivaluedMap<String, String> params) {
     String resourceType = params.getFirst(CorePackage.RESOURCE_TYPE);
     // Class<?> type = Registry.getResourceType(resourceType);
     // if (type != null) {
@@ -454,69 +371,13 @@ public abstract class Resource {
     return null;
   }
 
-  protected Resource doGetByPath(String path) {
-    Resource result = getChild(path);
-    if (result == null) {
-      Object propValue = getPropertyValue(path);
-      if (propValue != null && propValue instanceof Resource) {
-        result = (Resource) propValue;
-      }
-    }
-    return result;
-  }
-
-  protected void doLoad() {
-    if (loadChildren) {
-      loadChildren();
-    }
-  }
+  protected abstract List<? extends Content> doLoad();
 
   protected EntityManager em() {
     return WebPlatform.get().getEntityManager();
   }
 
-  protected Object execute(MethodInvocation action, Class<Exception>... ignores) {
-    EntityManager em = em();
-    final EntityTransaction txn = em.getTransaction();
-    // Allow 'joining' of transactions if there is an enclosing
-    // @Transactional method.
-    if (txn.isActive()) {
-      return action.proceed();
-    }
-
-    txn.begin();
-    Object result;
-    try {
-      result = action.proceed();
-    } catch (Exception e) {
-      boolean commit = false;
-      for (Class<? extends Exception> ignore : ignores) {
-        if (ignore.isInstance(e)) {
-          commit = true;
-          break;
-        }
-      }
-      if (!commit) {
-        txn.rollback();
-      } else {
-        txn.commit();
-      }
-      throw transformException(e);
-    } finally {
-      // Close the em if necessary (guarded so this code doesn't run
-      // unless catch fired).
-    }
-
-    // everything was normal so commit the txn (do not move into try block
-    // above as it
-    // interferes with the advised method's throwing semantics)
-    try {
-      txn.commit();
-    } finally {
-      // close the em if necessary
-    }
-    return result;
-  }
+  protected abstract <T extends Content> T findChild(String path);
 
   protected Object getObject(String type, String id) {
     try {
@@ -524,7 +385,7 @@ public abstract class Resource {
       if (Enum.class.isAssignableFrom(cls)) {
         Class<? extends Enum> enumClass = (Class<? extends Enum>) cls;
         return Enum.valueOf(enumClass, id);
-      } else if (Resource.class.isAssignableFrom(cls)) {
+      } else if (Content.class.isAssignableFrom(cls)) {
         return em().find(cls, id);
       }
     } catch (ClassNotFoundException e) {
@@ -533,20 +394,6 @@ public abstract class Resource {
     return null;
   }
 
-  protected void saveAndCommit(final Object rel) {
-    execute(new MethodInvocation() {
-      @Override
-      protected Object proceed() {
-        em().persist(rel);
-        return null;
-      };
-    });
-  };
+  protected abstract void init();
 
-  private RuntimeException transformException(Exception e) {
-    if (e instanceof RuntimeException) {
-      throw (RuntimeException) e;
-    }
-    throw new WebApplicationException(e);
-  }
 }

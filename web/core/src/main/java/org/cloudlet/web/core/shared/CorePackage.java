@@ -1,21 +1,21 @@
 package org.cloudlet.web.core.shared;
 
 public interface CorePackage {
-
   String PREFIX = "Core";
-
-  String BookTag = PREFIX + "Tag";
-  String Book = PREFIX + "Book";
+  String BookTag = PREFIX + "BookTag";
   String Group = PREFIX + "Group";
-  String GroupFeed = PREFIX + "GroupFeed";
-  String BookFeed = PREFIX + "BookFeed";
+  String Groups = PREFIX + "Groups";
+  String Book = PREFIX + "Book";
+  String Books = PREFIX + "Books";
   String Media = PREFIX + "Media";
   String Member = PREFIX + "Member";
-  String MemberFeed = PREFIX + "MemberFeed";
+  String Members = PREFIX + "Members";
   String Repository = PREFIX + "Repository";
   String Section = PREFIX + "Section";
   String User = PREFIX + "User";
-  String UserFeed = PREFIX + "UserFeed";
+  String Users = PREFIX + "Users";
+
+  String Reference = PREFIX + "Reference";
 
   String CONTENT = "content";
 
