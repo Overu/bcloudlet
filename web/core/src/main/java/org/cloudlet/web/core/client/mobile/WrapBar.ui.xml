@@ -1,0 +1,53 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+  <ui:style>
+    .root {
+      width: 769px;
+      height: 98px;
+      margin-bottom: 25px;
+      padding-top: 15px;
+    }
+    
+    .root>ul {
+      width: 800px;
+      list-style-type: none;
+    }
+    
+    .root>ul:AFTER {
+      clear: both;
+      content: '.';
+      display: block;
+      height: 0;
+      overflow: hidden;
+      visibility: hidden;
+    }
+    
+    .root>ul>li {
+      float: left;
+    }
+    
+    @sprite 
+    .root>ul>li>a {
+      gwt-image: "spritecover";
+      float: left;
+      display: block;
+      width: 166px;
+      cursor: pointer;
+      height: 88px;
+      padding: 3px 5px 7px;
+      margin-right: 22px;
+      background-position: 0 -340px;
+    }
+    
+    .root>ul>li>a>img {
+      width: 166px;
+      height: 88px;
+    }
+  </ui:style>
+
+  <ui:image field="spritecover" />
+  <g:HTMLPanel addStyleNames="{style.root}">
+    <ul ui:field="wrapElm"></ul>
+  </g:HTMLPanel>
+</ui:UiBinder> 
