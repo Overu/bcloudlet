@@ -24,7 +24,7 @@ public class Group extends Entry implements Principal {
   protected Groups groups;
 
   @OneToOne
-  protected MemberFeed members;
+  protected Members members;
 
   @Path("groups")
   @XmlTransient
@@ -34,7 +34,7 @@ public class Group extends Entry implements Principal {
 
   @Path("members")
   @XmlTransient
-  public MemberFeed getMembers() {
+  public Members getMembers() {
     return members;
   }
 

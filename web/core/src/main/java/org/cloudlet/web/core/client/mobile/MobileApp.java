@@ -1,6 +1,5 @@
 package org.cloudlet.web.core.client.mobile;
 
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -16,11 +15,8 @@ public class MobileApp extends Initializer {
   Provider<MobileExplorer> explorer;
 
   @Inject
-  Provider<FeaturedBookList> recommended;
-  @Inject
-  Provider<TaggedBookList> tagged;
-  @Inject
-  Provider<PromotedBookList> promotedBookList;
+  Provider<BookFeedViewer> recommended;
+
   @Inject
   Provider<BookDetail> bookDetail;
   @Inject
@@ -41,9 +37,7 @@ public class MobileApp extends Initializer {
   @Override
   protected void init() {
     Registry.setWidget(CorePackage.Repository, CorePackage.HOME, explorer);
-    Registry.setWidget(CorePackage.Books, CorePackage.FEATURED, recommended);
-    Registry.setWidget(CorePackage.Books, CorePackage.TAGGED, tagged);
-    Registry.setWidget(CorePackage.Books, CorePackage.PROMOTED, promotedBookList);
+    Registry.setWidget(CorePackage.Books, CorePackage.HOME, recommended);
     Registry.setWidget(CorePackage.Books, CorePackage.EDIT, bookDetail);
   }
 }

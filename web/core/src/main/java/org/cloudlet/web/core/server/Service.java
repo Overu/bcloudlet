@@ -37,10 +37,6 @@ public class Service {
 
     if (id == null) {
       child.setId(UUID.randomUUID().toString());
-      if (parent != null) {
-        parent.setTotalChildren(parent.getTotalChildren() + 1);
-        em().persist(parent);
-      }
     }
 
     if (path == null) {

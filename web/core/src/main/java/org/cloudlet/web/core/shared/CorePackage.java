@@ -65,7 +65,7 @@ public interface CorePackage {
 
   String HOME = "";
 
-  String CHILDREN = "children";
+  String REFERENCES = "children";
 
   String VERSION = "version";
 

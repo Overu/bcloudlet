@@ -28,7 +28,7 @@ public class ResourceTree extends BorderLayoutContainer implements TakesResource
     @Override
     public List<Resource> read(final Object loadConfig, final Resource resource) {
       List<Resource> result = new ArrayList<Resource>();
-      List<Resource> children = resource.getList(CorePackage.CHILDREN);
+      List<Resource> children = resource.getList(CorePackage.REFERENCES);
       for (Resource child : children) {
         result.add(child);
       }
@@ -75,7 +75,7 @@ public class ResourceTree extends BorderLayoutContainer implements TakesResource
     loader = new TreeLoader<Resource>(new DataProxy<Resource, Resource>() {
       @Override
       public void load(Resource resource, final Callback<Resource, Throwable> callback) {
-        resource.getQueryParameters().addFirst(CorePackage.CHILDREN, "true");
+        resource.getQueryParameters().addFirst(CorePackage.REFERENCES, "true");
         resource.load(new AsyncCallback<Resource>() {
           @Override
           public void onFailure(Throwable caught) {

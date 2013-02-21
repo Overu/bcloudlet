@@ -40,6 +40,11 @@ public abstract class Feed<E extends Entry> extends Content {
   @Transient
   protected List<? extends SortInfo> sortInfo;
 
+  @Transient
+  protected List<E> entries;
+
+  protected long totalEntries;
+
   public E createEntry(E entry) {
     return (E) getService().createEntry(this, entry);
   }
@@ -48,6 +53,10 @@ public abstract class Feed<E extends Entry> extends Content {
   @DELETE
   public void delete() {
     getService().deleteFeed(this);
+  }
+
+  public List<E> getEntries() {
+    return entries;
   }
 
   public E getEntry(String path) {
@@ -83,10 +92,18 @@ public abstract class Feed<E extends Entry> extends Content {
     return start;
   }
 
+  public long getTotalEntries() {
+    return totalEntries;
+  }
+
   @Path(CorePackage.NEW)
   @GET
   public E newEntry() {
     return WebPlatform.get().getInstance(getEntryType());
+  }
+
+  public void setEntries(List<E> entries) {
+    this.entries = entries;
   }
 
   public void setLimit(int limit) {
@@ -109,6 +126,10 @@ public abstract class Feed<E extends Entry> extends Content {
     this.start = start;
   }
 
+  public void setTotalEntries(long total) {
+    this.totalEntries = total;
+  }
+
   @Override
   public Content update() {
     getService().update(this);
@@ -116,8 +137,9 @@ public abstract class Feed<E extends Entry> extends Content {
   }
 
   @Override
-  protected List<E> doLoad() {
-    return getService().findEntries(this);
+  protected void doLoad() {
+    entries = getService().findEntries(this);
+    totalEntries = getService().countEntries(this);
   }
 
   @Override

@@ -45,11 +45,6 @@ public final class Repository extends Entry {
     return users;
   }
 
-  @Override
-  public boolean hasChildren() {
-    return true;
-  }
-
   public void setBooks(Books books) {
     this.books = books;
   }

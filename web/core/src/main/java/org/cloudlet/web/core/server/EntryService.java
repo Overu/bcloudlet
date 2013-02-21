@@ -18,6 +18,14 @@ public class EntryService<E extends Entry> extends Service {
     this.entryClass = entryClass;
   }
 
+  public long countReferences(E source) {
+    TypedQuery<Long> query =
+        em().createQuery("select count(ref) from " + Reference.class.getName() + " ref where ref.source=:source", Long.class);
+    query.setParameter("source", source);
+    long count = query.getSingleResult().longValue();
+    return count;
+  }
+
   public Content createReference(E source, Content target) {
     createChild(source, target);
     if (source != null) {
@@ -36,12 +44,12 @@ public class EntryService<E extends Entry> extends Service {
   }
 
   public List<Content> findReferences(E source) {
-    TypedQuery<Reference> query = em().createQuery("from " + Reference.class.getName() + " rel where rel.source=:source", Reference.class);
+    TypedQuery<Reference> query = em().createQuery("from " + Reference.class.getName() + " ref where ref.source=:source", Reference.class);
     query.setParameter("source", source);
-    List<Reference> rels = query.getResultList();
-    List<Content> children = new ArrayList<Content>(rels.size());
-    for (Reference rel : rels) {
-      children.add(rel.getTarget());
+    List<Reference> references = query.getResultList();
+    List<Content> children = new ArrayList<Content>(references.size());
+    for (Reference ref : references) {
+      children.add(ref.getTarget());
     }
     return children;
   }

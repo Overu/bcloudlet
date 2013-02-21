@@ -22,8 +22,6 @@ public class MobileExplorer extends FlowPanel implements TakesResource, WidgetCo
 
   private SimplePanel child;
 
-  private static final String[] bookFilters = {CorePackage.FEATURED, CorePackage.PROMOTED, CorePackage.TAGGED};
-
   private FlowPanel nav;
 
   @Inject
@@ -49,17 +47,14 @@ public class MobileExplorer extends FlowPanel implements TakesResource, WidgetCo
   public void setValue(Resource value) {
     this.resource = value;
     nav.clear();
-    Resource books = resource.getChild(CorePackage.BOOKS);
-    for (String filter : bookFilters) {
-      final Resource filteredBooks = books.getChild(filter);
-      Button filteredBtn = new Button(filter);
-      nav.add(filteredBtn);
-      filteredBtn.addClickHandler(new ClickHandler() {
-        @Override
-        public void onClick(ClickEvent event) {
-          resourceManager.goTo(filteredBooks);
-        }
-      });
-    }
+    final Resource books = resource.getChild(CorePackage.BOOKS);
+    Button booksBtn = new Button("Books");
+    nav.add(booksBtn);
+    booksBtn.addClickHandler(new ClickHandler() {
+      @Override
+      public void onClick(ClickEvent event) {
+        resourceManager.goTo(books);
+      }
+    });
   }
 }

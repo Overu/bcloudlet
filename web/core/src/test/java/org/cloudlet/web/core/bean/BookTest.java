@@ -49,7 +49,7 @@ public class BookTest extends CoreTest {
     Books books = booksSvc.getRoot();
     System.out.println(UUID.randomUUID().toString());
     books.load();
-    long total = books.getTotalChildren();
+    long total = books.getTotalEntries();
     Book book = books.newEntry();
     total = total + 1;
     book.setPath("book" + total);
@@ -70,7 +70,7 @@ public class BookTest extends CoreTest {
     book.setCover(cover);
     book.update();
     books.load();
-    assertEquals(total, books.getTotalChildren());
+    assertEquals(total, books.getTotalEntries());
     for (int i = 0; i < 10; i++) {
       Section section = new Section();
       section.setPath("section" + i);
@@ -94,7 +94,7 @@ public class BookTest extends CoreTest {
     Books books = booksSvc.getRoot();
     System.out.println(UUID.randomUUID().toString());
     books.load();
-    long total = books.getTotalChildren();
+    long total = books.getTotalEntries();
 
     Random priceRandom = new Random(1000);
 

@@ -1,6 +1,7 @@
 package org.cloudlet.web.core.provider;
 
 import org.cloudlet.web.core.server.Content;
+import org.cloudlet.web.core.server.Entry;
 import org.cloudlet.web.core.server.Feed;
 import org.cloudlet.web.core.shared.CorePackage;
 import org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider;
@@ -11,7 +12,6 @@ import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Collection;
-import java.util.List;
 
 import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
@@ -60,19 +60,24 @@ public class XmlResourceProvider extends AbstractMessageReaderWriterProvider<Con
     }
   }
 
-  private void writeResource(XMLStreamWriter writer, Content resource) throws XMLStreamException {
-    writer.writeStartElement(resource.getResourceType());
-    if (resource.getTitle() != null) {
-      writer.writeAttribute(CorePackage.TITLE, resource.getTitle());
+  private void writeResource(XMLStreamWriter writer, Content content) throws XMLStreamException {
+    writer.writeStartElement(content.getResourceType());
+    if (content.getTitle() != null) {
+      writer.writeAttribute(CorePackage.TITLE, content.getTitle());
     }
-    writer.writeAttribute(CorePackage.PATH, resource.getPath());
-    writer.writeAttribute(CorePackage.URI, resource.getUri());
-    if (resource.getBody() != null) {
-      writer.writeCharacters(resource.getBody());
+    writer.writeAttribute(CorePackage.PATH, content.getPath());
+    writer.writeAttribute(CorePackage.URI, content.getUri());
+    if (content.getBody() != null) {
+      writer.writeCharacters(content.getBody());
     }
-    Collection<? extends Content> rels = resource.getChildren();
-    if (rels != null && !rels.isEmpty()) {
-      for (Content rel : rels) {
+    Collection<? extends Content> contents;
+    if (content instanceof Entry) {
+      contents = ((Entry) content).getReferences();
+    } else {
+      contents = ((Feed) content).getEntries();
+    }
+    if (contents != null && !contents.isEmpty()) {
+      for (Content rel : contents) {
         writeResource(writer, rel);
       }
     }

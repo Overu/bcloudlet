@@ -2,13 +2,13 @@ package org.cloudlet.web.core.bean;
 
 import com.google.inject.Inject;
 
-import org.cloudlet.web.core.server.Groups;
 import org.cloudlet.web.core.server.GroupService;
+import org.cloudlet.web.core.server.Groups;
 import org.cloudlet.web.core.server.Repository;
 import org.cloudlet.web.core.server.RepositoryService;
 import org.cloudlet.web.core.server.User;
-import org.cloudlet.web.core.server.Users;
 import org.cloudlet.web.core.server.UserService;
+import org.cloudlet.web.core.server.Users;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -32,14 +32,12 @@ public class JAXBTest extends CoreTest {
 
   @Test
   public void testJAXB() throws JAXBException {
-    Repository repo = repoSvc.getRoot();
     Users users = usersSvc.getRoot();
-    Groups groups = groupsSvc.getRoot();
     User user = new User();
     user.setName("user1");
     List<User> userList = new ArrayList<User>();
     userList.add(user);
-    users.setChildren(userList);
+    users.setEntries(userList);
     JAXBContext jc = JAXBContext.newInstance(Users.class, User.class);
     Marshaller marshaller = jc.createMarshaller();
     ByteArrayOutputStream os = new ByteArrayOutputStream();

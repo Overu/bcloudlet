@@ -73,16 +73,7 @@ public abstract class Content {
   @Columns(columns = { @Column(name = "parentType"), @Column(name = "parentId") })
   protected Content parent;
 
-  protected long totalChildren;
-
-  @Transient
-  private List<? extends Content> children;
-
   protected String body;
-
-  @Transient
-  @QueryParam(CorePackage.CHILDREN)
-  protected boolean loadChildren;
 
   @Transient
   private Service service;
@@ -183,11 +174,6 @@ public abstract class Content {
     return result;
   }
 
-  @XmlElement
-  public List<? extends Content> getChildren() {
-    return children;
-  }
-
   public String getId() {
     return id;
   }
@@ -234,10 +220,6 @@ public abstract class Content {
     return title;
   }
 
-  public long getTotalChildren() {
-    return totalChildren;
-  }
-
   @XmlElement
   public String getUri() {
     return getUriBuilder().toString();
@@ -266,16 +248,10 @@ public abstract class Content {
     return version;
   }
 
-  public boolean hasChildren() {
-    return totalChildren > 0;
-  }
-
   @GET
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml" })
   public Content load() {
-    if (loadChildren) {
-      children = doLoad();
-    }
+    doLoad();
     return this;
   }
 
@@ -306,10 +282,6 @@ public abstract class Content {
     this.body = body;
   }
 
-  public void setChildren(List<? extends Content> children) {
-    this.children = children;
-  }
-
   public void setId(String id) {
     this.id = id;
   }
@@ -331,8 +303,6 @@ public abstract class Content {
       title = value;
     } else if (CorePackage.PATH.equals(name)) {
       path = value;
-    } else if (CorePackage.CHILDREN_COUNT.equals(name)) {
-      totalChildren = value == null ? 0 : Long.valueOf(value);
     }
   }
 
@@ -342,10 +312,6 @@ public abstract class Content {
 
   public void setTitle(String title) {
     this.title = title;
-  }
-
-  public void setTotalChildren(long totalResults) {
-    this.totalChildren = totalResults;
   }
 
   public void setUri(String value) {
@@ -371,7 +337,7 @@ public abstract class Content {
     return null;
   }
 
-  protected abstract List<? extends Content> doLoad();
+  protected abstract void doLoad();
 
   protected EntityManager em() {
     return WebPlatform.get().getEntityManager();

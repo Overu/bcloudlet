@@ -24,7 +24,6 @@ public class FeedService<F extends Feed<E>, E extends Entry> extends EntryServic
             Long.class);
     query.setParameter("parent", parent);
     long count = query.getSingleResult().longValue();
-    parent.setTotalChildren(count);
     return count;
   }
 
@@ -41,11 +40,10 @@ public class FeedService<F extends Feed<E>, E extends Entry> extends EntryServic
   }
 
   public List<E> findEntries(F feed) {
-    Class<E> entryType = feed.getEntryType();
-    StringBuilder sql = new StringBuilder("from ").append(entryType.getName()).append(" f where f.parent=:parent");
+    StringBuilder sql = new StringBuilder("from ").append(entryClass.getName()).append(" f where f.parent=:parent");
     initQueryConditions(feed, sql);
     sql.append(count(feed.getSearch())).append(limit(feed.getSort()));
-    TypedQuery<E> query = em().createQuery(sql.toString(), entryType);
+    TypedQuery<E> query = em().createQuery(sql.toString(), entryClass);
     if (feed.getStart() != null) {
       query.setFirstResult(feed.getStart());
     }
@@ -59,8 +57,7 @@ public class FeedService<F extends Feed<E>, E extends Entry> extends EntryServic
 
   public E getEntry(F parent, String path) {
     try {
-      Class<E> entryType = parent.getEntryType();
-      TypedQuery<E> query = em().createQuery("from " + entryType.getName() + " e where e.parent=:parent and e.path=:path", entryType);
+      TypedQuery<E> query = em().createQuery("from " + entryClass.getName() + " e where e.parent=:parent and e.path=:path", entryClass);
       query.setParameter("parent", parent);
       query.setParameter("path", path);
       return query.getSingleResult();

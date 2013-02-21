@@ -23,9 +23,14 @@ import javax.xml.bind.annotation.XmlType;
 @Path(CorePackage.BOOKS)
 public class Books extends Feed<Book> {
 
+  @QueryParam("tag")
   protected boolean featured;
 
+  @QueryParam("tag")
   protected boolean promoted;
+
+  @QueryParam("tag")
+  protected String[] tag;
 
   @Override
   @POST
@@ -43,37 +48,12 @@ public class Books extends Feed<Book> {
     return this;
   }
 
-  @GET
-  @Path(CorePackage.FEATURED)
-  public Books findFeaturedBooks() {
-    featured = true;
-    doLoad();
-    return this;
-  }
-
-  @GET
-  @Path(CorePackage.PROMOTED)
-  public Books findPromotedBooks() {
-    promoted = true;
-    doLoad();
-    return this;
-  }
-
-  @GET
-  @Path(CorePackage.TAGGED)
-  public Books findTaggedBooks(@QueryParam("tag") String tag) {
-    featured = true;
-    doLoad();
-    return this;
-  }
-
   @Override
   public Class<Book> getEntryType() {
     return Book.class;
   }
 
   @Override
-  @XmlTransient
   public String getResourceType() {
     return CorePackage.Books;
   }

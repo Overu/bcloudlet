@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = CorePackage.Members)
 @Entity(name = CorePackage.Members)
 @Table(name = CorePackage.Members)
-public class MemberFeed extends Feed<Member> {
+public class Members extends Feed<Member> {
   @Override
   @XmlTransient
   public Class<Member> getEntryType() {
