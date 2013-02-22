@@ -33,7 +33,7 @@ public class RepositoryService extends EntryService<Repository> {
     createReference(repo, users);
 
     Books books = new Books();
-    books.setPath("books");
+    books.setPath(CorePackage.BOOKS);
     books.setTitle("Books");
     createReference(repo, books);
 

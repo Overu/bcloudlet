@@ -8,6 +8,8 @@ public class Site {
 
   private String mirror;
 
+  private String localFile;
+
   public Site(String id, String url, String mirror) {
     this.id = id;
     this.url = url;
@@ -16,6 +18,10 @@ public class Site {
 
   public String getId() {
     return id;
+  }
+
+  public String getLocalFile() {
+    return localFile;
   }
 
   public String getMirror() {
@@ -28,6 +34,10 @@ public class Site {
 
   public void setId(String id) {
     this.id = id;
+  }
+
+  public void setLocalFile(String localFile) {
+    this.localFile = localFile;
   }
 
   public void setMirror(String mirror) {

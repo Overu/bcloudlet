@@ -10,6 +10,11 @@ public class BookService extends FeedService<Books, Book> {
   }
 
   @Override
+  protected void init(Book book) {
+    super.init(book);
+  }
+
+  @Override
   protected void initQueryConditions(Books feed, StringBuilder sql) {
     super.initQueryConditions(feed, sql);
     if (feed.isFeatured()) {
