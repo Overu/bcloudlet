@@ -100,6 +100,7 @@ public abstract class AbstractBox extends CompositeView {
     private UListElement recommendStar(double number) {
       Document document = Document.get();
       UListElement starUl = document.createULElement();
+      starUl.setAttribute("mobile", "");
 
       for (double i = 0.0; i < 5; i++) {
         LIElement statLi = document.createLIElement();

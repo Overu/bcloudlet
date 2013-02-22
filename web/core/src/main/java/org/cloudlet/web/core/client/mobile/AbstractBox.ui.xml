@@ -23,9 +23,6 @@
     
     .head>h3 {
       font-size: 22px;
-      padding: 0;
-      margin: 0;
-      font-weight: 700;
       color: #ff6a04;
       font-family: 'microsoft yahei';
     }
@@ -36,12 +33,10 @@
       top: 14px;
       right: 14px;
       padding-right: 11px;
-      font-size: 12px;
       background-position: right -173px;
       color: #999;
       font-family: 'microsoft yahei';
       line-height: 18px;
-      cursor: pointer;
     }
     
     .booklisthead {
@@ -53,20 +48,8 @@
     .booklist {
       width: 740px;
       padding-bottom: 10px;
-      list-style-type: none;
-      font-family: arial, helvetica, sans-serif;
-      font-size: 12px;
-      color: #333;
     }
     
-    .booklist:AFTER {
-      clear: both;
-      content: '.';
-      display: block;
-      height: 0;
-      overflow: hidden;
-      visibility: hidden;
-    }
     
     .booklist>li {
       width: 120px;
@@ -84,9 +67,6 @@
       text-overflow: ellipsis;
       white-space: nowrap;
       color: #888;
-      line-height: 16px;
-      margin: 0;
-      padding: 0;
     }
     
     @sprite 
@@ -98,7 +78,6 @@
       height: 128px !important;
       padding: 2px 4px 6px;
       background-position: -120px -196px;
-      cursor: pointer;
     }
     
     .cover:HOVER {
@@ -108,9 +87,7 @@
     .title {
       line-height: 16px;
       color: #704628;
-      text-decoration: none;
       outline: 0;
-      cursor: pointer;
     }
     
     .title:HOVER {
@@ -125,8 +102,6 @@
       margin-right: 5px;
       float: left;
       width: 70px;
-      line-height: 16px;
-      list-style: none;
     }
     
     @sprite 
@@ -135,9 +110,6 @@
       float: left;
       width: 14px !important;
       height: 18px !important;
-      line-height: 18px;
-      margin: 0 !important;
-      padding: 0 !important;
       background-position: 0 -1952px;
     }
     
@@ -146,7 +118,6 @@
       font-size: 10px;
       float: left;
       color: #999;
-      line-height: 18px;
     }
     
     .red {
@@ -159,8 +130,6 @@
     
     .price {
       color: #4c9ee0;
-      font-size: 12px;
-      line-height: 16px;
     }
     
     .price>del {
@@ -177,7 +146,7 @@
       <a href="#">更多</a>
     </div>
     <div class="{style.booklisthead}">
-      <ul ui:field="bookListElm" class="{style.booklist}"></ul>
+      <ul ui:field="bookListElm" class="{style.booklist}" mobile=""></ul>
     </div>
   </g:HTMLPanel>
 </ui:UiBinder> 

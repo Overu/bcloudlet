@@ -46,7 +46,7 @@
         <g:HTMLPanel ui:field="bgr"></g:HTMLPanel>
       </div>
       <g:HTMLPanel ui:field="bgl" addStyleNames="{style.bgf}"></g:HTMLPanel>
-      <g:HTMLPanel ui:field="ft" addStyleNames="{style.ft}"></g:HTMLPanel>
     </div>
+    <g:HTMLPanel ui:field="ft" addStyleNames="{style.ft}"></g:HTMLPanel>
   </g:HTMLPanel>
 </ui:UiBinder> 

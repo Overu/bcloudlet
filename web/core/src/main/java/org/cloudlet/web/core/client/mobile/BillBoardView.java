@@ -53,6 +53,7 @@ public class BillBoardView extends CompositeView {
       moreElm.setInnerText("更多");
 
       contentElm = document.createULElement();
+      contentElm.setAttribute("mobile", "");
 
       header.appendChild(titleElm);
       header.appendChild(moreElm);

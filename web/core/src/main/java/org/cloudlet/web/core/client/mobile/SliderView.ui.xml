@@ -20,7 +20,6 @@
       zoom: 1;
       margin: 0 auto;
       overflow: hidden;
-      list-style-type: none;
       -webkit-transition: all .16s ease-in-out;
     }
     
@@ -29,19 +28,15 @@
     }
     
     .slidertag {
-      list-style-type: none;
       position: absolute;
       right: 0;
       bottom: 10px;
       text-align: center;
       z-index: 3;
-      font-family: arial, helvetica, sans-serif;
-      font-size: 12px;
     }
     
     .slidertag>li {
       display: inline;
-      float: none;
       margin-right: 8px;
     }
     
@@ -92,9 +87,9 @@
   
   <ui:image field="arr" />
   <g:HTMLPanel ui:field="root" addStyleNames="{style.root}">
-    <ul ui:field="slider" class="{style.slider}"></ul>
+    <ul ui:field="slider" class="{style.slider}" mobile=""></ul>
     <a href="#" ui:field="previous" class="{style.base} {style.previous}">Previous</a>
     <a href="#" ui:field="next" class="{style.base} {style.next}">Next</a>
-    <ul ui:field="sliderTag" class="{style.slidertag}"></ul>
+    <ul ui:field="sliderTag" class="{style.slidertag}" mobile=""></ul>
   </g:HTMLPanel>
 </ui:UiBinder> 

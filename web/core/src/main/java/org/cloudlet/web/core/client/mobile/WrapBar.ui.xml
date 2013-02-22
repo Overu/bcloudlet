@@ -11,16 +11,6 @@
     
     .root>ul {
       width: 800px;
-      list-style-type: none;
-    }
-    
-    .root>ul:AFTER {
-      clear: both;
-      content: '.';
-      display: block;
-      height: 0;
-      overflow: hidden;
-      visibility: hidden;
     }
     
     .root>ul>li {
@@ -31,9 +21,7 @@
     .root>ul>li>a {
       gwt-image: "spritecover";
       float: left;
-      display: block;
       width: 166px;
-      cursor: pointer;
       height: 88px;
       padding: 3px 5px 7px;
       margin-right: 22px;
@@ -48,6 +36,6 @@
 
   <ui:image field="spritecover" />
   <g:HTMLPanel addStyleNames="{style.root}">
-    <ul ui:field="wrapElm"></ul>
+    <ul ui:field="wrapElm" mobile=""></ul>
   </g:HTMLPanel>
 </ui:UiBinder> 
