@@ -11,10 +11,13 @@
       margin: 0 auto;
     }
     
+    @sprite 
     .logo {
+      gwt-image: "sprite";
       float: left;
       width: 175px !important;
       height: 62px !important;
+      background-position: 0px 0px !important;
     }
     
     .nav {
@@ -23,10 +26,8 @@
     }
     
     .nav>ul>li {
-      display: inline;
       float: left;
       padding: 0 12px;
-      background-position: right -599px;
       font: 700 16px/20px STheiti, microsoft yahei;
       color: rgb(112, 70, 40);
       cursor: pointer;
@@ -49,12 +50,15 @@
       text-align: left;
     }
     
+    @sprite 
     .search>a {
+      gwt-image: "sprite";
       display: block;
       height: 28px;
+      width: initial;;
       border-radius: 14px;
-      background-position: 6px -91px;
       background-color: rgb(220, 215, 210);
+background-position: 6px -91px;
     }
     
     .search>a>input {
@@ -70,7 +74,9 @@
       outline: 0;
     }
     
+    @sprite 
     .search>a>span {
+      gwt-image: "sprite";
       display: none;
       position: absolute;
       right: 0;
@@ -81,22 +87,39 @@
       cursor: pointer;
     }
     
-    .search>a:HOVER, .inputting {
+    .search>a:HOVER,.inputting {
       -webkit-transition: background-color .08s ease-in;
-      background-position: 6px -130px!important;
-      background-color: rgb(102, 102, 102)!important;
-      text-decoration: none!important;
+      background-position: 6px -130px !important;
+      background-color: rgb(102, 102, 102) !important;
+      text-decoration: none !important;
     }
     
-    .search>a:HOVER>input, .inputting>input {
-      color: white!important;
+    .search>a:HOVER>input,.inputting>input {
+      color: white !important;
+    }
+    
+    .login {
+      position: absolute;
+      top: 34px;
+      right: 5px;
+      z-index: 200
+    }
+    
+    .login>a {
+      font-size: 12px;
+      font-family: 'microsoft yahei';
+      color: rgb(112, 70, 40);
+      margin-left: 15px;
+      outline: 0;
+      text-decoration: none;
     }
   </ui:style>
 
+  <ui:image field="sprite" />
   <g:HTMLPanel addStyleNames="{style.root}">
     <div ui:field="logoElm" class="{style.logo}"></div>
     <div class="{style.nav}">
-      <ul ui:field="navUlElm">
+      <ul mobile="" ui:field="navUlElm">
         <li ui:field="indexElm">首页</li>
         <li ui:field="rankElm">排行榜</li>
         <li ui:field="bargainElm">
@@ -112,8 +135,12 @@
     <div class="{style.search}">
       <a herf="#">
         <input ui:field="searchTextElm" type="text" placeholder="搜索书名或者作者..." />
-        <span></span>
+        <span ui:field="searchButton"></span>
       </a>
+    </div>
+    <div class="{style.login}">
+      <a href="#">登录</a>
+      <a href="#">注册</a>
     </div>
   </g:HTMLPanel>
 </ui:UiBinder> 

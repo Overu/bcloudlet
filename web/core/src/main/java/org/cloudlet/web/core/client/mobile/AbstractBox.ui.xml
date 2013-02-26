@@ -1,0 +1,152 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+  <ui:style type="org.cloudlet.web.core.client.mobile.AbstractBox.BoxStryle">
+    .root {
+      width: 769px;
+      margin-bottom: 10px;
+      padding: 0;
+      border: 1px solid #ebe8e3;
+      background: #fff;
+    }
+    
+    .head {
+      position: relative;
+      zoom: 1;
+      height: 40px;
+      line-height: 40px;
+      margin-bottom: 40px;
+      border-bottom: 1px solid #f0eeeb;
+      background: #f8f8f8;
+      padding-left: 25px;
+    }
+    
+    .head>h3 {
+      font-size: 22px;
+      color: #ff6a04;
+      font-family: 'microsoft yahei';
+    }
+    
+    .head>a {
+      text-decoration: none;
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      padding-right: 11px;
+      background-position: right -173px;
+      color: #999;
+      font-family: 'microsoft yahei';
+      line-height: 18px;
+    }
+    
+    .booklisthead {
+      width: 693px;
+      min-height: 458px;
+      margin: 0 0 0 40px;
+    }
+    
+    .booklist {
+      width: 740px;
+      padding-bottom: 10px;
+    }
+    
+    
+    .booklist>li {
+      width: 120px;
+      height: 218px;
+      margin: 0 25px 12px 0;
+      position: relative;
+      zoom: 1;
+      float: left;
+      z-index: 10;
+    }
+    
+    .booklist>li>p {
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: #888;
+    }
+    
+    @sprite 
+    .cover {
+      gwt-image: "spritecover";
+      display: block;
+      margin-bottom: 5px;
+      width: 96px !important;
+      height: 128px !important;
+      padding: 2px 4px 6px;
+      background-position: -120px -196px;
+    }
+    
+    .cover:HOVER {
+      background-position: 0 -196px !important;
+    }
+    
+    .title {
+      line-height: 16px;
+      color: #704628;
+      outline: 0;
+    }
+    
+    .title:HOVER {
+      color: #9b8270;
+    }
+    
+    .star {
+      color: #999;
+    }
+    
+    .star>ul {
+      margin-right: 5px;
+      float: left;
+      width: 70px;
+    }
+    
+    @sprite 
+    .star>ul>li {
+      gwt-image: "sprite";
+      float: left;
+      width: 14px !important;
+      height: 18px !important;
+      background-position: 0 -1952px;
+    }
+    
+    .star>span {
+      -webkit-text-size-adjust: none;
+      font-size: 10px;
+      float: left;
+      color: #999;
+    }
+    
+    .red {
+      background-position: -19px -1952px !important;
+    }
+    
+    .half {
+      background-position: -38px -1952px !important;
+    }
+    
+    .price {
+      color: #4c9ee0;
+    }
+    
+    .price>del {
+      margin-left: 6px;
+      color: #aaa;
+    }
+  </ui:style>
+
+  <ui:image field="sprite" />
+  <ui:image field="spritecover" />
+  <g:HTMLPanel addStyleNames="{style.root}">
+    <div class="{style.head}">
+      <h3 ui:field="headNameElm"></h3>
+      <a href="#">更多</a>
+    </div>
+    <div class="{style.booklisthead}">
+      <ul ui:field="bookListElm" class="{style.booklist}" mobile=""></ul>
+    </div>
+  </g:HTMLPanel>
+</ui:UiBinder> 

@@ -23,76 +23,52 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = CorePackage.PREFIX + "Relationship")
-@TypeDef(name = "content", typeClass = ResourceType.class)
-public class Relationship {
+@Table(name = CorePackage.Reference)
+@TypeDef(name = CorePackage.CONTENT, typeClass = ResourceType.class)
+public class Reference {
 
   @Id
   private String id;
 
-  @Type(type = "content")
+  @Type(type = CorePackage.CONTENT)
   @Columns(columns = { @Column(name = "sourceType"), @Column(name = "sourceId") })
-  private Resource source;
+  private Entry source;
 
-  @Type(type = "content")
+  @Type(type = CorePackage.CONTENT)
   @Columns(columns = { @Column(name = "targetType"), @Column(name = "targetId") })
-  private Resource target;
+  private Content target;
 
   private String path;
 
-  /**
-   * @return the id
-   */
   public String getId() {
     return id;
   }
 
-  /**
-   * @return the path
-   */
   public String getPath() {
     return path;
   }
 
-  /**
-   * @return the source
-   */
-  public Resource getSource() {
+  public Entry getSource() {
     return source;
   }
 
-  /**
-   * @return the target
-   */
-  public Resource getTarget() {
+  public Content getTarget() {
     return target;
   }
 
-  /**
-   * @param id the id to set
-   */
   public void setId(String id) {
     this.id = id;
   }
 
-  /**
-   * @param path the path to set
-   */
   public void setPath(String path) {
     this.path = path;
   }
 
-  /**
-   * @param source the source to set
-   */
-  public void setSource(Resource source) {
+  public void setSource(Entry source) {
     this.source = source;
   }
 
-  /**
-   * @param target the target to set
-   */
-  public void setTarget(Resource target) {
+  public void setTarget(Content target) {
     this.target = target;
   }
 

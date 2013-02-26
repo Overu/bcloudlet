@@ -25,12 +25,11 @@ public class JpaRealm extends AuthorizingRealm {
 
   public static final String ALGORITHM_NAME = Sha1Hash.ALGORITHM_NAME;
 
-  private final Provider<UserFeed> userService;
+  private final UserService userService;
 
   @Inject
-  JpaRealm(@Root Provider<UserFeed> userService) {
+  JpaRealm(UserService userService) {
     this.userService = userService;
-
     HashedCredentialsMatcher matcher = new HashedCredentialsMatcher(ALGORITHM_NAME);
     setCredentialsMatcher(matcher);
   }
@@ -44,7 +43,7 @@ public class JpaRealm extends AuthorizingRealm {
       throw new AccountException("Null usernames are not allowed by this realm.");
     }
 
-    User user = userService.get().findUserByName(userName);
+    User user = userService.findUserByName(userName);
     if (user == null) {
       return null;
     }
@@ -60,7 +59,7 @@ public class JpaRealm extends AuthorizingRealm {
     }
 
     String userName = (String) getAvailablePrincipal(principals);
-    User user = userService.get().findUserByName(userName);
+    User user = userService.findUserByName(userName);
 
     Set<String> roleNames = new LinkedHashSet<String>();
     Set<String> permissions = new LinkedHashSet<String>();

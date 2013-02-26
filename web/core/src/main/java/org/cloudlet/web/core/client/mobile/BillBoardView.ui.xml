@@ -1,0 +1,82 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+  <ui:style type="org.cloudlet.web.core.client.mobile.BillBoardView.BillBoardViewStyle">
+    .root {
+      margin-bottom: 10px;
+      width: 208px;
+      padding: 10px;
+      border: 1px solid #ebe8e3;
+      background: #fff;
+    }
+    
+    .top3 {
+      color: rgb(255, 106, 4) !important;
+    }
+    
+    .textlist {
+      padding-bottom: 15px;
+      min-height: 315px;
+    }
+    
+    .textlist>div {
+      position: relative;
+      zoom: 1;
+      height: 28px;
+      margin-bottom: 7px;
+      line-height: 28px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .textlist>div>h3 {
+      position: relative;
+      padding: 0 10px;
+      color: #ff6a04;
+      font-size: 12px;
+    }
+    
+    .textlist>div>a {
+      color: #999;
+      position: absolute;
+      right: 5px;
+      top: 1px;
+    }
+    
+    .textlist>div>a:HOVER {
+      color: #9b8270;
+    }
+    
+    .textlist>ul>li {
+      padding-left: 34px;
+      position: relative;
+      zoom: 1;
+      line-height: 28px;
+    }
+    
+    .textlist>ul>li>em {
+      position: absolute;
+      top: 1px;
+      left: 12px;
+      width: 14px;
+      text-align: center;
+      color: #999;
+      font-style: normal;
+    }
+    
+    .textlist>ul>li>a {
+      color: #666;
+      display: block;
+      width: 160px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    .textlist>ul>li>a:HOVER {
+      color: #ff6a04;
+    }
+  </ui:style>
+
+  <g:HTMLPanel ui:field="root" addStyleNames="{style.root}">
+  </g:HTMLPanel>
+</ui:UiBinder> 

@@ -5,15 +5,16 @@ import com.google.inject.Inject;
 import static org.junit.Assert.assertEquals;
 
 import org.cloudlet.web.core.server.Book;
-import org.cloudlet.web.core.server.BookFeed;
+import org.cloudlet.web.core.server.Books;
+import org.cloudlet.web.core.server.BookService;
 import org.cloudlet.web.core.server.BookTag;
-import org.cloudlet.web.core.server.GroupFeed;
+import org.cloudlet.web.core.server.Groups;
 import org.cloudlet.web.core.server.Media;
 import org.cloudlet.web.core.server.Repository;
+import org.cloudlet.web.core.server.RepositoryService;
 import org.cloudlet.web.core.server.Section;
 import org.cloudlet.web.core.server.User;
-import org.cloudlet.web.core.server.UserFeed;
-import org.cloudlet.web.core.shared.Root;
+import org.cloudlet.web.core.server.Users;
 import org.htmlparser.beans.StringBean;
 import org.junit.Test;
 
@@ -38,17 +39,17 @@ import nl.siegmann.epublib.epub.EpubReader;
 public class BookTest extends CoreTest {
 
   @Inject
-  Repository repo;
+  RepositoryService repoSvc;
 
-  @Root
   @Inject
-  BookFeed books;
+  BookService booksSvc;
 
   @Test
   public void testCreateBook() throws Exception {
+    Books books = booksSvc.getRoot();
     System.out.println(UUID.randomUUID().toString());
     books.load();
-    long total = books.getChildrenCount();
+    long total = books.getTotalEntries();
     Book book = books.newEntry();
     total = total + 1;
     book.setPath("book" + total);
@@ -57,28 +58,30 @@ public class BookTest extends CoreTest {
     // ByteArrayInputStream("Good work".getBytes()));
     books.createEntry(book);
 
-    Media cover = book.create(Media.class);
+    Books books2 = booksSvc.getRoot();
+
+    Media cover = new Media();
     cover.setPath("cover");
     cover.setTitle("Cover");
     InputStream stream = getClass().getResourceAsStream("/covers/sanguo.jpg");
     cover.read(stream);
-    cover.save();
+    book.createReference(cover);
 
     book.setCover(cover);
-    book.save();
+    book.update();
     books.load();
-    assertEquals(total, books.getChildrenCount());
+    assertEquals(total, books.getTotalEntries());
     for (int i = 0; i < 10; i++) {
-      Section section = book.create(Section.class);
+      Section section = new Section();
       section.setPath("section" + i);
       section.setTitle("第" + i + "章");
-      section.setContent("<p>北京时间11月11日晚，香港国际会展中心，跳水女皇郭晶晶与名门家族第三代霍启刚的第三场婚宴举行，包括三任香港特首、李嘉诚、刘德华、成龙、伏明霞等各界社会名流到场。这场婚礼耗时近八个小时，宾客多达1800人。</p>");
-      book.createChild(section);
+      section.setBody("<p>北京时间11月11日晚，香港国际会展中心，跳水女皇郭晶晶与名门家族第三代霍启刚的第三场婚宴举行，包括三任香港特首、李嘉诚、刘德华、成龙、伏明霞等各界社会名流到场。这场婚礼耗时近八个小时，宾客多达1800人。</p>");
+      book.createReference(section);
     }
 
     books.load();
 
-    JAXBContext jc = JAXBContext.newInstance(Repository.class, GroupFeed.class, UserFeed.class, User.class, Media.class, BookFeed.class);
+    JAXBContext jc = JAXBContext.newInstance(Repository.class, Groups.class, Users.class, User.class, Media.class, Books.class);
     Marshaller marshaller = jc.createMarshaller();
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     marshaller.marshal(books, os);
@@ -87,9 +90,11 @@ public class BookTest extends CoreTest {
 
   @Test
   public void testImportBook() throws Exception {
+    Repository repo = repoSvc.getRoot();
+    Books books = booksSvc.getRoot();
     System.out.println(UUID.randomUUID().toString());
     books.load();
-    long total = books.getChildrenCount();
+    long total = books.getTotalEntries();
 
     Random priceRandom = new Random(1000);
 
@@ -99,12 +104,12 @@ public class BookTest extends CoreTest {
     File folder = new File("D:\\电子书");
     for (File subFolder : folder.listFiles()) {
       String name = subFolder.getName();
-      BookTag tag = (BookTag) books.getByPath(name);
+      BookTag tag = (BookTag) repo.getChild(name);
       if (tag == null) {
-        tag = books.create(BookTag.class);
+        tag = new BookTag();
         tag.setTitle(name);
         tag.setPath(name);
-        tag.save();
+        repo.createReference(tag);
       }
       for (File epubFile : subFolder.listFiles()) {
 
@@ -160,7 +165,7 @@ public class BookTest extends CoreTest {
 
         Resource coverRes = ebook.getCoverImage();
 
-        Media cover = book.create(Media.class);
+        Media cover = new Media();
         cover.setPath("cover");
         cover.setTitle("Cover");
         InputStream stream;
@@ -170,32 +175,32 @@ public class BookTest extends CoreTest {
           stream = getClass().getResourceAsStream("/covers/sanguo.jpg");
         }
         cover.read(stream);
-        cover.save();
+        book.createReference(cover);
         book.setCover(cover);
-        book.save();
+        book.update();
         books.load();
 
         for (TOCReference toc : ebook.getTableOfContents().getTocReferences()) {
           Resource res = toc.getResource();
-          Section section = book.create(Section.class);
+          Section section = new Section();
           section.setPath(res.getHref());
           section.setTitle(res.getTitle());
-          book.createChild(section);
+          book.createReference(section);
 
-          Media media = section.create(Media.class);
-          section.setMedia(media);
+          Media media = new Media();
           media.setTitle(res.getTitle());
           media.read(res.getInputStream());
-          media.save();
+          section.createReference(section);
 
-          section.save();
+          section.setMedia(media);
+          section.update();
         }
       }
     }
 
     books.load();
 
-    JAXBContext jc = JAXBContext.newInstance(Repository.class, GroupFeed.class, UserFeed.class, User.class, Media.class, BookFeed.class);
+    JAXBContext jc = JAXBContext.newInstance(Repository.class, Groups.class, Users.class, User.class, Media.class, Books.class);
     Marshaller marshaller = jc.createMarshaller();
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     marshaller.marshal(books, os);

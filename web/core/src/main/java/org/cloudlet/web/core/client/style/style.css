@@ -1,24 +1,24 @@
-@external .abc;
-
 body {
+  margin: 0;
+  font-family: arial, helvetica, sans-serif;
+  font-size: 12px;
+  color: #333;
+  text-align: center;
+  line-height: 1.5em;
+}
+
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td {
+  padding: 0;
   margin: 0;
 }
 
-.abc {
-}
-
 div[class=x-grid-row-checker] {
-  width: 15px!important;
+  width: 15px !important;
 }
 
 div#resourcegrid>table>tbody>tr>td {
   vertical-align: middle;
   background-image: url("") !important;
-}
-
-ul {
-  padding: 0;
-  margin: 0;
 }
 
 div[myinput] {
@@ -60,6 +60,26 @@ div[myinput]>input+label {
 
 div[myinput]>input:FOCUS+label {
   opacity: .5;
+}
+
+ul[mobile] {
+  list-style-type: none;
+}
+
+ul[mobile]:AFTER {
+  clear: both;
+  content: '.';
+  display: block;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+a {
+  cursor: pointer;
+  text-decoration: none !important;
+  color: #704628;
+  outline: 0;
 }
 
 /* 

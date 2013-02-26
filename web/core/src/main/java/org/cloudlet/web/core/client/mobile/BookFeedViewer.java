@@ -12,7 +12,7 @@ import org.cloudlet.web.core.shared.CorePackage;
 
 import java.util.List;
 
-public abstract class BookFeedViewer extends FlowPanel implements TakesResource {
+public class BookFeedViewer extends FlowPanel implements TakesResource {
 
   protected Resource resource;
 

@@ -27,9 +27,9 @@ public class DesktopApp extends Initializer {
   @Override
   protected void init() {
     Registry.setWidget(CorePackage.Repository, CorePackage.HOME, explorer);
-    Registry.setWidget(CorePackage.UserFeed, CorePackage.HOME, userFeed);
-    Registry.setWidget(CorePackage.UserFeed, CorePackage.NEW, userEditor);
-    Registry.setWidget(CorePackage.BookFeed, CorePackage.HOME, bookFeed);
-    Registry.setWidget(CorePackage.BookFeed, CorePackage.NEW, bookEditor);
+    Registry.setWidget(CorePackage.Users, CorePackage.HOME, userFeed);
+    Registry.setWidget(CorePackage.Users, CorePackage.NEW, userEditor);
+    Registry.setWidget(CorePackage.Books, CorePackage.HOME, bookFeed);
+    Registry.setWidget(CorePackage.Books, CorePackage.NEW, bookEditor);
   }
 }

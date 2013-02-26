@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = CorePackage.BookTag)
 @Entity(name = CorePackage.BookTag)
 @Table(name = CorePackage.BookTag)
-public class BookTag extends Resource {
+public class BookTag extends Entry {
 
   @Override
   public String getResourceType() {

@@ -28,9 +28,6 @@ public final class WebPlatform {
   @Inject
   private Injector injector;
 
-  @Inject
-  private Provider<Repository> repository;
-
   public WebPlatform() {
     instance = this;
   }
@@ -39,12 +36,8 @@ public final class WebPlatform {
     return entityManager.get();
   }
 
-  public <T extends Resource> T getInstance(Class<T> resourceType) {
+  public <T> T getInstance(Class<T> resourceType) {
     return injector.getInstance(resourceType);
-  }
-
-  public Repository getRepository() {
-    return repository.get();
   }
 
   public void injectMembers(Object instance) {

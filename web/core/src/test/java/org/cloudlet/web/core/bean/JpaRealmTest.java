@@ -8,8 +8,7 @@ import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.subject.Subject;
 import org.cloudlet.web.core.server.User;
-import org.cloudlet.web.core.server.UserFeed;
-import org.cloudlet.web.core.shared.Root;
+import org.cloudlet.web.core.server.UserService;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,9 +18,8 @@ public class JpaRealmTest extends CoreTest {
 
   String pwd = "1234";
 
-  @Root
   @Inject
-  private UserFeed userService;
+  private UserService userService;
 
   @Inject
   SecurityManager securityManager;
@@ -35,7 +33,7 @@ public class JpaRealmTest extends CoreTest {
   public void testLogin() {
     User user = userService.findUserByName(userName);
     if (user == null) {
-      user = userService.newEntry();
+      user = new User();
       user.setName(userName);
       userService.createEntry(user);
     }

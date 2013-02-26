@@ -16,12 +16,9 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = CorePackage.Book)
 @Entity(name = CorePackage.Book)
 @Table(name = CorePackage.Book)
-@DefaultField(key = "title", value = "图书")
-public class Book extends Resource {
-
+public class Book extends Entry {
   @OneToOne
   private Media cover;
-
   @OneToOne
   private Media source;
 
@@ -92,6 +89,11 @@ public class Book extends Resource {
     return serialNumber;
   }
 
+  @Override
+  public Class<BookService> getServiceType() {
+    return BookService.class;
+  }
+
   public long getSize() {
     return size;
   }
@@ -145,9 +147,6 @@ public class Book extends Resource {
   }
 
   public void setCover(Media cover) {
-    if (cover != null) {
-      cover.setParent(this);
-    }
     this.cover = cover;
   }
 

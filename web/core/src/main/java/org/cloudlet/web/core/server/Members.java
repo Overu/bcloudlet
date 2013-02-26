@@ -1,6 +1,5 @@
 package org.cloudlet.web.core.server;
 
-
 import org.cloudlet.web.core.shared.CorePackage;
 
 import javax.persistence.Entity;
@@ -9,11 +8,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.MemberFeed)
-@XmlType(name = CorePackage.MemberFeed)
-@Entity(name = CorePackage.MemberFeed)
-@Table(name = CorePackage.MemberFeed)
-public class MemberFeed extends Feed<Member> {
+@XmlRootElement(name = CorePackage.Members)
+@XmlType(name = CorePackage.Members)
+@Entity(name = CorePackage.Members)
+@Table(name = CorePackage.Members)
+public class Members extends Feed<Member> {
   @Override
   @XmlTransient
   public Class<Member> getEntryType() {
@@ -22,7 +21,7 @@ public class MemberFeed extends Feed<Member> {
 
   @Override
   public String getResourceType() {
-    return CorePackage.MemberFeed;
+    return CorePackage.Members;
   }
 
 }
