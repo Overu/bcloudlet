@@ -5,7 +5,6 @@ import com.google.inject.Singleton;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.ProxyHost;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -24,6 +23,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.StringWriter;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -68,11 +70,13 @@ public class ProxyFilter implements Filter {
           os.close();
         }
       } catch (Throwable t) {
+        t.printStackTrace();
       }
 
       try {
         is.close();
       } catch (Throwable t) {
+        t.printStackTrace();
       }
     }
   }
@@ -100,6 +104,10 @@ public class ProxyFilter implements Filter {
 
   public Map<String, HttpClient> clients;
 
+  private String mirror = "book.duokan.com";
+
+  private Set<String> localAddresses;
+
   @Override
   public void destroy() {
   }
@@ -108,36 +116,49 @@ public class ProxyFilter implements Filter {
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
     HttpServletRequest req = (HttpServletRequest) request;
     HttpServletResponse resp = (HttpServletResponse) response;
-
+    String uri1 = req.getRequestURI();
     StringBuffer sb = req.getRequestURL();
     String qs = req.getQueryString();
     if (qs != null && qs.length() > 0) {
+      qs = qs.replace("deviceid=undefined", "deviceid=D002-F5805035-921D-4426-BF91-81F65004FEFC");
       sb.append("?").append(qs);
     }
     URL url = new URL(sb.toString());
     String method = req.getMethod();
-    logger.info(method + " " + url);
-    logger.info("Current Thread:" + Thread.currentThread());
-    logger.info("This: " + this);
-
     String host = url.getHost();
-    if ("127.0.0.1".equals(host) || "localhost".equals(host)) {
+    InetAddress requestHost = InetAddress.getByName(host);
+    if (localAddresses.contains(requestHost.getHostAddress())) {
       chain.doFilter(request, response);
       return;
     }
 
-    String uri = req.getRequestURI();
-
-    File localFile = new File("D:/Code/cloudlet/web/app/mirrors/" + host + uri + (uri.endsWith("/") ? "index.html" : ""));
-    if (localFile.exists() && isStatic(uri)) {
-      transferStream(new FileInputStream(localFile), resp.getOutputStream());
+    File mirror = getMirror(host, req.getRequestURI(), qs);
+    if (mirror.exists()) {
+      String contentType = "text/html";
+      String path = mirror.getPath();
+      int index = path.lastIndexOf(".");
+      if (index > 0) {
+        String ext = path.substring(index);
+        if (ext.equals(".json")) {
+          contentType = "application/json";
+        } else if (ext.equals(".xml")) {
+          contentType = "application/xml";
+        } else if (ext.equals(".png")) {
+          contentType = "image/png";
+        } else if (ext.equals(".jpg") || ext.equals(".jpg!s")) {
+          contentType = "image/jpg";
+        } else if (ext.equals(".html")) {
+          contentType = "text/html";
+        }
+      }
+      resp.setContentType(contentType);
+      transferStream(new FileInputStream(mirror), resp.getOutputStream());
     } else {
-      File parent = localFile.getParentFile();
+      File parent = mirror.getParentFile();
       if (!parent.exists()) {
         parent.mkdirs();
       }
-
-      HttpClient client = getClient(host);
+      HttpClient client = new HttpClient();
 
       HttpMethod httpMethod;
       if ("GET".equals(method)) {
@@ -157,45 +178,50 @@ public class ProxyFilter implements Filter {
         RequestEntity re = new InputStreamRequestEntity(req.getInputStream());
         m.setRequestEntity(re);
       }
-
       Enumeration<String> headers = req.getHeaderNames();
       while (headers.hasMoreElements()) {
         String key = headers.nextElement();
-        if ("If-Modified-Since".equalsIgnoreCase(key)) {
+        if ("If-Modified-Since".equalsIgnoreCase(key) || "If-None-Match".equalsIgnoreCase(key)) {
           continue;
         }
         Enumeration<String> values = req.getHeaders(key);
         while (values.hasMoreElements()) {
           String value = values.nextElement();
           httpMethod.addRequestHeader(key, value);
+          System.out.println(key + ":" + value);
         }
       }
-
-      ProxyHost proxy = new ProxyHost("127.0.0.1", 8888);
-      client.getHostConfiguration().setProxyHost(proxy);
-      client.executeMethod(httpMethod);
-
-      int code = httpMethod.getStatusCode();
-      String status = code + " " + httpMethod.getStatusText();
-      if (code >= 400) {
-        logger.severe(status);
-      } else {
-        logger.info(status);
+      if (host.equals("book.duokan.com")) {
+        httpMethod.addRequestHeader("Cookie",
+            "build=2012120701; device=D002-F5805035-921D-4426-BF91-81F65004FEFC; token=; userid=fantongx@gmail.com");
       }
 
-      resp.setStatus(code);
+      // ProxyHost proxy = new ProxyHost("127.0.0.1", 8888);
+      // client.getHostConfiguration().setProxyHost(proxy);
+
+      client.executeMethod(httpMethod);
+
+      int statusCode = httpMethod.getStatusCode();
+      System.out.println(statusCode + " " + httpMethod.getStatusText() + " " + url);
+
+      resp.setStatus(statusCode);
       for (Header header : httpMethod.getResponseHeaders()) {
+        if (header.getName().equalsIgnoreCase("Transfer-Encoding")) {
+          continue;
+        }
         resp.setHeader(header.getName(), header.getValue());
       }
 
-      InputStream respStream = httpMethod.getResponseBodyAsStream();
-      if (respStream != null) {
-        Header enc = httpMethod.getResponseHeader("Content-Encoding");
-        if (enc != null && "gzip".equalsIgnoreCase(enc.getValue())) {
-          GZIPInputStream gzipInput = new GZIPInputStream(respStream);
-          transferStream(gzipInput, new FileOutputStream(localFile), new GZIPOutputStream(resp.getOutputStream()));
-        } else {
-          transferStream(respStream, new FileOutputStream(localFile), resp.getOutputStream());
+      if (statusCode == 200 || statusCode == 201) {
+        InputStream respStream = httpMethod.getResponseBodyAsStream();
+        if (respStream != null) {
+          Header enc = httpMethod.getResponseHeader("Content-Encoding");
+          if (enc != null && "gzip".equalsIgnoreCase(enc.getValue())) {
+            GZIPInputStream gzipInput = new GZIPInputStream(respStream);
+            transferStream(gzipInput, new FileOutputStream(mirror), new GZIPOutputStream(resp.getOutputStream()));
+          } else {
+            transferStream(respStream, new FileOutputStream(mirror), new GZIPOutputStream(resp.getOutputStream()));
+          }
         }
       }
     }
@@ -211,6 +237,27 @@ public class ProxyFilter implements Filter {
     staticExtensions.add(".jpg");
 
     clients = new HashMap<String, HttpClient>();
+    localAddresses = new HashSet<String>();
+    Enumeration allNetInterfaces = null;
+    try {
+      allNetInterfaces = NetworkInterface.getNetworkInterfaces();
+    } catch (java.net.SocketException e) {
+      e.printStackTrace();
+    }
+    InetAddress ip = null;
+    while (allNetInterfaces.hasMoreElements()) {
+      NetworkInterface netInterface = (NetworkInterface) allNetInterfaces.nextElement();
+      logger.info(netInterface.getName());
+      Enumeration<InetAddress> addresses = netInterface.getInetAddresses();
+      while (addresses.hasMoreElements()) {
+        ip = addresses.nextElement();
+        if (ip != null && ip instanceof Inet4Address) {
+          logger.info(ip.getHostName());
+          logger.info(ip.getHostAddress());
+          localAddresses.add(ip.getHostAddress());
+        }
+      }
+    }
   }
 
   private synchronized HttpClient getClient(String host) {
@@ -222,14 +269,14 @@ public class ProxyFilter implements Filter {
     return client;
   }
 
-  private boolean isStatic(String uri) {
+  private File getMirror(String host, String uri, String query) {
     int index = uri.lastIndexOf(".");
-    if (index >= 0) {
-      String ext = uri.substring(index);
-      if (staticExtensions.contains(ext)) {
-        return true;
-      }
+    if (index < 0 && query != null) {
+      uri += ".";
+      uri += query;
+      uri += ".json";
     }
-    return false;
+    return new File("D:/Code/cloudlet/web/app/mirrors/" + host + uri + (uri.endsWith("/") ? "index.html" : ""));
   }
+
 }
