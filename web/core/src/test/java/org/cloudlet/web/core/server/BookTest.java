@@ -1,26 +1,23 @@
-package org.cloudlet.web.core.bean;
+package org.cloudlet.web.core.server;
 
 import com.google.inject.Inject;
 
 import static org.junit.Assert.assertEquals;
 
-import org.cloudlet.web.core.server.Book;
-import org.cloudlet.web.core.server.Books;
-import org.cloudlet.web.core.server.BookService;
-import org.cloudlet.web.core.server.BookTag;
-import org.cloudlet.web.core.server.Groups;
-import org.cloudlet.web.core.server.Media;
-import org.cloudlet.web.core.server.Repository;
-import org.cloudlet.web.core.server.RepositoryService;
-import org.cloudlet.web.core.server.Section;
-import org.cloudlet.web.core.server.User;
-import org.cloudlet.web.core.server.Users;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
 import org.htmlparser.beans.StringBean;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLDecoder;
 import java.util.List;
@@ -40,6 +37,11 @@ import nl.siegmann.epublib.epub.EpubReader;
 public class BookTest extends CoreTest {
 
   public static void main(String[] args) {
+    System.out.println(UUID.randomUUID());
+    UUID id1 = CoreUtil.parseUUID("91b7221c-6b92-11e2-8088-00163e0123ac");
+    System.out.println(id1);
+    UUID id2 = CoreUtil.parseUUID("91b7221c6b9211e2808800163e0123ac");
+    System.out.println(id2);
     System.out
         .println(URLDecoder
             .decode("http%3A%2F%2Fbook.duokan.com%2Fstore%2Fv0%2Fios%2Fwww%2Fipad_detail.html%3Fbook_id%3D66fff13e6a0211e299d100163e0123ac%26title%3D%25E5%2594%2590%25E7%25AB%258B%25E6%25B7%25872013%25E6%2598%259F%25E5%25BA%25A7%25E8%25BF%2590%25E7%25A8%258B"));
@@ -50,6 +52,15 @@ public class BookTest extends CoreTest {
 
   @Inject
   BookService booksSvc;
+
+  @Inject
+  BookTagService tagsSvc;
+
+  @Inject
+  JacksonJaxbJsonProvider jsonProvider;
+
+  private static final String DEVICE_INFO =
+      "build=2012120701; device=D002-F5805035-921D-4426-BF91-81F65004FEFC; token=; userid=fantongx@gmail.com";
 
   @Test
   public void testCreateBook() throws Exception {
@@ -95,7 +106,6 @@ public class BookTest extends CoreTest {
     System.out.println(os.toString());
   }
 
-  @Test
   public void testImportBook() throws Exception {
     Repository repo = repoSvc.getRoot();
     Books books = booksSvc.getRoot();
@@ -134,7 +144,7 @@ public class BookTest extends CoreTest {
 
         List<Author> authors = metadata.getAuthors();
         if (authors != null && !authors.isEmpty()) {
-          book.setAuthor(authors.get(0).getFirstname() + authors.get(0).getLastname());
+          book.setAuthors(authors.get(0).getFirstname() + authors.get(0).getLastname());
         }
 
         List<String> rights = metadata.getRights();
@@ -143,7 +153,7 @@ public class BookTest extends CoreTest {
         }
 
         book.setPrice(priceRandom.nextInt(1000));
-        book.setPromotionPrice((float) (book.getPrice() * 0.7));
+        book.setNew_price((float) (book.getPrice() * 0.7));
         book.setFeatured(priceRandom.nextInt(1000) % 2 == 0);
         book.setPromoted(priceRandom.nextInt(1000) % 2 == 0);
         List<Date> dates = metadata.getDates();
@@ -212,5 +222,94 @@ public class BookTest extends CoreTest {
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     marshaller.marshal(books, os);
     System.out.println(os.toString());
+  }
+
+  @Test
+  public void testImportDuoKan() throws Exception {
+    importTags();
+    BookTags tags = tagsSvc.getRoot();
+    tags.load();
+    for (BookTag tag : tags.getEntries()) {
+      importBooks(tag);
+    }
+  }
+
+  private void importBooks(BookTag tag) throws IOException, HttpException, JSONException {
+    HttpClient client = new HttpClient();
+    String url = "http://book.duokan.com/store/v0/ios/category/" + tag.getId() + "?start=0&page_length=23";
+    GetMethod httpMethod = new GetMethod(url);
+    httpMethod.addRequestHeader("Cookie", DEVICE_INFO);
+    // ProxyHost proxy = new ProxyHost("127.0.0.1", 8888);
+    // client.getHostConfiguration().setProxyHost(proxy);
+    client.executeMethod(httpMethod);
+    int statusCode = httpMethod.getStatusCode();
+    System.out.println(statusCode + " " + httpMethod.getStatusText() + " " + url);
+    if (statusCode == 200) {
+      String body = httpMethod.getResponseBodyAsString();
+      System.out.println(body);
+      JSONObject json = new JSONObject(body);
+      JSONArray jsonArr = (JSONArray) json.get("items");
+      Books books = booksSvc.getRoot();
+      for (int i = 0; i < jsonArr.length(); i++) {
+        JSONObject jsonObj = (JSONObject) jsonArr.get(i);
+        String id = jsonObj.getString("book_id");
+        Book book = books.getEntry(id);
+        if (book == null) {
+          book = new Book();
+          book.setId(id);
+          book.setPath(id);
+          book.setTitle(jsonObj.getString("title"));
+          book.setPrice((float) jsonObj.getDouble("price"));
+          if (jsonObj.has("new_price")) {
+            book.setNew_price((float) jsonObj.getDouble("new_price"));
+          }
+          book.setSummary(jsonObj.getString("summary"));
+          book.setTag1(tag);
+          books.createEntry(book);
+        } else {
+          if (book.getTag1() == null) {
+            book.setTag1(tag);
+          } else if (book.getTag2() == null) {
+            book.setTag2(tag);
+          } else if (book.getTag3() == null) {
+            book.setTag3(tag);
+          }
+          book.update();
+        }
+      }
+    }
+  }
+
+  private void importTags() throws IOException, HttpException, JSONException {
+    HttpClient client = new HttpClient();
+    String url = "http://book.duokan.com/store/v0/ios/category/all";
+    GetMethod httpMethod = new GetMethod(url);
+    httpMethod.addRequestHeader("Cookie", DEVICE_INFO);
+    // ProxyHost proxy = new ProxyHost("127.0.0.1", 8888);
+    // client.getHostConfiguration().setProxyHost(proxy);
+    client.executeMethod(httpMethod);
+    int statusCode = httpMethod.getStatusCode();
+    System.out.println(statusCode + " " + httpMethod.getStatusText() + " " + url);
+    if (statusCode == 200) {
+      String body = httpMethod.getResponseBodyAsString();
+      System.out.println(body);
+      JSONObject json = new JSONObject(body);
+      JSONArray arr = (JSONArray) json.get("items");
+      BookTags tags = tagsSvc.getRoot();
+      for (int i = 0; i < arr.length(); i++) {
+        JSONObject catJson = (JSONObject) arr.get(i);
+        String id = (String) catJson.get("category_id");
+        BookTag tag = tags.getEntry(id);
+        if (tag == null) {
+          tag = new BookTag();
+          tag.setId(id);
+          tag.setPath(id);
+          tag.setTitle(catJson.getString("titles"));
+          tag.setLabel(catJson.getString("label"));
+          tag.setSummary(catJson.getString("description"));
+          tags.createEntry(tag);
+        }
+      }
+    }
   }
 }

@@ -17,8 +17,10 @@ import javax.xml.bind.annotation.XmlType;
 @Entity(name = CorePackage.Book)
 @Table(name = CorePackage.Book)
 public class Book extends Entry {
+
   @OneToOne
   private Media cover;
+
   @OneToOne
   private Media source;
 
@@ -28,7 +30,9 @@ public class Book extends Entry {
 
   private float price;
 
-  private float promotionPrice;
+  private float new_price;
+
+  private float paper_price;
 
   @OneToOne
   private BookTag tag1;
@@ -39,20 +43,24 @@ public class Book extends Entry {
   @OneToOne
   private BookTag tag3;
 
-  private String author;
+  private String authors;
+
+  private float score;
+
+  private String editors;
+
+  private int weight;
 
   private String copyright;
 
   private Date datePublished;
 
-  private Date dateUpdated;
-
   private String serialNumber;
 
   private long size;
 
-  public String getAuthor() {
-    return author;
+  public String getAuthors() {
+    return authors;
   }
 
   public String getCopyright() {
@@ -68,21 +76,35 @@ public class Book extends Entry {
     return datePublished;
   }
 
-  public Date getDateUpdated() {
-    return dateUpdated;
+  /**
+   * @return the editors
+   */
+  public String getEditors() {
+    return editors;
+  }
+
+  public float getNew_price() {
+    return new_price;
+  }
+
+  public float getPaper_price() {
+    return paper_price;
   }
 
   public float getPrice() {
     return price;
   }
 
-  public float getPromotionPrice() {
-    return promotionPrice;
-  }
-
   @Override
   public String getResourceType() {
     return CorePackage.Book;
+  }
+
+  /**
+   * @return the score
+   */
+  public float getScore() {
+    return score;
   }
 
   public String getSerialNumber() {
@@ -115,6 +137,13 @@ public class Book extends Entry {
     return tag3;
   }
 
+  /**
+   * @return the weight
+   */
+  public int getWeight() {
+    return weight;
+  }
+
   public boolean isFeatured() {
     return featured;
   }
@@ -138,8 +167,8 @@ public class Book extends Entry {
     }
   }
 
-  public void setAuthor(String author) {
-    this.author = author;
+  public void setAuthors(String author) {
+    this.authors = author;
   }
 
   public void setCopyright(String copyright) {
@@ -154,12 +183,23 @@ public class Book extends Entry {
     this.datePublished = datePublished;
   }
 
-  public void setDateUpdated(Date dateUpdated) {
-    this.dateUpdated = dateUpdated;
+  /**
+   * @param editors the editors to set
+   */
+  public void setEditors(String editors) {
+    this.editors = editors;
   }
 
   public void setFeatured(boolean featured) {
     this.featured = featured;
+  }
+
+  public void setNew_price(float promotionPrice) {
+    this.new_price = promotionPrice;
+  }
+
+  public void setPaper_price(float paper_price) {
+    this.paper_price = paper_price;
   }
 
   public void setPrice(float price) {
@@ -170,8 +210,11 @@ public class Book extends Entry {
     this.promoted = promoted;
   }
 
-  public void setPromotionPrice(float promotionPrice) {
-    this.promotionPrice = promotionPrice;
+  /**
+   * @param score the score to set
+   */
+  public void setScore(float score) {
+    this.score = score;
   }
 
   public void setSerialNumber(String serialNumber) {
@@ -199,6 +242,13 @@ public class Book extends Entry {
 
   public void setTag3(BookTag tag3) {
     this.tag3 = tag3;
+  }
+
+  /**
+   * @param weight the weight to set
+   */
+  public void setWeight(int weight) {
+    this.weight = weight;
   }
 
 }

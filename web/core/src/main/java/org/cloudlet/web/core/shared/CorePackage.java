@@ -3,6 +3,7 @@ package org.cloudlet.web.core.shared;
 public interface CorePackage {
   String PREFIX = "Core";
   String BookTag = PREFIX + "BookTag";
+  String BookTags = PREFIX + "BookTags";
   String Group = PREFIX + "Group";
   String Groups = PREFIX + "Groups";
   String Book = PREFIX + "Book";
