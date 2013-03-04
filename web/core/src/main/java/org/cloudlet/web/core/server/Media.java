@@ -33,6 +33,8 @@ public class Media extends Entry {
 
   private String mimeType;
 
+  private String source;
+
   @Override
   public Entry getChild(String path) {
     throw null;
@@ -69,6 +71,10 @@ public class Media extends Entry {
     return MediaService.class;
   }
 
+  public String getSource() {
+    return source;
+  }
+
   public InputStream openStream() {
     try {
       return new FileInputStream(getFile());
@@ -100,6 +106,10 @@ public class Media extends Entry {
 
   public void setMimeType(String mimeType) {
     this.mimeType = mimeType;
+  }
+
+  public void setSource(String source) {
+    this.source = source;
   }
 
   public void write(OutputStream out) throws IOException {

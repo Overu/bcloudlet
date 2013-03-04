@@ -266,6 +266,15 @@ public class BookTest extends CoreTest {
           book.setSummary(jsonObj.getString("summary"));
           book.setTag1(tag);
           books.createEntry(book);
+
+          Media cover = new Media();
+          String coverUrl = jsonObj.getString("cover");
+          cover.setSource(coverUrl);
+          // InputStream stream = getClass().getResourceAsStream("/covers/sanguo.jpg");
+          // cover.read(stream);
+          book.createReference(cover);
+          book.setCover(cover);
+          book.update();
         } else {
           if (book.getTag1() == null) {
             book.setTag1(tag);
