@@ -293,7 +293,8 @@ function getCategoryBooks(c_id){
  
   if (start == 0) {
     addLoad('#add_load',function () {
-      return '/store/v0/ios/category/'+c_id+'.start='+start+'&page_length=23.json';
+    	return '/api/books?start=0&limit=10';
+     // return '/store/v0/ios/category/'+c_id+'.start='+start+'&page_length=23.json';
     }, getBooks, hideAll);
   }
    loadAjaxSpin('#inside_loading2', function () {

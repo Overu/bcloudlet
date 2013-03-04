@@ -263,6 +263,9 @@ public abstract class Content {
     return version;
   }
 
+  public void joinSQL(StringBuilder sql) {
+  }
+
   @GET
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml" })
   public Content load() {

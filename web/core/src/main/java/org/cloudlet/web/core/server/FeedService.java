@@ -40,8 +40,10 @@ public class FeedService<F extends Feed<E>, E extends Entry> extends EntryServic
   }
 
   public List<E> findEntries(F feed) {
-    StringBuilder sql = new StringBuilder("from ").append(entryClass.getName()).append(" f where f.parent=:parent");
-    initQueryConditions(feed, sql);
+    StringBuilder sql = new StringBuilder("from ").append(entryClass.getName()).append(" f");
+    sql.append(" where f.parent=:parent");
+    feed.prepareQuery(sql);
+
     sql.append(count(feed.getSearch())).append(limit(feed.getSort()));
     TypedQuery<E> query = em().createQuery(sql.toString(), entryClass);
     if (feed.getStart() != null) {
@@ -51,7 +53,7 @@ public class FeedService<F extends Feed<E>, E extends Entry> extends EntryServic
       query.setMaxResults(feed.getLimit());
     }
     query.setParameter("parent", feed);
-    initQueryParams(feed, query);
+    feed.setParams(query);
     return query.getResultList();
   }
 
@@ -87,12 +89,6 @@ public class FeedService<F extends Feed<E>, E extends Entry> extends EntryServic
   }
 
   protected void init(F feed) {
-  }
-
-  protected void initQueryConditions(F feed, StringBuilder sql) {
-  }
-
-  protected void initQueryParams(F feed, TypedQuery<E> query) {
   }
 
   private StringBuffer count(List<String> search) {

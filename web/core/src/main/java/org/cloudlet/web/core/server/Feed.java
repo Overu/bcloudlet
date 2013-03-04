@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
+import javax.persistence.TypedQuery;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -96,6 +97,9 @@ public abstract class Feed<E extends Entry> extends Content {
     return totalEntries;
   }
 
+  public void prepareQuery(StringBuilder sql) {
+  }
+
   @Path(CorePackage.NEW)
   @GET
   public E newEntry() {
@@ -112,6 +116,9 @@ public abstract class Feed<E extends Entry> extends Content {
 
   public void setLimit(Integer limit) {
     this.limit = limit;
+  }
+
+  public void setParams(TypedQuery<E> query) {
   }
 
   public void setSearch(List<String> search) {
