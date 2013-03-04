@@ -33,6 +33,8 @@ public class MobileApp extends Initializer {
   Provider<UpdataBox> updataBox;
   @Inject
   Provider<SaleBox> saleBox;
+  @Inject
+  Provider<ShopExplorer> shopExplorer;
 
   @Override
   protected void init() {

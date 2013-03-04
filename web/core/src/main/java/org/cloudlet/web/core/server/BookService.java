@@ -14,14 +14,4 @@ public class BookService extends FeedService<Books, Book> {
     super.init(book);
   }
 
-  @Override
-  protected void initQueryConditions(Books feed, StringBuilder sql) {
-    super.initQueryConditions(feed, sql);
-    if (feed.isFeatured()) {
-      sql.append(" and f.featured=true");
-    }
-    if (feed.isPromoted()) {
-      sql.append(" and f.promoted=true");
-    }
-  }
 }
