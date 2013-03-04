@@ -160,8 +160,8 @@
 				$(empty_li).insertBefore(ul.find($('li')).last());
 			}
 			function buildBook(book) {
-				var li = "<li book_id=" + book.book_id + " >"
-						+ "<img class=cover _src=" + book.cover + " />";
+				var li = "<li book_id=" + book.id + " >"
+						+ "<img class=cover _src=" + book.cover.source + " />";
 
 				if (book.hasOwnProperty('new_price')) {
 					if (book.new_price == 0) {
@@ -210,31 +210,35 @@
 				}
 
 				function getBooks(data) {
-					if (!data.hasOwnProperty('result')
+					/* if (!data.hasOwnProperty('result')
 							|| !data.hasOwnProperty('count')
 							|| !data.hasOwnProperty('items')
 							|| !data.hasOwnProperty('v') || data.v != 0)
 						handleError(status.UNEXPECTED_ERROR, hideAll);
-					else {
+					else { */
+					if (data.hasOwnProperty('entries')) {
 						try {
-							if (data.result == Status.OK) {
+							if (data) {
 								$('#no_result2').hide();
 
-								for ( var i = 0; i < data.count; i++) {
-									item = data.items[i];
+								for ( var i = 0; i < data.limit; i++) {
+									item = data.entries[i];
+									if(!item) {
+										break;
+									}
 									var content = buildBook(item);
 									content.insertBefore('#inside_loading2');
 									setHover(content);
 								}
 
-								start += data.count;
+								start += data.limit;
 								if (start > 0) {
 									$('#discount_select_panel').css({
 										top : 0
 									});
 									$('#discount_select_panel').show();
 								}
-								if (data.more) {
+								if (data.entries.length > start) {
 									$('#inside_loading2').show();
 								} else {
 									$('#inside_loading2').hide();
@@ -322,13 +326,11 @@
 
 				if (start == 0) {
 					addLoad('#add_load', function() {
-						return '/store/v0/ios/category/' + c_id + '.start='
-								+ start + '&page_length=23.json';
+						return '/api/books?start=' + start + '&limit=23&tag=' + c_id;
 					}, getBooks, hideAll);
 				}
 				loadAjaxSpin('#inside_loading2', function() {
-					return '/store/v0/ios/category/' + c_id + '.start=' + start
-							+ '&page_length=24.json';
+					return '/api/books?start=' + start + '&limit=24&tag=' + c_id;
 				}, getBooks, hideAllBooks);
 				$('#discount_select_panel>div:eq(1)').unbind("click");
 				$('#discount_select_panel>div:eq(1)').click(
@@ -371,7 +373,7 @@
 				if (data.hasOwnProperty('entries')) {
 					var content = "";
 					for ( var i = 0; i < data.totalEntries; i++) {
-						item = data.entries[1];
+						item = data.entries[i];
 						content += buildCategory(item);
 					}
 					$('#category_list').append(content);
