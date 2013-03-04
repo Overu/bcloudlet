@@ -14,7 +14,7 @@ import org.hibernate.annotations.TypeDef;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
+import java.util.Date;
 import java.util.logging.Logger;
 
 import javax.persistence.Column;
@@ -62,6 +62,10 @@ public abstract class Content {
   protected String path;
 
   protected String title;
+
+  protected String summary;
+
+  protected Date updated;
 
   @Version
   protected long version;
@@ -216,8 +220,19 @@ public abstract class Content {
     return Service.class;
   }
 
+  /**
+   * @return the summary
+   */
+  public String getSummary() {
+    return summary;
+  }
+
   public String getTitle() {
     return title;
+  }
+
+  public Date getUpdated() {
+    return updated;
   }
 
   @XmlElement
@@ -310,8 +325,19 @@ public abstract class Content {
     // do nothing;
   }
 
+  /**
+   * @param summary the summary to set
+   */
+  public void setSummary(String summary) {
+    this.summary = summary;
+  }
+
   public void setTitle(String title) {
     this.title = title;
+  }
+
+  public void setUpdated(Date dateUpdated) {
+    this.updated = dateUpdated;
   }
 
   public void setUri(String value) {

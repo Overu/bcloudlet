@@ -13,18 +13,21 @@
  */
 package org.cloudlet.web.core.server;
 
-import java.util.logging.Logger;
+import com.google.inject.Inject;
 
-public class ClassUtil {
+import org.cloudlet.web.core.server.CoreResourceConfig;
+import org.cloudlet.web.test.WebTest;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.test.TestProperties;
 
-  static Logger logger = Logger.getLogger(ClassUtil.class.getName());
+public abstract class CoreTest extends WebTest {
 
-  public static Class<?> getClass(String className) {
-    try {
-      return Class.forName(className);
-    } catch (ClassNotFoundException e) {
-      return null;
-    }
+  @Inject
+  CoreResourceConfig config;
+
+  @Override
+  protected ResourceConfig configure() {
+    enable(TestProperties.LOG_TRAFFIC);
+    return config;
   }
-
 }

@@ -50,6 +50,15 @@ public class ProxyFilter implements Filter {
 
   private static final Logger logger = Logger.getLogger(ProxyFilter.class.getName());
 
+  public static synchronized HttpClient getClient(String host) {
+    HttpClient client = clients.get(host);
+    if (client == null) {
+      client = new HttpClient();
+      clients.put(host, client);
+    }
+    return client;
+  }
+
   public static void transferStream(InputStream is, OutputStream... outs) throws IOException {
     if (is == null || outs == null) {
       throw new IOException("Invalid streams");
@@ -102,11 +111,13 @@ public class ProxyFilter implements Filter {
 
   public Set<String> staticExtensions;
 
-  public Map<String, HttpClient> clients;
+  public static Map<String, HttpClient> clients;
 
   private String mirror = "book.duokan.com";
 
   private Set<String> localAddresses;
+
+  private String dataLocation;
 
   @Override
   public void destroy() {
@@ -236,6 +247,17 @@ public class ProxyFilter implements Filter {
     staticExtensions.add(".png");
     staticExtensions.add(".jpg");
 
+    File dataFolder = new File("data");
+
+    if (!dataFolder.exists()) {
+      dataFolder.mkdirs();
+    }
+
+    dataLocation = dataFolder.getAbsolutePath();
+    if (!dataLocation.endsWith("/")) {
+      dataLocation += "/";
+    }
+
     clients = new HashMap<String, HttpClient>();
     localAddresses = new HashSet<String>();
     Enumeration allNetInterfaces = null;
@@ -260,23 +282,19 @@ public class ProxyFilter implements Filter {
     }
   }
 
-  private synchronized HttpClient getClient(String host) {
-    HttpClient client = clients.get(host);
-    if (client == null) {
-      client = new HttpClient();
-      clients.put(host, client);
-    }
-    return client;
-  }
-
   private File getMirror(String host, String uri, String query) {
-    int index = uri.lastIndexOf(".");
-    if (index < 0 && query != null) {
+    int index = uri.lastIndexOf("/");
+    String ending = index >= 0 ? uri.substring(index + 1) : uri;
+    index = ending.lastIndexOf(".");
+    if (index < 0) {
       uri += ".";
-      uri += query;
-      uri += ".json";
+      if (query != null) {
+        uri += query;
+        uri += ".";
+      }
+      uri += "json";
     }
-    return new File("D:/Code/cloudlet/web/app/mirrors/" + host + uri + (uri.endsWith("/") ? "index.html" : ""));
+    return new File(dataLocation + host + uri + (uri.endsWith("/") ? "index.html" : ""));
   }
 
 }
