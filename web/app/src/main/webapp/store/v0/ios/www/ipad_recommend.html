@@ -102,8 +102,8 @@ function refreshStatus() {
 }
 
 function buildBook(book) {
-  var li = "<li book_id=" + book.book_id + " >"
-    + "<img class=cover _src=" + book.cover + " />";
+  var li = "<li book_id=" + book.id + " >"
+    + "<img class=cover _src=" + book.cover.source + " />";
   
   if (book.hasOwnProperty('new_price')) {
     if (book.new_price == 0) {
@@ -130,7 +130,7 @@ function buildBook(book) {
   li+= "<p class=abst>" + book.summary + "</p>";
   li = $(li);
   li.click(function () {
-    navigateTo(ipadBookURL(book.book_id, book.title));
+    navigateTo(ipadBookURL(book.id, book.title));
   });
   
   return li;
@@ -166,16 +166,20 @@ function buildList(list) {
 }
 
 function getItems(data, index) {
-  if (!data.hasOwnProperty('result') || !data.hasOwnProperty('count')
+  /* if (!data.hasOwnProperty('result') || !data.hasOwnProperty('count')
     || !data.hasOwnProperty('items') || !data.hasOwnProperty('v')
     || data.v != 0)
     handleError(status.UNEXPECTED_ERROR, hideAll);
-  else {
-      if (data.result == Status.OK) {
+  else { */
+  if (data.hasOwnProperty('entries')) {
+      if (data) {
       var content = "";
-      for (var i=0; i<data.count; i++) {
-        item = data.items[i];
-        if (item.hasOwnProperty('book_id'))
+      for (var i=0; i<data.limit; i++) {
+        item = data.entries[i];
+        if(!item) {
+        	return;
+        }
+        if (item.hasOwnProperty('id'))
           content = buildBook(item);
         else
           content = buildList(item);
@@ -183,7 +187,7 @@ function getItems(data, index) {
         setHover(content);
       }
       
-      if (data.count == 0) {
+      if (data.limit == 0) {
         hideAll();
       } 
       else {
@@ -326,7 +330,7 @@ $(document).ready(function () {
   });
 
   $.ajax({
-    url: '/store/v0/ios/recommend.start=0&page_length='+recommend_count+".json",
+    url: '/api/books?start=0&limit='+recommend_count,
     success: getRecommendItems,
     dataType: 'json',
     complete: function () {
@@ -335,19 +339,19 @@ $(document).ready(function () {
   });
 		
   $.ajax({
-    url: '/store/v0/ios/fresh.start=0&page_length='+recommend_count+".json",
+    url: '/api/books?start=0&limit='+recommend_count,
     success: getFreshItems,
     dataType: 'json'
   });
   
   $.ajax({
-    url: '/store/v0/ad.key=main&deviceid='+device+'&build='+build+".json",
+    url: '/store/v0/ad.key=ipad_r2&deviceid=D002-F5805035-921D-4426-BF91-81F65004FEFC&build=2012120701.json',
     success: getAds,
     dataType: 'json'
   });
  
   $.ajax({
-    url:'/store/v0/ad.key=ipad_r2&deviceid='+device+'&build='+build+".json",
+    url:'/store/v0/ad.key=ipad_r2&deviceid=D002-F5805035-921D-4426-BF91-81F65004FEFC&build=2012120701.json',
     success: getBanner,
     dataType: 'json',
   });

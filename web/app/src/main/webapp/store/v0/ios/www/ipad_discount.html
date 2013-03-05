@@ -115,8 +115,8 @@ function appendEmptySlot() {
 }
 
 function buildBook(book) {
-  var li = "<li book_id=" + book.book_id + " >"
-    + "<img class=cover _src=" + book.cover + " />";
+  var li = "<li book_id=" + book.id + " >"
+    + "<img class=cover _src=" + book.cover.source + " />";
   
   if (book.hasOwnProperty('new_price')) {
     if (book.new_price == 0) {
@@ -145,7 +145,7 @@ function buildBook(book) {
 
   li = $(li);
   li.click(function () {
-    navigateTo(ipadBookURL(book.book_id, book.title));
+    navigateTo(ipadBookURL(book.id, book.title));
   });
   return li;
 }
@@ -178,19 +178,24 @@ function buildAppItem(app) {
 }
 
 function getItems1(data) {
-  if (!data.hasOwnProperty('result') || !data.hasOwnProperty('count')
+ /*  if (!data.hasOwnProperty('result') || !data.hasOwnProperty('count')
     || !data.hasOwnProperty('items') || !data.hasOwnProperty('v')
     || data.v != 0)
     handleError(status.UNEXPECTED_ERROR, hideAll);
-  else if (data.result == Status.OK) {
-    for (var i=0; i<data.count; i++) {
-      var content = buildBook(data.items[i]);
+  else  */
+  if (data.hasOwnProperty('entries')) {
+    for (var i=0; i<data.limit; i++) {
+    	var item = data.entries[i];
+    	if(!item) {
+    		break;
+    	}
+      var content = buildBook(data.entries[i]);
       content.insertBefore('#inside_loading1');
       setHover(content);
     }
-    start1 += data.count;
+    start1 += data.limit;
     
-    if (data.more) {
+    if (data.entries.length != 0) {
       $('#inside_loading1').show();
     } else{
       $('#inside_loading1').hide();
@@ -210,20 +215,25 @@ function getItems1(data) {
 }
 
 function getItems2(data) {
-  if (!data.hasOwnProperty('result') || !data.hasOwnProperty('count')
+	/*  if (!data.hasOwnProperty('result') || !data.hasOwnProperty('count')
     || !data.hasOwnProperty('items') || !data.hasOwnProperty('v')
     || data.v != 0)
     handleError(status.UNEXPECTED_ERROR, hideAll);
-  else if (data.result == Status.OK) {
-    for (var i=0; i<data.count; i++) {
-      var content = buildBook(data.items[i]);
+  else  */
+  if (data.hasOwnProperty('entries')) {
+    for (var i=0; i<data.limit; i++) {
+    	var item = data.entries[i];
+    	if(!item) {
+    		break;
+    	}
+      var content = buildBook(item);
       content.insertBefore('#inside_loading2');
       setHover(content);
     }
     
-    start2 += data.count;
+    start2 += data.limit;
     
-    if (data.more) {
+    if (data.entries.length != 0) {
       $('#inside_loading2').show();
     } else{
       $('#inside_loading2').hide();
@@ -281,7 +291,7 @@ function showFree() {
 
     if (start2 == 0){
       addLoad('#add_load',function () {
-        return '/store/v0/ios/free.start='+start2+'&page_length=23.json';
+        return '/api/books?start=' + start2 + '&limit=23';
       },getItems2, hideAll);
     }else if(start2>0){
       appendEmptySlot();
@@ -343,17 +353,17 @@ $(document).ready(function () {
    $('#discount_select_pane2').show();
   loadAjaxSpin('#inside_loading1', function () {
     if (start1==0)
-      return '/store/v0/ios/discount.latest=yes&start='+start1+'&page_length=23.json';
+      return '/api/books?start=' + start1 + '&limit=23';
     else
-      return '/store/v0/ios/discount.latest=yes&start='+start1+'&page_length=24.json';
+      return '/api/books?start=' + start1 + '&limit=24';
   }, getItems1, hideAll);
   
   loadAjaxSpin('#inside_loading2', function () {
-       return '/store/v0/ios/free.start='+start2+'&page_length=24.json';
+       return '/api/books?start=' + start1 + '&limit=24';
   }, getItems2, hideAll);
   
   $.ajax({
-    url: '/store/v0/ios/discount.latest=yes&start='+start1+'&page_length=23.json',
+    url: '/api/books?start=' + start1 + '&limit=23',
     success: getItems1,
     dataType: 'json',
     complete: function () {

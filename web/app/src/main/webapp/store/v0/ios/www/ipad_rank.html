@@ -114,8 +114,8 @@ function appendEmptySlot() {
 
 function buildBook(book, listIndex) {
   count[listIndex] += 1;
-  var li = "<li book_id=" + book.book_id + " >"
-    + "<img class=cover _src=" + book.cover + " />";
+  var li = "<li book_id=" + book.id + " >"
+    + "<img class=cover _src=" + book.cover.source + " />";
   
   if (book.hasOwnProperty('new_price')) {
     if (book.new_price == 0) {
@@ -147,29 +147,34 @@ function buildBook(book, listIndex) {
   
   li = $(li);
   li.click(function () {
-    navigateTo(ipadBookURL(book.book_id, book.title));
+    navigateTo(ipadBookURL(book.id, book.title));
   });
   
   return li;
 }
 
 function getItems(data, listIndex) {
-  if (!data.hasOwnProperty('result') || !data.hasOwnProperty('count')
+  /* if (!data.hasOwnProperty('result') || !data.hasOwnProperty('count')
     || !data.hasOwnProperty('items') || !data.hasOwnProperty('v')
     || data.v != 0)
     handleError(status.UNEXPECTED_ERROR, hideAll);
-  else if (data.result == Status.OK) {
+  else  */
+  if (data.hasOwnProperty('entries')) {
   	var loading = $('.inside_loading:eq('+listIndex+')');
-    for (var i=0; i < data.count; i++) {
-      var content = buildBook(data.items[i], listIndex);
+    for (var i=0; i < data.limit; i++) {
+    	var item = data.entries[i];
+    	if(!item) {
+    		break;
+    	}
+      var content = buildBook(item, listIndex);
       content.insertBefore(loading);
       setHover(content);
     }
-    start[listIndex] += data.count;
+    start[listIndex] += data.limit;
     if(start[listIndex] > 0) {
       loading.show()
     }
-    if (data.more) {
+    if (data.entries.length != 0) {
       loading.show();
     } else {
       loading.hide();
@@ -189,6 +194,7 @@ function getItems(data, listIndex) {
 }
 
 function showRank(listIndex) {
+	window.alert('2');
   if ($('#discount_select_pane2 div').eq(listIndex).attr('active')!= 'yes') {
     $('#discount_select_pane2 div').removeAttr('active');
     $('#discount_select_pane2 div').eq(listIndex).attr('active', 'yes');
@@ -197,7 +203,7 @@ function showRank(listIndex) {
     $('.book_list').eq(listIndex).show();
     if (start[listIndex] == 0) {
       addLoad('#add_load',function () {
-        return '/store/v0/ios/rank/'+rankTypes[listIndex]+'.start='+start[listIndex]+'&page_length=23.json';		
+        return '/api/books?start=' + start[listIndex] + '&limit=23';		
       }, function(data) {
 		  	getItems(data, listIndex);
 		  }, hideAll);
@@ -230,7 +236,7 @@ $(document).ready(function () {
 	
 	for (var i = 0; i < rankTypes.length; i++) {
 		var urlFunc = (function(idx) {
-			return function() { return '/store/v0/ios/rank/'+rankTypes[idx]+'.start='+start[idx]+'&page_length=24.json'; };
+			return function() { return '/api/books?start=' + start[idx] + '&limit=23'; };
 		})(i);
 		var getItemFunc = (function(idx) {
 			return function(data) { getItems(data, idx); };
@@ -239,8 +245,8 @@ $(document).ready(function () {
 	}
   
   $.ajax({
-    url: '/store/v0/ios/rank/hot_pay.start=0&page_length=23.json',
-    success: function(data) { getItems(data, 0); },
+    url: '/api/books?start=' + start[0] + '&limit=23',
+    success: function(data) {getItems(data, 0); },
     dataType: 'json',
     complete: function () {
       setTimeout(notifyAppLoaded, 100);

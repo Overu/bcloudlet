@@ -280,39 +280,40 @@ function buildAuthor(str) {
 }
 
 function showBook(data) {
-  if (!data.hasOwnProperty('result') || !data.hasOwnProperty('book')
+ /*  if (!data.hasOwnProperty('result') || !data.hasOwnProperty('book')
     || !data.hasOwnProperty('related') || !data.hasOwnProperty('v')
     || data.v != 0)
     handleError(status.UNEXPECTED_ERROR, hideAll);
-  else if (data.result == Status.OK) {
-    //$('.detail_cover').attr('_src', data.book.cover);
+  else  */
+  if (data.hasOwnProperty('id')) {
+    $('.detail_cover').attr('src', data.cover.source);
 
-    if ( (data.book.authors==null || data.book.authors==undefined || data.book.authors=="") && (data.book.editors==null||data.book.editors==undefined||data.book.editors=="")){
+    $('.detail_author_label').html('<p>作者：</p>');
+    $('.detail_author').html('<p>retech</p>');
+    if ( (data.authors==null || data.authors==undefined || data.authors=="") && (data.editors==null||data.editors==undefined||data.editors=="")){
       $('.detail_author_label').html('<p>作者：</p>');
       $('.detail_author').html('<p>未知</p>');
-    } else if( data.book.authors!=null && data.book.authors!=undefined && data.book.authors!="" ){
+    } else if( data.authors!=null && data.authors!=undefined && data.authors!="" ){
       $('.detail_author_label').html('<p>作者：</p>');
       $('.detail_author').html(buildAuthor(data.book.authors));
-    } else if((data.book.authors==null || data.book.authors==undefined || data.book.authors=="") && (data.book.editors!=null||data.book.editors!=undefined||data.book.editors!="")){
+    } else if((data.authors==null || data.authors==undefined || data.authors=="") && (data.editors!=null||data.editors!=undefined||data.editors!="")){
       $('.detail_author_label').html('<p>编者：</p>');
-      $('.detail_author').html('<p>'+data.book.editors+'</p>');
+      $('.detail_author').html('<p>'+data.editors+'</p>');
     }
     $('.detail_published_label').html('<p>版权：</p>');
-    if (data.book.rights==null||data.book.rights==undefined||data.book.rights=="")
-      $('.detail_published').html('<p>未知</p>');
+    if (data.rights==null||data.rights==undefined||data.rights=="")
+      $('.detail_published').html('<p>retech</p>');
     else
-      $('.detail_published').html('<p>' + data.book.rights + '</p>');
+      $('.detail_published').html('<p>' + data.rights + '</p>');
     
-		if (data.book.issued) {
-			$('.detail_issued').html('出版：'+data.book.issued);
-		}
-    $('.detail_updated').html('更新：'+data.book.updated);
+	$('.detail_issued').html('出版：'+(data.issued? data.issued : "retech"));
+    $('.detail_updated').html('更新：'+ (data.updated ? data.updatad : "2012-01-02"));
     
-    var price = data.book.price;
-    if (data.book.hasOwnProperty('new_price')) {
+    var price = data.price;
+    if (data.hasOwnProperty('price')) {
       $('.detail_old_price').show();
       $('.detail_old_price').html('￥'+price.toFixed(2));
-      price = data.book.new_price;
+      price = data.price;
     }
     
     if (price==0)
@@ -320,9 +321,17 @@ function showBook(data) {
     else
       $('.detail_price').html('￥'+price.toFixed(2));
     
-    $('.detail_title').html(data.book.title);
+    $('.detail_title').html(data.title);
     
-    if (data.book.epub != null && data.book.epub != "") {
+    $('div.detail_price').show();
+    $('div.detail_price').click(function () {
+      clickFullBook(data.book.book_id, data.book.title, data.book.epub, data.book.cover, price, data.book.revision);
+    });
+    setHover($('div.detail_price'));
+    if (data.book.hasOwnProperty('epub_size') && data.book.epub_size != null && data.book.epub_size > 0) {
+      $('.detail_size').html('大小：'+getSizeText(data.book.epub_size));
+    }
+    /* if (data.book.epub != null && data.book.epub != "") {
       $('div.detail_price').show();
       $('div.detail_price').click(function () {
         clickFullBook(data.book.book_id, data.book.title, data.book.epub, data.book.cover, price, data.book.revision);
@@ -333,7 +342,7 @@ function showBook(data) {
       }
     } else {
       $('div.detail_price').hide();
-    }
+    } */
     
     if (data.book.trial != null && data.book.trial != "") {
       $('div.detail_trial').show();
