@@ -323,6 +323,9 @@ function showBook(data) {
     
     $('.detail_title').html(data.title);
     
+    $('#detail_wrapper').removeClass('initial_hide');
+    $('#detail_intro').html($(buildContent(data.summary)));
+    
     $('div.detail_price').show();
     $('div.detail_price').click(function () {
       clickFullBook(data.book.book_id, data.book.title, data.book.epub, data.book.cover, price, data.book.revision);
@@ -354,12 +357,10 @@ function showBook(data) {
       $('div.detail_trial').hide();
     }
     
-    $('#detail_intro').html($(buildContent(data.book.content)));
 		
 		related_books = data.related;
 		buildRelatedBooks();
     
-    $('#detail_wrapper').removeClass('initial_hide');
     notifyAppLoaded();
     scrollContent.refresh();
     refreshStatus();
