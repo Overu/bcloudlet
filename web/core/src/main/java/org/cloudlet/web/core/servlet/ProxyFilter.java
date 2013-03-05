@@ -128,6 +128,12 @@ public class ProxyFilter implements Filter {
     HttpServletRequest req = (HttpServletRequest) request;
     HttpServletResponse resp = (HttpServletResponse) response;
     String uri1 = req.getRequestURI();
+
+    if (uri1.startsWith("/__duokan_appapi/")) {
+      chain.doFilter(request, response);
+      return;
+    }
+
     StringBuffer sb = req.getRequestURL();
     String qs = req.getQueryString();
     if (qs != null && qs.length() > 0) {

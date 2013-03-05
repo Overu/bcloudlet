@@ -2,7 +2,6 @@ package org.cloudlet.web.core.server;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 import javax.persistence.NoResultException;
@@ -30,7 +29,7 @@ public class EntryService<E extends Entry> extends Service {
     createChild(source, target);
     if (source != null) {
       final Reference rel = new Reference();
-      rel.setId(UUID.randomUUID().toString());
+      rel.setId(CoreUtil.randomID());
       rel.setSource(source);
       rel.setTarget(target);
       rel.setPath(target.getPath());

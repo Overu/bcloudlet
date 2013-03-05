@@ -5,7 +5,6 @@ import com.google.inject.persist.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityExistsException;
@@ -36,7 +35,7 @@ public class Service {
     }
 
     if (id == null) {
-      child.setId(UUID.randomUUID().toString());
+      child.setId(CoreUtil.randomID());
     }
 
     if (path == null) {

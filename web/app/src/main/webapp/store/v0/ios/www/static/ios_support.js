@@ -602,9 +602,6 @@ function handleError(code, callback) {
 }
 
 var base_url = window.location.protocol + '//' + window.location.host;
-if (window.location.port != null && window.location.port != undefined && window.location.port != "") {
-  base_url += window.location.port;
-}
 base_url += '/store/v0/ios/www/';
 
 function ipadBookURL(book_id, title) {

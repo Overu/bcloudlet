@@ -46,6 +46,29 @@ public abstract class Feed<E extends Entry> extends Content {
 
   protected long totalEntries;
 
+  public void buildSearch(StringBuilder sql) {
+    if (search != null && search.size() > 0) {
+      sql.append(" and (");
+      for (String s : search) {
+        String[] split = s.split("\\|");
+        sql.append("f.").append(split[0]).append(" like '").append(split[1]).append("%'").append(" or ");
+      }
+      sql.delete(sql.lastIndexOf(" or "), sql.length());
+      sql.append(")");
+    }
+  }
+
+  public void buildSort(StringBuilder sql) {
+    if (sort != null && sort.size() > 0) {
+      sql.append(" order by");
+      for (String s : sort) {
+        String[] split = s.split("\\|");
+        sql.append(" f.").append(split[0]).append(" ").append(split[1]).append(",");
+      }
+      sql.deleteCharAt(sql.lastIndexOf(","));
+    }
+  }
+
   public E createEntry(E entry) {
     return (E) getService().createEntry(this, entry);
   }
@@ -97,13 +120,13 @@ public abstract class Feed<E extends Entry> extends Content {
     return totalEntries;
   }
 
-  public void prepareQuery(StringBuilder sql) {
-  }
-
   @Path(CorePackage.NEW)
   @GET
   public E newEntry() {
     return WebPlatform.get().getInstance(getEntryType());
+  }
+
+  public void prepareQuery(StringBuilder sql) {
   }
 
   public void setEntries(List<E> entries) {

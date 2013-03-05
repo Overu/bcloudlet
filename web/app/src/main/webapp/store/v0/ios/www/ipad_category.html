@@ -194,7 +194,8 @@
 
 				li = $(li);
 				li.click(function() {
-					navigateTo(ipadBookURL(book.book_id, book.title));
+					var url = ipadBookURL(book.id, book.title);
+					navigateTo(url);
 				});
 
 				return li;

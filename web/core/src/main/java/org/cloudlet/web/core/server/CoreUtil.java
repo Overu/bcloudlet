@@ -27,14 +27,14 @@ public class CoreUtil {
     }
   }
 
-  public static UUID parseUUID(String name) {
-    if (name.length() == 32) {
+  public static UUID parseUUID(String id) {
+    if (id.length() == 32) {
       String[] components = new String[5];
-      components[0] = "0x" + name.substring(0, 8);
-      components[1] = "0x" + name.substring(8, 12);
-      components[2] = "0x" + name.substring(12, 16);
-      components[3] = "0x" + name.substring(16, 20);
-      components[4] = "0x" + name.substring(20);
+      components[0] = "0x" + id.substring(0, 8);
+      components[1] = "0x" + id.substring(8, 12);
+      components[2] = "0x" + id.substring(12, 16);
+      components[3] = "0x" + id.substring(16, 20);
+      components[4] = "0x" + id.substring(20);
       long mostSigBits = Long.decode(components[0]).longValue();
       mostSigBits <<= 16;
       mostSigBits |= Long.decode(components[1]).longValue();
@@ -47,6 +47,11 @@ public class CoreUtil {
 
       return new UUID(mostSigBits, leastSigBits);
     }
-    return UUID.fromString(name);
+    return UUID.fromString(id);
+  }
+
+  public static String randomID() {
+    UUID id = UUID.randomUUID();
+    return id.toString().replaceAll("-", "");
   }
 }

@@ -19,9 +19,10 @@ public class FeedService<F extends Feed<E>, E extends Entry> extends EntryServic
   }
 
   public long countEntries(F parent) {
-    TypedQuery<Long> query =
-        em().createQuery("select count(f) from " + entryClass.getName() + " f where f.parent=:parent" + count(parent.getSearch()),
-            Long.class);
+    StringBuilder sql = new StringBuilder("select count(f) from ").append(entryClass.getName());
+    sql.append(" f where f.parent=:parent");
+    parent.buildSearch(sql);
+    TypedQuery<Long> query = em().createQuery(sql.toString(), Long.class);
     query.setParameter("parent", parent);
     long count = query.getSingleResult().longValue();
     return count;
@@ -43,8 +44,9 @@ public class FeedService<F extends Feed<E>, E extends Entry> extends EntryServic
     StringBuilder sql = new StringBuilder("from ").append(entryClass.getName()).append(" f");
     sql.append(" where f.parent=:parent");
     feed.prepareQuery(sql);
+    feed.buildSearch(sql);
+    feed.buildSort(sql);
 
-    sql.append(count(feed.getSearch())).append(limit(feed.getSort()));
     TypedQuery<E> query = em().createQuery(sql.toString(), entryClass);
     if (feed.getStart() != null) {
       query.setFirstResult(feed.getStart());
@@ -91,30 +93,4 @@ public class FeedService<F extends Feed<E>, E extends Entry> extends EntryServic
   protected void init(F feed) {
   }
 
-  private StringBuffer count(List<String> search) {
-    StringBuffer limitQuery = new StringBuffer();
-    if (search != null && search.size() > 0) {
-      limitQuery.append(" and (");
-      for (String s : search) {
-        String[] split = s.split("\\|");
-        limitQuery.append("f.").append(split[0]).append(" like '").append(split[1]).append("%'").append(" or ");
-      }
-      limitQuery.delete(limitQuery.lastIndexOf(" or "), limitQuery.length());
-      limitQuery.append(")");
-    }
-    return limitQuery;
-  }
-
-  private StringBuffer limit(List<String> sort) {
-    StringBuffer countQuery = new StringBuffer();
-    if (sort != null && sort.size() > 0) {
-      countQuery.append(" order by");
-      for (String s : sort) {
-        String[] split = s.split("\\|");
-        countQuery.append(" f.").append(split[0]).append(" ").append(split[1]).append(",");
-      }
-      countQuery.deleteCharAt(countQuery.lastIndexOf(","));
-    }
-    return countQuery;
-  }
 }

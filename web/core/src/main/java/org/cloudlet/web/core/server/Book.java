@@ -76,9 +76,6 @@ public class Book extends Entry {
     return datePublished;
   }
 
-  /**
-   * @return the editors
-   */
   public String getEditors() {
     return editors;
   }
@@ -100,9 +97,6 @@ public class Book extends Entry {
     return CorePackage.Book;
   }
 
-  /**
-   * @return the score
-   */
   public float getScore() {
     return score;
   }
@@ -137,9 +131,6 @@ public class Book extends Entry {
     return tag3;
   }
 
-  /**
-   * @return the weight
-   */
   public int getWeight() {
     return weight;
   }
