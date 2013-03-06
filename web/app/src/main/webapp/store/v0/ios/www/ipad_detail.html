@@ -37,7 +37,7 @@
       <div class="book_five"><ul class="five"><li></li><li></li><li></li><li></li><li></li></ul><span><a id="comment_url"><city class="total_commtents"></city></a></span></div>
       <div id="detail_intro"></div>
       <div id="comments_box">
-        <div id="reply_title2" style="display: none">
+        <div id="reply_title2">
           <div class="five_layout2">
           	<span>我的评分</span>
           	<span style="float: left; width: 10px;">&nbsp;</span>
@@ -553,7 +553,7 @@ function reply() {
   var count=4;
   var order = ($('.comment_order').eq(0).attr('active') == 'yes') ? 1 : 0;
   loadAjaxSpin('#inside_loading1', function () {
-    return '/api/books/'+book_id+'/comments?start='+start+'&limit='+count+'&order_type='+order;
+    return '/api/books/'+b_id+'/comments'/*?start='+start+'&limit='+count+'&order_type='+order*/;
     }, replyInfor, hideAll);
    if(start==1){
     $('#inside_loading1').click()
@@ -588,11 +588,11 @@ function showNewest() {
 
 //创建评论
 function replyInfor(data){
-  if (data.result == 0){
-    if( data.total==undefined||data.total==null||data.total=='' ) {
+  if (data){
+    /* if( data.total==undefined||data.total==null||data.total=='' ) {
         data.total=0
-    }
-    if(data.total==0){
+    } */
+    if(data.totalEntries==0){
       $('#discount_select').hide();
       $('.Br_content').hide();
       $('.no_result').hide();
@@ -602,8 +602,8 @@ function replyInfor(data){
      
     for(var i=0; i<data.entries.length; i++){
      var comments=data.entries[i];
-      var com=data.comments[i].reply;
-      var total=comments.reply_count;
+      var com=data.entries[i].replies;
+      var total=comments.totalEntries;
       if(total==undefined||total==null||total==''){
         total=0;
       }
@@ -872,16 +872,17 @@ function fivestar(wich,tagclass){
   };
   var app_id ='DkReader.iPad';
   $.ajax({
-    url:'/api/books/'+book_id+'/comments?start=1&limit=1',
+    url:'/api/books/'+b_id+'/comments?start=1&limit=1',
     success:function(data){
-             if (data.result == 0){
-               var starIndex=data.user_last_score-1;
-               if(starIndex>-1){
-                 $('#reply_title2 .five>li:eq('+starIndex+')').addClass('Five_red');
-                 $('#write_comment .five>li:eq('+starIndex+')').addClass('Five_red');
-                 $('#reply_title2 .five>li:eq('+starIndex+')').prevAll().addClass('Five_red');
-                 $('#write_comment .five>li:eq('+starIndex+')').prevAll().addClass('Five_red');
-                  switch(starIndex)
+             if (data.totalEntries != 0){
+               /* var starIndex=data.user_last_score-1;
+               if(starIndex>-1){ */
+            	if(data.totalEntries) {
+                 $('#reply_title2 .five>li:eq('+1+')').addClass('Five_red');
+                 $('#write_comment .five>li:eq('+2+')').addClass('Five_red');
+                 $('#reply_title2 .five>li:eq('+3+')').prevAll().addClass('Five_red');
+                 $('#write_comment .five>li:eq('+4+')').prevAll().addClass('Five_red');
+                  switch(3)
                   {
                     case 0:
                      $('.star_word').html('（浪费时间）')
