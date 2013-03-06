@@ -189,8 +189,7 @@ function getItems(data, index) {
       
       if (data.limit == 0) {
         hideAll();
-      } 
-      else {
+      } else {
         $('.recommend_section').eq(index).removeClass('initial_hide');
         $('.book_list').eq(index).removeClass('initial_hide');
         hideUnusedCells();
@@ -325,9 +324,10 @@ function dkGetBgColor() {
 }
 
 $(document).ready(function () {
-  $('body').ajaxError(function () {
+  /* $('body').ajaxError(function () {
+	  window.alert("body");
     hideAll();
-  });
+  }); */
 
   $.ajax({
     url: '/api/books?start=0&limit='+recommend_count,
@@ -339,7 +339,7 @@ $(document).ready(function () {
   });
 		
   $.ajax({
-    url: '/api/books?start=0&limit='+recommend_count,
+    url: '/api/books?start=11&limit='+recommend_count,
     success: getFreshItems,
     dataType: 'json'
   });
