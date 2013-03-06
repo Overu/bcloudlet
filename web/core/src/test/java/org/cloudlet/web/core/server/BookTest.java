@@ -37,7 +37,6 @@ import nl.siegmann.epublib.epub.EpubReader;
 public class BookTest extends CoreTest {
 
   public static void main(String[] args) {
-    System.out.println(UUID.randomUUID());
     UUID id1 = CoreUtil.parseUUID("91b7221c-6b92-11e2-8088-00163e0123ac");
     System.out.println(id1);
     UUID id2 = CoreUtil.parseUUID("91b7221c6b9211e2808800163e0123ac");
@@ -65,7 +64,6 @@ public class BookTest extends CoreTest {
   @Test
   public void testCreateBook() throws Exception {
     Books books = booksSvc.getRoot();
-    System.out.println(UUID.randomUUID().toString());
     books.load();
     long total = books.getTotalEntries();
     Book book = books.newEntry();
@@ -76,7 +74,12 @@ public class BookTest extends CoreTest {
     // ByteArrayInputStream("Good work".getBytes()));
     books.createEntry(book);
 
-    Books books2 = booksSvc.getRoot();
+    Comments comments = book.getComments();
+    for (int i = 0; i < 5; i++) {
+      Comment comment = new Comment();
+      comment.setContent("how are you " + (i + 1));
+      comments.createEntry(comment);
+    }
 
     Media cover = new Media();
     cover.setPath("cover");
@@ -86,6 +89,7 @@ public class BookTest extends CoreTest {
     book.createReference(cover);
 
     book.setCover(cover);
+
     book.update();
     books.load();
     assertEquals(total, books.getTotalEntries());
@@ -93,7 +97,7 @@ public class BookTest extends CoreTest {
       Section section = new Section();
       section.setPath("section" + i);
       section.setTitle("第" + i + "章");
-      section.setBody("<p>北京时间11月11日晚，香港国际会展中心，跳水女皇郭晶晶与名门家族第三代霍启刚的第三场婚宴举行，包括三任香港特首、李嘉诚、刘德华、成龙、伏明霞等各界社会名流到场。这场婚礼耗时近八个小时，宾客多达1800人。</p>");
+      section.setContent("<p>北京时间11月11日晚，香港国际会展中心，跳水女皇郭晶晶与名门家族第三代霍启刚的第三场婚宴举行，包括三任香港特首、李嘉诚、刘德华、成龙、伏明霞等各界社会名流到场。这场婚礼耗时近八个小时，宾客多达1800人。</p>");
       book.createReference(section);
     }
 
@@ -109,7 +113,6 @@ public class BookTest extends CoreTest {
   public void testImportBook() throws Exception {
     Repository repo = repoSvc.getRoot();
     Books books = booksSvc.getRoot();
-    System.out.println(UUID.randomUUID().toString());
     books.load();
     long total = books.getTotalEntries();
 
@@ -234,9 +237,14 @@ public class BookTest extends CoreTest {
     }
   }
 
+  @Test
+  public void testSchema() {
+    System.out.println("ok");
+  }
+
   private void importBooks(BookTag tag) throws IOException, HttpException, JSONException {
     HttpClient client = new HttpClient();
-    String url = "http://book.duokan.com/store/v0/ios/category/" + tag.getId() + "?start=0&page_length=23";
+    String url = "http://book.duokan.com/store/v0/ios/category/" + tag.getId() + "?start=0&page_length=8";
     GetMethod httpMethod = new GetMethod(url);
     httpMethod.addRequestHeader("Cookie", DEVICE_INFO);
     // ProxyHost proxy = new ProxyHost("127.0.0.1", 8888);
@@ -275,6 +283,8 @@ public class BookTest extends CoreTest {
           book.createReference(cover);
           book.setCover(cover);
           book.update();
+
+          importComments(book);
         } else {
           if (book.getTag1() == null) {
             book.setTag1(tag);
@@ -284,6 +294,59 @@ public class BookTest extends CoreTest {
             book.setTag3(tag);
           }
           book.update();
+        }
+      }
+    }
+  }
+
+  private void importComments(Book book) throws IOException, HttpException, JSONException {
+    HttpClient client = new HttpClient();
+    String bookId = book.getId();
+    String url =
+        "http://book.duokan.com/comment/v0/get_book_comments?app_id=web&book_id=" + bookId
+            + "&device_id=D900NEXM6WII2DIX&start_index=1&count=6&order_type=1";
+    GetMethod httpMethod = new GetMethod(url);
+    httpMethod.addRequestHeader("Cookie", DEVICE_INFO);
+    // ProxyHost proxy = new ProxyHost("127.0.0.1", 8888);
+    // client.getHostConfiguration().setProxyHost(proxy);
+    client.executeMethod(httpMethod);
+    int statusCode = httpMethod.getStatusCode();
+    System.out.println(statusCode + " " + httpMethod.getStatusText() + " " + url);
+    if (statusCode == 200) {
+      String charset = httpMethod.getResponseCharSet();
+      String body = httpMethod.getResponseBodyAsString();
+      System.out.println(body);
+      JSONObject json = new JSONObject(body);
+      JSONArray jsonComments = (JSONArray) json.get("comments");
+      Comments comments = book.getComments();
+      for (int i = 0; i < jsonComments.length(); i++) {
+        JSONObject jsonComment = (JSONObject) jsonComments.get(i);
+        String id = jsonComment.getString("comment_id");
+        Comment comment = comments.getEntry(id);
+        if (comment == null) {
+          comment = new Comment();
+          comment.setId(id);
+          comment.setTitle(jsonComment.getString("title"));
+          comment.setContent(readContent(jsonComment));
+          // comment.setAuthorName(jsonComment.getString("nick_name"));
+          comments.createEntry(comment);
+
+          Replies replies = comment.getReplies();
+
+          JSONArray jsonReplies = (JSONArray) jsonComment.get("reply");
+          for (int j = 0; j < jsonReplies.length(); j++) {
+            JSONObject jsonReply = (JSONObject) jsonReplies.get(j);
+            String replyId = jsonReply.getString("reply_id");
+
+            Reply reply = replies.getEntry(replyId);
+            if (reply == null) {
+              reply = new Reply();
+              reply.setId(replyId);
+              reply.setContent(readContent(jsonReply));
+              // reply.setAuthorName(jsonReply.getString("nick_name"));
+              replies.createEntry(reply);
+            }
+          }
         }
       }
     }
@@ -320,5 +383,12 @@ public class BookTest extends CoreTest {
         }
       }
     }
+  }
+
+  // Note: 将Mysql的编码从utf8转换成utf8mb4
+  // http://www.2cto.com/database/201204/127743.html
+  private String readContent(JSONObject jsonComment) throws JSONException {
+    String txt = jsonComment.getString("content");
+    return txt;
   }
 }

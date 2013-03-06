@@ -28,6 +28,7 @@ import javax.persistence.Table;
 public class Reference {
 
   @Id
+  @Column(length = 128)
   private String id;
 
   @Type(type = CorePackage.CONTENT)

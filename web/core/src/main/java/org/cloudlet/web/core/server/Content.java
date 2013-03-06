@@ -17,12 +17,16 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.logging.Logger;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.EntityManager;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.ws.rs.Consumes;
@@ -57,6 +61,7 @@ public abstract class Content {
   protected ResourceContext resourceContext;
 
   @Id
+  @Column(length = 128)
   protected String id;
 
   protected String path;
@@ -64,6 +69,14 @@ public abstract class Content {
   protected String title;
 
   protected String summary;
+
+  protected Date created;
+
+  @OneToOne
+  protected User createdBy;
+
+  @OneToOne
+  protected User updatedBy;
 
   protected Date updated;
 
@@ -77,7 +90,9 @@ public abstract class Content {
   @Columns(columns = { @Column(name = "parentType"), @Column(name = "parentId") })
   protected Content parent;
 
-  protected String body;
+  @Lob
+  @Basic(fetch = FetchType.LAZY)
+  protected String content;
 
   @Transient
   private Service service;
@@ -163,10 +178,6 @@ public abstract class Content {
   @DELETE
   public abstract void delete();
 
-  public String getBody() {
-    return body;
-  }
-
   @Path("{path}")
   public <T extends Content> T getChild(@PathParam("path") String path) {
     T result = findChild(path);
@@ -176,6 +187,18 @@ public abstract class Content {
       }
     }
     return result;
+  }
+
+  public String getContent() {
+    return content;
+  }
+
+  public Date getCreated() {
+    return created;
+  }
+
+  public User getCreatedBy() {
+    return createdBy;
   }
 
   public String getId() {
@@ -233,6 +256,10 @@ public abstract class Content {
 
   public Date getUpdated() {
     return updated;
+  }
+
+  public User getUpdatedBy() {
+    return updatedBy;
   }
 
   @XmlElement
@@ -296,8 +323,16 @@ public abstract class Content {
     }
   }
 
-  public void setBody(String body) {
-    this.body = body;
+  public void setContent(String body) {
+    this.content = body;
+  }
+
+  public void setCreated(Date created) {
+    this.created = created;
+  }
+
+  public void setCreatedBy(User createdBy) {
+    this.createdBy = createdBy;
   }
 
   public void setId(String id) {
@@ -341,6 +376,10 @@ public abstract class Content {
 
   public void setUpdated(Date dateUpdated) {
     this.updated = dateUpdated;
+  }
+
+  public void setUpdatedBy(User updatedBy) {
+    this.updatedBy = updatedBy;
   }
 
   public void setUri(String value) {

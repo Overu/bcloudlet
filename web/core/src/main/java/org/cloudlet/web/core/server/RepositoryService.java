@@ -37,6 +37,11 @@ public class RepositoryService extends EntryService<Repository> {
     books.setTitle("Books");
     createReference(repo, books);
 
+    BookTags tags = new BookTags();
+    tags.setPath("tags");
+    tags.setTitle("Tags");
+    createReference(repo, tags);
+
     repo.setUsers(users);
     repo.setBooks(books);
     update(repo);

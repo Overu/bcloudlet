@@ -11,7 +11,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -43,7 +42,7 @@ public class Media extends Entry {
   @XmlTransient
   public File getFile() {
     if (id == null) {
-      id = UUID.randomUUID().toString();
+      id = CoreUtil.randomID();
     }
     String filePath = "D:/DevData/files/" + id;
     return new File(filePath);

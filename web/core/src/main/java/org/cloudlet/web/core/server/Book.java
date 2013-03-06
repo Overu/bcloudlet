@@ -35,6 +35,9 @@ public class Book extends Entry {
   private float paper_price;
 
   @OneToOne
+  private Comments comments;
+
+  @OneToOne
   private BookTag tag1;
 
   @OneToOne
@@ -61,6 +64,11 @@ public class Book extends Entry {
 
   public String getAuthors() {
     return authors;
+  }
+
+  @Path("comments")
+  public Comments getComments() {
+    return comments;
   }
 
   public String getCopyright() {
@@ -162,6 +170,10 @@ public class Book extends Entry {
     this.authors = author;
   }
 
+  public void setComments(Comments comments) {
+    this.comments = comments;
+  }
+
   public void setCopyright(String copyright) {
     this.copyright = copyright;
   }
@@ -174,9 +186,6 @@ public class Book extends Entry {
     this.datePublished = datePublished;
   }
 
-  /**
-   * @param editors the editors to set
-   */
   public void setEditors(String editors) {
     this.editors = editors;
   }
@@ -201,9 +210,6 @@ public class Book extends Entry {
     this.promoted = promoted;
   }
 
-  /**
-   * @param score the score to set
-   */
   public void setScore(float score) {
     this.score = score;
   }
@@ -235,9 +241,6 @@ public class Book extends Entry {
     this.tag3 = tag3;
   }
 
-  /**
-   * @param weight the weight to set
-   */
   public void setWeight(int weight) {
     this.weight = weight;
   }

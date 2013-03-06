@@ -12,6 +12,11 @@ public class BookService extends FeedService<Books, Book> {
   @Override
   protected void init(Book book) {
     super.init(book);
+    Comments comments = new Comments();
+    comments.setPath("comments");
+    book.createReference(comments);
+    book.setComments(comments);
+    book.update();
   }
 
 }

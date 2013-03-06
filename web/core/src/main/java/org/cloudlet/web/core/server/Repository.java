@@ -22,6 +22,9 @@ public final class Repository extends Entry {
   @OneToOne
   private Books books;
 
+  @OneToOne
+  private BookTags tags;
+
   public Books getBooks() {
     return books;
   }
@@ -36,6 +39,10 @@ public final class Repository extends Entry {
     return RepositoryService.class;
   }
 
+  public BookTags getTags() {
+    return tags;
+  }
+
   @Override
   public String getTitle() {
     return "Repository";
@@ -47,6 +54,10 @@ public final class Repository extends Entry {
 
   public void setBooks(Books books) {
     this.books = books;
+  }
+
+  public void setTags(BookTags tags) {
+    this.tags = tags;
   }
 
   public void setUsers(Users users) {

@@ -4,19 +4,9 @@ import com.google.inject.Inject;
 
 import static org.junit.Assert.assertEquals;
 
-import org.cloudlet.web.core.server.Group;
-import org.cloudlet.web.core.server.Groups;
-import org.cloudlet.web.core.server.GroupService;
-import org.cloudlet.web.core.server.Media;
-import org.cloudlet.web.core.server.Repository;
-import org.cloudlet.web.core.server.RepositoryService;
-import org.cloudlet.web.core.server.User;
-import org.cloudlet.web.core.server.Users;
-import org.cloudlet.web.core.server.UserService;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
-import java.util.UUID;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -38,7 +28,6 @@ public class GroupTest extends CoreTest {
     Repository repo = repoSvc.getRoot();
     Groups groups = groupsSvc.getRoot();
     Users users = usersSvc.getRoot();
-    System.out.println(UUID.randomUUID().toString());
     Group group = groups.getEntry("mygroup");
     if (group == null) {
       group = groups.newEntry();

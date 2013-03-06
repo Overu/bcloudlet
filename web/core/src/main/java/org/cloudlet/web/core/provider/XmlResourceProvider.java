@@ -67,8 +67,8 @@ public class XmlResourceProvider extends AbstractMessageReaderWriterProvider<Con
     }
     writer.writeAttribute(CorePackage.PATH, content.getPath());
     writer.writeAttribute(CorePackage.URI, content.getUri());
-    if (content.getBody() != null) {
-      writer.writeCharacters(content.getBody());
+    if (content.getContent() != null) {
+      writer.writeCharacters(content.getContent());
     }
     Collection<? extends Content> contents;
     if (content instanceof Entry) {

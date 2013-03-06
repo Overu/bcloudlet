@@ -15,6 +15,10 @@ public interface CorePackage {
   String Section = PREFIX + "Section";
   String User = PREFIX + "User";
   String Users = PREFIX + "Users";
+  String Comment = PREFIX + "Comment";
+  String Comments = PREFIX + "Comments";
+  String Reply = PREFIX + "Reply";
+  String Replies = PREFIX + "Replies";
 
   String Reference = PREFIX + "Reference";
 
