@@ -316,7 +316,7 @@ public class BookTest extends CoreTest {
           book.setFull(full);
 
           Media trial = new Media();
-          trial.setPath(Book.FULL);
+          trial.setPath(Book.TRIAL);
           trial.read(BookTest.class.getResourceAsStream(dataPath));
           book.createReference(trial);
           book.setTrial(trial);
