@@ -286,7 +286,7 @@ function showBook(data) {
     handleError(status.UNEXPECTED_ERROR, hideAll);
   else  */
   if (data.hasOwnProperty('id')) {
-    $('.detail_cover').attr('src', data.cover.source);
+    $('.detail_cover').attr('src', data.coverUrl);
 
     $('.detail_author_label').html('<p>作者：</p>');
     $('.detail_author').html('<p>retech</p>');

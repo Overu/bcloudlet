@@ -161,7 +161,7 @@
 			}
 			function buildBook(book) {
 				var li = "<li book_id=" + book.id + " >"
-						+ "<img class=cover _src=" + (book.cover ? book.cover.source : "") + " />";
+						+ "<img class=cover _src=" + (book.coverUrl ? book.coverUrl : "") + " />";
 
 				if (book.hasOwnProperty('new_price')) {
 					if (book.new_price == 0) {
@@ -381,7 +381,6 @@
 
 					// 修改ui
 					if ($('#category_list li').size() == 0) {
-						window.alert("abcd");
 						$('#no_result1').show();
 					} else {
 						$('#category_list_wrapper').css('display', '');

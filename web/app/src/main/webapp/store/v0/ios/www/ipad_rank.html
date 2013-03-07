@@ -115,7 +115,7 @@ function appendEmptySlot() {
 function buildBook(book, listIndex) {
   count[listIndex] += 1;
   var li = "<li book_id=" + book.id + " >"
-    + "<img class=cover _src=" + book.cover.source + " />";
+    + "<img class=cover _src=" + book.coverUrl + " />";
   
   if (book.hasOwnProperty('new_price')) {
     if (book.new_price == 0) {
