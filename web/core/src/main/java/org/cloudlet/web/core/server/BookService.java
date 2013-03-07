@@ -13,7 +13,7 @@ public class BookService extends FeedService<Books, Book> {
   protected void init(Book book) {
     super.init(book);
     Comments comments = new Comments();
-    comments.setPath("comments");
+    comments.setPath(Book.COMMENTS);
     book.createReference(comments);
     book.setComments(comments);
     book.update();

@@ -12,17 +12,35 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.Book)
-@XmlType(name = CorePackage.Book)
-@Entity(name = CorePackage.Book)
-@Table(name = CorePackage.Book)
+@XmlRootElement(name = Book.TYPE)
+@XmlType(name = Book.TYPE)
+@Entity(name = Book.TYPE)
+@Table(name = Book.TYPE)
 public class Book extends Entry {
+
+  public static final String TYPE = CorePackage.PREFIX + "Book";
+
+  public static final String SOURCE = "source";
+
+  public static final String FULL = "full";
+
+  public static final String COMMENTS = "comments";
+
+  public static final String COVER = "cover";
+
+  public static final String TRIAL = "trial";
 
   @OneToOne
   private Media cover;
 
   @OneToOne
   private Media source;
+
+  @OneToOne
+  private Media trial;
+
+  @OneToOne
+  private Media full;
 
   private boolean featured;
 
@@ -66,7 +84,7 @@ public class Book extends Entry {
     return authors;
   }
 
-  @Path("comments")
+  @Path(COMMENTS)
   public Comments getComments() {
     return comments;
   }
@@ -75,9 +93,17 @@ public class Book extends Entry {
     return copyright;
   }
 
-  @Path("cover")
+  @Path(COVER)
   public Media getCover() {
+    initResource(cover);
     return cover;
+  }
+
+  public String getCoverUrl() {
+    if (cover != null) {
+      return cover.getUrlBuilder().path("cover.jpg").build().toString();
+    }
+    return null;
   }
 
   public Date getDatePublished() {
@@ -86,6 +112,19 @@ public class Book extends Entry {
 
   public String getEditors() {
     return editors;
+  }
+
+  @Path(FULL)
+  public Media getFull() {
+    initResource(full);
+    return full;
+  }
+
+  public String getFullUrl() {
+    if (full != null) {
+      return full.getUrlBuilder().path("full.zip").build().toString();
+    }
+    return null;
   }
 
   public float getNew_price() {
@@ -98,11 +137,6 @@ public class Book extends Entry {
 
   public float getPrice() {
     return price;
-  }
-
-  @Override
-  public String getResourceType() {
-    return CorePackage.Book;
   }
 
   public float getScore() {
@@ -122,7 +156,7 @@ public class Book extends Entry {
     return size;
   }
 
-  @Path("source")
+  @Path(SOURCE)
   public Media getSource() {
     return source;
   }
@@ -137,6 +171,19 @@ public class Book extends Entry {
 
   public BookTag getTag3() {
     return tag3;
+  }
+
+  @Path(TRIAL)
+  public Media getTrial() {
+    initResource(trial);
+    return trial;
+  }
+
+  public String getTrialUrl() {
+    if (trial != null) {
+      return trial.getUrlBuilder().path("trial.zip").build().toString();
+    }
+    return null;
   }
 
   public int getWeight() {
@@ -157,12 +204,10 @@ public class Book extends Entry {
     Media cover = params.getFirst(CorePackage.COVER);
     if (cover != null) {
       this.cover = cover;
-      cover.setParent(this);
     }
     Media source = params.getFirst(CorePackage.SOURCE);
     if (source != null) {
       this.source = source;
-      source.setParent(this);
     }
   }
 
@@ -192,6 +237,10 @@ public class Book extends Entry {
 
   public void setFeatured(boolean featured) {
     this.featured = featured;
+  }
+
+  public void setFull(Media official) {
+    this.full = official;
   }
 
   public void setNew_price(float promotionPrice) {
@@ -239,6 +288,10 @@ public class Book extends Entry {
 
   public void setTag3(BookTag tag3) {
     this.tag3 = tag3;
+  }
+
+  public void setTrial(Media trial) {
+    this.trial = trial;
   }
 
   public void setWeight(int weight) {

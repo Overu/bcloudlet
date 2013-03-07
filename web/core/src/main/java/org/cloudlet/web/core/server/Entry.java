@@ -39,7 +39,7 @@ public abstract class Entry extends Content {
   @SuppressWarnings("unchecked")
   @DELETE
   public void delete() {
-    getService().deleteEntry(this);
+    getService().delete(this);
   }
 
   @XmlElement

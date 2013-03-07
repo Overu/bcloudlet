@@ -17,13 +17,10 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.logging.Logger;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.EntityManager;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
@@ -45,9 +42,11 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
 @TypeDef(name = CorePackage.CONTENT, typeClass = ResourceType.class)
 @MappedSuperclass
@@ -80,6 +79,10 @@ public abstract class Content {
 
   protected Date updated;
 
+  @Context
+  @Transient
+  protected UriInfo uriInfo;
+
   @Version
   protected long version;
 
@@ -89,10 +92,6 @@ public abstract class Content {
   @Type(type = CorePackage.CONTENT)
   @Columns(columns = { @Column(name = "parentType"), @Column(name = "parentId") })
   protected Content parent;
-
-  @Lob
-  @Basic(fetch = FetchType.LAZY)
-  protected String content;
 
   @Transient
   private Service service;
@@ -147,7 +146,7 @@ public abstract class Content {
             media.setPath(key);
             media.setTitle(value.getName());
             media.setMimeType(value.getContentType());
-            media.update();
+
             files.add(key, media);
           }
         } finally {
@@ -181,16 +180,8 @@ public abstract class Content {
   @Path("{path}")
   public <T extends Content> T getChild(@PathParam("path") String path) {
     T result = findChild(path);
-    if (result != null) {
-      if (resourceContext != null) {
-        resourceContext.initResource(result);
-      }
-    }
+    initResource(result);
     return result;
-  }
-
-  public String getContent() {
-    return content;
   }
 
   public Date getCreated() {
@@ -228,7 +219,10 @@ public abstract class Content {
     return null;
   }
 
-  public abstract String getResourceType();
+  public String getResourceType() {
+    XmlType type = getClass().getAnnotation(XmlType.class);
+    return type.name();
+  }
 
   @XmlTransient
   public Service getService() {
@@ -286,6 +280,12 @@ public abstract class Content {
     return builder;
   }
 
+  @XmlTransient
+  public UriBuilder getUrlBuilder() {
+    UriBuilder builder = uriInfo.getBaseUriBuilder().path(getUri());
+    return builder;
+  }
+
   public long getVersion() {
     return version;
   }
@@ -321,10 +321,6 @@ public abstract class Content {
     if (title != null) {
       this.title = title;
     }
-  }
-
-  public void setContent(String body) {
-    this.content = body;
   }
 
   public void setCreated(Date created) {
@@ -429,5 +425,13 @@ public abstract class Content {
   }
 
   protected abstract void init();
+
+  protected void initResource(Object result) {
+    if (result != null) {
+      if (resourceContext != null) {
+        resourceContext.initResource(result);
+      }
+    }
+  }
 
 }

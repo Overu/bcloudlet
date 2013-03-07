@@ -14,12 +14,18 @@ import java.io.OutputStream;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
@@ -28,15 +34,16 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = CorePackage.Media)
 @Entity(name = CorePackage.Media)
 @Table(name = CorePackage.Media)
-public class Media extends Entry {
+public class Media extends Content {
 
   private String mimeType;
 
   private String source;
 
   @Override
-  public Entry getChild(String path) {
-    throw null;
+  @DELETE
+  public void delete() {
+    getService().delete(this);
   }
 
   @XmlTransient
@@ -52,7 +59,8 @@ public class Media extends Entry {
   @Path("{fileName}")
   @Produces(MediaType.WILDCARD)
   public Response getMedia(@PathParam("fileName") String fileName) {
-    return Response.ok().entity(openStream()).type(getMimeType()).build();
+    String disposition = "attachment; filename*=UTF-8'en'" + CoreUtil.toURLEncoded(fileName) + ";";
+    return Response.ok().entity(openStream()).type(getMimeType()).header("Content-Disposition", disposition).build();
   }
 
   public String getMimeType() {
@@ -62,6 +70,12 @@ public class Media extends Entry {
   @Override
   public String getResourceType() {
     return CorePackage.Media;
+  }
+
+  @Override
+  @XmlTransient
+  public MediaService getService() {
+    return (MediaService) super.getService();
   }
 
   @Override
@@ -111,6 +125,12 @@ public class Media extends Entry {
     this.source = source;
   }
 
+  @Override
+  @PUT
+  public Media update() {
+    return getService().update(this);
+  }
+
   public void write(OutputStream out) throws IOException {
     InputStream in = null;
     try {
@@ -124,5 +144,18 @@ public class Media extends Entry {
       IOUtils.closeQuietly(in);
       IOUtils.closeQuietly(out);
     }
+  }
+
+  @Override
+  protected void doLoad() {
+  }
+
+  @Override
+  protected <T extends Content> T findChild(String path) {
+    return null;
+  }
+
+  @Override
+  protected void init() {
   }
 }

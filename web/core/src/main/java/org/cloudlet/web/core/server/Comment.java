@@ -2,7 +2,10 @@ package org.cloudlet.web.core.server;
 
 import org.cloudlet.web.core.shared.CorePackage;
 
+import javax.persistence.Basic;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.ws.rs.Path;
@@ -19,6 +22,13 @@ public class Comment extends Entry {
   private Replies replies;
 
   protected String deviceType;
+
+  @Basic(fetch = FetchType.LAZY)
+  protected String content;
+
+  public String getContent() {
+    return content;
+  }
 
   public String getDeviceType() {
     return deviceType;
@@ -37,6 +47,10 @@ public class Comment extends Entry {
   @Override
   public Class<CommentService> getServiceType() {
     return CommentService.class;
+  }
+
+  public void setContent(String body) {
+    this.content = body;
   }
 
   public void setDeviceType(String deviceType) {

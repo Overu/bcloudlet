@@ -2,7 +2,10 @@ package org.cloudlet.web.core.server;
 
 import org.cloudlet.web.core.shared.CorePackage;
 
+import javax.persistence.Basic;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -14,6 +17,13 @@ import javax.xml.bind.annotation.XmlType;
 public class Reply extends Entry {
 
   protected String deviceType;
+
+  @Basic(fetch = FetchType.LAZY)
+  protected String content;
+
+  public String getContent() {
+    return content;
+  }
 
   public String getDeviceType() {
     return deviceType;
@@ -29,8 +39,11 @@ public class Reply extends Entry {
     return ReplyService.class;
   }
 
+  public void setContent(String body) {
+    this.content = body;
+  }
+
   public void setDeviceType(String deviceType) {
     this.deviceType = deviceType;
   }
-
 }

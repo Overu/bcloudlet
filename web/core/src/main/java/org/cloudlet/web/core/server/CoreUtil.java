@@ -12,6 +12,9 @@
  */
 package org.cloudlet.web.core.server;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -53,5 +56,62 @@ public class CoreUtil {
   public static String randomID() {
     UUID id = UUID.randomUUID();
     return id.toString().replaceAll("-", "");
+  }
+
+  /**
+   * Performs URL decoding from UTF-8, trapping the UnsupportedEncodingException, which in practice will not be a problem.
+   * 
+   * @param s the string to decoded.
+   * @return s decoded from utf-8.
+   */
+  public static String toURLDecoded(String s) {
+    try {
+      return URLDecoder.decode(s, "utf-8");
+    } catch (UnsupportedEncodingException e) {
+      throw new IllegalStateException(e);
+    }
+  }
+
+  /**
+   * Performs URL encoding to UTF-8, trapping the UnsupportedEncodingException which in practice should never be thrown. Will correctly
+   * encode the string to the URL encoding (URLEncoder.encode is for HTML form encoding, not for URL encoding) including using %20 instead
+   * of + for space.
+   * 
+   * @param s the string to encode.
+   * @return s encoded in UTF-8.
+   */
+  public static String toURLEncoded(String s) {
+    if (s == null) {
+      return null;
+    }
+
+    try {
+      String encodedString = URLEncoder.encode(s, "UTF-8");
+
+      // Goal is to replace all + with %20 efficiently. replaceAll on a pre-compiled pattern is extremely slow for these scenarios
+
+      // Lazily allocate
+      StringBuilder sb = null;
+
+      for (int i = 0; i < encodedString.length(); i++) {
+        char ch = encodedString.charAt(i);
+
+        if (sb == null) {
+          if (ch == '+') {
+            sb = new StringBuilder((int) (encodedString.length() * 1.2)).append(encodedString.substring(0, i)).append("%20");
+          }
+        } else {
+          if (ch == '+') {
+            sb.append("%20");
+          } else {
+            sb.append(ch);
+          }
+        }
+      }
+
+      return (sb == null ? encodedString : sb.toString());
+    } catch (UnsupportedEncodingException e) {
+      throw new IllegalStateException(e);
+    }
   }
 }

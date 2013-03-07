@@ -19,6 +19,10 @@ public class Service {
   @Inject
   protected RepositoryService repositoryService;
 
+  public void delete(Content bean) {
+    em().remove(bean);
+  }
+
   @Transactional
   protected Content createChild(Content parent, Content child) {
     if (em().contains(child)) {
@@ -53,7 +57,7 @@ public class Service {
   }
 
   @Transactional
-  protected void update(Content content) {
+  protected Content update(Content content) {
     String id = content.getId();
     String path = content.getPath();
     Content parent = content.getParent();
@@ -71,6 +75,7 @@ public class Service {
       }
     }
     em().persist(content);
+    return content;
   }
 
 }

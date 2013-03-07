@@ -76,7 +76,7 @@ public abstract class Feed<E extends Entry> extends Content {
   @Override
   @DELETE
   public void delete() {
-    getService().deleteFeed(this);
+    getService().delete(this);
   }
 
   public List<E> getEntries() {

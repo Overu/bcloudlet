@@ -36,7 +36,7 @@ public class FeedService<F extends Feed<E>, E extends Entry> extends EntryServic
     return (E) createChild(parent, entry);
   }
 
-  public void deleteFeed(F bean) {
+  public void delete(F bean) {
     em().remove(bean);
   }
 

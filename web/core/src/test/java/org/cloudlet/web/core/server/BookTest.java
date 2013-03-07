@@ -12,6 +12,7 @@ import org.htmlparser.beans.StringBean;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -19,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.util.List;
 import java.util.Random;
@@ -61,6 +63,22 @@ public class BookTest extends CoreTest {
   private static final String DEVICE_INFO =
       "build=2012120701; device=D002-F5805035-921D-4426-BF91-81F65004FEFC; token=; userid=fantongx@gmail.com";
 
+  private String[] dataFiles;
+  private int count;
+
+  @Before
+  public void setupData() {
+    String dataPath = BookTest.class.getResource("/data").getFile();
+    File dataFolder = new File(dataPath);
+    File[] bookFiles = dataFolder.listFiles();
+    dataFiles = new String[bookFiles.length];
+    for (int i = 0; i < bookFiles.length; i++) {
+      File file = bookFiles[i];
+      dataFiles[i] = file.getName();
+    }
+    System.out.println(dataFiles);
+  }
+
   @Test
   public void testCreateBook() throws Exception {
     Books books = booksSvc.getRoot();
@@ -97,7 +115,7 @@ public class BookTest extends CoreTest {
       Section section = new Section();
       section.setPath("section" + i);
       section.setTitle("第" + i + "章");
-      section.setContent("<p>北京时间11月11日晚，香港国际会展中心，跳水女皇郭晶晶与名门家族第三代霍启刚的第三场婚宴举行，包括三任香港特首、李嘉诚、刘德华、成龙、伏明霞等各界社会名流到场。这场婚礼耗时近八个小时，宾客多达1800人。</p>");
+      // section.setContent("<p>北京时间11月11日晚，香港国际会展中心，跳水女皇郭晶晶与名门家族第三代霍启刚的第三场婚宴举行，包括三任香港特首、李嘉诚、刘德华、成龙、伏明霞等各界社会名流到场。这场婚礼耗时近八个小时，宾客多达1800人。</p>");
       book.createReference(section);
     }
 
@@ -260,12 +278,12 @@ public class BookTest extends CoreTest {
       Books books = booksSvc.getRoot();
       for (int i = 0; i < jsonArr.length(); i++) {
         JSONObject jsonObj = (JSONObject) jsonArr.get(i);
-        String id = jsonObj.getString("book_id");
-        Book book = books.getEntry(id);
+        String book_id = jsonObj.getString("book_id");
+        Book book = books.getEntry(book_id);
         if (book == null) {
           book = new Book();
-          book.setId(id);
-          book.setPath(id);
+          book.setId(book_id);
+          book.setPath(book_id);
           book.setTitle(jsonObj.getString("title"));
           book.setPrice((float) jsonObj.getDouble("price"));
           if (jsonObj.has("new_price")) {
@@ -275,13 +293,34 @@ public class BookTest extends CoreTest {
           book.setTag1(tag);
           books.createEntry(book);
 
-          Media cover = new Media();
           String coverUrl = jsonObj.getString("cover");
+
+          Media cover = new Media();
+          cover.setPath(Book.COVER);
           cover.setSource(coverUrl);
-          // InputStream stream = getClass().getResourceAsStream("/covers/sanguo.jpg");
-          // cover.read(stream);
+          cover.read(new URL(coverUrl).openStream());
           book.createReference(cover);
           book.setCover(cover);
+
+          String dataPath = ("/data/" + dataFiles[(++count) % dataFiles.length]);
+          Media source = new Media();
+          source.setPath(Book.SOURCE);
+          source.read(BookTest.class.getResourceAsStream(dataPath));
+          book.createReference(source);
+          book.setSource(source);
+
+          Media full = new Media();
+          full.setPath(Book.FULL);
+          full.read(BookTest.class.getResourceAsStream(dataPath));
+          book.createReference(full);
+          book.setFull(full);
+
+          Media trial = new Media();
+          trial.setPath(Book.FULL);
+          trial.read(BookTest.class.getResourceAsStream(dataPath));
+          book.createReference(trial);
+          book.setTrial(trial);
+
           book.update();
 
           importComments(book);
@@ -389,6 +428,9 @@ public class BookTest extends CoreTest {
   // http://www.2cto.com/database/201204/127743.html
   private String readContent(JSONObject jsonComment) throws JSONException {
     String txt = jsonComment.getString("content");
+    if (txt.length() > 255) {
+      txt = txt.substring(0, 255);
+    }
     return txt;
   }
 }

@@ -38,7 +38,7 @@ public class EntryService<E extends Entry> extends Service {
     return target;
   }
 
-  public void deleteEntry(E entry) {
+  public void delete(E entry) {
     em().remove(entry);
   }
 
