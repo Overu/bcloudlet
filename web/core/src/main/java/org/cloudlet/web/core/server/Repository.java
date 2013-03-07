@@ -5,8 +5,13 @@ import org.cloudlet.web.core.shared.CorePackage;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = CorePackage.Repository)
@@ -15,6 +20,9 @@ import javax.xml.bind.annotation.XmlType;
 @Table(name = CorePackage.Repository)
 @Path("/")
 public final class Repository extends Entry {
+  @Context
+  @Transient
+  protected UriInfo uriInfo;
 
   @OneToOne
   private Users users;
@@ -46,6 +54,12 @@ public final class Repository extends Entry {
   @Override
   public String getTitle() {
     return "Repository";
+  }
+
+  @Override
+  @XmlTransient
+  public UriBuilder getUriBuilder() {
+    return uriInfo.getBaseUriBuilder();
   }
 
   public Users getUsers() {

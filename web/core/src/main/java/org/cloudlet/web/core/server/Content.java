@@ -14,6 +14,7 @@ import org.hibernate.annotations.TypeDef;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.Date;
 import java.util.logging.Logger;
 
@@ -78,10 +79,6 @@ public abstract class Content {
   protected User updatedBy;
 
   protected Date updated;
-
-  @Context
-  @Transient
-  protected UriInfo uriInfo;
 
   @Version
   protected long version;
@@ -258,31 +255,14 @@ public abstract class Content {
 
   @XmlElement
   public String getUri() {
-    return getUriBuilder().toString();
+    URI uri = getUriBuilder().build();
+    return uri.getPath();
   }
 
   @XmlTransient
-  public StringBuilder getUriBuilder() {
-    return getUriBuilder(true);
-  }
-
-  public StringBuilder getUriBuilder(boolean includeParams) {
-    StringBuilder builder;
-    if (getParent() == null) {
-      builder = new StringBuilder("/");
-    } else {
-      builder = getParent().getUriBuilder(false);
-      if (builder.length() > 1) {
-        builder.append("/");
-      }
-      builder.append(path);
-    }
-    return builder;
-  }
-
-  @XmlTransient
-  public UriBuilder getUrlBuilder() {
-    UriBuilder builder = uriInfo.getBaseUriBuilder().path(getUri());
+  public UriBuilder getUriBuilder() {
+    UriBuilder builder = parent.getUriBuilder();
+    builder.path(path);
     return builder;
   }
 

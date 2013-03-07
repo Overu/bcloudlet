@@ -95,13 +95,12 @@ public class Book extends Entry {
 
   @Path(COVER)
   public Media getCover() {
-    initResource(cover);
     return cover;
   }
 
   public String getCoverUrl() {
     if (cover != null) {
-      return cover.getUrlBuilder().path("cover.jpg").build().toString();
+      return cover.getUriBuilder().path("cover.jpg").build().toString();
     }
     return null;
   }
@@ -116,13 +115,12 @@ public class Book extends Entry {
 
   @Path(FULL)
   public Media getFull() {
-    initResource(full);
     return full;
   }
 
   public String getFullUrl() {
     if (full != null) {
-      return full.getUrlBuilder().path("full.zip").build().toString();
+      return full.getUriBuilder().path("full.zip").build().toString();
     }
     return null;
   }
@@ -175,13 +173,12 @@ public class Book extends Entry {
 
   @Path(TRIAL)
   public Media getTrial() {
-    initResource(trial);
     return trial;
   }
 
   public String getTrialUrl() {
     if (trial != null) {
-      return trial.getUrlBuilder().path("trial.zip").build().toString();
+      return trial.getUriBuilder().path("trial.zip").build().toString();
     }
     return null;
   }
