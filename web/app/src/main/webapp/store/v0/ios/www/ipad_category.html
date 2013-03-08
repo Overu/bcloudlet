@@ -271,31 +271,35 @@
 				}
 
 				function getBooks2(data) {
-					if (!data.hasOwnProperty('result')
+					/* if (!data.hasOwnProperty('result')
 							|| !data.hasOwnProperty('count')
 							|| !data.hasOwnProperty('items')
 							|| !data.hasOwnProperty('v') || data.v != 0)
 						handleError(status.UNEXPECTED_ERROR, hideAll);
-					else {
+					else { */
+					if (data.hasOwnProperty('entries')) {
 						try {
-							if (data.result == Status.OK) {
+							if (data) {
 								$('#no_result2').hide();
-								for ( var i = 0; i < data.count; i++) {
-									item = data.items[i];
+								for (var i = 0; i < data.limit; i++) {
+									item = data.entries[i];
+									if(!item) {
+										break;
+									}
 									var content = buildBook(item);
 									content.insertBefore('#inside_loading3');
 									setHover(content);
 								}
-								start2 += data.count;
+								
+								start2 += data.limit;
 								if (start2 > 0) {
 									$('#discount_select_panel').show();
 								}
-								if (data.more) {
+								if (data.entries.length > start2) {
 									$('#inside_loading3').show();
 								} else {
 									$('#inside_loading3').hide();
 								}
-
 								if ($('.category_detail_list:eq(1) li').size() == 1) {
 									hideAllBooks();
 								} else {
@@ -338,9 +342,7 @@
 						function() {
 							if (start2 == 0) {
 								addLoad('#add_load', function() {
-									return '/store/v0/ios/category/' + c_id
-											+ '.latest=yes&start=' + start2
-											+ '&page_length=23.json';
+									return '/api/books?start=' + start2 + '&limit=23&tag=' + c_id;
 								}, getBooks2, hideAll);
 							} else if (start2 > 0) {
 								appendEmptySlot();
