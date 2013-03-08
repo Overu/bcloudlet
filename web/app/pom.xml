@@ -9,7 +9,7 @@
   <artifactId>org.cloudlet.web.app</artifactId>
   <packaging>war</packaging>
   <properties>
-    <m2eclipse.wtp.contextRoot>/cloud</m2eclipse.wtp.contextRoot>
+    <m2eclipse.wtp.contextRoot>/</m2eclipse.wtp.contextRoot>
   </properties>
   <dependencies>
     <dependency>
@@ -117,7 +117,7 @@
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
       </plugin>
-      <plugin>
+      <!-- <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
         <configuration>
@@ -134,15 +134,15 @@
         <configuration>
           <warSourceExcludes>platform/*</warSourceExcludes>
         </configuration>
-      </plugin>
+      </plugin> -->
       <plugin>
         <groupId>org.apache.tomcat.maven</groupId>
         <artifactId>tomcat7-maven-plugin</artifactId>
         <configuration>
-          <path>/cloud</path>
+          <path>/</path>
         </configuration>
       </plugin>
-      <plugin>
+      <!-- <plugin>
         <groupId>net.kindleit</groupId>
         <artifactId>maven-gae-plugin</artifactId>
         <configuration>
@@ -152,7 +152,7 @@
             <jvmFlag>-Drdbms.url=jdbc:mysql://dev.retechcorp.com:3306/reader?useInformationSchema=true&amp;useUnicode=true&amp;characterEncoding=UTF8&amp;useServerPrepStmts=true&amp;user=root&amp;password=passw0rd</jvmFlag>
           </jvmFlags>
         </configuration>
-      </plugin>
+      </plugin> -->
     </plugins>
   </build>
 
