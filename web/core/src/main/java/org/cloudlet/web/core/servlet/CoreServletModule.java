@@ -29,7 +29,7 @@ public class CoreServletModule extends ServletModule {
   @Override
   protected void configureServlets() {
     logger.finest("installPersistModule begin");
-    filter("/*").through(ProxyFilter.class);
+    // filter("/*").through(ProxyFilter.class);
     filter("/*").through(PersistFilter.class);
 
     requestStaticInjection(DatabaseConnectionProvider.class);
@@ -37,6 +37,7 @@ public class CoreServletModule extends ServletModule {
 
     filter("/*").through(GuiceShiroFilter.class);
     serve("/_ah/login_required").with(OpenIdAuthServlet.class);
+    serve("/import").with(ImporterServlet.class);
 
     Map<String, String> jaxRsParams = new HashMap<String, String>();
     jaxRsParams.put(ServletProperties.JAXRS_APPLICATION_CLASS, CoreResourceConfig.class.getName());

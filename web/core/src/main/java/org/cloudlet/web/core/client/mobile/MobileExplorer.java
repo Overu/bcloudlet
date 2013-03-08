@@ -12,7 +12,7 @@ import org.cloudlet.web.core.client.Resource;
 import org.cloudlet.web.core.client.ResourceManager;
 import org.cloudlet.web.core.client.TakesResource;
 import org.cloudlet.web.core.client.WidgetContainer;
-import org.cloudlet.web.core.shared.CorePackage;
+import org.cloudlet.web.core.server.Repository;
 
 public class MobileExplorer extends FlowPanel implements TakesResource, WidgetContainer {
 
@@ -47,7 +47,7 @@ public class MobileExplorer extends FlowPanel implements TakesResource, WidgetCo
   public void setValue(Resource value) {
     this.resource = value;
     nav.clear();
-    final Resource books = resource.getChild(CorePackage.BOOKS);
+    final Resource books = resource.getChild(Repository.BOOKS);
     Button booksBtn = new Button("Books");
     nav.add(booksBtn);
     booksBtn.addClickHandler(new ClickHandler() {

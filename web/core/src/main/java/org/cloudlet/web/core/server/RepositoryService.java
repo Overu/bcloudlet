@@ -28,22 +28,23 @@ public class RepositoryService extends EntryService<Repository> {
   protected void init(Repository repo) {
     super.init(repo);
     Users users = new Users();
-    users.setPath("users");
+    users.setPath(Repository.USERS);
     users.setTitle("Users");
     createReference(repo, users);
 
     Books books = new Books();
-    books.setPath(CorePackage.BOOKS);
+    books.setPath(Repository.BOOKS);
     books.setTitle("Books");
     createReference(repo, books);
 
     BookTags tags = new BookTags();
-    tags.setPath("tags");
+    tags.setPath(Repository.TAGS);
     tags.setTitle("Tags");
     createReference(repo, tags);
 
     repo.setUsers(users);
     repo.setBooks(books);
+    repo.setTags(tags);
     update(repo);
   }
 }

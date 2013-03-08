@@ -328,7 +328,7 @@ function showBook(data) {
     
     $('div.detail_price').show();
     $('div.detail_price').click(function () {
-      clickFullBook(data.book.book_id, data.book.title, data.book.epub, data.book.cover, price, data.book.revision);
+      clickFullBook(data.id, data.title, data.fullUrl, data.coverUrl, price, data.revision);
     });
     setHover($('div.detail_price'));
     if (data.book.hasOwnProperty('epub_size') && data.book.epub_size != null && data.book.epub_size > 0) {

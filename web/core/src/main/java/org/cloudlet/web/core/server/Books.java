@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = CorePackage.Books)
 @Entity(name = CorePackage.Books)
 @Table(name = CorePackage.Books)
-@Path(CorePackage.BOOKS)
+@Path(Repository.BOOKS)
 public class Books extends Feed<Book> {
 
   @QueryParam("recommended")
