@@ -56,10 +56,6 @@ public abstract class Content {
 
   private static final Logger logger = Logger.getLogger(Content.class.getName());
 
-  @Context
-  @Transient
-  protected ResourceContext resourceContext;
-
   @Id
   @Column(length = 128)
   protected String id;
@@ -276,6 +272,7 @@ public abstract class Content {
   @GET
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml" })
   public Content load() {
+    initResource(this);
     doLoad();
     return this;
   }
@@ -407,11 +404,7 @@ public abstract class Content {
   protected abstract void init();
 
   protected void initResource(Object result) {
-    if (result != null) {
-      if (resourceContext != null) {
-        resourceContext.initResource(result);
-      }
-    }
+    getParent().initResource(result);
   }
 
 }

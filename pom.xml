@@ -483,7 +483,8 @@
             <warDirectory>${project.build.directory}/${project.build.finalName}</warDirectory>
             <charset>UTF-8</charset>
             <uriEncoding>UTF-8</uriEncoding>
-            <url>http://retechlive.xicp.net/manager/text</url>
+            <!-- <url>http://retechlive.xicp.net/manager/text</url> -->
+            <url>http://book.retechcorp.com/manager/text</url>
             <failOnError>true</failOnError>
             <detail>true</detail>
           </configuration>

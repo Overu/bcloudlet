@@ -24,8 +24,6 @@ public interface CorePackage {
 
   String CONTENT = "content";
 
-  String BOOKS = "books";
-
   String CHILDREN_COUNT = "childrenCount";
 
   String QUERY_COUNT = "queryCount";

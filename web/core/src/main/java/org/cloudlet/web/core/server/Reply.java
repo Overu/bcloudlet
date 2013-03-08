@@ -18,6 +18,7 @@ public class Reply extends Entry {
 
   protected String deviceType;
 
+  @Lob
   @Basic(fetch = FetchType.LAZY)
   protected String content;
 
