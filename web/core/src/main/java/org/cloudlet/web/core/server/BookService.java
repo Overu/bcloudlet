@@ -2,11 +2,22 @@ package org.cloudlet.web.core.server;
 
 import com.google.inject.Singleton;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Singleton
 public class BookService extends FeedService<Books, Book> {
 
   public BookService() {
     super(Books.class, Book.class);
+  }
+
+  public void addTag(Book book, Tag tag) {
+    tag.createReference(book);
+    Set<Tag> tags = new HashSet<Tag>();
+    tags.add(tag);
+    book.setTags(tags);
+    book.update();
   }
 
   @Override
@@ -18,5 +29,4 @@ public class BookService extends FeedService<Books, Book> {
     book.setComments(comments);
     book.update();
   }
-
 }

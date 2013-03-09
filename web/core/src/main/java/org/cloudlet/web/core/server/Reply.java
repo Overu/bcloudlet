@@ -1,20 +1,19 @@
 package org.cloudlet.web.core.server;
 
-import org.cloudlet.web.core.shared.CorePackage;
 
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Lob;
-import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.Reply)
-@XmlType(name = CorePackage.Reply)
-@Entity(name = CorePackage.Reply)
-@Table(name = CorePackage.Reply)
+@XmlRootElement
+@XmlType
+@Entity(name = Reply.TYPE_NAME)
 public class Reply extends Entry {
+
+  public static final String TYPE_NAME = CoreUtil.PREFIX + "Reply";
 
   protected String deviceType;
 
@@ -31,8 +30,8 @@ public class Reply extends Entry {
   }
 
   @Override
-  public String getResourceType() {
-    return CorePackage.Reply;
+  public String getType() {
+    return Reply.TYPE_NAME;
   }
 
   @Override

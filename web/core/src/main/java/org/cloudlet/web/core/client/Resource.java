@@ -20,7 +20,8 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import org.cloudlet.web.core.shared.CorePackage;
+import org.cloudlet.web.core.server.Content;
+import org.cloudlet.web.core.server.Feed;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -170,11 +171,11 @@ public class Resource extends Place {
   }
 
   public Object getHomeWidget() {
-    return Registry.getWidget(getResourceType(), CorePackage.HOME);
+    return Registry.getWidget(getResourceType(), Content.HOME);
   }
 
   public String getId() {
-    return getString(CorePackage.ID);
+    return getString(Content.ID);
   }
 
   public List<Resource> getList(String prop) {
@@ -185,7 +186,7 @@ public class Resource extends Place {
       for (int i = 0; i < array.size(); i++) {
         JSONValue v = array.get(i);
         JSONObject obj = v.isObject();
-        String path = obj.get(CorePackage.PATH).isString().stringValue();
+        String path = obj.get(Content.PATH).isString().stringValue();
         Resource child = getChild(path);
         child.data = obj;
         result.add(child);
@@ -199,11 +200,11 @@ public class Resource extends Place {
   }
 
   public String getPath() {
-    return getString(CorePackage.PATH);
+    return getString(Content.PATH);
   }
 
   public Long getQueryCount() {
-    Object result = getValue(CorePackage.QUERY_COUNT);
+    Object result = getValue(Feed.QUERY_COUNT);
     if (result != null && result instanceof Double) {
       return ((Double) result).longValue();
     }
@@ -239,7 +240,7 @@ public class Resource extends Place {
   }
 
   public String getResourceType() {
-    return getString(CorePackage.RESOURCE_TYPE);
+    return getString(Content.TYPE);
   }
 
   public String getString(String propName) {
@@ -252,7 +253,7 @@ public class Resource extends Place {
   }
 
   public String getTitle() {
-    return getString(CorePackage.TITLE);
+    return getString(Content.TITLE);
   }
 
   public String getToken() {
@@ -338,7 +339,7 @@ public class Resource extends Place {
   }
 
   public boolean hasChildren() {
-    JSONValue count = data.get(CorePackage.CHILDREN_COUNT);
+    JSONValue count = data.get(Content.TOTAL);
     if (count != null) {
       return count.isNumber().doubleValue() > 0;
     }
@@ -471,7 +472,7 @@ public class Resource extends Place {
   }
 
   public void setPath(String path) {
-    setString(CorePackage.PATH, path);
+    setString(Content.PATH, path);
   }
 
   public void setQueryParameters(MultivaluedMap<String, String> queryParameters) {
@@ -479,7 +480,7 @@ public class Resource extends Place {
   }
 
   public void setResourceType(String value) {
-    setString(CorePackage.RESOURCE_TYPE, value);
+    setString(Content.TYPE, value);
   }
 
   public void setString(String propName, String value) {
@@ -487,7 +488,7 @@ public class Resource extends Place {
   }
 
   public void setTitle(String title) {
-    setString(CorePackage.TITLE, title);
+    setString(Content.TITLE, title);
   }
 
   public void setToken(String token) {

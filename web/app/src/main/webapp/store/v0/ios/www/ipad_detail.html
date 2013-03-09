@@ -592,7 +592,7 @@ function replyInfor(data){
     /* if( data.total==undefined||data.total==null||data.total=='' ) {
         data.total=0
     } */
-    if(data.totalEntries==0){
+    if(data.count==0){
       $('#discount_select').hide();
       $('.Br_content').hide();
       $('.no_result').hide();
@@ -603,7 +603,7 @@ function replyInfor(data){
     for(var i=0; i<data.entries.length; i++){
      var comments=data.entries[i];
       var com=data.entries[i].replies;
-      var total=comments.totalEntries;
+      var total=comments.count;
       if(total==undefined||total==null||total==''){
         total=0;
       }
@@ -874,10 +874,10 @@ function fivestar(wich,tagclass){
   $.ajax({
     url:'/api/books/'+b_id+'/comments?start=1&limit=1',
     success:function(data){
-             if (data.totalEntries != 0){
+             if (data.count != 0){
                /* var starIndex=data.user_last_score-1;
                if(starIndex>-1){ */
-            	if(data.totalEntries) {
+            	if(data.count) {
                  $('#reply_title2 .five>li:eq('+1+')').addClass('Five_red');
                  $('#write_comment .five>li:eq('+2+')').addClass('Five_red');
                  $('#reply_title2 .five>li:eq('+3+')').prevAll().addClass('Five_red');

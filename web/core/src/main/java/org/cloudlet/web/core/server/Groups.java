@@ -1,20 +1,17 @@
 package org.cloudlet.web.core.server;
 
-import org.cloudlet.web.core.shared.CorePackage;
-
 import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.Groups)
-@XmlType(name = CorePackage.Groups)
-@Entity(name = CorePackage.Groups)
-@Table(name = CorePackage.Groups)
-@Path("groups")
+@XmlRootElement
+@XmlType
+@Entity(name = Groups.TYPE_NAME)
+@Path(Repository.GROUPS)
 public class Groups extends Feed<Group> {
+
+  public static final String TYPE_NAME = CoreUtil.PREFIX + "Groups";
 
   @Override
   public Class<Group> getEntryType() {
@@ -22,13 +19,13 @@ public class Groups extends Feed<Group> {
   }
 
   @Override
-  public String getResourceType() {
-    return CorePackage.Groups;
+  public Class<GroupService> getServiceType() {
+    return GroupService.class;
   }
 
   @Override
-  public Class<GroupService> getServiceType() {
-    return GroupService.class;
+  public String getType() {
+    return Groups.TYPE_NAME;
   }
 
 }

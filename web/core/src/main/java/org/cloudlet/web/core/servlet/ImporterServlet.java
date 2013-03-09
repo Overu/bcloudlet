@@ -24,7 +24,7 @@ public class ImporterServlet extends HttpServlet {
     PrintWriter w = resp.getWriter();
     try {
       importer.setWriter(w);
-      importer.testImportDuoKan();
+      importer.importDuoKan();
     } catch (Throwable t) {
       t.printStackTrace(w);
     }

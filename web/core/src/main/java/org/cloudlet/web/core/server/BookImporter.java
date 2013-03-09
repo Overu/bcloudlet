@@ -24,7 +24,7 @@ public class BookImporter {
   BookService booksSvc;
 
   @Inject
-  BookTagService tagsSvc;
+  TagService tagsSvc;
 
   PrintWriter writer;
 
@@ -39,9 +39,20 @@ public class BookImporter {
     return writer;
   }
 
+  public void importDuoKan() throws Exception {
+    setup();
+    importTags();
+    Tags tags = tagsSvc.getRoot();
+    tags.load();
+    for (Tag tag : tags.getEntries()) {
+      importBooks(tag);
+    }
+  }
+
   public void setup() {
     File dataFolder = new File("data/source");
-    writer.println(dataFolder.getAbsolutePath());
+    String path = dataFolder.getAbsolutePath();
+    writer.println(path);
     File[] bookFiles = dataFolder.listFiles();
     dataFiles = new String[bookFiles.length];
     for (int i = 0; i < bookFiles.length; i++) {
@@ -55,17 +66,7 @@ public class BookImporter {
     this.writer = writer;
   }
 
-  public void testImportDuoKan() throws Exception {
-    setup();
-    importTags();
-    BookTags tags = tagsSvc.getRoot();
-    tags.load();
-    for (BookTag tag : tags.getEntries()) {
-      importBooks(tag);
-    }
-  }
-
-  private void importBooks(BookTag tag) throws IOException, HttpException, JSONException {
+  private void importBooks(Tag tag) throws IOException, HttpException, JSONException {
     HttpClient client = new HttpClient();
     String url = "http://book.duokan.com/store/v0/ios/category/" + tag.getId() + "?start=0&page_length=8";
     GetMethod httpMethod = new GetMethod(url);
@@ -95,7 +96,6 @@ public class BookImporter {
             book.setNew_price((float) jsonObj.getDouble("new_price"));
           }
           book.setSummary(jsonObj.getString("summary"));
-          book.setTag1(tag);
           books.createEntry(book);
 
           String coverUrl = jsonObj.getString("cover");
@@ -129,16 +129,10 @@ public class BookImporter {
           book.update();
 
           importComments(book);
-        } else {
-          if (book.getTag1() == null) {
-            book.setTag1(tag);
-          } else if (book.getTag2() == null) {
-            book.setTag2(tag);
-          } else if (book.getTag3() == null) {
-            book.setTag3(tag);
-          }
-          book.update();
         }
+
+        book.addTag(tag);
+
       }
     }
   }
@@ -211,13 +205,13 @@ public class BookImporter {
       writer.println(body);
       JSONObject json = new JSONObject(body);
       JSONArray arr = (JSONArray) json.get("items");
-      BookTags tags = tagsSvc.getRoot();
+      Tags tags = tagsSvc.getRoot();
       for (int i = 0; i < arr.length(); i++) {
         JSONObject catJson = (JSONObject) arr.get(i);
         String id = (String) catJson.get("category_id");
-        BookTag tag = tags.getEntry(id);
+        Tag tag = tags.getEntry(id);
         if (tag == null) {
-          tag = new BookTag();
+          tag = new Tag();
           tag.setId(id);
           tag.setPath(id);
           tag.setTitle(catJson.getString("titles"));
@@ -230,7 +224,7 @@ public class BookImporter {
   }
 
   // Note: 将Mysql的编码从utf8转换成utf8mb4
-  // http://www.2cto.com/database/201204/127743.html
+  // http://www.cnblogs.com/vincentchan/archive/2012/09/25/2701266.html
   private String readContent(JSONObject jsonComment) throws JSONException {
     String txt = jsonComment.getString("content");
     if (txt.length() > 255) {

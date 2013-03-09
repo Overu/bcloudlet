@@ -1,9 +1,6 @@
 package org.cloudlet.web.core.server;
 
-import org.cloudlet.web.core.shared.CorePackage;
-
 import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -14,12 +11,13 @@ import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.Users)
-@XmlType(name = CorePackage.Users)
-@Entity(name = CorePackage.Users)
-@Table(name = CorePackage.Users)
-@Path("users")
+@XmlRootElement
+@XmlType
+@Entity(name = Users.TYPE_NAME)
+@Path(Repository.USERS)
 public class Users extends Feed<User> {
+
+  public static final String TYPE_NAME = CoreUtil.PREFIX + "Users";
 
   @Override
   @POST
@@ -35,13 +33,13 @@ public class Users extends Feed<User> {
   }
 
   @Override
-  public String getResourceType() {
-    return CorePackage.Users;
+  public Class<UserService> getServiceType() {
+    return UserService.class;
   }
 
   @Override
-  public Class<UserService> getServiceType() {
-    return UserService.class;
+  public String getType() {
+    return Users.TYPE_NAME;
   }
 
   @Override

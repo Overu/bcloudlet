@@ -3,7 +3,6 @@ package org.cloudlet.web.core.provider;
 import org.cloudlet.web.core.server.Content;
 import org.cloudlet.web.core.server.Entry;
 import org.cloudlet.web.core.server.Feed;
-import org.cloudlet.web.core.shared.CorePackage;
 import org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider;
 
 import java.io.IOException;
@@ -61,12 +60,12 @@ public class XmlResourceProvider extends AbstractMessageReaderWriterProvider<Con
   }
 
   private void writeResource(XMLStreamWriter writer, Content content) throws XMLStreamException {
-    writer.writeStartElement(content.getResourceType());
+    writer.writeStartElement(content.getType());
     if (content.getTitle() != null) {
-      writer.writeAttribute(CorePackage.TITLE, content.getTitle());
+      writer.writeAttribute(Content.TITLE, content.getTitle());
     }
-    writer.writeAttribute(CorePackage.PATH, content.getPath());
-    writer.writeAttribute(CorePackage.URI, content.getUri());
+    writer.writeAttribute(Content.PATH, content.getPath());
+    writer.writeAttribute(Content.URI, content.getUri());
     // if (content.getContent() != null) {
     // writer.writeCharacters(content.getContent());
     // }

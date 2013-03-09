@@ -375,7 +375,7 @@
 				} else  */
 				if (data.hasOwnProperty('entries')) {
 					var content = "";
-					for ( var i = 0; i < data.totalEntries; i++) {
+					for ( var i = 0; i < data.count; i++) {
 						item = data.entries[i];
 						content += buildCategory(item);
 					}

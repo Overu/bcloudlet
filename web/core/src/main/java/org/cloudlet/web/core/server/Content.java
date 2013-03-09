@@ -7,7 +7,6 @@ import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.RequestContext;
 import org.apache.commons.fileupload.util.Streams;
 import org.apache.commons.io.IOUtils;
-import org.cloudlet.web.core.shared.CorePackage;
 import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -19,6 +18,7 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EntityManager;
 import javax.persistence.Id;
@@ -38,7 +38,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.container.ResourceContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
@@ -47,14 +46,15 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
 
-@TypeDef(name = CorePackage.CONTENT, typeClass = ResourceType.class)
+@TypeDef(name = ContentType.NAME, typeClass = ContentType.class)
 @MappedSuperclass
 @EntityListeners(InjectionListener.class)
 public abstract class Content {
 
   private static final Logger logger = Logger.getLogger(Content.class.getName());
+
+  public static final String TYPE = "type";
 
   @Id
   @Column(length = 128)
@@ -82,12 +82,34 @@ public abstract class Content {
   @ManyToOne
   protected User owner;
 
-  @Type(type = CorePackage.CONTENT)
+  @Type(type = ContentType.NAME)
   @Columns(columns = { @Column(name = "parentType"), @Column(name = "parentId") })
   protected Content parent;
 
   @Transient
   private Service service;
+
+  public static final String SEARCH = "search";
+
+  public static final String HOME = "";
+
+  public static final String EDIT = "edit";
+
+  public static final String TOTAL = "total";
+
+  public static final String ID = "id";
+
+  public static final String PARENT_TYPE = "parentType";
+
+  public static final String PARENT_ID = "parentId";
+
+  public static final String TITLE = "title";
+
+  public static final String PATH = "path";
+
+  public static final String VERSION = "version";
+
+  public static final String URI = "uri";
 
   public Content createFromInputStream(@Context UriInfo uriInfo, @QueryParam("path") Integer contentLength,
       @HeaderParam("Content-Type") String contentType, InputStream inputStream) {
@@ -203,18 +225,13 @@ public abstract class Content {
   }
 
   public Object getPropertyValue(String name) {
-    if (CorePackage.TITLE.equals(name)) {
+    if (Content.TITLE.equals(name)) {
       return title;
     }
-    if (CorePackage.PATH.equals(name)) {
+    if (Content.PATH.equals(name)) {
       return path;
     }
     return null;
-  }
-
-  public String getResourceType() {
-    XmlType type = getClass().getAnnotation(XmlType.class);
-    return type.name();
   }
 
   @XmlTransient
@@ -239,6 +256,11 @@ public abstract class Content {
 
   public String getTitle() {
     return title;
+  }
+
+  public String getType() {
+    Entity type = getClass().getAnnotation(Entity.class);
+    return type.name();
   }
 
   public Date getUpdated() {
@@ -290,8 +312,8 @@ public abstract class Content {
   }
 
   public void readParams(MultivaluedMap<String, String> params) {
-    String path = params.getFirst(CorePackage.PATH);
-    String title = params.getFirst(CorePackage.TITLE);
+    String path = params.getFirst(Content.PATH);
+    String title = params.getFirst(Content.TITLE);
     if (path != null) {
       this.path = path;
     }
@@ -325,9 +347,9 @@ public abstract class Content {
   }
 
   public void setPropertyValue(String name, String value) {
-    if (CorePackage.TITLE.equals(name)) {
+    if (Content.TITLE.equals(name)) {
       title = value;
-    } else if (CorePackage.PATH.equals(name)) {
+    } else if (Content.PATH.equals(name)) {
       path = value;
     }
   }
@@ -367,7 +389,7 @@ public abstract class Content {
   public abstract Content update();
 
   protected Content createFrom(MultivaluedMap<String, String> params) {
-    String resourceType = params.getFirst(CorePackage.RESOURCE_TYPE);
+    String resourceType = params.getFirst(Content.TYPE);
     // Class<?> type = Registry.getResourceType(resourceType);
     // if (type != null) {
     // ImplementedBy impl = type.getAnnotation(ImplementedBy.class);

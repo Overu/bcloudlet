@@ -11,7 +11,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ResourceType implements UserType {
+public class ContentType implements UserType {
+
+  public static final String NAME = "content";
 
   @Override
   public Object assemble(final Serializable cached, final Object arg1) throws HibernateException {
@@ -71,7 +73,7 @@ public class ResourceType implements UserType {
       StringType.INSTANCE.nullSafeSet(st, null, index + 1, session);
     } else {
       Content resource = (Content) value;
-      StringType.INSTANCE.nullSafeSet(st, resource.getResourceType(), index, session);
+      StringType.INSTANCE.nullSafeSet(st, resource.getType(), index, session);
       StringType.INSTANCE.nullSafeSet(st, resource.getId(), index + 1, session);
     }
   }

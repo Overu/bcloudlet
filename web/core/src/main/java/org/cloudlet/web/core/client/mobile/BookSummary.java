@@ -20,7 +20,8 @@ import org.cloudlet.web.core.client.CompositeView;
 import org.cloudlet.web.core.client.Resource;
 import org.cloudlet.web.core.client.ResourceGrid;
 import org.cloudlet.web.core.client.TakesResource;
-import org.cloudlet.web.core.shared.CorePackage;
+import org.cloudlet.web.core.server.Book;
+import org.cloudlet.web.core.server.Content;
 
 public class BookSummary extends CompositeView implements TakesResource {
 
@@ -111,8 +112,8 @@ public class BookSummary extends CompositeView implements TakesResource {
       // bookImage.getElement().getStyle().setBackgroundImage(
       // "url(\"" + GWT.getModuleBaseURL() + "resources/" + book.getCover().getId() + "\")");
       titleLabel.setText(book.getTitle());
-      authorLabel.setText(book.getString(CorePackage.AUTHOR));
-      descLabel.setText(book.getString(CorePackage.TITLE));
+      authorLabel.setText(book.getString(Book.AUTHOR));
+      descLabel.setText(book.getString(Content.TITLE));
       setFree();
     }
   }

@@ -1,18 +1,16 @@
 package org.cloudlet.web.core.server;
 
-import org.cloudlet.web.core.shared.CorePackage;
-
 import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.Members)
-@XmlType(name = CorePackage.Members)
-@Entity(name = CorePackage.Members)
-@Table(name = CorePackage.Members)
+@XmlRootElement
+@XmlType
+@Entity(name = Members.TYPE_NAME)
 public class Members extends Feed<Member> {
+  public static final String TYPE_NAME = CoreUtil.PREFIX + "Members";
+
   @Override
   @XmlTransient
   public Class<Member> getEntryType() {
@@ -20,8 +18,8 @@ public class Members extends Feed<Member> {
   }
 
   @Override
-  public String getResourceType() {
-    return CorePackage.Members;
+  public String getType() {
+    return Members.TYPE_NAME;
   }
 
 }

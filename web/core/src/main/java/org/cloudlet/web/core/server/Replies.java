@@ -1,17 +1,16 @@
 package org.cloudlet.web.core.server;
 
-import org.cloudlet.web.core.shared.CorePackage;
 
 import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.Replies)
-@XmlType(name = CorePackage.Replies)
-@Entity(name = CorePackage.Replies)
-@Table(name = CorePackage.Replies)
+@XmlRootElement
+@XmlType
+@Entity(name = Replies.TYPE_NAME)
 public class Replies extends Feed<Reply> {
+
+  public static final String TYPE_NAME = CoreUtil.PREFIX + "Replies";
 
   @Override
   public Class<Reply> getEntryType() {
@@ -19,8 +18,8 @@ public class Replies extends Feed<Reply> {
   }
 
   @Override
-  public String getResourceType() {
-    return CorePackage.Replies;
+  public String getType() {
+    return Replies.TYPE_NAME;
   }
 
   @Override

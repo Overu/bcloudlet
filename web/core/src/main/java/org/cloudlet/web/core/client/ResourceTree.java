@@ -18,7 +18,8 @@ import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 
-import org.cloudlet.web.core.shared.CorePackage;
+import org.cloudlet.web.core.server.Content;
+import org.cloudlet.web.core.server.Entry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,7 @@ public class ResourceTree extends BorderLayoutContainer implements TakesResource
     @Override
     public List<Resource> read(final Object loadConfig, final Resource resource) {
       List<Resource> result = new ArrayList<Resource>();
-      List<Resource> children = resource.getList(CorePackage.REFERENCES);
+      List<Resource> children = resource.getList(Entry.REFERENCES);
       for (Resource child : children) {
         result.add(child);
       }
@@ -75,7 +76,7 @@ public class ResourceTree extends BorderLayoutContainer implements TakesResource
     loader = new TreeLoader<Resource>(new DataProxy<Resource, Resource>() {
       @Override
       public void load(Resource resource, final Callback<Resource, Throwable> callback) {
-        resource.getQueryParameters().addFirst(CorePackage.REFERENCES, "true");
+        resource.getQueryParameters().addFirst(Entry.REFERENCES, "true");
         resource.load(new AsyncCallback<Resource>() {
           @Override
           public void onFailure(Throwable caught) {
@@ -100,7 +101,7 @@ public class ResourceTree extends BorderLayoutContainer implements TakesResource
 
       @Override
       public String getPath() {
-        return CorePackage.TITLE;
+        return Content.TITLE;
       }
 
       @Override

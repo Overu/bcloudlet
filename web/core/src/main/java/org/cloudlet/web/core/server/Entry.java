@@ -1,8 +1,5 @@
 package org.cloudlet.web.core.server;
 
-import org.cloudlet.web.core.shared.CorePackage;
-import org.hibernate.annotations.TypeDef;
-
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -14,25 +11,29 @@ import javax.ws.rs.QueryParam;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-@TypeDef(name = "resource", typeClass = ResourceType.class)
 @MappedSuperclass
 @EntityListeners(InjectionListener.class)
 public abstract class Entry extends Content {
 
   private static final Logger logger = Logger.getLogger(Entry.class.getName());
 
-  @Transient
-  @QueryParam(CorePackage.REFERENCES)
-  protected boolean loadReferences;
+  public static final String REFERENCES = "children";
 
-  protected long totalReferences;
+  @Transient
+  @QueryParam(Entry.REFERENCES)
+  protected boolean loadReferences;
 
   @Transient
   protected List<? extends Content> references;
 
-  public Content createReference(Content child) {
-    getService().createReference(this, child);
-    return child;
+  protected long total;
+
+  @Transient
+  protected long count;
+
+  public Content createReference(Content target) {
+    getService().createReference(this, target);
+    return target;
   }
 
   @Override
@@ -40,6 +41,10 @@ public abstract class Entry extends Content {
   @DELETE
   public void delete() {
     getService().delete(this);
+  }
+
+  public long getCount() {
+    return count;
   }
 
   @XmlElement
@@ -58,8 +63,12 @@ public abstract class Entry extends Content {
     return EntryService.class;
   }
 
-  public long getTotalReferences() {
-    return totalReferences;
+  public long getTotal() {
+    return total;
+  }
+
+  public void setCount(long count) {
+    this.count = count;
   }
 
   @Override
@@ -67,12 +76,12 @@ public abstract class Entry extends Content {
     this.id = id;
   }
 
-  public void setReferences(List<? extends Content> children) {
-    this.references = children;
+  public void setReferences(List<? extends Content> contents) {
+    this.references = contents;
   }
 
-  public void setTotalReferences(long totalReferences) {
-    this.totalReferences = totalReferences;
+  public void setTotal(long total) {
+    this.total = total;
   }
 
   @Override
@@ -85,7 +94,7 @@ public abstract class Entry extends Content {
   protected void doLoad() {
     if (loadReferences) {
       references = getService().findReferences(this);
-      totalReferences = getService().countReferences(this);
+      count = getService().countReferences(this);
     }
   }
 

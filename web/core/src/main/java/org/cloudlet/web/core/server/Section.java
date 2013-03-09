@@ -1,29 +1,27 @@
 package org.cloudlet.web.core.server;
 
-import org.cloudlet.web.core.shared.CorePackage;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.Section)
-@XmlType(name = CorePackage.Section)
-@Entity(name = CorePackage.Section)
-@Table(name = CorePackage.Section)
+@XmlRootElement
+@XmlType
+@Entity(name = Section.TYPE_NAME)
 public class Section extends Entry {
   @OneToOne
   private Media media;
+  public static final String TYPE_NAME = CoreUtil.PREFIX + "Section";
 
   public Media getMedia() {
     return media;
   }
 
   @Override
-  public String getResourceType() {
-    return CorePackage.Section;
+  public String getType() {
+    return TYPE_NAME;
   }
 
   @Override

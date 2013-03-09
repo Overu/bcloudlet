@@ -23,7 +23,7 @@ import org.cloudlet.web.core.client.CompositeView;
 import org.cloudlet.web.core.client.EventGenerator;
 import org.cloudlet.web.core.client.EventGenerator.Function;
 import org.cloudlet.web.core.client.Resource;
-import org.cloudlet.web.core.shared.CorePackage;
+import org.cloudlet.web.core.server.Content;
 
 import java.util.List;
 
@@ -97,8 +97,8 @@ public class CategoryView extends CompositeView implements SelectionHandler<Inte
     for (final Resource rsource : resources) {
       LIElement li = Document.get().createLIElement();
       AnchorElement a = Document.get().createAnchorElement();
-      a.setInnerText(rsource.getString(CorePackage.TITLE));
-      a.setPropertyObject(CorePackage.PATH, rsource);
+      a.setInnerText(rsource.getString(Content.TITLE));
+      a.setPropertyObject(Content.PATH, rsource);
       bindLiEvent(a, i);
       li.appendChild(a);
       category.appendChild(li);

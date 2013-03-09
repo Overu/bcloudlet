@@ -1,22 +1,18 @@
 package org.cloudlet.web.core.server;
 
-import org.cloudlet.web.core.shared.CorePackage;
-
 import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = Order.TYPE)
-@XmlType(name = Order.TYPE)
-@Entity(name = Order.TYPE)
-@Table(name = Order.TYPE)
+@XmlRootElement
+@XmlType
+@Entity(name = Order.TYPE_NAME)
 public class Order extends Entry {
 
-  public static final String TYPE = CorePackage.PREFIX + "Order";
+  public static final String TYPE_NAME = CoreUtil.PREFIX + "Order";
 
   @OneToOne
   protected Book book;
@@ -46,13 +42,13 @@ public class Order extends Entry {
   }
 
   @Override
-  public String getResourceType() {
-    return Order.TYPE;
+  public Class<OrderService> getServiceType() {
+    return OrderService.class;
   }
 
   @Override
-  public Class<OrderService> getServiceType() {
-    return OrderService.class;
+  public String getType() {
+    return Order.TYPE_NAME;
   }
 
   public void setAppId(String appId) {

@@ -114,4 +114,6 @@ public class CoreUtil {
       throw new IllegalStateException(e);
     }
   }
+
+  public static final String PREFIX = "Core";
 }

@@ -1,17 +1,16 @@
 package org.cloudlet.web.core.server;
 
-import org.cloudlet.web.core.shared.CorePackage;
 
 import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.Comments)
-@XmlType(name = CorePackage.Comments)
-@Entity(name = CorePackage.Comments)
-@Table(name = CorePackage.Comments)
+@XmlRootElement
+@XmlType
+@Entity(name = Comments.TYPE_NAME)
 public class Comments extends Feed<Comment> {
+
+  public static final String TYPE_NAME = CoreUtil.PREFIX + "Comments";
 
   @Override
   public Class<Comment> getEntryType() {
@@ -19,8 +18,8 @@ public class Comments extends Feed<Comment> {
   }
 
   @Override
-  public String getResourceType() {
-    return CorePackage.Comments;
+  public String getType() {
+    return TYPE_NAME;
   }
 
   @Override

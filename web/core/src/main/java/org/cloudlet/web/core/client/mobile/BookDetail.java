@@ -17,7 +17,7 @@ import com.google.inject.Singleton;
 import org.cloudlet.web.core.client.CompositeView;
 import org.cloudlet.web.core.client.Resource;
 import org.cloudlet.web.core.client.ResourceGrid;
-import org.cloudlet.web.core.shared.CorePackage;
+import org.cloudlet.web.core.server.Book;
 
 @Singleton
 public class BookDetail extends CompositeView {
@@ -50,7 +50,7 @@ public class BookDetail extends CompositeView {
     if (getValue() == null) {
       return;
     }
-    String string = book.getString(CorePackage.AUTHOR);
+    String string = book.getString(Book.AUTHOR);
     authorElm.setInnerHTML(string);
   }
 

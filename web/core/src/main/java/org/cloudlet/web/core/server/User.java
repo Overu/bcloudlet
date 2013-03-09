@@ -1,11 +1,8 @@
 package org.cloudlet.web.core.server;
 
-import org.cloudlet.web.core.shared.CorePackage;
-
 import java.security.Principal;
 
 import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Produces;
@@ -13,10 +10,9 @@ import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.User)
-@XmlType(name = CorePackage.User)
-@Entity(name = CorePackage.User)
-@Table(name = CorePackage.User)
+@XmlRootElement
+@XmlType
+@Entity(name = User.TYPE_NAME)
 public class User extends Entry implements Principal {
   private String name;
   private String email;
@@ -28,6 +24,12 @@ public class User extends Entry implements Principal {
   private String passwordHash;
 
   private String zip;
+  public static final String ZIP = "zip";
+  public static final String STATE = "state";
+  public static final String PHONE = "phone";
+  public static final String EMAIL = "email";
+  public static final String NAME = "name";
+  public static final String TYPE_NAME = CoreUtil.PREFIX + "User";
 
   public String getEmail() {
     return email;
@@ -50,17 +52,17 @@ public class User extends Entry implements Principal {
   }
 
   @Override
-  public String getResourceType() {
-    return CorePackage.User;
-  }
-
-  @Override
   public Class<UserService> getServiceType() {
     return UserService.class;
   }
 
   public String getState() {
     return state;
+  }
+
+  @Override
+  public String getType() {
+    return User.TYPE_NAME;
   }
 
   public String getZip() {

@@ -1,22 +1,21 @@
 package org.cloudlet.web.core.server;
 
-import org.cloudlet.web.core.shared.CorePackage;
 
 import java.security.Principal;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import javax.ws.rs.Path;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.Group)
-@XmlType(name = CorePackage.Group)
-@Entity(name = CorePackage.Group)
-@Table(name = CorePackage.Group)
+@XmlRootElement
+@XmlType
+@Entity(name = Group.TYPE_NAME)
 public class Group extends Entry implements Principal {
+
+  public static final String TYPE_NAME = CoreUtil.PREFIX + "Group";
 
   protected String name;
 
@@ -44,8 +43,8 @@ public class Group extends Entry implements Principal {
   }
 
   @Override
-  public String getResourceType() {
-    return CorePackage.Group;
+  public String getType() {
+    return Group.TYPE_NAME;
   }
 
   @Override

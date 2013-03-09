@@ -4,23 +4,15 @@ import com.google.inject.Inject;
 
 import static org.junit.Assert.assertEquals;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
 import org.htmlparser.beans.StringBean;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.io.PrintWriter;
 import java.net.URLDecoder;
 import java.util.List;
 import java.util.Random;
@@ -55,7 +47,7 @@ public class BookTest extends CoreTest {
   BookService booksSvc;
 
   @Inject
-  BookTagService tagsSvc;
+  TagService tagsSvc;
 
   @Inject
   JacksonJaxbJsonProvider jsonProvider;
@@ -63,11 +55,14 @@ public class BookTest extends CoreTest {
   private static final String DEVICE_INFO =
       "build=2012120701; device=D002-F5805035-921D-4426-BF91-81F65004FEFC; token=; userid=fantongx@gmail.com";
 
+  @Inject
+  BookImporter importer;
+
   @Test
   public void testCreateBook() throws Exception {
     Books books = booksSvc.getRoot();
     books.load();
-    long total = books.getTotalEntries();
+    long total = books.getCount();
     Book book = books.newEntry();
     total = total + 1;
     book.setPath("book" + total);
@@ -94,7 +89,7 @@ public class BookTest extends CoreTest {
 
     book.update();
     books.load();
-    assertEquals(total, books.getTotalEntries());
+    assertEquals(total, books.getCount());
     for (int i = 0; i < 10; i++) {
       Section section = new Section();
       section.setPath("section" + i);
@@ -112,11 +107,12 @@ public class BookTest extends CoreTest {
     System.out.println(os.toString());
   }
 
+  @Test
   public void testImportBook() throws Exception {
     Repository repo = repoSvc.getRoot();
     Books books = booksSvc.getRoot();
     books.load();
-    long total = books.getTotalEntries();
+    long total = books.getCount();
 
     Random priceRandom = new Random(1000);
 
@@ -126,9 +122,9 @@ public class BookTest extends CoreTest {
     File folder = new File("D:\\电子书");
     for (File subFolder : folder.listFiles()) {
       String name = subFolder.getName();
-      BookTag tag = (BookTag) repo.getChild(name);
+      Tag tag = (Tag) repo.getChild(name);
       if (tag == null) {
-        tag = new BookTag();
+        tag = new Tag();
         tag.setTitle(name);
         tag.setPath(name);
         repo.createReference(tag);
@@ -142,8 +138,6 @@ public class BookTest extends CoreTest {
         total = total + 1;
         book.setPath("book" + total);
         book.setTitle(ebook.getTitle());
-
-        book.setTag1(tag);
 
         Metadata metadata = ebook.getMetadata();
 
@@ -185,6 +179,8 @@ public class BookTest extends CoreTest {
         // ByteArrayInputStream("Good work".getBytes()));
         books.createEntry(book);
 
+        tag.createReference(book);
+
         Resource coverRes = ebook.getCoverImage();
 
         Media cover = new Media();
@@ -212,7 +208,7 @@ public class BookTest extends CoreTest {
           Media media = new Media();
           media.setTitle(res.getTitle());
           media.read(res.getInputStream());
-          section.createReference(section);
+          section.createReference(media);
 
           section.setMedia(media);
           section.update();
@@ -227,5 +223,11 @@ public class BookTest extends CoreTest {
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     marshaller.marshal(books, os);
     System.out.println(os.toString());
+  }
+
+  @Test
+  public void testImportDuoKanBook() throws Exception {
+    importer.setWriter(new PrintWriter(System.out));
+    importer.importDuoKan();
   }
 }

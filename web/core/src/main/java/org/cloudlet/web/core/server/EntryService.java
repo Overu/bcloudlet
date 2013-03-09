@@ -1,5 +1,7 @@
 package org.cloudlet.web.core.server;
 
+import com.google.inject.persist.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -25,16 +27,20 @@ public class EntryService<E extends Entry> extends Service {
     return count;
   }
 
+  @Transactional
   public Content createReference(E source, Content target) {
-    createChild(source, target);
-    if (source != null) {
-      final Reference rel = new Reference();
-      rel.setId(CoreUtil.randomID());
-      rel.setSource(source);
-      rel.setTarget(target);
-      rel.setPath(target.getPath());
-      em().persist(rel);
+    final Reference reference = new Reference();
+    reference.setId(CoreUtil.randomID());
+    reference.setSource(source);
+    reference.setTarget(target);
+    reference.setPath(target.getPath());
+
+    if (!em().contains(target)) {
+      createChild(source, target);
+      reference.setContaiment(true);
     }
+
+    em().persist(reference);
     return target;
   }
 

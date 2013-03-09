@@ -2,7 +2,6 @@ package org.cloudlet.web.core.server;
 
 import com.google.inject.Singleton;
 
-import org.cloudlet.web.core.shared.CorePackage;
 
 import javax.persistence.NoResultException;
 
@@ -16,7 +15,7 @@ public class RepositoryService extends EntryService<Repository> {
   public Repository getRoot() {
     Repository repo = null;
     try {
-      repo = em().createQuery("from " + CorePackage.Repository, Repository.class).getSingleResult();
+      repo = em().createQuery("from " + Repository.TYPE_NAME, Repository.class).getSingleResult();
     } catch (NoResultException e) {
       repo = new Repository();
       createReference(null, repo);
@@ -37,7 +36,7 @@ public class RepositoryService extends EntryService<Repository> {
     books.setTitle("Books");
     createReference(repo, books);
 
-    BookTags tags = new BookTags();
+    Tags tags = new Tags();
     tags.setPath(Repository.TAGS);
     tags.setTitle("Tags");
     createReference(repo, tags);

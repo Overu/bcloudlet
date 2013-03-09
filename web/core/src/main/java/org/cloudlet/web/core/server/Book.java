@@ -1,24 +1,22 @@
 package org.cloudlet.web.core.server;
 
-import org.cloudlet.web.core.shared.CorePackage;
-
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = Book.TYPE)
-@XmlType(name = Book.TYPE)
-@Entity(name = Book.TYPE)
-@Table(name = Book.TYPE)
+@XmlRootElement
+@XmlType
+@Entity(name = Book.TYPE_NAME)
 public class Book extends Entry {
 
-  public static final String TYPE = CorePackage.PREFIX + "Book";
+  public static final String TYPE_NAME = CoreUtil.PREFIX + "Book";
 
   public static final String SOURCE = "source";
 
@@ -55,15 +53,6 @@ public class Book extends Entry {
   @OneToOne
   private Comments comments;
 
-  @OneToOne
-  private BookTag tag1;
-
-  @OneToOne
-  private BookTag tag2;
-
-  @OneToOne
-  private BookTag tag3;
-
   private String authors;
 
   private float score;
@@ -79,6 +68,39 @@ public class Book extends Entry {
   private String serialNumber;
 
   private long size;
+
+  public static final String SIZE = "size";
+
+  public static final String SERIAL_NUMBER = "serialNumber";
+
+  public static final String COPYRIGHT = "copyright";
+
+  public static final String DATE_UPDATED = "dateUpdated";
+
+  public static final String PROMOTION_PRICE = "promotionPrice";
+
+  public static final String HOT = "hot";
+
+  public static final String FEATURED = "featured";
+
+  public static final String DATE_PUBLISHED = "datePublished";
+
+  public static final String TAG = "tag";
+
+  public static final String TAGS = "tags";
+
+  public static final String PROMOTED = "promoted";
+
+  public static final String PRICE = "price";
+
+  public static final String AUTHOR = "author";
+
+  @ManyToMany
+  private Set<Tag> tags;
+
+  public void addTag(Tag tag) {
+    getService().addTag(this, tag);
+  }
 
   public String getAuthors() {
     return authors;
@@ -146,6 +168,11 @@ public class Book extends Entry {
   }
 
   @Override
+  public BookService getService() {
+    return (BookService) super.getService();
+  }
+
+  @Override
   public Class<BookService> getServiceType() {
     return BookService.class;
   }
@@ -159,16 +186,8 @@ public class Book extends Entry {
     return source;
   }
 
-  public BookTag getTag1() {
-    return tag1;
-  }
-
-  public BookTag getTag2() {
-    return tag2;
-  }
-
-  public BookTag getTag3() {
-    return tag3;
+  public Set<Tag> getTags() {
+    return tags;
   }
 
   @Path(TRIAL)
@@ -198,11 +217,11 @@ public class Book extends Entry {
   @Override
   public void readMedia(MultivaluedMap<String, Media> params) {
     super.readMedia(params);
-    Media cover = params.getFirst(CorePackage.COVER);
+    Media cover = params.getFirst(COVER);
     if (cover != null) {
       this.cover = cover;
     }
-    Media source = params.getFirst(CorePackage.SOURCE);
+    Media source = params.getFirst(SOURCE);
     if (source != null) {
       this.source = source;
     }
@@ -275,16 +294,8 @@ public class Book extends Entry {
     this.source = source;
   }
 
-  public void setTag1(BookTag tag1) {
-    this.tag1 = tag1;
-  }
-
-  public void setTag2(BookTag tag2) {
-    this.tag2 = tag2;
-  }
-
-  public void setTag3(BookTag tag3) {
-    this.tag3 = tag3;
+  public void setTags(Set<Tag> tags) {
+    this.tags = tags;
   }
 
   public void setTrial(Media trial) {

@@ -30,7 +30,8 @@ import com.sencha.gxt.widget.core.client.form.ComboBox;
 import com.sencha.gxt.widget.core.client.toolbar.LabelToolItem;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
-import org.cloudlet.web.core.shared.CorePackage;
+import org.cloudlet.web.core.server.Content;
+import org.cloudlet.web.core.server.Feed;
 
 import java.util.List;
 
@@ -99,7 +100,7 @@ public abstract class ResourceSearch extends SimpleContainer implements TakesRes
           if (text == null && text.equals("")) {
             continue;
           }
-          builder.buildQuery(CorePackage.SEARCH, title, text);
+          builder.buildQuery(Content.SEARCH, title, text);
         }
         builder.limit(String.valueOf(loadConfig.getLimit()), String.valueOf(loadConfig.getOffset()));
         getValue().load(new AsyncCallback<Resource>() {
@@ -109,7 +110,7 @@ public abstract class ResourceSearch extends SimpleContainer implements TakesRes
 
           @Override
           public void onSuccess(final Resource result) {
-            List<Resource> books = result.getList(CorePackage.ENTRIES);
+            List<Resource> books = result.getList(Feed.ENTRIES);
             builder.clear();
             callback.onSuccess(new PagingLoadResultBean<Resource>(books, result.getQueryCount().intValue(), loadConfig.getOffset()));
           }

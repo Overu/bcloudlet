@@ -6,7 +6,9 @@ import com.google.inject.Singleton;
 
 import org.cloudlet.web.core.client.Initializer;
 import org.cloudlet.web.core.client.Registry;
-import org.cloudlet.web.core.shared.CorePackage;
+import org.cloudlet.web.core.server.Books;
+import org.cloudlet.web.core.server.Content;
+import org.cloudlet.web.core.server.Repository;
 
 @Singleton
 public class MobileApp extends Initializer {
@@ -38,8 +40,8 @@ public class MobileApp extends Initializer {
 
   @Override
   protected void init() {
-    Registry.setWidget(CorePackage.Repository, CorePackage.HOME, explorer);
-    Registry.setWidget(CorePackage.Books, CorePackage.HOME, recommended);
-    Registry.setWidget(CorePackage.Books, CorePackage.EDIT, bookDetail);
+    Registry.setWidget(Repository.TYPE_NAME, Content.HOME, explorer);
+    Registry.setWidget(Books.TYPE_NAME, Content.HOME, recommended);
+    Registry.setWidget(Books.TYPE_NAME, Content.EDIT, bookDetail);
   }
 }

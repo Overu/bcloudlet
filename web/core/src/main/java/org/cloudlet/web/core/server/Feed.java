@@ -2,8 +2,6 @@ package org.cloudlet.web.core.server;
 
 import com.sencha.gxt.data.shared.SortInfo;
 
-import org.cloudlet.web.core.shared.CorePackage;
-
 import java.util.List;
 
 import javax.persistence.MappedSuperclass;
@@ -30,11 +28,11 @@ public abstract class Feed<E extends Entry> extends Content {
   protected Integer limit;
 
   // sort=title|asc&sort=email|desc
-  @QueryParam(CorePackage.SORT)
+  @QueryParam(Feed.SORT)
   @Transient
   protected List<String> sort;
 
-  @QueryParam(CorePackage.SEARCH)
+  @QueryParam(Content.SEARCH)
   @Transient
   protected List<String> search;
 
@@ -44,7 +42,18 @@ public abstract class Feed<E extends Entry> extends Content {
   @Transient
   protected List<E> entries;
 
-  protected long totalEntries;
+  public static final String NEW = "new";
+
+  public static final String QUERY_COUNT = "queryCount";
+
+  public static final String ENTRIES = "entries";
+
+  public static final String SORT = "sort";
+
+  protected long total;
+
+  @Transient
+  protected long count;
 
   public void buildSearch(StringBuilder sql) {
     if (search != null && search.size() > 0) {
@@ -77,6 +86,10 @@ public abstract class Feed<E extends Entry> extends Content {
   @DELETE
   public void delete() {
     getService().delete(this);
+  }
+
+  public long getCount() {
+    return count;
   }
 
   public List<E> getEntries() {
@@ -116,17 +129,26 @@ public abstract class Feed<E extends Entry> extends Content {
     return start;
   }
 
-  public long getTotalEntries() {
-    return totalEntries;
+  public long getTotal() {
+    return total;
   }
 
-  @Path(CorePackage.NEW)
+  @Override
+  public void joinSQL(StringBuilder sql) {
+    sql.append(getEntryType().getName()).append(" e");
+  }
+
+  @Path(Feed.NEW)
   @GET
   public E newEntry() {
     return WebPlatform.get().getInstance(getEntryType());
   }
 
   public void prepareQuery(StringBuilder sql) {
+  }
+
+  public void setCount(long count) {
+    this.count = count;
   }
 
   public void setEntries(List<E> entries) {
@@ -141,7 +163,7 @@ public abstract class Feed<E extends Entry> extends Content {
     this.limit = limit;
   }
 
-  public void setParams(TypedQuery<E> query) {
+  public void setParams(TypedQuery<?> query) {
   }
 
   public void setSearch(List<String> search) {
@@ -156,8 +178,8 @@ public abstract class Feed<E extends Entry> extends Content {
     this.start = start;
   }
 
-  public void setTotalEntries(long total) {
-    this.totalEntries = total;
+  public void setTotal(long total) {
+    this.total = total;
   }
 
   @Override
@@ -169,7 +191,7 @@ public abstract class Feed<E extends Entry> extends Content {
   @Override
   protected void doLoad() {
     entries = getService().findEntries(this);
-    totalEntries = getService().countEntries(this);
+    count = getService().countEntries(this);
   }
 
   @Override

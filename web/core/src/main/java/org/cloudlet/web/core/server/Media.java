@@ -1,7 +1,6 @@
 package org.cloudlet.web.core.server;
 
 import org.apache.commons.io.IOUtils;
-import org.cloudlet.web.core.shared.CorePackage;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -13,7 +12,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -26,15 +24,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.Media)
-@XmlType(name = CorePackage.Media)
-@Entity(name = CorePackage.Media)
-@Table(name = CorePackage.Media)
+@XmlRootElement
+@XmlType
+@Entity(name = Media.TYPE_NAME)
 public class Media extends Content {
 
   private String mimeType;
 
   private String source;
+
+  public static final String TYPE_NAME = CoreUtil.PREFIX + "Media";
 
   @Override
   @DELETE
@@ -64,8 +63,8 @@ public class Media extends Content {
   }
 
   @Override
-  public String getResourceType() {
-    return CorePackage.Media;
+  public String getType() {
+    return Media.TYPE_NAME;
   }
 
   @Override

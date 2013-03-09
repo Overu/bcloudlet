@@ -1,9 +1,6 @@
 package org.cloudlet.web.core.server;
 
-import org.cloudlet.web.core.shared.CorePackage;
-
 import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -17,12 +14,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.Books)
-@XmlType(name = CorePackage.Books)
-@Entity(name = CorePackage.Books)
-@Table(name = CorePackage.Books)
+@XmlRootElement
+@XmlType
+@Entity(name = Books.TYPE_NAME)
 @Path(Repository.BOOKS)
 public class Books extends Feed<Book> {
+
+  public static final String TYPE_NAME = CoreUtil.PREFIX + "Books";
 
   @QueryParam("recommended")
   protected boolean featured;
@@ -30,7 +28,7 @@ public class Books extends Feed<Book> {
   @QueryParam("promoted")
   protected boolean promoted;
 
-  @QueryParam("tag")
+  @QueryParam(Book.TAG)
   protected String tag;
 
   @Override
@@ -42,7 +40,7 @@ public class Books extends Feed<Book> {
   }
 
   @GET
-  @Path(CorePackage.EDIT)
+  @Path(Content.EDIT)
   public Books editBook() {
     featured = true;
     doLoad();
@@ -55,14 +53,14 @@ public class Books extends Feed<Book> {
   }
 
   @Override
-  public String getResourceType() {
-    return CorePackage.Books;
-  }
-
-  @Override
   @XmlTransient
   public Class<BookService> getServiceType() {
     return BookService.class;
+  }
+
+  @Override
+  public String getType() {
+    return TYPE_NAME;
   }
 
   public boolean isFeatured() {
@@ -76,9 +74,9 @@ public class Books extends Feed<Book> {
   @Override
   public void joinSQL(StringBuilder sql) {
     super.joinSQL(sql);
-    // if (tag != null) {
-    // sql.append(" join ").append(BookTag.class).append(" t").append(" on f.tag1" + "=t.id");
-    // }
+    if (tag != null) {
+      sql.append(" join e.tags t");
+    }
   }
 
   @Override
@@ -91,13 +89,13 @@ public class Books extends Feed<Book> {
   @Override
   public void prepareQuery(StringBuilder sql) {
     if (featured) {
-      sql.append(" and f.featured=true");
+      sql.append(" and e.featured=true");
     }
     if (promoted) {
-      sql.append(" and f.promoted=true");
+      sql.append(" and e.promoted=true");
     }
     if (tag != null) {
-      sql.append(" and (f.tag1.id=:tag or f.tag2.id=:tag or f.tag3.id=:tag)");
+      sql.append(" and t.id=:tag");
     }
   }
 
@@ -106,7 +104,7 @@ public class Books extends Feed<Book> {
   }
 
   @Override
-  public void setParams(TypedQuery<Book> query) {
+  public void setParams(TypedQuery<?> query) {
     super.setParams(query);
     if (tag != null) {
       query.setParameter("tag", tag);

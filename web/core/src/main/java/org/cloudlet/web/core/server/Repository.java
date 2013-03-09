@@ -1,30 +1,31 @@
 package org.cloudlet.web.core.server;
 
-import org.cloudlet.web.core.shared.CorePackage;
-
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.ws.rs.Path;
 import javax.ws.rs.container.ResourceContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.ext.RuntimeDelegate;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = CorePackage.Repository)
-@XmlType(name = CorePackage.Repository)
-@Entity(name = CorePackage.Repository)
-@Table(name = CorePackage.Repository)
+@XmlRootElement
+@XmlType
+@Entity(name = Repository.TYPE_NAME)
 @Path("/")
 public final class Repository extends Entry {
+
+  public static final String TYPE_NAME = CoreUtil.PREFIX + "Repository";
 
   public static final String BOOKS = "books";
 
   public static final String USERS = "users";
+
+  public static final String GROUPS = "groups";
 
   public static final String TAGS = "tags";
 
@@ -48,7 +49,7 @@ public final class Repository extends Entry {
   private Orders orders;
 
   @OneToOne
-  private BookTags tags;
+  private Tags tags;
 
   @Path(BOOKS)
   public Books getBooks() {
@@ -66,7 +67,7 @@ public final class Repository extends Entry {
   }
 
   @Path(TAGS)
-  public BookTags getTags() {
+  public Tags getTags() {
     return tags;
   }
 
@@ -78,6 +79,10 @@ public final class Repository extends Entry {
   @Override
   @XmlTransient
   public UriBuilder getUriBuilder() {
+    if (uriInfo == null) {
+      RuntimeDelegate rd = RuntimeDelegate.getInstance();
+      return rd.createUriBuilder();
+    }
     return uriInfo.getBaseUriBuilder();
   }
 
@@ -94,7 +99,7 @@ public final class Repository extends Entry {
     this.orders = orders;
   }
 
-  public void setTags(BookTags tags) {
+  public void setTags(Tags tags) {
     this.tags = tags;
   }
 

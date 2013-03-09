@@ -37,7 +37,7 @@ public class GroupTest extends CoreTest {
       group.load();
     }
     users.load();
-    long total = users.getTotalEntries();
+    long total = users.getCount();
     for (int i = 1; i <= 10; i++) {
       User user = users.newEntry();
       long count = total + i;
@@ -47,7 +47,7 @@ public class GroupTest extends CoreTest {
       user.setPhone(Long.toString(count));
       users.createEntry(user);
       users.load();
-      assertEquals(count, users.getTotalEntries());
+      assertEquals(count, users.getCount());
     }
     repo.load();
 

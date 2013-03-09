@@ -8,7 +8,8 @@ import com.google.inject.Inject;
 import org.cloudlet.web.core.client.Resource;
 import org.cloudlet.web.core.client.ResourceManager;
 import org.cloudlet.web.core.client.TakesResource;
-import org.cloudlet.web.core.shared.CorePackage;
+import org.cloudlet.web.core.server.Content;
+import org.cloudlet.web.core.server.Feed;
 
 import java.util.List;
 
@@ -53,7 +54,7 @@ public class BookFeedViewer extends FlowPanel implements TakesResource {
 
   private void refresh() {
     clear();
-    List<Resource> books = resource.getList(CorePackage.ENTRIES);
+    List<Resource> books = resource.getList(Feed.ENTRIES);
     for (int i = 0; i < display; i++) {
       if (i >= books.size()) {
         break;
@@ -68,7 +69,7 @@ public class BookFeedViewer extends FlowPanel implements TakesResource {
         @Override
         public void onClick(ClickEvent event) {
           bookDetail.setValue(book);
-          resourceManager.goTo(book.getParent().getParent().getChild(CorePackage.EDIT));
+          resourceManager.goTo(book.getParent().getParent().getChild(Content.EDIT));
         }
       }, ClickEvent.getType());
     }

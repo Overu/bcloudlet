@@ -25,9 +25,6 @@ public class Service {
 
   @Transactional
   protected Content createChild(Content parent, Content child) {
-    if (em().contains(child)) {
-      throw new RuntimeException("Content already created.");
-    }
     child.setParent(parent);
     String id = child.getId();
     String path = child.getPath();
