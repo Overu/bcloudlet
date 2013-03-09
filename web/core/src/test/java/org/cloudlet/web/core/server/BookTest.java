@@ -62,7 +62,7 @@ public class BookTest extends CoreTest {
   public void testCreateBook() throws Exception {
     Books books = booksSvc.getRoot();
     books.load();
-    long total = books.getCount();
+    Long total = books.getCount();
     Book book = books.newEntry();
     total = total + 1;
     book.setPath("book" + total);

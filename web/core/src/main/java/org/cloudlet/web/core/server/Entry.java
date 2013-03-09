@@ -26,10 +26,10 @@ public abstract class Entry extends Content {
   @Transient
   protected List<? extends Content> references;
 
-  protected long total;
+  protected Long total;
 
   @Transient
-  protected long count;
+  protected Long count;
 
   public Content createReference(Content target) {
     getService().createReference(this, target);
@@ -43,7 +43,7 @@ public abstract class Entry extends Content {
     getService().delete(this);
   }
 
-  public long getCount() {
+  public Long getCount() {
     return count;
   }
 
@@ -63,11 +63,11 @@ public abstract class Entry extends Content {
     return EntryService.class;
   }
 
-  public long getTotal() {
+  public Long getTotal() {
     return total;
   }
 
-  public void setCount(long count) {
+  public void setCount(Long count) {
     this.count = count;
   }
 
@@ -80,7 +80,7 @@ public abstract class Entry extends Content {
     this.references = contents;
   }
 
-  public void setTotal(long total) {
+  public void setTotal(Long total) {
     this.total = total;
   }
 
