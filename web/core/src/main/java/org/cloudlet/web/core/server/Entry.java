@@ -13,7 +13,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 @MappedSuperclass
 @EntityListeners(InjectionListener.class)
-public abstract class Entry extends Content {
+public abstract class Entry extends Content implements Resource {
 
   private static final Logger logger = Logger.getLogger(Entry.class.getName());
 
@@ -75,7 +75,7 @@ public abstract class Entry extends Content {
   }
 
   @Override
-  public Content update() {
+  public Entry update() {
     getService().update(this);
     return this;
   }

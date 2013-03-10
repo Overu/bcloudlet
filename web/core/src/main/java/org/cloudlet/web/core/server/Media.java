@@ -46,7 +46,7 @@ public class Media extends Content {
     if (id == null) {
       id = CoreUtil.randomID();
     }
-    String filePath = "data/localhost/media/" + id;
+    String filePath = CoreUtil.getDataLocation() + "/localhost/media/" + id;
     return new File(filePath);
   }
 
@@ -63,11 +63,6 @@ public class Media extends Content {
   }
 
   @Override
-  public String getType() {
-    return Media.TYPE_NAME;
-  }
-
-  @Override
   @XmlTransient
   public MediaService getService() {
     return (MediaService) super.getService();
@@ -81,6 +76,11 @@ public class Media extends Content {
 
   public String getSource() {
     return source;
+  }
+
+  @Override
+  public String getType() {
+    return Media.TYPE_NAME;
   }
 
   public InputStream openStream() {

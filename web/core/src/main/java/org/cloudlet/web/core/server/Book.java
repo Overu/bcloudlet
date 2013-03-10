@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType
 @Entity(name = Book.TYPE_NAME)
-public class Book extends Entry {
+public class Book extends Entry implements Taggable {
 
   public static final String TYPE_NAME = CoreUtil.PREFIX + "Book";
 
@@ -27,6 +27,32 @@ public class Book extends Entry {
   public static final String COVER = "cover";
 
   public static final String TRIAL = "trial";
+
+  public static final String SIZE = "size";
+
+  public static final String SERIAL_NUMBER = "serialNumber";
+
+  public static final String COPYRIGHT = "copyright";
+
+  public static final String DATE_UPDATED = "dateUpdated";
+
+  public static final String PROMOTION_PRICE = "promotionPrice";
+
+  public static final String HOT = "hot";
+
+  public static final String FEATURED = "featured";
+
+  public static final String DATE_PUBLISHED = "datePublished";
+
+  public static final String TAG = "tag";
+
+  public static final String TAGS = "tags";
+
+  public static final String PROMOTED = "promoted";
+
+  public static final String PRICE = "price";
+
+  public static final String AUTHOR = "author";
 
   @OneToOne
   private Media cover;
@@ -69,37 +95,20 @@ public class Book extends Entry {
 
   private long size;
 
-  public static final String SIZE = "size";
-
-  public static final String SERIAL_NUMBER = "serialNumber";
-
-  public static final String COPYRIGHT = "copyright";
-
-  public static final String DATE_UPDATED = "dateUpdated";
-
-  public static final String PROMOTION_PRICE = "promotionPrice";
-
-  public static final String HOT = "hot";
-
-  public static final String FEATURED = "featured";
-
-  public static final String DATE_PUBLISHED = "datePublished";
-
-  public static final String TAG = "tag";
-
-  public static final String TAGS = "tags";
-
-  public static final String PROMOTED = "promoted";
-
-  public static final String PRICE = "price";
-
-  public static final String AUTHOR = "author";
-
   @ManyToMany
   private Set<Tag> tags;
 
+  @Override
   public void addTag(Tag tag) {
-    getService().addTag(this, tag);
+    tag.addTo(this);
+  }
+
+  @Override
+  public Taggable addTags(String tag) {
+    TagService tagService = WebPlatform.get().getInstance(TagService.class);
+    Tag t = tagService.getOrCreateTag(tag, TYPE_NAME);
+    addTag(t);
+    return this;
   }
 
   public String getAuthors() {
@@ -186,6 +195,7 @@ public class Book extends Entry {
     return source;
   }
 
+  @Override
   public Set<Tag> getTags() {
     return tags;
   }
@@ -294,6 +304,7 @@ public class Book extends Entry {
     this.source = source;
   }
 
+  @Override
   public void setTags(Set<Tag> tags) {
     this.tags = tags;
   }

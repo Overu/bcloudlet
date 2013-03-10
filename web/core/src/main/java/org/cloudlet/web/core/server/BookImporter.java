@@ -50,7 +50,7 @@ public class BookImporter {
   }
 
   public void setup() {
-    File dataFolder = new File("data/source");
+    File dataFolder = new File(CoreUtil.getDataLocation() + "/source");
     String path = dataFolder.getAbsolutePath();
     writer.println(path);
     File[] bookFiles = dataFolder.listFiles();
@@ -131,8 +131,7 @@ public class BookImporter {
           importComments(book);
         }
 
-        book.addTag(tag);
-
+        tag.addTo(book);
       }
     }
   }
@@ -215,7 +214,7 @@ public class BookImporter {
           tag.setId(id);
           tag.setPath(id);
           tag.setTitle(catJson.getString("titles"));
-          tag.setLabel(catJson.getString("label"));
+          tag.setValue(catJson.getString("label"));
           tag.setSummary(catJson.getString("description"));
           tag.setTargetType(Book.TYPE_NAME);
           tags.createEntry(tag);

@@ -29,18 +29,16 @@ public class EntryService<E extends Entry> extends Service {
 
   @Transactional
   public Content createReference(E source, Content target) {
-    final Reference reference = new Reference();
-    reference.setId(CoreUtil.randomID());
-    reference.setSource(source);
-    reference.setTarget(target);
-    reference.setPath(target.getPath());
-
+    final Reference ref = new Reference();
+    ref.setId(CoreUtil.randomID());
+    ref.setSource(source);
+    ref.setTarget(target);
+    ref.setPath(target.getPath());
     if (!em().contains(target)) {
       createChild(source, target);
-      reference.setContaiment(true);
+      ref.setContaiment(true);
     }
-
-    em().persist(reference);
+    em().persist(ref);
     return target;
   }
 

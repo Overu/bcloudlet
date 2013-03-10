@@ -12,6 +12,7 @@
  */
 package org.cloudlet.web.core.server;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -22,12 +23,30 @@ public class CoreUtil {
 
   static Logger logger = Logger.getLogger(CoreUtil.class.getName());
 
+  private static String dataLocation;
+
+  public static final String PREFIX = "Core";
+
   public static Class<?> getClass(String className) {
     try {
       return Class.forName(className);
     } catch (ClassNotFoundException e) {
       return null;
     }
+  }
+
+  public static String getDataLocation() {
+    if (dataLocation == null) {
+      dataLocation = System.getenv("cloudlet.data");
+      if (dataLocation == null) {
+        dataLocation = System.getProperty("user.home") + "/cloudlet";
+      }
+      File folder = new File(dataLocation);
+      if (!folder.exists()) {
+        folder.mkdirs();
+      }
+    }
+    return dataLocation;
   }
 
   public static UUID parseUUID(String id) {
@@ -114,6 +133,4 @@ public class CoreUtil {
       throw new IllegalStateException(e);
     }
   }
-
-  public static final String PREFIX = "Core";
 }

@@ -3,6 +3,7 @@ package org.cloudlet.web.core.provider;
 import org.cloudlet.web.core.server.Content;
 import org.cloudlet.web.core.server.Entry;
 import org.cloudlet.web.core.server.Feed;
+import org.cloudlet.web.core.server.Reference;
 import org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider;
 
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.List;
 
 import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
@@ -71,15 +73,17 @@ public class XmlResourceProvider extends AbstractMessageReaderWriterProvider<Con
     // }
     Collection<? extends Content> contents;
     if (content instanceof Entry) {
-      contents = ((Entry) content).getReferences();
+      List<Reference> refs = ((Entry) content).getReferences();
+      for (Reference ref : refs) {
+        writeResource(writer, ref.getTarget());
+      }
     } else {
       contents = ((Feed) content).getEntries();
-    }
-    if (contents != null && !contents.isEmpty()) {
       for (Content rel : contents) {
         writeResource(writer, rel);
       }
     }
+
     writer.writeEndElement();
   }
 }

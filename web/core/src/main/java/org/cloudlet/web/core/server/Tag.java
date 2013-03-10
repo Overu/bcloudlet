@@ -14,22 +14,31 @@ public class Tag extends Entry {
 
   private String targetType;
 
-  private String label;
+  private String value;
 
   private long weight;
 
-  public String getTargetType() {
-    return targetType;
+  public void addTo(Taggable taggable) {
+    getService().addTag(taggable, this);
   }
 
-  public String getLabel() {
-    return label;
+  public String getValue() {
+    return value;
+  }
+
+  @Override
+  public TagService getService() {
+    return (TagService) super.getService();
   }
 
   @Override
   @XmlTransient
   public Class<? extends Service> getServiceType() {
     return TagService.class;
+  }
+
+  public String getTargetType() {
+    return targetType;
   }
 
   @Override
@@ -41,12 +50,12 @@ public class Tag extends Entry {
     return weight;
   }
 
-  public void setTargetType(String type) {
-    this.targetType = type;
+  public void setValue(String label) {
+    this.value = label;
   }
 
-  public void setLabel(String label) {
-    this.label = label;
+  public void setTargetType(String type) {
+    this.targetType = type;
   }
 
   public void setWeight(long weight) {

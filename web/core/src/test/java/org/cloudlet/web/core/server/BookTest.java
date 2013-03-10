@@ -71,6 +71,15 @@ public class BookTest extends CoreTest {
     // ByteArrayInputStream("Good work".getBytes()));
     books.createEntry(book);
 
+    Tags tags = tagsSvc.getRoot();
+    Tag tag = new Tag();
+    tag.setTitle("example tag");
+    tag.setValue("tag" + System.currentTimeMillis());
+    tag.setTargetType(Book.TYPE_NAME);
+    tags.createEntry(tag);
+
+    book.addTag(tag);
+
     Comments comments = book.getComments();
     for (int i = 0; i < 5; i++) {
       Comment comment = new Comment();

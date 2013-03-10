@@ -12,6 +12,7 @@ import javax.persistence.Id;
 @TypeDef(name = ContentType.NAME, typeClass = ContentType.class)
 public class Reference {
 
+  public static final String SOURCE = "source";
   @Id
   @Column(length = 128)
   private String id;
