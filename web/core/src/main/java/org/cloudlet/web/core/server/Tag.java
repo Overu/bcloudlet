@@ -12,12 +12,14 @@ public class Tag extends Entry {
 
   public static final String TYPE_NAME = CoreUtil.PREFIX + "Tag";
 
-  private String contentType;
+  private String targetType;
 
   private String label;
 
-  public String getContentType() {
-    return contentType;
+  private long weight;
+
+  public String getTargetType() {
+    return targetType;
   }
 
   public String getLabel() {
@@ -35,12 +37,20 @@ public class Tag extends Entry {
     return TYPE_NAME;
   }
 
-  public void setContentType(String contentType) {
-    this.contentType = contentType;
+  public long getWeight() {
+    return weight;
+  }
+
+  public void setTargetType(String type) {
+    this.targetType = type;
   }
 
   public void setLabel(String label) {
     this.label = label;
+  }
+
+  public void setWeight(long weight) {
+    this.weight = weight;
   }
 
 }

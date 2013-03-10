@@ -217,6 +217,7 @@ public class BookImporter {
           tag.setTitle(catJson.getString("titles"));
           tag.setLabel(catJson.getString("label"));
           tag.setSummary(catJson.getString("description"));
+          tag.setTargetType(Book.TYPE_NAME);
           tags.createEntry(tag);
         }
       }

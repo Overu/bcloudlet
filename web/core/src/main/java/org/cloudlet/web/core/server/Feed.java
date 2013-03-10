@@ -50,7 +50,7 @@ public abstract class Feed<E extends Entry> extends Content {
 
   public static final String SORT = "sort";
 
-  protected Long total;
+  protected long total;
 
   @Transient
   protected Long count;
@@ -129,7 +129,7 @@ public abstract class Feed<E extends Entry> extends Content {
     return start;
   }
 
-  public Long getTotal() {
+  public long getTotal() {
     return total;
   }
 
@@ -178,7 +178,7 @@ public abstract class Feed<E extends Entry> extends Content {
     this.start = start;
   }
 
-  public void setTotal(Long total) {
+  public void setTotal(long total) {
     this.total = total;
   }
 

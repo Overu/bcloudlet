@@ -21,12 +21,14 @@ public class ImporterServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    resp.setCharacterEncoding("UTF-8");
     PrintWriter w = resp.getWriter();
     try {
       importer.setWriter(w);
       importer.importDuoKan();
     } catch (Throwable t) {
       t.printStackTrace(w);
+      t.printStackTrace();
     }
     w.println("Complete import data.");
   }

@@ -24,9 +24,7 @@ public abstract class Entry extends Content {
   protected boolean loadReferences;
 
   @Transient
-  protected List<? extends Content> references;
-
-  protected Long total;
+  protected List<Reference> references;
 
   @Transient
   protected Long count;
@@ -48,7 +46,7 @@ public abstract class Entry extends Content {
   }
 
   @XmlElement
-  public List<? extends Content> getReferences() {
+  public List<Reference> getReferences() {
     return references;
   }
 
@@ -63,10 +61,6 @@ public abstract class Entry extends Content {
     return EntryService.class;
   }
 
-  public Long getTotal() {
-    return total;
-  }
-
   public void setCount(Long count) {
     this.count = count;
   }
@@ -76,12 +70,8 @@ public abstract class Entry extends Content {
     this.id = id;
   }
 
-  public void setReferences(List<? extends Content> contents) {
-    this.references = contents;
-  }
-
-  public void setTotal(Long total) {
-    this.total = total;
+  public void setReferences(List<Reference> refs) {
+    this.references = refs;
   }
 
   @Override
