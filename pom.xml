@@ -800,6 +800,5 @@
   </repositories>
   <modules>
     <module>web</module>
-    <module>examples</module>
   </modules>
 </project>
