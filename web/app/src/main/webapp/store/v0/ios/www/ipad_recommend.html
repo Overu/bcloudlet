@@ -166,11 +166,6 @@ function buildList(list) {
 }
 
 function getItems(data, index) {
-  /* if (!data.hasOwnProperty('result') || !data.hasOwnProperty('count')
-    || !data.hasOwnProperty('items') || !data.hasOwnProperty('v')
-    || data.v != 0)
-    handleError(status.UNEXPECTED_ERROR, hideAll);
-  else { */
   if (data.hasOwnProperty('entries')) {
       if (data) {
       var content = "";

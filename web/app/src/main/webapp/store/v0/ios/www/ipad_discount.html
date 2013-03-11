@@ -83,10 +83,11 @@ function appendEmptySlot() {
   ul.find('.empty').remove();
   
   var count = ul.children(':visible').size();
-  if (current_direct == 'h')
+  if (current_direct == 'h') {
     count = (3 - (count%3))%3;
-  else
+  } else {
     count = count%2;
+  }
   
   var empty_li = "";
   for (var i = 0; i < count; i++)
@@ -178,11 +179,6 @@ function buildAppItem(app) {
 }
 
 function getItems1(data) {
- /*  if (!data.hasOwnProperty('result') || !data.hasOwnProperty('count')
-    || !data.hasOwnProperty('items') || !data.hasOwnProperty('v')
-    || data.v != 0)
-    handleError(status.UNEXPECTED_ERROR, hideAll);
-  else  */
   if (data.hasOwnProperty('entries')) {
     for (var i=0; i<data.limit; i++) {
     	var item = data.entries[i];
@@ -195,7 +191,7 @@ function getItems1(data) {
     }
     start1 += data.limit;
     
-    if (data.entries.length != 0) {
+    if (start1 < data.count) {
       $('#inside_loading1').show();
     } else{
       $('#inside_loading1').hide();
@@ -215,11 +211,6 @@ function getItems1(data) {
 }
 
 function getItems2(data) {
-	/*  if (!data.hasOwnProperty('result') || !data.hasOwnProperty('count')
-    || !data.hasOwnProperty('items') || !data.hasOwnProperty('v')
-    || data.v != 0)
-    handleError(status.UNEXPECTED_ERROR, hideAll);
-  else  */
   if (data.hasOwnProperty('entries')) {
     for (var i=0; i<data.limit; i++) {
     	var item = data.entries[i];
@@ -233,7 +224,7 @@ function getItems2(data) {
     
     start2 += data.limit;
     
-    if (data.entries.length != 0) {
+    if (start2 < date.count) {
       $('#inside_loading2').show();
     } else{
       $('#inside_loading2').hide();

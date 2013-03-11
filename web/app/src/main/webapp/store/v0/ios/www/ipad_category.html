@@ -102,9 +102,7 @@
 					appendEmptySlot();
 					scrollContent.scrollTo(0, 0, 0, false);
 					scrollContent.refresh();
-
 				}
-				;
 			}
 
 			function hotSell() {
@@ -117,7 +115,6 @@
 					appendEmptySlot();
 					scrollContent.scrollTo(0, 0, 0, false);
 					scrollContent.refresh();
-
 				}
 			}
 
@@ -211,12 +208,6 @@
 				}
 
 				function getBooks(data) {
-					/* if (!data.hasOwnProperty('result')
-							|| !data.hasOwnProperty('count')
-							|| !data.hasOwnProperty('items')
-							|| !data.hasOwnProperty('v') || data.v != 0)
-						handleError(status.UNEXPECTED_ERROR, hideAll);
-					else { */
 					if (data.hasOwnProperty('entries')) {
 						try {
 							if (data) {
@@ -239,7 +230,7 @@
 									});
 									$('#discount_select_panel').show();
 								}
-								if (data.entries.length > start) {
+								if (start < data.count) {
 									$('#inside_loading2').show();
 								} else {
 									$('#inside_loading2').hide();
@@ -271,12 +262,6 @@
 				}
 
 				function getBooks2(data) {
-					/* if (!data.hasOwnProperty('result')
-							|| !data.hasOwnProperty('count')
-							|| !data.hasOwnProperty('items')
-							|| !data.hasOwnProperty('v') || data.v != 0)
-						handleError(status.UNEXPECTED_ERROR, hideAll);
-					else { */
 					if (data.hasOwnProperty('entries')) {
 						try {
 							if (data) {
@@ -295,7 +280,7 @@
 								if (start2 > 0) {
 									$('#discount_select_panel').show();
 								}
-								if (data.entries.length > start2) {
+								if (start2 < data.count) {
 									$('#inside_loading3').show();
 								} else {
 									$('#inside_loading3').hide();
@@ -365,14 +350,6 @@
 			}
 
 			function getItems(data) {
-				/* if (!data.hasOwnProperty('result')
-				|| !data.hasOwnProperty('count')
-				|| !data.hasOwnProperty('items')
-				|| !data.hasOwnProperty('v') || data.v != 0) {
-				if (!data.hasOwnProperty('entries')) {
-				handleError(status.UNEXPECTED_ERROR, hideAll);
-				} else if (data.result == Status.OK) {
-				} else  */
 				if (data.hasOwnProperty('entries')) {
 					var content = "";
 					for ( var i = 0; i < data.count; i++) {
@@ -432,7 +409,6 @@
 				refreshStatus();
 			}
 			function dkWillHidePage() {
-				// do nothing
 			}
 			function dkGetBgColor() {
 				return '[204,204,204]';
@@ -448,7 +424,6 @@
 			$(document).ready(
 					function() {
 						$.ajax({
-							//url: '/store/v0/ios/category/all.json',
 							url : '/api/tags',
 							success : getItems,
 							dataType : 'json',

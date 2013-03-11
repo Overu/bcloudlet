@@ -154,11 +154,6 @@ function buildBook(book, listIndex) {
 }
 
 function getItems(data, listIndex) {
-  /* if (!data.hasOwnProperty('result') || !data.hasOwnProperty('count')
-    || !data.hasOwnProperty('items') || !data.hasOwnProperty('v')
-    || data.v != 0)
-    handleError(status.UNEXPECTED_ERROR, hideAll);
-  else  */
   if (data.hasOwnProperty('entries')) {
   	var loading = $('.inside_loading:eq('+listIndex+')');
     for (var i=0; i < data.limit; i++) {
@@ -174,7 +169,7 @@ function getItems(data, listIndex) {
     if(start[listIndex] > 0) {
       loading.show()
     }
-    if (data.entries.length != 0) {
+    if (start[listIndex] < data.count) {
       loading.show();
     } else {
       loading.hide();
@@ -194,7 +189,6 @@ function getItems(data, listIndex) {
 }
 
 function showRank(listIndex) {
-	window.alert('2');
   if ($('#discount_select_pane2 div').eq(listIndex).attr('active')!= 'yes') {
     $('#discount_select_pane2 div').removeAttr('active');
     $('#discount_select_pane2 div').eq(listIndex).attr('active', 'yes');
