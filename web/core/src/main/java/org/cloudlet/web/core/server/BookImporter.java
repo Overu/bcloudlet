@@ -107,7 +107,7 @@ public class BookImporter {
           book.createReference(cover);
           book.setCover(cover);
 
-          String dataPath = ("data/source/" + dataFiles[(++count) % dataFiles.length]);
+          String dataPath = (CoreUtil.getDataLocation() + "/source/" + dataFiles[(++count) % dataFiles.length]);
           Media source = new Media();
           source.setPath(Book.SOURCE);
           source.read(new FileInputStream(dataPath));
