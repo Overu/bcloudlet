@@ -16,7 +16,6 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.crypto.hash.Sha1Hash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.cloudlet.web.core.shared.Root;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -25,11 +24,11 @@ public class JpaRealm extends AuthorizingRealm {
 
   public static final String ALGORITHM_NAME = Sha1Hash.ALGORITHM_NAME;
 
-  private final UserService userService;
+  private Provider<Repository> repo;
 
   @Inject
-  JpaRealm(UserService userService) {
-    this.userService = userService;
+  public JpaRealm(Provider<Repository> repo) {
+    this.repo = repo;
     HashedCredentialsMatcher matcher = new HashedCredentialsMatcher(ALGORITHM_NAME);
     setCredentialsMatcher(matcher);
   }
@@ -43,7 +42,7 @@ public class JpaRealm extends AuthorizingRealm {
       throw new AccountException("Null usernames are not allowed by this realm.");
     }
 
-    User user = userService.findUserByName(userName);
+    User user = repo.get().getUsers().findUserByName(userName);
     if (user == null) {
       return null;
     }
@@ -59,7 +58,7 @@ public class JpaRealm extends AuthorizingRealm {
     }
 
     String userName = (String) getAvailablePrincipal(principals);
-    User user = userService.findUserByName(userName);
+    User user = repo.get().getUsers().findUserByName(userName);
 
     Set<String> roleNames = new LinkedHashSet<String>();
     Set<String> permissions = new LinkedHashSet<String>();

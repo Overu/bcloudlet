@@ -1,6 +1,8 @@
 package org.cloudlet.web.core.server;
 
 import javax.persistence.Entity;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -31,9 +33,20 @@ public class Tags extends Feed<Tag> {
     return Tag.class;
   }
 
-  @Override
-  public Class<TagService> getServiceType() {
-    return TagService.class;
+  public Tag getOrCreateTag(String value, String targetType) {
+    try {
+      TypedQuery<Tag> query =
+          em().createQuery(" from " + Tag.TYPE_NAME + " t where t.targetType=:targetType and t.value=:value", Tag.class);
+      query.setParameter("targetType", targetType);
+      query.setParameter("value", value);
+      return query.getSingleResult();
+    } catch (NoResultException e) {
+      Tag tag = new Tag();
+      tag.setValue(value);
+      tag.setTargetType(targetType);
+      createEntry(tag);
+      return tag;
+    }
   }
 
   @Override

@@ -1,6 +1,5 @@
 package org.cloudlet.web.core.server;
 
-
 import javax.persistence.Entity;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -20,11 +19,6 @@ public class Replies extends Feed<Reply> {
   @Override
   public String getType() {
     return Replies.TYPE_NAME;
-  }
-
-  @Override
-  public Class<ReplyService> getServiceType() {
-    return ReplyService.class;
   }
 
 }

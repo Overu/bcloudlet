@@ -1,6 +1,5 @@
 package org.cloudlet.web.core.server;
 
-
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -22,12 +21,6 @@ public class Section extends Entry {
   @Override
   public String getType() {
     return TYPE_NAME;
-  }
-
-  @Override
-  @XmlTransient
-  public Class<SectionService> getServiceType() {
-    return SectionService.class;
   }
 
   public void setMedia(Media media) {

@@ -53,12 +53,6 @@ public class Books extends Feed<Book> {
   }
 
   @Override
-  @XmlTransient
-  public Class<BookService> getServiceType() {
-    return BookService.class;
-  }
-
-  @Override
   public String getType() {
     return TYPE_NAME;
   }

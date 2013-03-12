@@ -1,6 +1,7 @@
 package org.cloudlet.web.core.server;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
@@ -14,19 +15,15 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 
 public class BookImporter {
 
-  @Inject
-  RepositoryService repoSvc;
-
-  @Inject
-  BookService booksSvc;
-
-  @Inject
-  TagService tagsSvc;
-
   PrintWriter writer;
+
+  @Inject
+  Provider<Repository> repo;
 
   private static final String DEVICE_INFO =
       "build=2012120701; device=D002-F5805035-921D-4426-BF91-81F65004FEFC; token=; userid=fantongx@gmail.com";
@@ -42,7 +39,7 @@ public class BookImporter {
   public void importDuoKan() throws Exception {
     setup();
     importTags();
-    Tags tags = tagsSvc.getRoot();
+    Tags tags = repo.get().getTags();
     tags.load();
     for (Tag tag : tags.getEntries()) {
       importBooks(tag);
@@ -81,7 +78,7 @@ public class BookImporter {
       writer.println(body);
       JSONObject json = new JSONObject(body);
       JSONArray jsonArr = (JSONArray) json.get("items");
-      Books books = booksSvc.getRoot();
+      Books books = repo.get().getBooks();
       for (int i = 0; i < jsonArr.length(); i++) {
         JSONObject jsonObj = (JSONObject) jsonArr.get(i);
         String book_id = jsonObj.getString("book_id");
@@ -96,6 +93,10 @@ public class BookImporter {
             book.setNew_price((float) jsonObj.getDouble("new_price"));
           }
           book.setSummary(jsonObj.getString("summary"));
+
+          Set<Tag> bTags = new HashSet<Tag>();
+          bTags.add(tag);
+          book.setTags(bTags);
           books.createEntry(book);
 
           String coverUrl = jsonObj.getString("cover");
@@ -129,9 +130,11 @@ public class BookImporter {
           book.update();
 
           importComments(book);
+        } else {
+          Set<Tag> tags = book.getTags();
+          tags.add(tag);
+          book.update();
         }
-
-        tag.addTo(book);
       }
     }
   }
@@ -204,7 +207,7 @@ public class BookImporter {
       writer.println(body);
       JSONObject json = new JSONObject(body);
       JSONArray arr = (JSONArray) json.get("items");
-      Tags tags = tagsSvc.getRoot();
+      Tags tags = repo.get().getTags();
       for (int i = 0; i < arr.length(); i++) {
         JSONObject catJson = (JSONObject) arr.get(i);
         String id = (String) catJson.get("category_id");

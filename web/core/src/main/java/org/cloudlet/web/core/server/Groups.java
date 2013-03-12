@@ -19,11 +19,6 @@ public class Groups extends Feed<Group> {
   }
 
   @Override
-  public Class<GroupService> getServiceType() {
-    return GroupService.class;
-  }
-
-  @Override
   public String getType() {
     return Groups.TYPE_NAME;
   }

@@ -17,4 +17,5 @@ public abstract class CoreTest extends WebTest {
     enable(TestProperties.LOG_TRAFFIC);
     return config;
   }
+
 }

@@ -14,7 +14,6 @@ import java.io.OutputStream;
 import javax.persistence.Entity;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -35,12 +34,6 @@ public class Media extends Content {
 
   public static final String TYPE_NAME = CoreUtil.PREFIX + "Media";
 
-  @Override
-  @DELETE
-  public void delete() {
-    getService().delete(this);
-  }
-
   @XmlTransient
   public File getFile() {
     if (id == null) {
@@ -60,18 +53,6 @@ public class Media extends Content {
 
   public String getMimeType() {
     return mimeType;
-  }
-
-  @Override
-  @XmlTransient
-  public MediaService getService() {
-    return (MediaService) super.getService();
-  }
-
-  @Override
-  @XmlTransient
-  public Class<MediaService> getServiceType() {
-    return MediaService.class;
   }
 
   public String getSource() {
@@ -118,12 +99,6 @@ public class Media extends Content {
 
   public void setSource(String source) {
     this.source = source;
-  }
-
-  @Override
-  @PUT
-  public Media update() {
-    return getService().update(this);
   }
 
   public void write(OutputStream out) throws IOException {

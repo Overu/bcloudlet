@@ -2,13 +2,6 @@ package org.cloudlet.web.core.server;
 
 import com.google.inject.Inject;
 
-import org.cloudlet.web.core.server.GroupService;
-import org.cloudlet.web.core.server.Groups;
-import org.cloudlet.web.core.server.Repository;
-import org.cloudlet.web.core.server.RepositoryService;
-import org.cloudlet.web.core.server.User;
-import org.cloudlet.web.core.server.UserService;
-import org.cloudlet.web.core.server.Users;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -22,17 +15,11 @@ import javax.xml.bind.Marshaller;
 public class JAXBTest extends CoreTest {
 
   @Inject
-  RepositoryService repoSvc;
-
-  @Inject
-  UserService usersSvc;
-
-  @Inject
-  GroupService groupsSvc;
+  Repository repo;
 
   @Test
   public void testJAXB() throws JAXBException {
-    Users users = usersSvc.getRoot();
+    Users users = repo.getUsers();
     User user = new User();
     user.setName("user1");
     List<User> userList = new ArrayList<User>();

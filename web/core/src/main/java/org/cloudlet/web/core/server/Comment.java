@@ -1,6 +1,5 @@
 package org.cloudlet.web.core.server;
 
-
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,6 +14,8 @@ import javax.xml.bind.annotation.XmlType;
 @Entity(name = Comment.TYPE_NAME)
 public class Comment extends Entry {
   public static final String TYPE_NAME = CoreUtil.PREFIX + "Comment";
+
+  public static final String REPLIES = "replies";
   @OneToOne
   private Replies replies;
 
@@ -32,14 +33,9 @@ public class Comment extends Entry {
     return deviceType;
   }
 
-  @Path("replies")
+  @Path(REPLIES)
   public Replies getReplies() {
     return replies;
-  }
-
-  @Override
-  public Class<CommentService> getServiceType() {
-    return CommentService.class;
   }
 
   public void setContent(String body) {
@@ -52,6 +48,20 @@ public class Comment extends Entry {
 
   public void setReplies(Replies replies) {
     this.replies = replies;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.cloudlet.web.core.server.Entry#init()
+   */
+  @Override
+  protected void init() {
+    super.init();
+    replies = new Replies();
+    replies.setPath(REPLIES);
+    createReference(replies);
+    update();
   }
 
 }

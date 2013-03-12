@@ -14,8 +14,10 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URLDecoder;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.xml.bind.JAXBContext;
@@ -41,13 +43,7 @@ public class BookTest extends CoreTest {
   }
 
   @Inject
-  RepositoryService repoSvc;
-
-  @Inject
-  BookService booksSvc;
-
-  @Inject
-  TagService tagsSvc;
+  Repository repo;
 
   @Inject
   JacksonJaxbJsonProvider jsonProvider;
@@ -60,7 +56,7 @@ public class BookTest extends CoreTest {
 
   @Test
   public void testCreateBook() throws Exception {
-    Books books = booksSvc.getRoot();
+    Books books = repo.getBooks();
     books.load();
     Long total = books.getCount();
     Book book = books.newEntry();
@@ -69,16 +65,19 @@ public class BookTest extends CoreTest {
     book.setTitle("娱乐 " + total);
     // book.setContentStream(new
     // ByteArrayInputStream("Good work".getBytes()));
-    books.createEntry(book);
 
-    Tags tags = tagsSvc.getRoot();
+    Tags tags = repo.getTags();
     Tag tag = new Tag();
     tag.setTitle("example tag");
     tag.setValue("tag" + System.currentTimeMillis());
     tag.setTargetType(Book.TYPE_NAME);
     tags.createEntry(tag);
 
-    book.addTag(tag);
+    Set<Tag> bTags = new HashSet<Tag>();
+    bTags.add(tag);
+    book.setTags(bTags);
+
+    books.createEntry(book);
 
     Comments comments = book.getComments();
     for (int i = 0; i < 5; i++) {
@@ -118,8 +117,7 @@ public class BookTest extends CoreTest {
 
   @Test
   public void testImportBook() throws Exception {
-    Repository repo = repoSvc.getRoot();
-    Books books = booksSvc.getRoot();
+    Books books = repo.getBooks();
     books.load();
     long total = books.getCount();
 

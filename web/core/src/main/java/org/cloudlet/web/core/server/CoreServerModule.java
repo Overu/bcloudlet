@@ -7,9 +7,9 @@ import com.google.inject.persist.jpa.JpaPersistModule;
 import java.util.logging.Logger;
 
 @Singleton
-public class WebServerModule extends AbstractModule {
+public class CoreServerModule extends AbstractModule {
 
-  private final Logger logger = Logger.getLogger(WebServerModule.class.getName());
+  private final Logger logger = Logger.getLogger(CoreServerModule.class.getName());
 
   @java.lang.Override
   protected void configure() {
@@ -20,10 +20,7 @@ public class WebServerModule extends AbstractModule {
     requestStaticInjection(InjectionListener.class);
 
     bind(WebPlatform.class).asEagerSingleton();
-    // bind(Repository.class).toProvider(RepositoryService.class);
-    // bind(UserFeed.class).toProvider(UserFeedProvider.class);
-    // bind(GroupFeed.class).toProvider(GroupFeedProvider.class);
-    // bind(BookFeed.class).toProvider(BookFeedService.class);
+    bind(Repository.class).toProvider(RepositoryProvider.class);
 
     // MethodInterceptor finderInterceptor = new JpaFinderProxy();
     // requestInjection(finderInterceptor);
