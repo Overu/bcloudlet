@@ -80,10 +80,10 @@ public class Book extends Entry {
 
   private float paper_price;
 
-  @FormParam("tag")
+  // @FormParam("tag")
   private transient Set<String> addTags;
 
-  @FormParam("dtag")
+  // @FormParam("dtag")
   private transient Set<String> deleteTags;
 
   @OneToOne
