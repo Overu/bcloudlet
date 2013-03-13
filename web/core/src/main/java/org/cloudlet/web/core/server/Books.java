@@ -35,8 +35,8 @@ public class Books extends Feed<Book> {
   @POST
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public Book createEntry(Book book) {
-    return super.createEntry(book);
+  public Book doCreate(Book book) {
+    return super.doCreate(book);
   }
 
   @GET

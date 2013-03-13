@@ -37,40 +37,27 @@ public abstract class Entry extends Content {
     return count;
   }
 
-  public Content createReference(Content target) {
-    final Reference ref = new Reference();
-    ref.setId(CoreUtil.randomID());
-    ref.setSource(this);
-    ref.setTarget(target);
-    ref.setPath(target.getPath());
-    if (!em().contains(target)) {
-      createChild(target);
-      ref.setContaiment(true);
-    }
-    em().persist(ref);
-    return target;
-  }
-
   public List<Reference> findReferences() {
     TypedQuery<Reference> query = em().createQuery("from " + Reference.class.getName() + " ref where ref.source=:source", Reference.class);
     query.setParameter("source", this);
     return query.getResultList();
   }
 
-  public Long getCount() {
-    return count;
-  }
-
-  public Content getReference(String path) {
+  @Override
+  public <T extends Content> T getChild(String path) {
     try {
       TypedQuery<Reference> query =
           em().createQuery("from " + Reference.class.getName() + " rel where rel.source=:source and rel.path=:path", Reference.class);
       query.setParameter("source", this);
       query.setParameter("path", path);
-      return query.getSingleResult().getTarget();
+      return (T) query.getSingleResult().getTarget();
     } catch (NoResultException e) {
       return null;
     }
+  }
+
+  public Long getCount() {
+    return count;
   }
 
   @XmlElement
@@ -92,16 +79,26 @@ public abstract class Entry extends Content {
   }
 
   @Override
+  protected <T extends Content> T doCreate(T target) {
+    final Reference ref = new Reference();
+    ref.setId(CoreUtil.randomID());
+    ref.setSource(this);
+    ref.setTarget(target);
+    ref.setPath(target.getPath());
+    if (!em().contains(target)) {
+      super.doCreate(target);
+      ref.setContaiment(true);
+    }
+    em().persist(ref);
+    return target;
+  }
+
+  @Override
   protected void doLoad() {
     if (loadReferences) {
       references = findReferences();
       count = countReferences();
     }
-  }
-
-  @Override
-  protected Content findChild(String path) {
-    return getReference(path);
   }
 
 }

@@ -14,10 +14,8 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URLDecoder;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 import java.util.UUID;
 
 import javax.xml.bind.JAXBContext;
@@ -71,19 +69,17 @@ public class BookTest extends CoreTest {
     tag.setTitle("example tag");
     tag.setValue("tag" + System.currentTimeMillis());
     tag.setTargetType(Book.TYPE_NAME);
-    tags.createEntry(tag);
+    tags.createChild(tag);
 
-    Set<Tag> bTags = new HashSet<Tag>();
-    bTags.add(tag);
-    book.setTags(bTags);
+    books.createChild(book);
 
-    books.createEntry(book);
+    book.addTag(tag);
 
     Comments comments = book.getComments();
     for (int i = 0; i < 5; i++) {
       Comment comment = new Comment();
       comment.setContent("how are you " + (i + 1));
-      comments.createEntry(comment);
+      comments.createChild(comment);
     }
 
     Media cover = new Media();
@@ -91,7 +87,7 @@ public class BookTest extends CoreTest {
     cover.setTitle("Cover");
     InputStream stream = getClass().getResourceAsStream("/covers/sanguo.jpg");
     cover.read(stream);
-    book.createReference(cover);
+    book.createChild(cover);
 
     book.setCover(cover);
 
@@ -103,7 +99,7 @@ public class BookTest extends CoreTest {
       section.setPath("section" + i);
       section.setTitle("第" + i + "章");
       // section.setContent("<p>北京时间11月11日晚，香港国际会展中心，跳水女皇郭晶晶与名门家族第三代霍启刚的第三场婚宴举行，包括三任香港特首、李嘉诚、刘德华、成龙、伏明霞等各界社会名流到场。这场婚礼耗时近八个小时，宾客多达1800人。</p>");
-      book.createReference(section);
+      book.createChild(section);
     }
 
     books.load();
@@ -134,7 +130,7 @@ public class BookTest extends CoreTest {
         tag = new Tag();
         tag.setTitle(name);
         tag.setPath(name);
-        repo.createReference(tag);
+        repo.createChild(tag);
       }
       for (File epubFile : subFolder.listFiles()) {
 
@@ -184,9 +180,9 @@ public class BookTest extends CoreTest {
         }
         // book.setContentStream(new
         // ByteArrayInputStream("Good work".getBytes()));
-        books.createEntry(book);
+        books.createChild(book);
 
-        tag.createReference(book);
+        tag.createChild(book);
 
         Resource coverRes = ebook.getCoverImage();
 
@@ -200,7 +196,7 @@ public class BookTest extends CoreTest {
           stream = getClass().getResourceAsStream("/covers/sanguo.jpg");
         }
         cover.read(stream);
-        book.createReference(cover);
+        book.createChild(cover);
         book.setCover(cover);
         book.update();
         books.load();
@@ -210,12 +206,12 @@ public class BookTest extends CoreTest {
           Section section = new Section();
           section.setPath(res.getHref());
           section.setTitle(res.getTitle());
-          book.createReference(section);
+          book.createChild(section);
 
           Media media = new Media();
           media.setTitle(res.getTitle());
           media.read(res.getInputStream());
-          section.createReference(media);
+          section.createChild(media);
 
           section.setMedia(media);
           section.update();

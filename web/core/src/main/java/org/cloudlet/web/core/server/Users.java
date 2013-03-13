@@ -1,7 +1,5 @@
 package org.cloudlet.web.core.server;
 
-import com.google.inject.persist.Transactional;
-
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.crypto.hash.SimpleHash;
 
@@ -29,8 +27,8 @@ public class Users extends Feed<User> {
   @POST
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public User createEntry(User user) {
-    return super.createEntry(user);
+  public User doCreate(User user) {
+    return super.doCreate(user);
   }
 
   public User findUserByName(final String name) {
@@ -77,7 +75,6 @@ public class Users extends Feed<User> {
     return this;
   }
 
-  @Transactional
   public void updatePassword(final String userName, final String newPwd) {
     User user = findUserByName(userName);
     if (user == null) {

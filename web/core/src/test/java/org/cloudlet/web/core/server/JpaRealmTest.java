@@ -34,7 +34,7 @@ public class JpaRealmTest extends CoreTest {
     if (user == null) {
       user = new User();
       user.setName(userName);
-      users.createEntry(user);
+      users.doCreate(user);
     }
     users.updatePassword(userName, pwd);
     UsernamePasswordToken token = new UsernamePasswordToken(userName, pwd);

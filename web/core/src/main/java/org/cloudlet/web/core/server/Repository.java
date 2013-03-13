@@ -94,6 +94,10 @@ public final class Repository extends Entry {
     return users;
   }
 
+  public final void save() {
+    WebPlatform.get().getInstance(ContentService.class).save(this);
+  }
+
   public void setBooks(Books books) {
     this.books = books;
   }
@@ -115,25 +119,12 @@ public final class Repository extends Entry {
   }
 
   @Override
-  protected void init() {
-    super.init();
-
-    users = new Users();
-    users.setPath(Repository.USERS);
-    users.setTitle("Users");
-    createReference(users);
-
-    books = new Books();
-    books.setPath(Repository.BOOKS);
-    books.setTitle("Books");
-    createReference(books);
-
-    tags = new Tags();
-    tags.setPath(Repository.TAGS);
-    tags.setTitle("Tags");
-    createReference(tags);
-
-    update();
+  protected boolean doInit() {
+    super.doInit();
+    users = createChild(USERS, Users.class);
+    books = createChild(BOOKS, Books.class);
+    tags = createChild(TAGS, Tags.class);
+    return true;
   }
 
   @Override
