@@ -7,8 +7,6 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.subject.Subject;
-import org.cloudlet.web.core.server.User;
-import org.cloudlet.web.core.server.UserService;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,7 +17,7 @@ public class JpaRealmTest extends CoreTest {
   String pwd = "1234";
 
   @Inject
-  private UserService userService;
+  private Repository repo;
 
   @Inject
   SecurityManager securityManager;
@@ -31,18 +29,19 @@ public class JpaRealmTest extends CoreTest {
 
   @Test
   public void testLogin() {
-    User user = userService.findUserByName(userName);
+    Users users = repo.getUsers();
+    User user = users.findUserByName(userName);
     if (user == null) {
       user = new User();
       user.setName(userName);
-      userService.createEntry(user);
+      users.createEntry(user);
     }
-    userService.updatePassword(userName, pwd);
+    users.updatePassword(userName, pwd);
     UsernamePasswordToken token = new UsernamePasswordToken(userName, pwd);
     Subject subject = SecurityUtils.getSubject();
     try {
       subject.login(token);
-      userService.updatePassword(userName, pwd);
+      users.updatePassword(userName, pwd);
       // } catch (UnknownAccountException uae) {
       // } catch (IncorrectCredentialsException ice) {
       // } catch (LockedAccountException lae) {
@@ -59,7 +58,8 @@ public class JpaRealmTest extends CoreTest {
   @Test
   public void testPermissonViolate() {
     try {
-      userService.updatePassword(userName, pwd);
+      Users users = repo.getUsers();
+      users.updatePassword(userName, pwd);
     } catch (UnauthenticatedException e) {
       return;
     }

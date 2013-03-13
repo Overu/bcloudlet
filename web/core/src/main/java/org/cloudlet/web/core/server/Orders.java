@@ -16,9 +16,4 @@ public class Orders extends Feed<Order> {
     return Order.class;
   }
 
-  @Override
-  public Class<OrderService> getServiceType() {
-    return OrderService.class;
-  }
-
 }

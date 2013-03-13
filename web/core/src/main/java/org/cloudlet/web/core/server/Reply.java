@@ -1,6 +1,5 @@
 package org.cloudlet.web.core.server;
 
-
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -32,11 +31,6 @@ public class Reply extends Entry {
   @Override
   public String getType() {
     return Reply.TYPE_NAME;
-  }
-
-  @Override
-  public Class<ReplyService> getServiceType() {
-    return ReplyService.class;
   }
 
   public void setContent(String body) {

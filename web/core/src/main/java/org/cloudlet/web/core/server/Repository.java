@@ -43,6 +43,9 @@ public final class Repository extends Entry {
   private Users users;
 
   @OneToOne
+  private Groups groups;
+
+  @OneToOne
   private Books books;
 
   @OneToOne
@@ -56,14 +59,14 @@ public final class Repository extends Entry {
     return books;
   }
 
+  @Path(GROUPS)
+  public Groups getGroups() {
+    return groups;
+  }
+
   @Path(ORDERS)
   public Orders getOrders() {
     return orders;
-  }
-
-  @Override
-  public Class<RepositoryService> getServiceType() {
-    return RepositoryService.class;
   }
 
   @Path(TAGS)
@@ -95,6 +98,10 @@ public final class Repository extends Entry {
     this.books = books;
   }
 
+  public void setGroups(Groups groups) {
+    this.groups = groups;
+  }
+
   public void setOrders(Orders orders) {
     this.orders = orders;
   }
@@ -105,6 +112,28 @@ public final class Repository extends Entry {
 
   public void setUsers(Users users) {
     this.users = users;
+  }
+
+  @Override
+  protected void init() {
+    super.init();
+
+    users = new Users();
+    users.setPath(Repository.USERS);
+    users.setTitle("Users");
+    createReference(users);
+
+    books = new Books();
+    books.setPath(Repository.BOOKS);
+    books.setTitle("Books");
+    createReference(books);
+
+    tags = new Tags();
+    tags.setPath(Repository.TAGS);
+    tags.setTitle("Tags");
+    createReference(tags);
+
+    update();
   }
 
   @Override

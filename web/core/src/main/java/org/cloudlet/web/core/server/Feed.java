@@ -5,9 +5,9 @@ import com.sencha.gxt.data.shared.SortInfo;
 import java.util.List;
 
 import javax.persistence.MappedSuperclass;
+import javax.persistence.NoResultException;
 import javax.persistence.Transient;
 import javax.persistence.TypedQuery;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -78,14 +78,54 @@ public abstract class Feed<E extends Entry> extends Content {
     }
   }
 
-  public E createEntry(E entry) {
-    return (E) getService().createEntry(this, entry);
+  public long countEntries() {
+    StringBuilder sql = new StringBuilder("select count(e) from ");
+    joinSQL(sql);
+    sql.append(" where e.parent=:parent");
+    prepareQuery(sql);
+    buildSearch(sql);
+    TypedQuery<Long> query = em().createQuery(sql.toString(), Long.class);
+    query.setParameter("parent", this);
+    setParams(query);
+    long count = query.getSingleResult().longValue();
+    return count;
   }
 
-  @Override
-  @DELETE
-  public void delete() {
-    getService().delete(this);
+  public E createEntry(E entry) {
+    if (em().contains(entry)) {
+      throw new RuntimeException("Content already created.");
+    }
+    total = total + 1;
+    update();
+    return createChild(entry);
+  }
+
+  public List<E> findEntries() {
+    Class<E> entryClass = getEntryType();
+    // CriteriaBuilder cb = em().getCriteriaBuilder();
+    // CriteriaQuery<Book> cq = cb.createQuery(Book.class);
+    // Root<Book> root_ = cq.from(Book.class);
+    // Join<Book, Tag> join = root_.join(Book.COMMENTS,
+    // JoinType.LEFT);
+    // cq.select(root_);
+
+    StringBuilder sql = new StringBuilder("select e from ");
+    joinSQL(sql);
+    sql.append(" where e.parent=:parent");
+    prepareQuery(sql);
+    buildSearch(sql);
+    buildSort(sql);
+
+    TypedQuery<E> query = em().createQuery(sql.toString(), entryClass);
+    if (getStart() != null) {
+      query.setFirstResult(getStart());
+    }
+    if (getLimit() != null && getLimit() > 0) {
+      query.setMaxResults(getLimit());
+    }
+    query.setParameter("parent", this);
+    setParams(query);
+    return query.getResultList();
   }
 
   public Long getCount() {
@@ -97,7 +137,15 @@ public abstract class Feed<E extends Entry> extends Content {
   }
 
   public E getEntry(String path) {
-    return (E) getService().getEntry(this, path);
+    try {
+      Class<E> entryClass = getEntryType();
+      TypedQuery<E> query = em().createQuery("from " + entryClass.getName() + " e where e.parent=:parent and e.path=:path", entryClass);
+      query.setParameter("parent", this);
+      query.setParameter("path", path);
+      return query.getSingleResult();
+    } catch (NoResultException e) {
+      return null;
+    }
   }
 
   @XmlTransient
@@ -114,11 +162,6 @@ public abstract class Feed<E extends Entry> extends Content {
 
   public List<String> getSearch() {
     return search;
-  }
-
-  @Override
-  public FeedService getService() {
-    return (FeedService) super.getService();
   }
 
   public List<String> getSort() {
@@ -183,15 +226,9 @@ public abstract class Feed<E extends Entry> extends Content {
   }
 
   @Override
-  public Content update() {
-    getService().update(this);
-    return this;
-  }
-
-  @Override
   protected void doLoad() {
-    entries = getService().findEntries(this);
-    count = getService().countEntries(this);
+    entries = findEntries();
+    count = countEntries();
   }
 
   @Override
@@ -199,8 +236,4 @@ public abstract class Feed<E extends Entry> extends Content {
     return getEntry(path);
   }
 
-  @Override
-  protected void init() {
-    getService().init(this);
-  }
 }

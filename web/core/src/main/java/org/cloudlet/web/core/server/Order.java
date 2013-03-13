@@ -42,11 +42,6 @@ public class Order extends Entry {
   }
 
   @Override
-  public Class<OrderService> getServiceType() {
-    return OrderService.class;
-  }
-
-  @Override
   public String getType() {
     return Order.TYPE_NAME;
   }

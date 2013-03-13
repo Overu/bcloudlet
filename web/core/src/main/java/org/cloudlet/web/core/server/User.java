@@ -51,11 +51,6 @@ public class User extends Entry implements Principal {
     return phone;
   }
 
-  @Override
-  public Class<UserService> getServiceType() {
-    return UserService.class;
-  }
-
   public String getState() {
     return state;
   }

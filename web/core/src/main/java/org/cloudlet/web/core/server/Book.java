@@ -1,11 +1,15 @@
 package org.cloudlet.web.core.server;
 
+import com.google.inject.Inject;
+
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -14,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType
 @Entity(name = Book.TYPE_NAME)
-public class Book extends Entry implements Taggable {
+public class Book extends Entry {
 
   public static final String TYPE_NAME = CoreUtil.PREFIX + "Book";
 
@@ -76,6 +80,12 @@ public class Book extends Entry implements Taggable {
 
   private float paper_price;
 
+  // @FormParam("tag")
+  private transient Set<String> addTags;
+
+  // @FormParam("dtag")
+  private transient Set<String> deleteTags;
+
   @OneToOne
   private Comments comments;
 
@@ -98,18 +108,8 @@ public class Book extends Entry implements Taggable {
   @ManyToMany
   private Set<Tag> tags;
 
-  @Override
-  public void addTag(Tag tag) {
-    tag.addTo(this);
-  }
-
-  @Override
-  public Taggable addTags(String tag) {
-    TagService tagService = WebPlatform.get().getInstance(TagService.class);
-    Tag t = tagService.getOrCreateTag(tag, TYPE_NAME);
-    addTag(t);
-    return this;
-  }
+  @Inject
+  private transient Repository repo;
 
   public String getAuthors() {
     return authors;
@@ -176,16 +176,6 @@ public class Book extends Entry implements Taggable {
     return serialNumber;
   }
 
-  @Override
-  public BookService getService() {
-    return (BookService) super.getService();
-  }
-
-  @Override
-  public Class<BookService> getServiceType() {
-    return BookService.class;
-  }
-
   public long getSize() {
     return size;
   }
@@ -195,7 +185,6 @@ public class Book extends Entry implements Taggable {
     return source;
   }
 
-  @Override
   public Set<Tag> getTags() {
     return tags;
   }
@@ -304,7 +293,6 @@ public class Book extends Entry implements Taggable {
     this.source = source;
   }
 
-  @Override
   public void setTags(Set<Tag> tags) {
     this.tags = tags;
   }
@@ -315,6 +303,43 @@ public class Book extends Entry implements Taggable {
 
   public void setWeight(int weight) {
     this.weight = weight;
+  }
+
+  @Override
+  protected void doUpdate() {
+    if (addTags != null) {
+      for (String value : addTags) {
+        Tag tag = repo.getTags().getOrCreateTag(value, getType());
+        if (tags == null) {
+          tags = new HashSet<Tag>();
+        }
+        if (tags.add(tag)) {
+          tag.setWeight(tag.getWeight() + 1);
+          tag.update();
+        }
+      }
+    }
+    if (deleteTags != null && tags != null && !tags.isEmpty()) {
+      for (String value : deleteTags) {
+        Tag tag = repo.getTags().getOrCreateTag(value, getType());
+        if (tags.remove(tag)) {
+          tag.setWeight(tag.getWeight() - 1);
+          tag.update();
+        }
+      }
+    }
+    super.doUpdate();
+  }
+
+  @Override
+  protected void init() {
+    super.init();
+
+    Comments comments = new Comments();
+    comments.setPath(Book.COMMENTS);
+    createReference(comments);
+    setComments(comments);
+    update();
   }
 
 }

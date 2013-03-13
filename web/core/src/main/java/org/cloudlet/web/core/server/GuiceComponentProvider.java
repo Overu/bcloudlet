@@ -15,10 +15,10 @@ public class GuiceComponentProvider implements ComponentProvider {
 
   private class RepositoryFactory implements Factory<Repository> {
 
-    private final RepositoryService repoSvc;
+    private final RepositoryProvider repoProvider;
 
     public RepositoryFactory() {
-      repoSvc = WebPlatform.get().getInstance(RepositoryService.class);
+      repoProvider = WebPlatform.get().getInstance(RepositoryProvider.class);
     }
 
     @Override
@@ -27,9 +27,9 @@ public class GuiceComponentProvider implements ComponentProvider {
 
     @Override
     public Repository provide() {
-      Repository resource = repoSvc.getRoot();
-      resourceContext.initResource(resource);
-      return resource;
+      Repository repo = repoProvider.get();
+      resourceContext.initResource(repo);
+      return repo;
     }
   }
 

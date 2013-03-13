@@ -15,19 +15,12 @@ import javax.xml.bind.Marshaller;
 public class GroupTest extends CoreTest {
 
   @Inject
-  RepositoryService repoSvc;
-
-  @Inject
-  GroupService groupsSvc;
-
-  @Inject
-  UserService usersSvc;
+  Repository repo;
 
   @Test
   public void testSubResource() throws JAXBException {
-    Repository repo = repoSvc.getRoot();
-    Groups groups = groupsSvc.getRoot();
-    Users users = usersSvc.getRoot();
+    Groups groups = repo.getGroups();
+    Users users = repo.getUsers();
     Group group = groups.getEntry("mygroup");
     if (group == null) {
       group = groups.newEntry();

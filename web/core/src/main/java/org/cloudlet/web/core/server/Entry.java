@@ -5,15 +5,15 @@ import java.util.logging.Logger;
 
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.NoResultException;
 import javax.persistence.Transient;
-import javax.ws.rs.DELETE;
+import javax.persistence.TypedQuery;
 import javax.ws.rs.QueryParam;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 @MappedSuperclass
 @EntityListeners(InjectionListener.class)
-public abstract class Entry extends Content implements Resource {
+public abstract class Entry extends Content {
 
   private static final Logger logger = Logger.getLogger(Entry.class.getName());
 
@@ -29,36 +29,53 @@ public abstract class Entry extends Content implements Resource {
   @Transient
   protected Long count;
 
+  public long countReferences() {
+    TypedQuery<Long> query =
+        em().createQuery("select count(ref) from " + Reference.class.getName() + " ref where ref.source=:source", Long.class);
+    query.setParameter("source", this);
+    long count = query.getSingleResult().longValue();
+    return count;
+  }
+
   public Content createReference(Content target) {
-    getService().createReference(this, target);
+    final Reference ref = new Reference();
+    ref.setId(CoreUtil.randomID());
+    ref.setSource(this);
+    ref.setTarget(target);
+    ref.setPath(target.getPath());
+    if (!em().contains(target)) {
+      createChild(target);
+      ref.setContaiment(true);
+    }
+    em().persist(ref);
     return target;
   }
 
-  @Override
-  @SuppressWarnings("unchecked")
-  @DELETE
-  public void delete() {
-    getService().delete(this);
+  public List<Reference> findReferences() {
+    TypedQuery<Reference> query = em().createQuery("from " + Reference.class.getName() + " ref where ref.source=:source", Reference.class);
+    query.setParameter("source", this);
+    return query.getResultList();
   }
 
   public Long getCount() {
     return count;
   }
 
+  public Content getReference(String path) {
+    try {
+      TypedQuery<Reference> query =
+          em().createQuery("from " + Reference.class.getName() + " rel where rel.source=:source and rel.path=:path", Reference.class);
+      query.setParameter("source", this);
+      query.setParameter("path", path);
+      return query.getSingleResult().getTarget();
+    } catch (NoResultException e) {
+      return null;
+    }
+  }
+
   @XmlElement
   public List<Reference> getReferences() {
     return references;
-  }
-
-  @Override
-  public EntryService getService() {
-    return (EntryService) super.getService();
-  }
-
-  @Override
-  @XmlTransient
-  public Class<? extends Service> getServiceType() {
-    return EntryService.class;
   }
 
   public void setCount(Long count) {
@@ -75,26 +92,16 @@ public abstract class Entry extends Content implements Resource {
   }
 
   @Override
-  public Entry update() {
-    getService().update(this);
-    return this;
-  }
-
-  @Override
   protected void doLoad() {
     if (loadReferences) {
-      references = getService().findReferences(this);
-      count = getService().countReferences(this);
+      references = findReferences();
+      count = countReferences();
     }
   }
 
   @Override
   protected Content findChild(String path) {
-    return getService().getReference(this, path);
+    return getReference(path);
   }
 
-  @Override
-  protected void init() {
-    getService().init(this);
-  }
 }

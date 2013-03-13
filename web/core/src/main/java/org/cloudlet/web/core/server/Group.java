@@ -1,6 +1,5 @@
 package org.cloudlet.web.core.server;
 
-
 import java.security.Principal;
 
 import javax.persistence.Entity;
@@ -45,11 +44,6 @@ public class Group extends Entry implements Principal {
   @Override
   public String getType() {
     return Group.TYPE_NAME;
-  }
-
-  @Override
-  public Class<GroupService> getServiceType() {
-    return GroupService.class;
   }
 
   public void setName(String name) {

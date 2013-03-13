@@ -1,5 +1,7 @@
 package org.cloudlet.web.core.server;
 
+import com.google.inject.persist.Transactional;
+
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUpload;
@@ -15,18 +17,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityListeners;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
 import javax.persistence.Version;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -51,6 +58,27 @@ import javax.xml.bind.annotation.XmlTransient;
 @MappedSuperclass
 @EntityListeners(InjectionListener.class)
 public abstract class Content {
+
+  @Transactional
+  static class CreateExecuter {
+    protected <T extends Content> T execute(Content parent, T child) {
+      return parent.createChild(child);
+    }
+  }
+
+  @Transactional
+  static class DeleteExecuter {
+    protected void execute(Content content) {
+      content.doDelete();
+    }
+  }
+
+  @Transactional
+  static class UpdateExecuter {
+    protected void execute(Content content) {
+      content.doUpdate();
+    }
+  }
 
   private static final Logger logger = Logger.getLogger(Content.class.getName());
 
@@ -86,9 +114,6 @@ public abstract class Content {
   @Columns(columns = { @Column(name = "parentType"), @Column(name = "parentId") })
   protected Content parent;
 
-  @Transient
-  private Service service;
-
   public static final String SEARCH = "search";
 
   public static final String HOME = "";
@@ -110,6 +135,18 @@ public abstract class Content {
   public static final String VERSION = "version";
 
   public static final String URI = "uri";
+
+  @POST
+  @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_ATOM_XML })
+  public <T extends Content> T create() {
+    T content = null;
+    return create(content);
+  }
+
+  public <T extends Content> T create(T child) {
+    return WebPlatform.get().getInstance(CreateExecuter.class).execute(this, child);
+  }
 
   public Content createFromInputStream(@Context UriInfo uriInfo, @QueryParam("path") Integer contentLength,
       @HeaderParam("Content-Type") String contentType, InputStream inputStream) {
@@ -190,7 +227,29 @@ public abstract class Content {
   }
 
   @DELETE
-  public abstract void delete();
+  public void delete() {
+    WebPlatform.get().getInstance(DeleteExecuter.class).execute(this);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (!(obj instanceof Content)) {
+      return false;
+    }
+    Content that = (Content) obj;
+    if (this.id == null || that.id == null) {
+      return false;
+    }
+    return (this.id.equals(that.id));
+  }
 
   @Path("{path}")
   public <T extends Content> T getChild(@PathParam("path") String path) {
@@ -232,19 +291,6 @@ public abstract class Content {
       return path;
     }
     return null;
-  }
-
-  @XmlTransient
-  public Service getService() {
-    if (service == null) {
-      service = WebPlatform.get().getInstance(getServiceType());
-    }
-    return service;
-  }
-
-  @XmlTransient
-  public Class<? extends Service> getServiceType() {
-    return Service.class;
   }
 
   /**
@@ -322,6 +368,11 @@ public abstract class Content {
     }
   }
 
+  public boolean rollbackIfNecessary(EntityTransaction txn) {
+    txn.rollback();
+    return false;
+  }
+
   public void setCreated(Date created) {
     this.created = created;
   }
@@ -386,7 +437,36 @@ public abstract class Content {
   }
 
   @PUT
-  public abstract Content update();
+  @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+  public final Content update() {
+    WebPlatform.get().getInstance(UpdateExecuter.class).execute(this);
+    return this;
+  }
+
+  protected <T extends Content> T createChild(T child) {
+    child.setParent(this);
+    String id = child.getId();
+    String path = child.getPath();
+    if (path != null) {
+      Content exist = getChild(path);
+      if (exist != null) {
+        throw new EntityExistsException("A child with path=" + path + " already exists");
+      }
+    }
+
+    if (id == null) {
+      child.setId(CoreUtil.randomID());
+    }
+
+    if (path == null) {
+      child.setPath(child.getId());
+    }
+
+    em().persist(child);
+
+    child.init();
+    return child;
+  }
 
   protected Content createFrom(MultivaluedMap<String, String> params) {
     String resourceType = params.getFirst(Content.TYPE);
@@ -400,7 +480,28 @@ public abstract class Content {
     return null;
   }
 
+  protected void doDelete() {
+    em().remove(this);
+  }
+
   protected abstract void doLoad();
+
+  protected void doUpdate() {
+    // TODO validation
+    Set<ConstraintViolation<?>> violations = new HashSet<ConstraintViolation<?>>();
+    if (path == null) {
+    }
+    if (!violations.isEmpty()) {
+      throw new ConstraintViolationException("", violations);
+    }
+    if (parent != null) {
+      Content exist = parent.getChild(path);
+      if (exist != null && !exist.equals(this)) {
+        throw new EntityExistsException("A child with path=" + path + " already exists");
+      }
+    }
+    em().persist(this);
+  }
 
   protected EntityManager em() {
     return WebPlatform.get().getEntityManager();
@@ -423,7 +524,8 @@ public abstract class Content {
     return null;
   }
 
-  protected abstract void init();
+  protected void init() {
+  }
 
   protected void initResource(Object result) {
     getParent().initResource(result);
