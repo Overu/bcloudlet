@@ -14,23 +14,18 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.StringWriter;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.URL;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
@@ -50,14 +45,16 @@ public class ProxyFilter implements Filter {
 
   private static final Logger logger = Logger.getLogger(ProxyFilter.class.getName());
 
-  public static synchronized HttpClient getClient(String host) {
-    HttpClient client = clients.get(host);
-    if (client == null) {
-      client = new HttpClient();
-      clients.put(host, client);
-    }
-    return client;
-  }
+  // public static Map<String, HttpClient> clients;
+
+  // public static synchronized HttpClient getClient(String host) {
+  // HttpClient client = clients.get(host);
+  // if (client == null) {
+  // client = new HttpClient();
+  // clients.put(host, client);
+  // }
+  // return client;
+  // }
 
   public static void transferStream(InputStream is, OutputStream... outs) throws IOException {
     if (is == null || outs == null) {
@@ -90,34 +87,11 @@ public class ProxyFilter implements Filter {
     }
   }
 
-  private static String getStreamAsString(InputStream stream, String charset) throws IOException {
-    try {
-      BufferedReader reader = new BufferedReader(new InputStreamReader(stream, charset));
-      StringWriter writer = new StringWriter();
-
-      char[] chars = new char[256];
-      int count = 0;
-      while ((count = reader.read(chars)) > 0) {
-        writer.write(chars, 0, count);
-      }
-
-      return writer.toString();
-    } finally {
-      if (stream != null) {
-        stream.close();
-      }
-    }
-  }
-
-  public Set<String> staticExtensions;
-
-  public static Map<String, HttpClient> clients;
-
-  private String mirror = "book.duokan.com";
-
   private Set<String> localAddresses;
 
   private String dataLocation;
+
+  public Set<String> cacheableContentTypes;
 
   @Override
   public void destroy() {
@@ -149,7 +123,7 @@ public class ProxyFilter implements Filter {
       return;
     }
 
-    File mirror = getMirror(host, req.getRequestURI(), qs);
+    File mirror = getMirror(host, req.getRequestURI(), qs, req.getHeader("Accept"));
     if (mirror.exists()) {
       String contentType = "text/html";
       String path = mirror.getPath();
@@ -160,12 +134,18 @@ public class ProxyFilter implements Filter {
           contentType = "application/json";
         } else if (ext.equals(".xml")) {
           contentType = "application/xml";
-        } else if (ext.equals(".png")) {
+        } else if (ext.startsWith(".png")) {
           contentType = "image/png";
-        } else if (ext.equals(".jpg") || ext.equals(".jpg!s")) {
+        } else if (ext.startsWith(".jpg")) {
           contentType = "image/jpg";
-        } else if (ext.equals(".html")) {
+        } else if (ext.startsWith(".gif")) {
+          contentType = "image/gif";
+        } else if (ext.startsWith(".htm")) {
           contentType = "text/html";
+        } else if (ext.startsWith(".css")) {
+          contentType = "text/css";
+        } else if (ext.startsWith(".js")) {
+          contentType = "application/x-javascript";
         }
       }
       resp.setContentType(contentType);
@@ -233,11 +213,15 @@ public class ProxyFilter implements Filter {
         InputStream respStream = httpMethod.getResponseBodyAsStream();
         if (respStream != null) {
           Header enc = httpMethod.getResponseHeader("Content-Encoding");
+          Header ct = httpMethod.getResponseHeader("Content-Type");
+          String contentType = ct.getValue();
           if (enc != null && "gzip".equalsIgnoreCase(enc.getValue())) {
             GZIPInputStream gzipInput = new GZIPInputStream(respStream);
             transferStream(gzipInput, new FileOutputStream(mirror), new GZIPOutputStream(resp.getOutputStream()));
+          } else if (cacheableContentTypes.contains(contentType)) {
+            transferStream(respStream, new FileOutputStream(mirror), resp.getOutputStream());
           } else {
-            transferStream(respStream, new FileOutputStream(mirror), new GZIPOutputStream(resp.getOutputStream()));
+            transferStream(respStream, resp.getOutputStream());
           }
         }
       }
@@ -246,13 +230,12 @@ public class ProxyFilter implements Filter {
 
   @Override
   public void init(FilterConfig config) throws ServletException {
-    staticExtensions = new HashSet<String>();
-    staticExtensions.add(".js");
-    staticExtensions.add(".css");
-    staticExtensions.add(".html");
-    staticExtensions.add(".png");
-    staticExtensions.add(".jpg");
-
+    cacheableContentTypes = new HashSet<String>();
+    cacheableContentTypes.add("text/html");
+    cacheableContentTypes.add("text/css");
+    cacheableContentTypes.add("application/x-javascript");
+    cacheableContentTypes.add("application/json");
+    cacheableContentTypes.add("application/xml");
     File dataFolder = new File("data");
 
     if (!dataFolder.exists()) {
@@ -264,7 +247,7 @@ public class ProxyFilter implements Filter {
       dataLocation += "/";
     }
 
-    clients = new HashMap<String, HttpClient>();
+    // clients = new HashMap<String, HttpClient>();
     localAddresses = new HashSet<String>();
     Enumeration allNetInterfaces = null;
     try {
@@ -288,7 +271,7 @@ public class ProxyFilter implements Filter {
     }
   }
 
-  private File getMirror(String host, String uri, String query) {
+  private File getMirror(String host, String uri, String query, String accept) {
     int index = uri.lastIndexOf("/");
     String ending = index >= 0 ? uri.substring(index + 1) : uri;
     index = ending.lastIndexOf(".");
@@ -298,9 +281,12 @@ public class ProxyFilter implements Filter {
         uri += query;
         uri += ".";
       }
-      uri += "json";
+      if (accept != null && accept.contains("application/json")) {
+        uri += "json";
+      } else {
+        uri += "html";
+      }
     }
-    return new File(dataLocation + host + uri + (uri.endsWith("/") ? "index.html" : ""));
+    return new File(dataLocation + host + uri);
   }
-
 }
