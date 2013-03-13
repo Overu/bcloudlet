@@ -11,13 +11,13 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement
 @XmlType
 @Entity(name = Books.TYPE_NAME)
 @Path(Repository.BOOKS)
+@Produces("text/html;qs=5")
 public class Books extends Feed<Book> {
 
   public static final String TYPE_NAME = CoreUtil.PREFIX + "Books";
@@ -98,7 +98,7 @@ public class Books extends Feed<Book> {
   }
 
   @Override
-  public void setParams(TypedQuery<?> query) {
+  public void setParams(TypedQuery query) {
     super.setParams(query);
     if (tag != null) {
       query.setParameter("tag", tag);

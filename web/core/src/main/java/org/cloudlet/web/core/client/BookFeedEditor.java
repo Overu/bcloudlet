@@ -41,7 +41,7 @@ public class BookFeedEditor extends ResourceEditor {
 
   private void createEditors() {
     Resource feed = getValue();
-    List<Resource> entries = feed.getList(Feed.ENTRIES);
+    List<Resource> entries = feed.getList(Feed.ITEMS);
     if (entries != null) {
       clear();
       for (Resource entry : entries) {

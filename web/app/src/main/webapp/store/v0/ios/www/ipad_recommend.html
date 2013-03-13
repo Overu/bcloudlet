@@ -166,11 +166,11 @@ function buildList(list) {
 }
 
 function getItems(data, index) {
-  if (data.hasOwnProperty('entries')) {
+  if (data.hasOwnProperty('items')) {
       if (data) {
       var content = "";
       for (var i=0; i<data.limit; i++) {
-        item = data.entries[i];
+        item = data.items[i];
         if(!item) {
         	return;
         }
@@ -325,7 +325,7 @@ $(document).ready(function () {
   }); */
 
   $.ajax({
-    url: '/api/books?start=0&limit='+recommend_count,
+    url: '/books?start=0&limit='+recommend_count,
     success: getRecommendItems,
     dataType: 'json',
     complete: function () {
@@ -334,7 +334,7 @@ $(document).ready(function () {
   });
 		
   $.ajax({
-    url: '/api/books?start=11&limit='+recommend_count,
+    url: '/books?start=11&limit='+recommend_count,
     success: getFreshItems,
     dataType: 'json'
   });

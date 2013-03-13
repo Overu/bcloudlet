@@ -39,7 +39,7 @@ public class BookImporter {
     importTags();
     Tags tags = repo.get().getTags();
     tags.load();
-    for (Tag tag : tags.getEntries()) {
+    for (Tag tag : tags.getItems()) {
       importBooks(tag);
     }
   }

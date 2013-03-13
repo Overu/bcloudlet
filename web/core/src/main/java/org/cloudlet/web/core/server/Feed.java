@@ -40,13 +40,13 @@ public abstract class Feed<E extends Entry> extends Content {
   protected List<? extends SortInfo> sortInfo;
 
   @Transient
-  protected List<E> entries;
+  protected List<E> items;
 
   public static final String NEW = "new";
 
   public static final String QUERY_COUNT = "queryCount";
 
-  public static final String ENTRIES = "entries";
+  public static final String ITEMS = "items";
 
   public static final String SORT = "sort";
 
@@ -78,7 +78,7 @@ public abstract class Feed<E extends Entry> extends Content {
     }
   }
 
-  public long countEntries() {
+  public long countItems() {
     StringBuilder sql = new StringBuilder("select count(e) from ");
     joinSQL(sql);
     sql.append(" where e.parent=:parent");
@@ -91,7 +91,7 @@ public abstract class Feed<E extends Entry> extends Content {
     return count;
   }
 
-  public List<E> findEntries() {
+  public List<E> findItems() {
     Class<E> entryClass = getEntryType();
     // CriteriaBuilder cb = em().getCriteriaBuilder();
     // CriteriaQuery<Book> cq = cb.createQuery(Book.class);
@@ -137,12 +137,12 @@ public abstract class Feed<E extends Entry> extends Content {
     return count;
   }
 
-  public List<E> getEntries() {
-    return entries;
-  }
-
   @XmlTransient
   public abstract Class<E> getEntryType();
+
+  public List<E> getItems() {
+    return items;
+  }
 
   public Integer getLimit() {
     return limit;
@@ -187,8 +187,8 @@ public abstract class Feed<E extends Entry> extends Content {
     this.count = count;
   }
 
-  public void setEntries(List<E> entries) {
-    this.entries = entries;
+  public void setItems(List<E> items) {
+    this.items = items;
   }
 
   public void setLimit(int limit) {
@@ -199,7 +199,7 @@ public abstract class Feed<E extends Entry> extends Content {
     this.limit = limit;
   }
 
-  public void setParams(TypedQuery<?> query) {
+  public void setParams(TypedQuery query) {
   }
 
   public void setSearch(List<String> search) {
@@ -229,8 +229,8 @@ public abstract class Feed<E extends Entry> extends Content {
 
   @Override
   protected void doLoad() {
-    entries = findEntries();
-    count = countEntries();
+    items = findItems();
+    count = countItems();
   }
 
 }

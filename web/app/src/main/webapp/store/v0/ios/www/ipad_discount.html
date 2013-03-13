@@ -179,13 +179,13 @@ function buildAppItem(app) {
 }
 
 function getItems1(data) {
-  if (data.hasOwnProperty('entries')) {
+  if (data.hasOwnProperty('items')) {
     for (var i=0; i<data.limit; i++) {
-    	var item = data.entries[i];
+    	var item = data.items[i];
     	if(!item) {
     		break;
     	}
-      var content = buildBook(data.entries[i]);
+      var content = buildBook(data.items[i]);
       content.insertBefore('#inside_loading1');
       setHover(content);
     }
@@ -211,9 +211,9 @@ function getItems1(data) {
 }
 
 function getItems2(data) {
-  if (data.hasOwnProperty('entries')) {
+  if (data.hasOwnProperty('items')) {
     for (var i=0; i<data.limit; i++) {
-    	var item = data.entries[i];
+    	var item = data.items[i];
     	if(!item) {
     		break;
     	}
@@ -282,7 +282,7 @@ function showFree() {
 
     if (start2 == 0){
       addLoad('#add_load',function () {
-        return '/api/books?start=' + start2 + '&limit=23';
+        return '/books?start=' + start2 + '&limit=23';
       },getItems2, hideAll);
     }else if(start2>0){
       appendEmptySlot();
@@ -344,17 +344,17 @@ $(document).ready(function () {
    $('#discount_select_pane2').show();
   loadAjaxSpin('#inside_loading1', function () {
     if (start1==0)
-      return '/api/books?start=' + start1 + '&limit=23';
+      return '/books?start=' + start1 + '&limit=23';
     else
-      return '/api/books?start=' + start1 + '&limit=24';
+      return '/books?start=' + start1 + '&limit=24';
   }, getItems1, hideAll);
   
   loadAjaxSpin('#inside_loading2', function () {
-       return '/api/books?start=' + start1 + '&limit=24';
+       return '/books?start=' + start1 + '&limit=24';
   }, getItems2, hideAll);
   
   $.ajax({
-    url: '/api/books?start=' + start1 + '&limit=23',
+    url: '/books?start=' + start1 + '&limit=23',
     success: getItems1,
     dataType: 'json',
     complete: function () {

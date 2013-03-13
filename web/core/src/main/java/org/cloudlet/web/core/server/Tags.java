@@ -16,6 +16,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType
 @Entity(name = Tags.TYPE_NAME)
 @Path(Repository.TAGS)
+@Produces("text/html;qs=5")
 public class Tags extends Feed<Tag> {
 
   public static final String TYPE_NAME = CoreUtil.PREFIX + "Tags";

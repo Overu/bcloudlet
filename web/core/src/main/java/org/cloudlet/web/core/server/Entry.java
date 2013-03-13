@@ -27,6 +27,9 @@ public abstract class Entry extends Content {
   protected List<Reference> references;
 
   @Transient
+  protected List<Content> items;
+
+  @Transient
   protected Long count;
 
   public long countReferences() {
@@ -58,6 +61,10 @@ public abstract class Entry extends Content {
 
   public Long getCount() {
     return count;
+  }
+
+  public List<Content> getItems() {
+    return items;
   }
 
   @XmlElement

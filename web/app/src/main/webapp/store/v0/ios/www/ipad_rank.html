@@ -154,10 +154,10 @@ function buildBook(book, listIndex) {
 }
 
 function getItems(data, listIndex) {
-  if (data.hasOwnProperty('entries')) {
+  if (data.hasOwnProperty('items')) {
   	var loading = $('.inside_loading:eq('+listIndex+')');
     for (var i=0; i < data.limit; i++) {
-    	var item = data.entries[i];
+    	var item = data.items[i];
     	if(!item) {
     		break;
     	}
@@ -197,7 +197,7 @@ function showRank(listIndex) {
     $('.book_list').eq(listIndex).show();
     if (start[listIndex] == 0) {
       addLoad('#add_load',function () {
-        return '/api/books?start=' + start[listIndex] + '&limit=23';		
+        return '/books?start=' + start[listIndex] + '&limit=23';		
       }, function(data) {
 		  	getItems(data, listIndex);
 		  }, hideAll);
@@ -230,7 +230,7 @@ $(document).ready(function () {
 	
 	for (var i = 0; i < rankTypes.length; i++) {
 		var urlFunc = (function(idx) {
-			return function() { return '/api/books?start=' + start[idx] + '&limit=23'; };
+			return function() { return '/books?start=' + start[idx] + '&limit=23'; };
 		})(i);
 		var getItemFunc = (function(idx) {
 			return function(data) { getItems(data, idx); };
@@ -239,7 +239,7 @@ $(document).ready(function () {
 	}
   
   $.ajax({
-    url: '/api/books?start=' + start[0] + '&limit=23',
+    url: '/books?start=' + start[0] + '&limit=23',
     success: function(data) {getItems(data, 0); },
     dataType: 'json',
     complete: function () {

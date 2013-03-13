@@ -26,11 +26,11 @@
   </servlet>
   <servlet>
     <servlet-name>mobile.jsp</servlet-name>
-    <jsp-file>/WEB-INF/pages/mobile.jsp</jsp-file>
+    <jsp-file>/jsp/mobile.jsp</jsp-file>
   </servlet>
   <servlet>
     <servlet-name>desktop.jsp</servlet-name>
-    <jsp-file>/WEB-INF/pages/desktop.jsp</jsp-file>
+    <jsp-file>/jsp/desktop.jsp</jsp-file>
   </servlet>
   <servlet-mapping>
     <servlet-name>opennew.jsp</servlet-name>

@@ -54,7 +54,7 @@ public class BookFeedViewer extends FlowPanel implements TakesResource {
 
   private void refresh() {
     clear();
-    List<Resource> books = resource.getList(Feed.ENTRIES);
+    List<Resource> books = resource.getList(Feed.ITEMS);
     for (int i = 0; i < display; i++) {
       if (i >= books.size()) {
         break;

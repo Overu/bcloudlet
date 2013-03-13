@@ -78,7 +78,7 @@ public class XmlResourceProvider extends AbstractMessageReaderWriterProvider<Con
         writeResource(writer, ref.getTarget());
       }
     } else {
-      contents = ((Feed) content).getEntries();
+      contents = ((Feed) content).getItems();
       for (Content rel : contents) {
         writeResource(writer, rel);
       }

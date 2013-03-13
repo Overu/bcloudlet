@@ -548,7 +548,7 @@ function reply() {
   var count=4;
   var order = ($('.comment_order').eq(0).attr('active') == 'yes') ? 1 : 0;
   loadAjaxSpin('#inside_loading1', function () {
-    return '/api/books/'+b_id+'/comments'/*?start='+start+'&limit='+count+'&order_type='+order*/;
+    return '/books/'+b_id+'/comments'/*?start='+start+'&limit='+count+'&order_type='+order*/;
     }, replyInfor, hideAll);
    if(start==1){
     $('#inside_loading1').click()
@@ -592,9 +592,9 @@ function replyInfor(data){
       $('.no_comment1').show();
      }
      
-    for(var i=0; i<data.entries.length; i++){
-     var comments=data.entries[i];
-      var com=data.entries[i].replies;
+    for(var i=0; i<data.items.length; i++){
+     var comments=data.items[i];
+      var com=data.items[i].replies;
       var total=comments.count;
       if(total==undefined||total==null||total==''){
         total=0;
@@ -864,7 +864,7 @@ function fivestar(wich,tagclass){
   };
   var app_id ='DkReader.iPad';
   $.ajax({
-    url:'/api/books/'+b_id+'/comments?start=1&limit=1',
+    url:'/books/'+b_id+'/comments?start=1&limit=1',
     success:function(data){
              if (data.count != 0){
                /* var starIndex=data.user_last_score-1;
@@ -1372,7 +1372,7 @@ $(document).ready(function () {
   postioncenter('#warning_pl');
   postioncenter(".votesuccess");
   postioncenter(".had_voted");
-  $.getJSON('/api/books/'+b_id, function(data) {
+  $.getJSON('/books/'+b_id, function(data) {
     showBook(data);
   });
   $.getJSON('/store/v0/ios/book/'+b_id+'/change_log?start=0&page_length=50', function(data) {

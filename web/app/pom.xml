@@ -74,6 +74,13 @@
       <groupId>com.sencha.gxt</groupId>
       <artifactId>gxt</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jstl</artifactId>
+      <version>${jstl.version}</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -117,24 +124,10 @@
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
       </plugin>
-      <!-- <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>gwt-maven-plugin</artifactId>
-        <configuration>
-          <extraJvmArgs>-Xmx2048M -XX:MaxPermSize=512M -Xss4M</extraJvmArgs>
-          <extraParam>true</extraParam>
-          <modules>
-            <module>org.cloudlet.web.app.Platform</module>
-          </modules>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <configuration>
-          <warSourceExcludes>platform/*</warSourceExcludes>
-        </configuration>
-      </plugin> -->
+      <!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>gwt-maven-plugin</artifactId> <configuration> <extraJvmArgs>-Xmx2048M -XX:MaxPermSize=512M 
+        -Xss4M</extraJvmArgs> <extraParam>true</extraParam> <modules> <module>org.cloudlet.web.app.Platform</module> </modules> </configuration> </plugin> 
+        <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-war-plugin</artifactId> <configuration> <warSourceExcludes>platform/*</warSourceExcludes> 
+        </configuration> </plugin> -->
       <plugin>
         <groupId>org.apache.tomcat.maven</groupId>
         <artifactId>tomcat7-maven-plugin</artifactId>
@@ -142,17 +135,9 @@
           <path>/</path>
         </configuration>
       </plugin>
-      <!-- <plugin>
-        <groupId>net.kindleit</groupId>
-        <artifactId>maven-gae-plugin</artifactId>
-        <configuration>
-          <jvmFlags>
-            <jvmFlag>-Drdbms.server=local</jvmFlag>
-            <jvmFlag>-Drdbms.driver=com.mysql.jdbc.Driver</jvmFlag>
-            <jvmFlag>-Drdbms.url=jdbc:mysql://dev.retechcorp.com:3306/reader?useInformationSchema=true&amp;useUnicode=true&amp;characterEncoding=UTF8&amp;useServerPrepStmts=true&amp;user=root&amp;password=passw0rd</jvmFlag>
-          </jvmFlags>
-        </configuration>
-      </plugin> -->
+      <!-- <plugin> <groupId>net.kindleit</groupId> <artifactId>maven-gae-plugin</artifactId> <configuration> <jvmFlags> <jvmFlag>-Drdbms.server=local</jvmFlag> 
+        <jvmFlag>-Drdbms.driver=com.mysql.jdbc.Driver</jvmFlag> <jvmFlag>-Drdbms.url=jdbc:mysql://dev.retechcorp.com:3306/reader?useInformationSchema=true&amp;useUnicode=true&amp;characterEncoding=UTF8&amp;useServerPrepStmts=true&amp;user=root&amp;password=passw0rd</jvmFlag> 
+        </jvmFlags> </configuration> </plugin> -->
     </plugins>
   </build>
 

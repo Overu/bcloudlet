@@ -208,13 +208,13 @@
 				}
 
 				function getBooks(data) {
-					if (data.hasOwnProperty('entries')) {
+					if (data.hasOwnProperty('items')) {
 						try {
 							if (data) {
 								$('#no_result2').hide();
 
 								for ( var i = 0; i < data.limit; i++) {
-									item = data.entries[i];
+									item = data.items[i];
 									if(!item) {
 										break;
 									}
@@ -262,12 +262,12 @@
 				}
 
 				function getBooks2(data) {
-					if (data.hasOwnProperty('entries')) {
+					if (data.hasOwnProperty('items')) {
 						try {
 							if (data) {
 								$('#no_result2').hide();
 								for (var i = 0; i < data.limit; i++) {
-									item = data.entries[i];
+									item = data.items[i];
 									if(!item) {
 										break;
 									}
@@ -316,18 +316,18 @@
 
 				if (start == 0) {
 					addLoad('#add_load', function() {
-						return '/api/books?start=' + start + '&limit=23&tag=' + c_id;
+						return '/books?start=' + start + '&limit=23&tag=' + c_id;
 					}, getBooks, hideAll);
 				}
 				loadAjaxSpin('#inside_loading2', function() {
-					return '/api/books?start=' + start + '&limit=24&tag=' + c_id;
+					return '/books?start=' + start + '&limit=24&tag=' + c_id;
 				}, getBooks, hideAllBooks);
 				$('#discount_select_panel>div:eq(1)').unbind("click");
 				$('#discount_select_panel>div:eq(1)').click(
 						function() {
 							if (start2 == 0) {
 								addLoad('#add_load', function() {
-									return '/api/books?start=' + start2 + '&limit=23&tag=' + c_id;
+									return '/books?start=' + start2 + '&limit=23&tag=' + c_id;
 								}, getBooks2, hideAll);
 							} else if (start2 > 0) {
 								appendEmptySlot();
@@ -350,10 +350,10 @@
 			}
 
 			function getItems(data) {
-				if (data.hasOwnProperty('entries')) {
+				if (data.hasOwnProperty('items')) {
 					var content = "";
 					for ( var i = 0; i < data.count; i++) {
-						item = data.entries[i];
+						item = data.items[i];
 						content += buildCategory(item);
 					}
 					$('#category_list').append(content);
@@ -424,7 +424,7 @@
 			$(document).ready(
 					function() {
 						$.ajax({
-							url : '/api/tags',
+							url : '/tags',
 							success : getItems,
 							dataType : 'json',
 							complete : function() {

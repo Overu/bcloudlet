@@ -1,0 +1,20 @@
+﻿/* 分类浏览页面目录 */
+.m-category-ttl{position:relative;zoom:1;height:30px;margin:20px 0 15px 0;padding-bottom:10px;border-bottom:1px solid #EBE8DB;}
+.m-category-ttl .w-tab{position:absolute;top:6px;right:-20px;}
+.m-category-list h3{padding-right:25px;color:#666666;font-size:24px;font-weight:400;_font:700 16px/40px '宋体','黑体';}
+.m-category-list .w-tab{margin-top:10px;width:170px;}
+.m-category-list .w-page2{float:right;}
+.m-category-list .w-booklist{width:689px;min-height:850px;_height:850px;margin:0 40px 10px;overflow:hidden;}
+.m-category-list .w-booklist ul{}
+.m-category-list .w-booklist .itm{width:327px;height:160px;margin:0 35px 10px 0;}
+.m-category-list .w-booklist .info{width:214px;}
+.m-category-list .desc{color:#888;}
+.m-category-list .w-box2{margin-bottom:0;}
+.m-directory .w-ttl{margin-bottom:12px;padding-left:20px;}
+.m-directory .w-ttl h3{font:700 14px/40px '宋体','黑体';}
+.m-directory .w-box{width:228px;padding:0;margin:0;}
+.m-directory .cnt{padding:10px;}
+.m-directory .w-txtlist2 li{margin-bottom:10px;}
+.m-directory .w-txtlist2 li a{padding-left:14px;margin-left:13px;}
+.m-directory .w-txtlist2 .crt{height:20px;line-height:20px;}
+.m-directory .w-txtlist2 .crt a{border-left:3px solid #FF6A04;color:#FF6A04;}

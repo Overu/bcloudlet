@@ -110,7 +110,7 @@ public abstract class ResourceSearch extends SimpleContainer implements TakesRes
 
           @Override
           public void onSuccess(final Resource result) {
-            List<Resource> books = result.getList(Feed.ENTRIES);
+            List<Resource> books = result.getList(Feed.ITEMS);
             builder.clear();
             callback.onSuccess(new PagingLoadResultBean<Resource>(books, result.getQueryCount().intValue(), loadConfig.getOffset()));
           }

@@ -24,7 +24,7 @@ public class JAXBTest extends CoreTest {
     user.setName("user1");
     List<User> userList = new ArrayList<User>();
     userList.add(user);
-    users.setEntries(userList);
+    users.setItems(userList);
     JAXBContext jc = JAXBContext.newInstance(Users.class, User.class);
     Marshaller marshaller = jc.createMarshaller();
     ByteArrayOutputStream os = new ByteArrayOutputStream();

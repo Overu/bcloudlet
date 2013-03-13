@@ -9,6 +9,7 @@ import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.RequestContext;
 import org.apache.commons.fileupload.util.Streams;
 import org.apache.commons.io.IOUtils;
+import org.glassfish.jersey.server.mvc.Template;
 import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -142,9 +143,9 @@ public abstract class Content {
   @POST
   @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
   @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_ATOM_XML })
-  public final <T extends Content> T create() {
+  public final Content create() {
     initResource();
-    T content = null;
+    Content content = null;
     return createChild(content);
   }
 
@@ -350,6 +351,15 @@ public abstract class Content {
   @GET
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml" })
   public Content load() {
+    initResource(this);
+    doLoad();
+    return this;
+  }
+
+  @GET
+  @Produces({ MediaType.TEXT_HTML })
+  @Template
+  public Content loadHtml() {
     initResource(this);
     doLoad();
     return this;
