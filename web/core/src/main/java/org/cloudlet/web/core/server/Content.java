@@ -26,7 +26,6 @@ import javax.persistence.Entity;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityListeners;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
@@ -60,22 +59,26 @@ import javax.xml.bind.annotation.XmlTransient;
 public abstract class Content {
 
   @Transactional
-  static class CreateExecuter {
-    protected <T extends Content> T execute(Content parent, T child) {
-      return parent.createChild(child);
-    }
-  }
+  static class ContentService {
 
-  @Transactional
-  static class DeleteExecuter {
-    protected void execute(Content content) {
+    protected void addTag(Book parent, Tag tag) {
+      parent.doAddTag(tag);
+    }
+
+    protected <T extends Content> T createChild(Content parent, T child) {
+      return parent.doCreate(child);
+    }
+
+    protected void delete(Content content) {
       content.doDelete();
     }
-  }
 
-  @Transactional
-  static class UpdateExecuter {
-    protected void execute(Content content) {
+    protected <T extends Content> T save(T content) {
+      content.doSave();
+      return content;
+    }
+
+    protected void update(Content content) {
       content.doUpdate();
     }
   }
@@ -139,13 +142,20 @@ public abstract class Content {
   @POST
   @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
   @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_ATOM_XML })
-  public <T extends Content> T create() {
+  public final <T extends Content> T create() {
+    initResource();
     T content = null;
-    return create(content);
+    return createChild(content);
   }
 
-  public <T extends Content> T create(T child) {
-    return WebPlatform.get().getInstance(CreateExecuter.class).execute(this, child);
+  public final <T extends Content> T createChild(String path, Class<T> type) {
+    T result = WebPlatform.get().getInstance(type);
+    result.setPath(path);
+    return createChild(result);
+  }
+
+  public final <T extends Content> T createChild(T child) {
+    return WebPlatform.get().getInstance(ContentService.class).createChild(this, child);
   }
 
   public Content createFromInputStream(@Context UriInfo uriInfo, @QueryParam("path") Integer contentLength,
@@ -158,6 +168,7 @@ public abstract class Content {
   @Produces({ MediaType.APPLICATION_JSON })
   public Content createFromMultipartFormData(@Context UriInfo uriInfo, @HeaderParam("Content-Length") final Integer contentLength,
       @HeaderParam("Content-Type") final String contentType, final InputStream inputStream) {
+    initResource();
     Content result = null;
     MultivaluedMap<String, String> params = uriInfo.getQueryParameters();
     try {
@@ -227,8 +238,9 @@ public abstract class Content {
   }
 
   @DELETE
-  public void delete() {
-    WebPlatform.get().getInstance(DeleteExecuter.class).execute(this);
+  public final void delete() {
+    initResource();
+    WebPlatform.get().getInstance(ContentService.class).delete(this);
   }
 
   /*
@@ -253,9 +265,7 @@ public abstract class Content {
 
   @Path("{path}")
   public <T extends Content> T getChild(@PathParam("path") String path) {
-    T result = findChild(path);
-    initResource(result);
-    return result;
+    return null;
   }
 
   public Date getCreated() {
@@ -368,11 +378,6 @@ public abstract class Content {
     }
   }
 
-  public boolean rollbackIfNecessary(EntityTransaction txn) {
-    txn.rollback();
-    return false;
-  }
-
   public void setCreated(Date created) {
     this.created = created;
   }
@@ -439,11 +444,24 @@ public abstract class Content {
   @PUT
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
   public final Content update() {
-    WebPlatform.get().getInstance(UpdateExecuter.class).execute(this);
+    initResource();
+    WebPlatform.get().getInstance(ContentService.class).update(this);
     return this;
   }
 
-  protected <T extends Content> T createChild(T child) {
+  protected Content createFrom(MultivaluedMap<String, String> params) {
+    String resourceType = params.getFirst(Content.TYPE);
+    // Class<?> type = Registry.getResourceType(resourceType);
+    // if (type != null) {
+    // ImplementedBy impl = type.getAnnotation(ImplementedBy.class);
+    // Class<? extends ResourceBean> resType = (Class<? extends ResourceBean>) impl.value();
+    // ResourceBean result = create(resType);
+    // return result;
+    // }
+    return null;
+  }
+
+  protected <T extends Content> T doCreate(T child) {
     child.setParent(this);
     String id = child.getId();
     String path = child.getPath();
@@ -461,30 +479,36 @@ public abstract class Content {
     if (path == null) {
       child.setPath(child.getId());
     }
-
     em().persist(child);
-
-    child.init();
+    if (child.doInit()) {
+      em().persist(child);
+    }
     return child;
-  }
-
-  protected Content createFrom(MultivaluedMap<String, String> params) {
-    String resourceType = params.getFirst(Content.TYPE);
-    // Class<?> type = Registry.getResourceType(resourceType);
-    // if (type != null) {
-    // ImplementedBy impl = type.getAnnotation(ImplementedBy.class);
-    // Class<? extends ResourceBean> resType = (Class<? extends ResourceBean>) impl.value();
-    // ResourceBean result = create(resType);
-    // return result;
-    // }
-    return null;
   }
 
   protected void doDelete() {
     em().remove(this);
   }
 
-  protected abstract void doLoad();
+  protected boolean doInit() {
+    return false;
+  }
+
+  protected void doLoad() {
+  }
+
+  protected void doSave() {
+    if (id == null) {
+      id = CoreUtil.randomID();
+    }
+    if (path == null) {
+      path = id;
+    }
+    em().persist(this);
+    if (doInit()) {
+      em().persist(this);
+    }
+  }
 
   protected void doUpdate() {
     // TODO validation
@@ -507,8 +531,6 @@ public abstract class Content {
     return WebPlatform.get().getEntityManager();
   }
 
-  protected abstract <T extends Content> T findChild(String path);
-
   protected Object getObject(String type, String id) {
     try {
       Class<?> cls = Class.forName(type);
@@ -524,7 +546,8 @@ public abstract class Content {
     return null;
   }
 
-  protected void init() {
+  protected void initResource() {
+    initResource(this);
   }
 
   protected void initResource(Object result) {

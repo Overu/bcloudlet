@@ -24,8 +24,8 @@ public class Tags extends Feed<Tag> {
   @POST
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public Tag createEntry(Tag tag) {
-    return super.createEntry(tag);
+  public Tag doCreate(Tag tag) {
+    return super.doCreate(tag);
   }
 
   @Override
@@ -44,7 +44,7 @@ public class Tags extends Feed<Tag> {
       Tag tag = new Tag();
       tag.setValue(value);
       tag.setTargetType(targetType);
-      createEntry(tag);
+      doCreate(tag);
       return tag;
     }
   }

@@ -15,8 +15,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
-import java.util.HashSet;
-import java.util.Set;
 
 public class BookImporter {
 
@@ -82,7 +80,7 @@ public class BookImporter {
       for (int i = 0; i < jsonArr.length(); i++) {
         JSONObject jsonObj = (JSONObject) jsonArr.get(i);
         String book_id = jsonObj.getString("book_id");
-        Book book = books.getEntry(book_id);
+        Book book = books.getChild(book_id);
         if (book == null) {
           book = new Book();
           book.setId(book_id);
@@ -94,10 +92,7 @@ public class BookImporter {
           }
           book.setSummary(jsonObj.getString("summary"));
 
-          Set<Tag> bTags = new HashSet<Tag>();
-          bTags.add(tag);
-          book.setTags(bTags);
-          books.createEntry(book);
+          books.createChild(book);
 
           String coverUrl = jsonObj.getString("cover");
 
@@ -105,36 +100,34 @@ public class BookImporter {
           cover.setPath(Book.COVER);
           cover.setSource(coverUrl);
           cover.read(new URL(coverUrl).openStream());
-          book.createReference(cover);
+          book.createChild(cover);
           book.setCover(cover);
 
           String dataPath = (CoreUtil.getDataLocation() + "/source/" + dataFiles[(++count) % dataFiles.length]);
           Media source = new Media();
           source.setPath(Book.SOURCE);
           source.read(new FileInputStream(dataPath));
-          book.createReference(source);
+          book.createChild(source);
           book.setSource(source);
 
           Media full = new Media();
           full.setPath(Book.FULL);
           full.read(new FileInputStream(dataPath));
-          book.createReference(full);
+          book.createChild(full);
           book.setFull(full);
 
           Media trial = new Media();
           trial.setPath(Book.TRIAL);
           trial.read(new FileInputStream(dataPath));
-          book.createReference(trial);
+          book.createChild(trial);
           book.setTrial(trial);
 
           book.update();
 
           importComments(book);
-        } else {
-          Set<Tag> tags = book.getTags();
-          tags.add(tag);
-          book.update();
         }
+
+        book.addTag(tag);
       }
     }
   }
@@ -162,14 +155,14 @@ public class BookImporter {
       for (int i = 0; i < jsonComments.length(); i++) {
         JSONObject jsonComment = (JSONObject) jsonComments.get(i);
         String id = jsonComment.getString("comment_id");
-        Comment comment = comments.getEntry(id);
+        Comment comment = comments.getChild(id);
         if (comment == null) {
           comment = new Comment();
           comment.setId(id);
           comment.setTitle(jsonComment.getString("title"));
           comment.setContent(readContent(jsonComment));
           // comment.setAuthorName(jsonComment.getString("nick_name"));
-          comments.createEntry(comment);
+          comments.createChild(comment);
 
           Replies replies = comment.getReplies();
 
@@ -178,13 +171,13 @@ public class BookImporter {
             JSONObject jsonReply = (JSONObject) jsonReplies.get(j);
             String replyId = jsonReply.getString("reply_id");
 
-            Reply reply = replies.getEntry(replyId);
+            Reply reply = replies.getChild(replyId);
             if (reply == null) {
               reply = new Reply();
               reply.setId(replyId);
               reply.setContent(readContent(jsonReply));
               // reply.setAuthorName(jsonReply.getString("nick_name"));
-              replies.createEntry(reply);
+              replies.createChild(reply);
             }
           }
         }
@@ -211,7 +204,7 @@ public class BookImporter {
       for (int i = 0; i < arr.length(); i++) {
         JSONObject catJson = (JSONObject) arr.get(i);
         String id = (String) catJson.get("category_id");
-        Tag tag = tags.getEntry(id);
+        Tag tag = tags.getChild(id);
         if (tag == null) {
           tag = new Tag();
           tag.setId(id);
@@ -220,7 +213,7 @@ public class BookImporter {
           tag.setValue(catJson.getString("label"));
           tag.setSummary(catJson.getString("description"));
           tag.setTargetType(Book.TYPE_NAME);
-          tags.createEntry(tag);
+          tags.createChild(tag);
         }
       }
     }

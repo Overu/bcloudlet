@@ -21,11 +21,11 @@ public class GroupTest extends CoreTest {
   public void testSubResource() throws JAXBException {
     Groups groups = repo.getGroups();
     Users users = repo.getUsers();
-    Group group = groups.getEntry("mygroup");
+    Group group = groups.getChild("mygroup");
     if (group == null) {
       group = groups.newEntry();
       group.setPath("mygroup");
-      group = groups.createEntry(group);
+      group = groups.doCreate(group);
     } else {
       group.load();
     }
@@ -38,7 +38,7 @@ public class GroupTest extends CoreTest {
       user.setPath("user" + count);
       user.setEmail("user" + count + "@gmail.com");
       user.setPhone(Long.toString(count));
-      users.createEntry(user);
+      users.doCreate(user);
       users.load();
       assertEquals(count, users.getCount());
     }

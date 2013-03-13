@@ -91,15 +91,6 @@ public abstract class Feed<E extends Entry> extends Content {
     return count;
   }
 
-  public E createEntry(E entry) {
-    if (em().contains(entry)) {
-      throw new RuntimeException("Content already created.");
-    }
-    total = total + 1;
-    update();
-    return createChild(entry);
-  }
-
   public List<E> findEntries() {
     Class<E> entryClass = getEntryType();
     // CriteriaBuilder cb = em().getCriteriaBuilder();
@@ -128,15 +119,9 @@ public abstract class Feed<E extends Entry> extends Content {
     return query.getResultList();
   }
 
-  public Long getCount() {
-    return count;
-  }
-
-  public List<E> getEntries() {
-    return entries;
-  }
-
-  public E getEntry(String path) {
+  @Override
+  @SuppressWarnings("unchecked")
+  public E getChild(String path) {
     try {
       Class<E> entryClass = getEntryType();
       TypedQuery<E> query = em().createQuery("from " + entryClass.getName() + " e where e.parent=:parent and e.path=:path", entryClass);
@@ -146,6 +131,14 @@ public abstract class Feed<E extends Entry> extends Content {
     } catch (NoResultException e) {
       return null;
     }
+  }
+
+  public Long getCount() {
+    return count;
+  }
+
+  public List<E> getEntries() {
+    return entries;
   }
 
   @XmlTransient
@@ -225,15 +218,19 @@ public abstract class Feed<E extends Entry> extends Content {
     this.total = total;
   }
 
+  protected E doCreate(E entry) {
+    if (em().contains(entry)) {
+      throw new RuntimeException("Content already created.");
+    }
+    total = total + 1;
+    update();
+    return super.doCreate(entry);
+  }
+
   @Override
   protected void doLoad() {
     entries = findEntries();
     count = countEntries();
-  }
-
-  @Override
-  protected Content findChild(String path) {
-    return getEntry(path);
   }
 
 }

@@ -50,18 +50,11 @@ public class Comment extends Entry {
     this.replies = replies;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.cloudlet.web.core.server.Entry#init()
-   */
   @Override
-  protected void init() {
-    super.init();
-    replies = new Replies();
-    replies.setPath(REPLIES);
-    createReference(replies);
-    update();
+  protected boolean doInit() {
+    super.doInit();
+    replies = createChild(REPLIES, Replies.class);
+    return true;
   }
 
 }

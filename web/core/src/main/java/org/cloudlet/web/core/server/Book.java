@@ -9,7 +9,6 @@ import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -110,6 +109,10 @@ public class Book extends Entry {
 
   @Inject
   private transient Repository repo;
+
+  public void addTag(Tag tag) {
+    WebPlatform.get().getInstance(ContentService.class).addTag(this, tag);
+  }
 
   public String getAuthors() {
     return authors;
@@ -305,41 +308,45 @@ public class Book extends Entry {
     this.weight = weight;
   }
 
+  protected void doAddTag(Tag tag) {
+    if (tags == null) {
+      tags = new HashSet<Tag>();
+    }
+    if (tags.add(tag)) {
+      tag.setWeight(tag.getWeight() + 1);
+      tag.doUpdate();
+    }
+  }
+
+  protected void doDeleteTag(Tag tag) {
+    if (tags != null && tags.remove(tag)) {
+      tag.setWeight(tag.getWeight() - 1);
+      tag.doUpdate();
+    }
+  }
+
+  @Override
+  protected boolean doInit() {
+    super.doInit();
+    comments = createChild(Book.COMMENTS, Comments.class);
+    return true;
+  }
+
   @Override
   protected void doUpdate() {
     if (addTags != null) {
       for (String value : addTags) {
         Tag tag = repo.getTags().getOrCreateTag(value, getType());
-        if (tags == null) {
-          tags = new HashSet<Tag>();
-        }
-        if (tags.add(tag)) {
-          tag.setWeight(tag.getWeight() + 1);
-          tag.update();
-        }
+        doAddTag(tag);
       }
     }
     if (deleteTags != null && tags != null && !tags.isEmpty()) {
       for (String value : deleteTags) {
         Tag tag = repo.getTags().getOrCreateTag(value, getType());
-        if (tags.remove(tag)) {
-          tag.setWeight(tag.getWeight() - 1);
-          tag.update();
-        }
+        doDeleteTag(tag);
       }
     }
     super.doUpdate();
-  }
-
-  @Override
-  protected void init() {
-    super.init();
-
-    Comments comments = new Comments();
-    comments.setPath(Book.COMMENTS);
-    createReference(comments);
-    setComments(comments);
-    update();
   }
 
 }

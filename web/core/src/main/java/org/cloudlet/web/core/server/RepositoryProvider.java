@@ -17,9 +17,7 @@ public class RepositoryProvider implements Provider<Repository> {
       repo = em.createQuery("from " + Repository.TYPE_NAME, Repository.class).getSingleResult();
     } catch (NoResultException e) {
       repo = new Repository();
-      repo.setId(CoreUtil.randomID());
-      em.persist(repo);
-      repo.init();
+      repo.save();
     }
     return repo;
   }
