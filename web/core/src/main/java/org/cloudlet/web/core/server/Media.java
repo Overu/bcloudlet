@@ -12,7 +12,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.persistence.Entity;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -116,16 +115,4 @@ public class Media extends Content {
     }
   }
 
-  @Override
-  protected void doLoad() {
-  }
-
-  @Override
-  protected <T extends Content> T findChild(String path) {
-    return null;
-  }
-
-  @Override
-  protected void init() {
-  }
 }
