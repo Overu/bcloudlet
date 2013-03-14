@@ -3,7 +3,6 @@ package org.cloudlet.web.core.server;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement
