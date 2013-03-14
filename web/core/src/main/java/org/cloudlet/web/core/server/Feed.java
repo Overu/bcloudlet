@@ -23,7 +23,7 @@ public abstract class Feed<E extends Entry> extends Content {
   protected Integer start;
 
   @QueryParam("limit")
-  @DefaultValue("-1")
+  @DefaultValue("20")
   @Transient
   protected Integer limit;
 

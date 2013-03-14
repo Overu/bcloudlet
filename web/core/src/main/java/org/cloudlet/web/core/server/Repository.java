@@ -2,20 +2,15 @@ package org.cloudlet.web.core.server;
 
 import org.glassfish.jersey.server.mvc.Template;
 
-import java.io.IOException;
-
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.container.ResourceContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.RuntimeDelegate;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -28,6 +23,11 @@ import javax.xml.bind.annotation.XmlType;
 @Path("/")
 @Produces("text/html;qs=5")
 public final class Repository extends Entry {
+
+  /**
+   * 
+   */
+  private static final String HOT_BOOKS = "r/hot";
 
   public static final String TYPE_NAME = CoreUtil.PREFIX + "Repository";
 
@@ -60,23 +60,30 @@ public final class Repository extends Entry {
   private transient HttpServletRequest request;
 
   @Context
-  private transient HttpServletResponse response;
+  @Transient
+  private HttpServletResponse response;
+
+  @Transient
+  private HotBooks hotBooks;
 
   @Path(BOOKS)
   public Books getBooks() {
     return books;
   }
 
-  @GET
-  @Path("r/free")
-  public Object getFree() throws IOException {
-    response.sendRedirect("/r/free.jsp");
-    return null;
-  }
-
   @Path(GROUPS)
   public Groups getGroups() {
     return groups;
+  }
+
+  @Path(HOT_BOOKS)
+  public HotBooks getHotBooks() {
+    if (hotBooks == null) {
+      hotBooks = new HotBooks();
+      hotBooks.setParent(this);
+      hotBooks.setPath(HOT_BOOKS);
+    }
+    return hotBooks;
   }
 
   @Path(ORDERS)

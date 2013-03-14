@@ -20,10 +20,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
@@ -272,6 +274,11 @@ public class ProxyFilter implements Filter {
   }
 
   private File getMirror(String host, String uri, String query, String accept) {
+    try {
+      uri = URLDecoder.decode(uri, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
+    }
     int index = uri.lastIndexOf("/");
     String ending = index >= 0 ? uri.substring(index + 1) : uri;
     index = ending.lastIndexOf(".");

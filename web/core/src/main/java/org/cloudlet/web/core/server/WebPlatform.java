@@ -24,6 +24,9 @@ public final class WebPlatform {
   @Transient
   private Provider<EntityManager> emProvider;
 
+  @Inject
+  private Provider<Repository> repositoryProvider;
+
   private static final Logger logger = Logger.getLogger(WebPlatform.class.getName());
 
   @Inject
@@ -42,6 +45,10 @@ public final class WebPlatform {
 
   public <T> T getInstance(Class<T> resourceType) {
     return injector.getInstance(resourceType);
+  }
+
+  public Repository getRepository() {
+    return repositoryProvider.get();
   }
 
   public void injectMembers(Object instance) {

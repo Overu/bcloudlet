@@ -324,7 +324,11 @@ public abstract class Content {
 
   public String getType() {
     Entity type = getClass().getAnnotation(Entity.class);
-    return type.name();
+    if (type != null) {
+      return type.name();
+    } else {
+      return getClass().getSimpleName();
+    }
   }
 
   public Date getUpdated() {
@@ -358,7 +362,6 @@ public abstract class Content {
   @GET
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml" })
   public Content load() {
-    initResource(this);
     doLoad();
     return this;
   }
@@ -367,7 +370,6 @@ public abstract class Content {
   @Produces({ MediaType.TEXT_HTML })
   @Template
   public Content loadHtml() {
-    initResource(this);
     doLoad();
     return this;
   }
