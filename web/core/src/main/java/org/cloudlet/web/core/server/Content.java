@@ -154,7 +154,6 @@ public abstract class Content {
   @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
   @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_ATOM_XML })
   public final Content create() {
-    initResource();
     Content content = null;
     return createChild(content);
   }
@@ -179,7 +178,6 @@ public abstract class Content {
   @Produces({ MediaType.APPLICATION_JSON })
   public Content createFromMultipartFormData(@Context UriInfo uriInfo, @HeaderParam("Content-Length") final Integer contentLength,
       @HeaderParam("Content-Type") final String contentType, final InputStream inputStream) {
-    initResource();
     Content result = null;
     MultivaluedMap<String, String> params = uriInfo.getQueryParameters();
     try {
@@ -250,7 +248,6 @@ public abstract class Content {
 
   @DELETE
   public final void delete() {
-    initResource();
     WebPlatform.get().getInstance(ContentService.class).delete(this);
   }
 
@@ -464,7 +461,6 @@ public abstract class Content {
   @PUT
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
   public final Content update() {
-    initResource();
     WebPlatform.get().getInstance(ContentService.class).update(this);
     return this;
   }
@@ -574,7 +570,7 @@ public abstract class Content {
     if (resourceContext != null) {
       return;
     }
-    // getParent().initResource(result);
+    getParent().initResource(result);
   }
 
 }
