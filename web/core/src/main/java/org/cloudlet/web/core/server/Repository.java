@@ -41,14 +41,6 @@ public final class Repository extends Entry {
 
   public static final String ORDERS = "orders";
 
-  @Context
-  @Transient
-  protected ResourceContext resourceContext;
-
-  @Context
-  @Transient
-  protected UriInfo uriInfo;
-
   @OneToOne
   private Users users;
 

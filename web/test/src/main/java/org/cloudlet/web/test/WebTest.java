@@ -11,7 +11,6 @@ import org.glassfish.jersey.internal.ServiceFinderBinder;
 import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.server.ApplicationHandler;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 import org.glassfish.jersey.test.spi.TestContainer;
 import org.glassfish.jersey.test.spi.TestContainerException;
@@ -28,11 +27,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientFactory;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.UriBuilder;
 
+/**
+ * Parent class for all tests written using Jersey test framework.
+ * 
+ * @author Paul Sandoz (paul.sandoz at oracle.com)
+ * @author Srinivas Bhimisetty
+ * @author Pavel Bucek (pavel.bucek at oracle.com)
+ * @author Michal Gajdos (michal.gajdos at oracle.com)
+ */
+@SuppressWarnings("UnusedDeclaration")
 public abstract class WebTest {
 
   public static class WebTestModule extends GuiceBerryModule {
@@ -47,16 +55,13 @@ public abstract class WebTest {
   @Rule
   public final GuiceBerryRule guiceBerry = new GuiceBerryRule(WebTestModule.class);
 
-  private static final Logger LOGGER = Logger.getLogger(JerseyTest.class.getName());
-
+  private static final Logger LOGGER = Logger.getLogger(WebTest.class.getName());
   /**
    * Holds the default test container factory class to be used for running the tests.
    */
   private static Class<? extends TestContainerFactory> testContainerFactoryClass;
-
   /**
-   * The test container factory which creates an instance of the test container on which the tests
-   * would be run.
+   * The test container factory which creates an instance of the test container on which the tests would be run.
    */
   private TestContainerFactory testContainerFactory;
   /**
@@ -66,13 +71,12 @@ public abstract class WebTest {
   private Client client;
   private ApplicationHandler application;
   /**
-   * JerseyTest property bag that can be used to configure the test behavior. These properties can
-   * be overridden with a system property.
+   * JerseyTest property bag that can be used to configure the test behavior. These properties can be overridden with a system property.
    */
   private final Map<String, String> propertyMap = Maps.newHashMap();
   /**
-   * JerseyTest forced property bag that can be used to configure the test behavior. These property
-   * cannot be overridden with a system property.
+   * JerseyTest forced property bag that can be used to configure the test behavior. These property cannot be overridden with a system
+   * property.
    */
   private final Map<String, String> forcedPropertyMap = Maps.newHashMap();
 
@@ -89,8 +93,7 @@ public abstract class WebTest {
   }
 
   /**
-   * Set up the test by invoking {@link TestContainer#start() } on the test container obtained from
-   * the test container factory.
+   * Set up the test by invoking {@link TestContainer#start() } on the test container obtained from the test container factory.
    * 
    * @throws Exception if an exception is thrown during setting up the test environment.
    */
@@ -98,7 +101,7 @@ public abstract class WebTest {
   public void setUp() throws Exception {
     if (tc == null) {
       ResourceConfig config = getResourceConfig(configure());
-      config.addBinders(new ServiceFinderBinder<TestContainerFactory>(TestContainerFactory.class));
+      config.register(new ServiceFinderBinder<TestContainerFactory>(TestContainerFactory.class));
       this.application = new ApplicationHandler(config);
 
       this.tc = getContainer(application, getTestContainerFactory());
@@ -116,8 +119,7 @@ public abstract class WebTest {
   }
 
   /**
-   * Create a web resource whose URI refers to the base URI the Web application is deployed at plus
-   * the path specified in the argument.
+   * Create a web resource whose URI refers to the base URI the Web application is deployed at plus the path specified in the argument.
    * 
    * This method is an equivalent of calling {@code target().path(path)}.
    * 
@@ -129,8 +131,7 @@ public abstract class WebTest {
   }
 
   /**
-   * Tear down the test by invoking {@link TestContainer#stop() } on the test container obtained from
-   * the test container factory.
+   * Tear down the test by invoking {@link TestContainer#stop() } on the test container obtained from the test container factory.
    * 
    * @throws Exception if an exception is thrown during tearing down the test environment.
    */
@@ -140,21 +141,18 @@ public abstract class WebTest {
   }
 
   /**
-   * Return an JAX-RS application that defines how the application in the test container is
-   * configured.
+   * Return an JAX-RS application that defines how the application in the test container is configured.
    * <p>
-   * If a constructor is utilized that does not supply an application descriptor then this method
-   * must be overridden to return an application descriptor, otherwise an
-   * {@link UnsupportedOperationException} exception will be thrown.
+   * If a constructor is utilized that does not supply an application descriptor then this method must be overridden to return an
+   * application descriptor, otherwise an {@link UnsupportedOperationException} exception will be thrown.
    * <p>
-   * If a constructor is utilized that does supply an application descriptor then this method does
-   * not require to be overridden and will not be invoked.
+   * If a constructor is utilized that does supply an application descriptor then this method does not require to be overridden and will not
+   * be invoked.
    * 
    * @return the application descriptor.
    */
   protected Application configure() {
-    throw new UnsupportedOperationException(
-        "The configure method must be implemented by the extending class");
+    throw new UnsupportedOperationException("The configure method must be implemented by the extending class");
   }
 
   /**
@@ -167,8 +165,7 @@ public abstract class WebTest {
   }
 
   /**
-   * Programmatically disable a feature with a given name. Disabling of the feature may be
-   * overridden via a system property.
+   * Programmatically disable a feature with a given name. Disabling of the feature may be overridden via a system property.
    * 
    * @param featureName name of the disabled feature.
    */
@@ -177,20 +174,18 @@ public abstract class WebTest {
   }
 
   /**
-   * Programmatically enable a feature with a given name. Enabling of the feature may be overridden
-   * via a system property.
+   * Programmatically enable a feature with a given name. Enabling of the feature may be overridden via a system property.
    * 
    * @param featureName name of the enabled feature.
    */
   protected final void enable(String featureName) {
-    // TODO: perhaps we could reuse the resource config for the test
-    // properties?
+    // TODO: perhaps we could reuse the resource config for the test properties?
     propertyMap.put(featureName, Boolean.TRUE.toString());
   }
 
   /**
-   * Programmatically force-disable a feature with a given name. Force-disabling of the feature
-   * cannot be overridden via a system property. Use with care!
+   * Programmatically force-disable a feature with a given name. Force-disabling of the feature cannot be overridden via a system property.
+   * Use with care!
    * 
    * @param featureName name of the force-disabled feature.
    */
@@ -199,8 +194,8 @@ public abstract class WebTest {
   }
 
   /**
-   * Programmatically force-enable a feature with a given name. Force-enabling of the feature cannot
-   * be overridden via a system property. Use with care!
+   * Programmatically force-enable a feature with a given name. Force-enabling of the feature cannot be overridden via a system property.
+   * Use with care!
    * 
    * @param featureName name of the force-enabled feature.
    */
@@ -209,8 +204,8 @@ public abstract class WebTest {
   }
 
   /**
-   * Programmatically force-set a value of a property with a given name. The force-set property
-   * value cannot be overridden via a system property.
+   * Programmatically force-set a value of a property with a given name. The force-set property value cannot be overridden via a system
+   * property.
    * 
    * @param propertyName name of the property.
    * @param value property value.
@@ -231,9 +226,8 @@ public abstract class WebTest {
   /**
    * Creates an instance of {@link Client}.
    * 
-   * Checks whether TestContainer provides ClientConfig instance and if not, empty new
-   * {@link org.glassfish.jersey.client.ClientConfig} instance will be used to create new client
-   * instance.
+   * Checks whether TestContainer provides ClientConfig instance and if not, empty new {@link org.glassfish.jersey.client.ClientConfig}
+   * instance will be used to create new client instance.
    * 
    * This method is called exactly once when JerseyTest is created.
    * 
@@ -255,7 +249,7 @@ public abstract class WebTest {
 
     configureClient(cc);
 
-    return ClientFactory.newClient(cc);
+    return ClientBuilder.newClient(cc);
   }
 
   /**
@@ -274,8 +268,7 @@ public abstract class WebTest {
         }
         return i;
       } catch (NumberFormatException e) {
-        LOGGER.log(Level.CONFIG, "Value of " + TestProperties.CONTAINER_PORT
-            + " property is not a valid positive integer [" + value + "]."
+        LOGGER.log(Level.CONFIG, "Value of " + TestProperties.CONTAINER_PORT + " property is not a valid positive integer [" + value + "]."
             + " Reverting to default [" + TestProperties.DEFAULT_CONTAINER_PORT + "].", e);
       }
     }
@@ -283,14 +276,12 @@ public abstract class WebTest {
   }
 
   /**
-   * Returns an instance of {@link TestContainerFactory} class. This instance can be set by a
-   * constructor ( {@link #JerseyTest(org.glassfish.jersey.test.spi.TestContainerFactory)}, as an
-   * application {@link Providers Provider} or the {@link TestContainerFactory} class can be set as
-   * a {@value org.glassfish.jersey.test.TestProperties#CONTAINER_FACTORY} property.
+   * Returns an instance of {@link TestContainerFactory} class. This instance can be set by a constructor (
+   * {@link #JerseyTest(org.glassfish.jersey.test.spi.TestContainerFactory)}, as an application {@link Providers Provider} or the
+   * {@link TestContainerFactory} class can be set as a {@value org.glassfish.jersey.test.TestProperties#CONTAINER_FACTORY} property.
    * 
    * @return an instance of {@link TestContainerFactory} class.
-   * @throws TestContainerException if the initialization of {@link TestContainerFactory} instance
-   *           is not successful.
+   * @throws TestContainerException if the initialization of {@link TestContainerFactory} instance is not successful.
    */
   protected TestContainerFactory getTestContainerFactory() throws TestContainerException {
     if (testContainerFactory == null) {
@@ -306,9 +297,8 @@ public abstract class WebTest {
             for (TestContainerFactory tcFactory : testContainerFactories) {
 
               if (tcFactory.getClass().getName().equals(TestProperties.DEFAULT_CONTAINER_FACTORY)) {
-                LOGGER.log(Level.CONFIG,
-                    "Found multiple TestContainerFactory implementations, using default {0}",
-                    tcFactory.getClass().getName());
+                LOGGER.log(Level.CONFIG, "Found multiple TestContainerFactory implementations, using default {0}", tcFactory.getClass()
+                    .getName());
 
                 testContainerFactoryClass = tcFactory.getClass(); // is this necessary?
                 return tcFactory;
@@ -316,9 +306,8 @@ public abstract class WebTest {
             }
 
             if (testContainerFactories.size() != 1) {
-              LOGGER.log(Level.WARNING,
-                  "Found multiple TestContainerFactory implementations, using {0}",
-                  testContainerFactories.iterator().next().getClass().getName());
+              LOGGER.log(Level.WARNING, "Found multiple TestContainerFactory implementations, using {0}", testContainerFactories.iterator()
+                  .next().getClass().getName());
             }
 
             testContainerFactoryClass = testContainerFactories.iterator().next().getClass();
@@ -327,14 +316,12 @@ public abstract class WebTest {
           }
         } else {
           try {
-            testContainerFactoryClass =
-                Class.forName(tcfClassName).asSubclass(TestContainerFactory.class);
+            testContainerFactoryClass = Class.forName(tcfClassName).asSubclass(TestContainerFactory.class);
           } catch (ClassNotFoundException ex) {
-            throw new TestContainerException("The default test container factory class name, "
-                + tcfClassName + ", cannot be loaded", ex);
+            throw new TestContainerException("The default test container factory class name, " + tcfClassName + ", cannot be loaded", ex);
           } catch (ClassCastException ex) {
-            throw new TestContainerException("The default test container factory class, "
-                + tcfClassName + ", is not an instance of TestContainerFactory", ex);
+            throw new TestContainerException("The default test container factory class, " + tcfClassName
+                + ", is not an instance of TestContainerFactory", ex);
           }
         }
       }
@@ -342,8 +329,8 @@ public abstract class WebTest {
       try {
         return testContainerFactoryClass.newInstance();
       } catch (Exception ex) {
-        throw new TestContainerException("The default test container factory, "
-            + testContainerFactoryClass + ", could not be instantiated", ex);
+        throw new TestContainerException(
+            "The default test container factory, " + testContainerFactoryClass + ", could not be instantiated", ex);
       }
     }
 
@@ -355,8 +342,7 @@ public abstract class WebTest {
   }
 
   /**
-   * Programmatically set a value of a property with a given name. The property value may be
-   * overridden via a system property.
+   * Programmatically set a value of a property with a given name. The property value may be overridden via a system property.
    * 
    * @param propertyName name of the property.
    * @param value property value.

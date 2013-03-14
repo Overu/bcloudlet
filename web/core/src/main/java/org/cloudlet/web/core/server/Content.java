@@ -31,6 +31,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -45,6 +46,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.container.ResourceContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
@@ -87,6 +89,14 @@ public abstract class Content {
   private static final Logger logger = Logger.getLogger(Content.class.getName());
 
   public static final String TYPE = "type";
+
+  @Context
+  @Transient
+  protected ResourceContext resourceContext;
+
+  @Context
+  @Transient
+  protected UriInfo uriInfo;
 
   @Id
   @Column(length = 128)
@@ -561,7 +571,10 @@ public abstract class Content {
   }
 
   protected void initResource(Object result) {
-    getParent().initResource(result);
+    if (resourceContext != null) {
+      return;
+    }
+    // getParent().initResource(result);
   }
 
 }
