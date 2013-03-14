@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh" lang="zh">
+<head>
+<title>免费榜 - 多看精品书城</title>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="author" content="duokan"/>
+<meta property="wb:webmaster" content="614a83f3edbfc3be" />
+
+<meta name="description" content="多看精品书城提供免费图书下载，排版精美，内容完整。多看阅读支持iPhone,iPad,安卓,Kindle平台下载阅读。"/>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+<link type="text/css" rel="stylesheet" href="/static/lib/css/style.css?201303081413"/>
+<!--[if IE 6]><script type="text/javascript">document.execCommand("BackgroundImageCache", false, true);</script><![endif]-->
+<!--[if IE]><script src="/static/lib/gallery/html5.js"></script><![endif]-->
+<!-- <script src="/static/lib/firebug-lite/build/firebug-lite.js"></script> -->
+<script src="/static/lib/seajs/2.0.0/sea.js"></script>
+<script>
+seajs.config({
+base: '/static/lib/',
+alias: {
+'jquery': 'gallery/jquery/1.8.3/jquery',
+'es5-safe': 'gallery/es5-safe/es5-safe'
+},
+map: [
+[ /^(.*\/static\/lib\/.*\.(?:css|js))(?:.*)$/i, '$1?201303081413' ]
+],
+preload: [
+Function.prototype.bind ? '' : 'es5-safe',
+'jquery',
+'gallery/underscore/1.0/underscore'
+]
+});
+// FIXME 临时解决方案
+window.onLoadImg = function(evt) {
+evt.style.display='block'
+}
+</script>
+
+</head>
+<body id="page-duokan-com" itemscope itemtype="http://schema.org/WebPage">
+<noscript>请使用支持脚本的浏览器！</noscript>
+<div class="g-doc">
+<header class="g-hd">
+<div class="m-header">
+<div class="m-logo"><a href="/" title="多看精品书城" hidefocus="hidefocus">多看精品书城</a></div>
+<nav class="m-nav">
+<ul itemprop="breadcrumb">
+<li id="index"><a href="/" hidefocus="hidefocus">首页</a></li>
+<li id="rank"><a href="/r/%E7%95%85%E9%94%80%E6%A6%9C" hidefocus="hidefocus">排行榜</a></li>
+<li id="bargain"><a href="/r/%E7%83%AD%E9%97%A8%E6%8E%A8%E8%8D%90" hidefocus="hidefocus">精品<span class="dot">·</span>特价</a></li>
+
+<li id="category"><a href="/%E5%B0%8F%E8%AF%B4/c/14-1" class="usename" hidefocus="hidefocus">分类</a></li>
+<li><a href="http://home.duokan.com/index.html" target="_blank" hidefocus="hidefocus">客户端</a></li>
+<li><a href="http://bbs.duokan.com/" target="_blank" hidefocus="hidefocus">论坛</a></li>
+</ul>
+</nav>
+<div class="w-search">
+<div class="searchform" href="javascript:void(0);" hidefocus="hidefocus">
+<input type="text" id="dk-text" class="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" hidefocus="hidefocus" value="搜索书名或者作者..."/>
+<span title="搜索" class="btn" id="searchbotton" style="display:none"></span>
+</div>
+</div>
+<div class="m-pctrl">
+<div id='w-login' style="display:none"><a href="/login" id="gotologin" hidefocus="hidefocus">登录</a><span class="w-sep">|</span><a href="/reg" hidefocus="hidefocus">注册</a></div>
+<div class="m-person" id="w-person" style="display:none">
+<div class="w-dropdown-menu">
+<div class="ttl"><a href="/u/mybook" class="username" id="username" hidefocus="hidefocus"></a><a class="btn" href="javascript:void(0);" hidefocus="hidefocus">&nbsp;</a></div>
+<div class="cnt">
+<ul class="list">
+<li><a href="/u/mybook" hidefocus="hidefocus">已购图书 </a></li>
+<li><a href="/u/redeem" hidefocus="hidefocus">我的兑换码 </a></li>
+<li><a href="/u/invite" hidefocus="hidefocus">我的邀请码</a></li>
+<li><a href="/u/settings" hidefocus="hidefocus">帐号设置</a></li>
+</ul>
+<a href="javascript:void(0);" class="exit" id="exit" hidefocus="hidefocus">退出</a>
+<span class="arr0"></span>
+<span class="arr1"></span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+
+<div class="g-bd">
+<div class="w-tabox w-tabox-1">
+<div id="navFix" class="w-tab1 rank-nav">
+<ul>
+
+<li class=""><a href="/r/%E7%95%85%E9%94%80%E6%A6%9C" hidefocus="hidefocus">畅销榜</a></li>
+
+<li class=""><a href="/r/%E6%9C%88%E5%BA%A6%E6%A6%9C" hidefocus="hidefocus">月度榜</a></li>
+
+<li class=""><a href="/r/%E5%A5%BD%E8%AF%84%E6%A6%9C" hidefocus="hidefocus">好评榜</a></li>
+
+<li class="crt"><a href="/r/%E5%85%8D%E8%B4%B9%E6%A6%9C" hidefocus="hidefocus">免费榜</a></li>
+
+<li class=""><a href="/r/%E6%9C%80%E6%96%B0" hidefocus="hidefocus">最新上架</a></li>
+
+</ul>
+</div>
+<!--畅销榜-->
+<div id='book-rank'>
+<div class="content">
+<div class="w-booklist w-booklist-1">
+<ul id="paybook">
+
+
+
+
+
+
+<li class="itm" book_id ="608461668a0d11e282ed00163e0123ac">
+<a href="/i%E5%A4%A9%E4%B8%8B%E7%BD%91%E5%95%86%E7%B2%BE%E9%80%89%EF%BC%88%E5%88%9B%E5%88%8A%E5%8F%B7%EF%BC%89/b/24672" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2013/03/fe84a0ec1d7e894c.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>唯一一本专门办给电商从业者的电子杂志。</p></div>
+</div>
+</a>
+<a class="title" href="/i%E5%A4%A9%E4%B8%8B%E7%BD%91%E5%95%86%E7%B2%BE%E9%80%89%EF%BC%88%E5%88%9B%E5%88%8A%E5%8F%B7%EF%BC%89/b/24672" hidefocus="hidefocus">
+
+
+<em class="num_bc hot">1.</em>
+
+
+i天下网商精选（创刊号）</a>
+
+<p class="author"><span>许维</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li class='halfive'></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">8.9</span>
+<span class="num">( <span itemprop="reviewCount">22</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="047d406270eb11e2808800163e0123ac">
+<a href="/%E9%9F%B3%E4%B9%90%E5%A4%A9%E5%A0%82%EF%BC%881st/2013%EF%BC%89/b/21717" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2013/03/ba361518f8d5a1de.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>休刊6年后，《音乐天堂》满血复活！</p></div>
+</div>
+</a>
+<a class="title" href="/%E9%9F%B3%E4%B9%90%E5%A4%A9%E5%A0%82%EF%BC%881st/2013%EF%BC%89/b/21717" hidefocus="hidefocus">
+
+
+<em class="num_bc hot">2.</em>
+
+
+音乐天堂（1st/2013）</a>
+
+<p class="author"><span>李文枫</span><span>蓝靛</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li class='halfive'></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">8.9</span>
+<span class="num">( <span itemprop="reviewCount">196</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="a9f8fb7a6e8011e2808800163e0123ac">
+<a href="/%E4%B9%8C%E5%90%88%E4%B9%8B%E4%BC%97/b/20817" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2013/02/ee4f8fa52fde0495.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>获著名心理学家弗洛伊德高度评价的书</p></div>
+</div>
+</a>
+<a class="title" href="/%E4%B9%8C%E5%90%88%E4%B9%8B%E4%BC%97/b/20817" hidefocus="hidefocus">
+
+
+<em class="num_bc hot">3.</em>
+
+
+乌合之众</a>
+
+<p class="author"><span>【法】古斯塔夫·勒庞</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">8.19</span>
+<span class="num">( <span itemprop="reviewCount">31</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="c3611e6470d611e2808800163e0123ac">
+<a href="/%E5%BE%AE%E5%8A%BF%E5%8A%9B/b/21637" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2013/02/317639c3ca7da6f6.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>边缘媒体人，社会化“湿人”，黑马良驹博文精选。</p></div>
+</div>
+</a>
+<a class="title" href="/%E5%BE%AE%E5%8A%BF%E5%8A%9B/b/21637" hidefocus="hidefocus">
+
+
+<em class="num_bc hot">4.</em>
+
+
+微势力</a>
+
+<p class="author"><span>黑马良驹</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">8.1</span>
+<span class="num">( <span itemprop="reviewCount">26</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="2e8ddd00797211e2b27a00163e0123ac">
+<a href="/%E7%B2%BE%E5%93%81%E9%98%85%E8%AF%BB%E6%97%B6%E5%85%89%EF%BC%88%E7%AC%AC8%E6%9C%9F%EF%BC%89/b/21737" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2013/03/ecd979860a0dd414.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>书与影，哪个少年派更接近上帝？茅于轼毁誉参半，身边人怎样评价？</p></div>
+</div>
+</a>
+<a class="title" href="/%E7%B2%BE%E5%93%81%E9%98%85%E8%AF%BB%E6%97%B6%E5%85%89%EF%BC%88%E7%AC%AC8%E6%9C%9F%EF%BC%89/b/21737" hidefocus="hidefocus">
+
+
+<em class="num_bc hot">5.</em>
+
+
+精品阅读时光（第8期）</a>
+
+<p class="author"><span>多看</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">8.4</span>
+<span class="num">( <span itemprop="reviewCount">99</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="e10775b8870a11e2a3f500163e0123ac">
+<a href="/%E5%86%99%E4%BD%9C%E5%A5%87%E8%BF%B9%EF%BC%8C%E5%A6%82%E4%BD%95%E4%B8%80%E4%B8%AA%E6%9C%88%E8%B5%9A4%E4%B8%87%E7%BE%8E%E5%85%83/b/24662" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2013/03/ae4ec05d5770f246.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>科技革命，生产者与消费者直接对接！</p></div>
+</div>
+</a>
+<a class="title" href="/%E5%86%99%E4%BD%9C%E5%A5%87%E8%BF%B9%EF%BC%8C%E5%A6%82%E4%BD%95%E4%B8%80%E4%B8%AA%E6%9C%88%E8%B5%9A4%E4%B8%87%E7%BE%8E%E5%85%83/b/24662" hidefocus="hidefocus">
+
+
+<em class="num_bc hot">6.</em>
+
+
+写作奇迹，如何一个月赚4万美元</a>
+
+<p class="author"><span>李书航</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">8.1</span>
+<span class="num">( <span itemprop="reviewCount">52</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="b92c1c5c6b7f11e28a7d00163e0123ac">
+<a href="/%E7%9C%8B%E8%A7%81%EF%BC%88%E8%AF%95%E8%AF%BB%E7%89%88%EF%BC%89/b/20712" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2013/01/13e435cf9685cdf3.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>柴静首度出书讲述十年央视生涯，视频试读版</p></div>
+</div>
+</a>
+<a class="title" href="/%E7%9C%8B%E8%A7%81%EF%BC%88%E8%AF%95%E8%AF%BB%E7%89%88%EF%BC%89/b/20712" hidefocus="hidefocus">
+
+
+<em class="num_bc hot">7.</em>
+
+
+看见（试读版）</a>
+
+<p class="author"><span>柴静</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li class='halfive'></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">9.19</span>
+<span class="num">( <span itemprop="reviewCount">718</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="eec0ddc8ade111e1b8ee00163e0060da">
+<a href="/%E9%87%91%E7%93%B6%E6%A2%85/b/666" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2012/06/05a6313e83f750b0.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>不仅要读，而且要精读。</p></div>
+</div>
+</a>
+<a class="title" href="/%E9%87%91%E7%93%B6%E6%A2%85/b/666" hidefocus="hidefocus">
+
+
+<em class="num_bc hot">8.</em>
+
+
+金瓶梅</a>
+
+<p class="author"><span>兰陵笑笑生</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">7.8</span>
+<span class="num">( <span itemprop="reviewCount">1477</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="13bcb2b0660511e2bee100163e0123ac">
+<a href="/%E5%BE%AE%E6%97%B6%E9%97%B4%E7%AE%A1%E7%90%86%E6%9C%AF%EF%BC%88%E5%A4%A7%E5%B8%88%E8%BD%BB%E6%9D%BE%E8%AF%BB002%EF%BC%89/b/19507" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2013/01/7c76dfd7c4c10af1.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>每天18分钟，你的人生可以不一样！</p></div>
+</div>
+</a>
+<a class="title" href="/%E5%BE%AE%E6%97%B6%E9%97%B4%E7%AE%A1%E7%90%86%E6%9C%AF%EF%BC%88%E5%A4%A7%E5%B8%88%E8%BD%BB%E6%9D%BE%E8%AF%BB002%EF%BC%89/b/19507" hidefocus="hidefocus">
+
+
+<em class="num_bc hot">9.</em>
+
+
+微时间管理术（大师轻松读002）</a>
+
+<p class="author"><span>【美】彼得·布雷格曼</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">8.1</span>
+<span class="num">( <span itemprop="reviewCount">677</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="34691c368baa11e298b900163e0123ac">
+<a href="/ifanr%C2%B7Life%EF%BC%88%E7%AC%AC%E4%B8%80%E6%9C%9F%EF%BC%89/b/24687" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2013/03/984816e38c26b1fc.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>ifanr·Life，最贴近生活的科技杂志。</p></div>
+</div>
+</a>
+<a class="title" href="/ifanr%C2%B7Life%EF%BC%88%E7%AC%AC%E4%B8%80%E6%9C%9F%EF%BC%89/b/24687" hidefocus="hidefocus">
+
+
+<em class="num_bc hot">10.</em>
+
+
+ifanr·Life（第一期）</a>
+
+<p class="author"><span>黄龙中</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li></li><li></li><li></li><li></li><li></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">0.0</span>
+<span class="num">( <span itemprop="reviewCount">0</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="85ebfb14310f41809e6ce335b7381698">
+<a href="/%E5%8E%9A%E9%BB%91%E5%AD%A6/b/20" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2012/05/426b003a39c2aa82.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>史上技术含量最HIGH的升迁绝学。不懂这些，你就永远只能当炮灰。</p></div>
+</div>
+</a>
+<a class="title" href="/%E5%8E%9A%E9%BB%91%E5%AD%A6/b/20" hidefocus="hidefocus">
+
+
+<em num_bc>11.</em>
+
+
+厚黑学</a>
+
+<p class="author"><span>李宗吾</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">8.1</span>
+<span class="num">( <span itemprop="reviewCount">1954</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="2f9a9f9e615811e2946a00163e0123ac">
+<a href="/%E9%BB%91%E8%93%9D%7C121%E6%9C%9F%E2%96%AA%E9%BB%91%E5%A4%A9%E6%89%8D%E4%B8%93%E5%8F%B7/b/18557" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2013/01/e2f5f144d29328ba.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>艺术写作，各具个性。只有最好的文学才值得黑蓝专注。</p></div>
+</div>
+</a>
+<a class="title" href="/%E9%BB%91%E8%93%9D%7C121%E6%9C%9F%E2%96%AA%E9%BB%91%E5%A4%A9%E6%89%8D%E4%B8%93%E5%8F%B7/b/18557" hidefocus="hidefocus">
+
+
+<em num_bc>12.</em>
+
+
+黑蓝|121期▪黑天才专号</a>
+
+<p class="author"><span>黑蓝文学</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li class='halfive'></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">8.8</span>
+<span class="num">( <span itemprop="reviewCount">69</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="1b70e279d80b4163bde825aa56808f73">
+<a href="/%E4%B8%89%E5%9B%BD%E6%BC%94%E4%B9%89/b/426" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2012/05/f86de9f178cbbb1f.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>实用到让你恐惧的社会生存、发展谋略指南。</p></div>
+</div>
+</a>
+<a class="title" href="/%E4%B8%89%E5%9B%BD%E6%BC%94%E4%B9%89/b/426" hidefocus="hidefocus">
+
+
+<em num_bc>13.</em>
+
+
+三国演义</a>
+
+<p class="author"><span>罗贯中</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li class='halfive'></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">9.1</span>
+<span class="num">( <span itemprop="reviewCount">545</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="ed9161fe091f11e29b4000163e0123ac">
+<a href="/%E5%AE%B9%E6%96%8B%E9%9A%8F%E7%AC%94/b/5907" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2013/02/f5b197ad63335953.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>毛泽东生前所看的最后一部书。</p></div>
+</div>
+</a>
+<a class="title" href="/%E5%AE%B9%E6%96%8B%E9%9A%8F%E7%AC%94/b/5907" hidefocus="hidefocus">
+
+
+<em num_bc>14.</em>
+
+
+容斋随笔</a>
+
+<p class="author"><span>洪迈</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li class='halfive'></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">8.6</span>
+<span class="num">( <span itemprop="reviewCount">14</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="75b83216dbed11e192a600163e0123ac">
+<a href="/%E9%B2%81%E8%BF%85%E5%85%A8%E9%9B%86/b/1602" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2012/08/e3c793b22c9fb9e1.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>世上只有两种中国人，读过鲁迅的和没读过鲁迅的！</p></div>
+</div>
+</a>
+<a class="title" href="/%E9%B2%81%E8%BF%85%E5%85%A8%E9%9B%86/b/1602" hidefocus="hidefocus">
+
+
+<em num_bc>15.</em>
+
+
+鲁迅全集</a>
+
+<p class="author"><span>鲁迅</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li class='halfive'></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">8.8</span>
+<span class="num">( <span itemprop="reviewCount">241</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="9790df55836c433b9da4d233cf7e5c26">
+<a href="/%E4%BA%BA%E9%97%B4%E8%AF%8D%E8%AF%9D/b/146" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2012/05/a0edcb45c884dd90.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>文青必读、装逼必备，读书人一生必看的100本书之一。近代国学大师王国维巅峰之作。
+</p></div>
+</div>
+</a>
+<a class="title" href="/%E4%BA%BA%E9%97%B4%E8%AF%8D%E8%AF%9D/b/146" hidefocus="hidefocus">
+
+
+<em num_bc>16.</em>
+
+
+人间词话</a>
+
+<p class="author"><span>王国维</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">8.1</span>
+<span class="num">( <span itemprop="reviewCount">1542</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="c6758acc660411e2bee100163e0123ac">
+<a href="/%E4%BD%95%E4%B8%8D%E8%BF%99%E4%B8%AA%E5%91%A8%E6%9C%AB%E6%9D%A5%E5%88%9B%E4%B8%9A%EF%BC%88%E5%A4%A7%E5%B8%88%E8%BD%BB%E6%9D%BE%E8%AF%BB001%EF%BC%89/b/19502" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2013/01/7adda0fb8cb25f5a.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>用54小时开一家新公司！</p></div>
+</div>
+</a>
+<a class="title" href="/%E4%BD%95%E4%B8%8D%E8%BF%99%E4%B8%AA%E5%91%A8%E6%9C%AB%E6%9D%A5%E5%88%9B%E4%B8%9A%EF%BC%88%E5%A4%A7%E5%B8%88%E8%BD%BB%E6%9D%BE%E8%AF%BB001%EF%BC%89/b/19502" hidefocus="hidefocus">
+
+
+<em num_bc>17.</em>
+
+
+何不这个周末来创业（大师轻松读001）</a>
+
+<p class="author"><span>【美】马克·内格</span><span>【美】克林特·尼尔森</span><span>【法】弗兰克·诺里戈特</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">8.0</span>
+<span class="num">( <span itemprop="reviewCount">212</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="caa48534660511e2bee100163e0123ac">
+<a href="/%E5%88%9B%E6%84%8F%E4%BA%94%E6%8A%8A%E5%88%80%EF%BC%88%E5%A4%A7%E5%B8%88%E8%BD%BB%E6%9D%BE%E8%AF%BB003%EF%BC%89/b/19512" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2013/01/b73ac99a6e9dc3f6.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>想要出类拔萃，就必须拥有创意思考的能力！</p></div>
+</div>
+</a>
+<a class="title" href="/%E5%88%9B%E6%84%8F%E4%BA%94%E6%8A%8A%E5%88%80%EF%BC%88%E5%A4%A7%E5%B8%88%E8%BD%BB%E6%9D%BE%E8%AF%BB003%EF%BC%89/b/19512" hidefocus="hidefocus">
+
+
+<em num_bc>18.</em>
+
+
+创意五把刀（大师轻松读003）</a>
+
+<p class="author"><span>【美】乔希·林克纳</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">7.6</span>
+<span class="num">( <span itemprop="reviewCount">127</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="d8aa278b453f4f4fb48dacbac50137f8">
+<a href="/%E7%BA%A2%E6%A5%BC%E6%A2%A6/b/451" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2012/05/0b03f1b1bc9a1983.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>人生最大恨：红楼梦未完</p></div>
+</div>
+</a>
+<a class="title" href="/%E7%BA%A2%E6%A5%BC%E6%A2%A6/b/451" hidefocus="hidefocus">
+
+
+<em num_bc>19.</em>
+
+
+红楼梦</a>
+
+<p class="author"><span>曹雪芹</span><span>高鹗</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li class='halfive'></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">8.69</span>
+<span class="num">( <span itemprop="reviewCount">442</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="32559c666b8f11e2808800163e0123ac">
+<a href="/%E6%88%91%E4%BB%AC%E7%9A%84%E6%95%B0%E5%AD%97%E5%87%BA%E7%89%88%E6%A2%A6/b/20762" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2013/02/545b4bfcfac67f46.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>胡晓东谈数字出版，专栏+访谈首次结集，独家发布！</p></div>
+</div>
+</a>
+<a class="title" href="/%E6%88%91%E4%BB%AC%E7%9A%84%E6%95%B0%E5%AD%97%E5%87%BA%E7%89%88%E6%A2%A6/b/20762" hidefocus="hidefocus">
+
+
+<em num_bc>20.</em>
+
+
+我们的数字出版梦</a>
+
+<p class="author"><span>胡晓东</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li class='halfive'></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">8.5</span>
+<span class="num">( <span itemprop="reviewCount">73</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="721c3fc5845e47c6ba8d34ca3a2faef2">
+<a href="/%E5%8A%A8%E7%89%A9%E5%86%9C%E5%BA%84/b/16" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2012/05/6e3ec381e45f1224.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>“动物主义”革命的酝酿、兴起和最终蜕变。</p></div>
+</div>
+</a>
+<a class="title" href="/%E5%8A%A8%E7%89%A9%E5%86%9C%E5%BA%84/b/16" hidefocus="hidefocus">
+
+
+<em num_bc>21.</em>
+
+
+动物农庄</a>
+
+<p class="author"><span>【英】乔治·奥威尔</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li class='halfive'></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">9.19</span>
+<span class="num">( <span itemprop="reviewCount">567</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="14d54c40797211e2b27a00163e0123ac">
+<a href="/%E8%99%8E%E5%97%85%E7%B2%BE%E9%80%89NO.4/b/21732" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2013/02/1d661b1bd9f4087d.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>虎嗅电子刊第四弹，个性化的商业新闻笔记！</p></div>
+</div>
+</a>
+<a class="title" href="/%E8%99%8E%E5%97%85%E7%B2%BE%E9%80%89NO.4/b/21732" hidefocus="hidefocus">
+
+
+<em num_bc>22.</em>
+
+
+虎嗅精选NO.4</a>
+
+<p class="author"><span>蔡钰</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li class='halfive'></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">8.8</span>
+<span class="num">( <span itemprop="reviewCount">95</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="516df386797311e2b27a00163e0123ac">
+<a href="/%E6%96%B0%E5%8D%8E%E9%98%85%E8%AF%BB%EF%BC%882013.1%EF%BC%89/b/21742" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2013/02/041c1c5249597d87.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>主编严歌苓：用心做国内最好的文学杂志。</p></div>
+</div>
+</a>
+<a class="title" href="/%E6%96%B0%E5%8D%8E%E9%98%85%E8%AF%BB%EF%BC%882013.1%EF%BC%89/b/21742" hidefocus="hidefocus">
+
+
+<em num_bc>23.</em>
+
+
+新华阅读（2013.1）</a>
+
+<p class="author"><span>严歌苓</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">8.3</span>
+<span class="num">( <span itemprop="reviewCount">66</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="40ff88137fdf47f0a7f26053c4276724">
+<a href="/%E6%B5%AE%E7%94%9F%E5%85%AD%E8%AE%B0/b/341" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2012/05/5e3d83ab19f1a1bc.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>古代最可爱的一对夫妻浪漫生活自传。P.S.居然顺手记下了珍贵的钓鱼岛史料。</p></div>
+</div>
+</a>
+<a class="title" href="/%E6%B5%AE%E7%94%9F%E5%85%AD%E8%AE%B0/b/341" hidefocus="hidefocus">
+
+
+<em num_bc>24.</em>
+
+
+浮生六记</a>
+
+<p class="author"><span>沈复</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li class='halfive'></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">8.5</span>
+<span class="num">( <span itemprop="reviewCount">140</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="70e8461248ef11e2b5b200163e0123ac">
+<a href="/36%E6%B0%AA%EF%BC%882012.12%EF%BC%89/b/16092" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2012/12/777c368c8c56881a.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>36氪第一本电子杂志，献给地球上每一个氪星人。</p></div>
+</div>
+</a>
+<a class="title" href="/36%E6%B0%AA%EF%BC%882012.12%EF%BC%89/b/16092" hidefocus="hidefocus">
+
+
+<em num_bc>25.</em>
+
+
+36氪（2012.12）</a>
+
+<p class="author"><span>王壮</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li class='halfive'></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">8.8</span>
+<span class="num">( <span itemprop="reviewCount">324</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="69e517a0ca1144639cf845f496cb5ba5">
+<a href="/%E4%B8%AD%E5%9B%BD%E4%BD%9B%E6%95%99%E5%8F%B2/b/336" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2012/05/3d3fafd6b0a8d441.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>读佛即拜佛，领略佛教之美，开启智慧人生。</p></div>
+</div>
+</a>
+<a class="title" href="/%E4%B8%AD%E5%9B%BD%E4%BD%9B%E6%95%99%E5%8F%B2/b/336" hidefocus="hidefocus">
+
+
+<em num_bc>26.</em>
+
+
+中国佛教史</a>
+
+<p class="author"><span>蒋维乔</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">8.1</span>
+<span class="num">( <span itemprop="reviewCount">91</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="1132a87f53c24d2595b5ae84253b2b8b">
+<a href="/%E7%AC%91%E6%9E%97%E5%B9%BF%E8%AE%B0/b/141" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2012/05/7ff9b3a75d835f9c.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>古代流传最广的坊间笑话大合集。一部打开就让人开心的书，中国幽默元素大宝库</p></div>
+</div>
+</a>
+<a class="title" href="/%E7%AC%91%E6%9E%97%E5%B9%BF%E8%AE%B0/b/141" hidefocus="hidefocus">
+
+
+<em num_bc>27.</em>
+
+
+笑林广记</a>
+
+<p class="author"><span>游戏主人</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">7.7</span>
+<span class="num">( <span itemprop="reviewCount">245</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="138e3517f8df4b218ee996528671601a">
+<a href="/%E6%96%B0%E6%9C%88%E9%9B%86%C2%B7%E9%A3%9E%E9%B8%9F%E9%9B%86/b/446" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2012/05/913914bb0dbf6a9c.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>减压、助眠、提升精神力，活出全新的自己</p></div>
+</div>
+</a>
+<a class="title" href="/%E6%96%B0%E6%9C%88%E9%9B%86%C2%B7%E9%A3%9E%E9%B8%9F%E9%9B%86/b/446" hidefocus="hidefocus">
+
+
+<em num_bc>28.</em>
+
+
+新月集·飞鸟集</a>
+
+<p class="author"><span>【印】泰戈尔</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li class='halfive'></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">8.9</span>
+<span class="num">( <span itemprop="reviewCount">203</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="b4f020928e77465490e2ada0274cba67">
+<a href="/%E6%B0%B4%E6%B5%92%E4%BC%A0/b/431" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2012/06/fe2b5e079243cae9.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>像江湖大佬那样做人、聚人、识人、防人、用人。</p></div>
+</div>
+</a>
+<a class="title" href="/%E6%B0%B4%E6%B5%92%E4%BC%A0/b/431" hidefocus="hidefocus">
+
+
+<em num_bc>29.</em>
+
+
+水浒传</a>
+
+<p class="author"><span>施耐庵</span><span>罗贯中</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li class='halfive'></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">8.6</span>
+<span class="num">( <span itemprop="reviewCount">182</span> )</span>
+</div>
+
+</li>
+
+<li class="itm" book_id ="edda1baa6a58441caf8c9dd2cf5b60c9">
+<a href="/%E7%BA%AF%E7%B2%B9%E7%90%86%E6%80%A7%E6%89%B9%E5%88%A4/b/19" class="cover" hidefocus="hidefocus">
+<div class="wrap">
+<img src="http://c.duokan.com/cover/2012/05/97798cc3f0486dce.jpg!ss" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+
+<div class="desc"><p>充盈着五四气息的蓝公武经典译本，彻底改变西方哲学进程的惊世之作！</p></div>
+</div>
+</a>
+<a class="title" href="/%E7%BA%AF%E7%B2%B9%E7%90%86%E6%80%A7%E6%89%B9%E5%88%A4/b/19" hidefocus="hidefocus">
+
+
+<em num_bc>30.</em>
+
+
+纯粹理性批判</a>
+
+<p class="author"><span>【德】康德</span></p>
+
+
+
+<div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+
+<ul class="five"><li class='red'></li> <li class='red'></li> <li class='red'></li> <li class = 'red'></li> <li class='halfive'></li></ul>
+
+<span style="display:none;" itemprop="ratingValue">8.5</span>
+<span class="num">( <span itemprop="reviewCount">44</span> )</span>
+</div>
+
+</li>
+
+</ul>
+</div>
+</div>
+<div class="w-load"><div class="spin"></div></div>
+</div>
+</div>
+</div>
+
+<div class="w-fbox js-fixed" style="display:none">
+<div class="gotop"><a href="javascript:void(0);" hidefocus="hidefocus" title="回到顶部"><span class="cnt">回到顶部</span></a></div>
+<div class="m-sns m-sns-2 js-sns">
+<div class="wrap">
+<ul>
+<li><a href="http://e.weibo.com/duokan" class="sina first" hidefocus="hidefocus"><span class="cnt"><span class="img"></span><p>@多看阅读</p></span><span class="line"></span></a></li>
+<li><a href="http://e.t.qq.com/duokan_book" class="qq" hidefocus="hidefocus"><span class="cnt"><span class="img"></span><p>@多看阅读</p></span><span class="line"></span></a></li>
+<li class=""><a href="javascript:void(0);" class="weixin" hidefocus="hidefocus"><span class="cnt cnt2"><span class="img"></span><p>微信：<em>duokan</em></p></span><span class="line"></span></a></li>
+<li class="final"><a href="javascript:void(0);" class="miliao" hidefocus="hidefocus"><span class="cnt cnt2"><span class="img"></span><p>米聊：<em>800383</em></p></span><span class="line"></span></a></li>
+</ul>
+</div>
+</div>
+</div>
+<footer class="g-ft">
+<div class="m-cprt">Copyright&copy;duokan.com　<a href="http://www.miibeian.gov.cn/" target="_blank" hidefocus="hidefocus">京ICP备10047083号</a>　<a href="http://www.gapp.gov.cn/" target="_blank" hidefocus="hidefocus">电复证字第01D010号</a></div>
+</footer>
+</div>
+
+
+
+
+<script type="text/template" id="jst-more">
+{@each items as itm, index}
+<li class="itm" book_id ="${ itm['book_id'] }">
+<a class="cover" href="/${ itm['afs'] }/b/${itm['sid']}" hidefocus = "hidefocus">
+<div class="wrap">
+<img src="${ itm.cover|imgAdapt,'ss' }" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
+<div class="desc"><p>${ itm['summary'] }</p></div>
+</div>
+</a>
+<div class="info">
+<a class="title" href="/${ itm['afs'] }/b/${itm['sid']}">
+
+<em num_bc>${ (+index) + offset + 1 }.</em>
+
+${ itm['title'] }
+</a>
+{@if itm['authors'] != '' }
+<p class="author">$${ itm['authors']| buildAuthor }</p>
+{@else}
+<p class="author">$${ itm['editors']| buildAuthor }</p>
+{@/if}
+<div class="w-starfive">
+$${ itm.score|showStar }
+<span class="num">( ${ itm['score_count'] } )</span>
+</div>
+
+<div class="desc"><p>${ itm['summary'] }</p></div>
+</div>
+</li>
+{@/each}
+</script>
+
+
+
+
+<script>seajs.use(['duokan/store/1/page/book','duokan/store/1/page/patched'])</script>
+
+<script>
+seajs.use('duokan/store/1/page/act_rank_free');
+</script>
+
+</body>
+</html>

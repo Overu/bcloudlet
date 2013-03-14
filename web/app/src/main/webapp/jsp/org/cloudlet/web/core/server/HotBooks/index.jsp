@@ -155,55 +155,6 @@
   </div>
 
 
-  <script type="text/template" id="jst-more">
-{@each items as itm, index}
-<li class="itm" book_id ="${ itm['book_id'] }">
-<a class="cover" href="/${ itm['afs'] }/b/${itm['sid']}" hidefocus = "hidefocus">
-<div class="wrap">
-<img src="${ itm.cover|imgAdapt,'ss' }" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
-<div class="desc"><p>${ itm['summary'] }</p></div>
-</div>
-</a>
-<div class="info">
-<a class="title" href="/${ itm['afs'] }/b/${itm['sid']}">
-
-<em num_bc>${ (+index) + offset + 1 }.</em>
-
-${ itm['title'] }
-</a>
-{@if itm['authors'] != '' }
-<p class="author">$${ itm['authors']| buildAuthor }</p>
-{@else}
-<p class="author">$${ itm['editors']| buildAuthor }</p>
-{@/if}
-<div class="w-starfive">
-$${ itm.score|showStar }
-<span class="num">( ${ itm['score_count'] } )</span>
-</div>
-
-{@if itm['new_price'] }
-{@if itm['new_price'] == 0 }
-<div class="price0 price"><span class="price1">免费</span><del>¥ ${ itm['price']|formatPrice }</del></div>
-{@else}
-<div class="price0 price"><span>¥ ${ itm['new_price']|formatPrice }</span><del>¥ ${ itm['price']|formatPrice }</del></div>
-{@/if}
-{@else}
-{@if itm['price'] == 0 }
-<div class="price0 price"><span class="price1">免费</span></div>
-{@else}
-<div class="price0 price"><span>¥ ${ itm['price']|formatPrice }</span></div>
-{@/if}
-{@/if}
-
-<div class="desc"><p>${ itm['summary'] }</p></div>
-</div>
-</li>
-{@/each}
-</script>
-
-
-
-
   <script>
 			seajs.use([ 'duokan/store/1/page/book',
 					'duokan/store/1/page/patched' ])
