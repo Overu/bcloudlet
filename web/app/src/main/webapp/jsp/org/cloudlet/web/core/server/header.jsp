@@ -9,7 +9,7 @@
       <ul itemprop="breadcrumb">
         <li id="index"><a href="/" hidefocus="hidefocus">首页</a></li>
         <li id="rank"><a href="/r/hot" hidefocus="hidefocus">排行榜</a></li>
-        <li id="bargain"><a href="/r/%E7%83%AD%E9%97%A8%E6%8E%A8%E8%8D%90" hidefocus="hidefocus">精品<span class="dot">·</span>特价
+        <li id="bargain"><a href="/r/free" hidefocus="hidefocus">精品<span class="dot">·</span>特价
         </a></li>
 
         <li id="category"><a href="/%E5%B0%8F%E8%AF%B4/c/14-1" class="usename" hidefocus="hidefocus">分类</a></li>

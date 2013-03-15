@@ -312,9 +312,14 @@ public abstract class Content {
     return null;
   }
 
-  /**
-   * @return the summary
-   */
+  @XmlTransient
+  public Content getRoot() {
+    if (parent == null) {
+      return this;
+    }
+    return parent.getRoot();
+  }
+
   public String getSummary() {
     return summary;
   }

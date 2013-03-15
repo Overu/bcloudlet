@@ -8,6 +8,7 @@ import javax.persistence.Transient;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriBuilder;
@@ -23,10 +24,6 @@ import javax.xml.bind.annotation.XmlType;
 @Path("/")
 @Produces("text/html;qs=5")
 public final class Repository extends Item {
-
-  private static final String HOT_BOOKS = "r/hot";
-
-  private static final String MONTHLY_BOOKS = "r/monthly";
 
   public static final String TYPE_NAME = CoreUtil.PREFIX + "Repository";
 
@@ -62,12 +59,6 @@ public final class Repository extends Item {
   @Transient
   private HttpServletResponse response;
 
-  @Transient
-  private HotBooks hotBooks;
-
-  @Transient
-  private MonthlyBooks monthlyBooks;
-
   @Path(BOOKS)
   public Books getBooks() {
     return books;
@@ -78,29 +69,22 @@ public final class Repository extends Item {
     return groups;
   }
 
-  @Path(HOT_BOOKS)
-  public HotBooks getHotBooks() {
-    if (hotBooks == null) {
-      hotBooks = new HotBooks();
-      hotBooks.setParent(this);
-      hotBooks.setPath(HOT_BOOKS);
-    }
-    return hotBooks;
-  }
-
-  @Path(MONTHLY_BOOKS)
-  public MonthlyBooks getMonthlyBooks() {
-    if (monthlyBooks == null) {
-      monthlyBooks = new MonthlyBooks();
-      monthlyBooks.setParent(this);
-      monthlyBooks.setPath(MONTHLY_BOOKS);
-    }
-    return monthlyBooks;
-  }
-
   @Path(ORDERS)
   public Orders getOrders() {
     return orders;
+  }
+
+  @Path("r/{rank}")
+  public BookQuery getRankedBooks(@PathParam("rank") String path) {
+    BookRank rank = BookRank.getByPath(path);
+    if (rank != null) {
+      BookQuery query = WebPlatform.get().getInstance(rank.type);
+      query.setParent(this);
+      query.setPath(path);
+      query.setRank(rank);
+      return query;
+    }
+    return null;
   }
 
   @Path(TAGS)
