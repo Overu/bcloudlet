@@ -74,7 +74,7 @@ body{text-align:center;}
 /* 顶部导航 */
 .m-header{position:relative;z-index:100;padding:0 0 25px;height:62px;}
 /* logo */
-.m-logo,.m-logo a{display:inline;float:left;width:175px;height:62px;}
+.m-logo,.m-logo a{display:inline;float:left;width: 230px;height: 70px;}
 .m-logo a{overflow:hidden;text-indent:-20000px;background-position:0 0;}
 /* 导航 */
 .m-nav{margin:0 0 0 227px;padding-top:33px;}
