@@ -19,7 +19,7 @@ public class Reference {
 
   @Type(type = ContentType.NAME)
   @Columns(columns = { @Column(name = "sourceType"), @Column(name = "sourceId") })
-  private Entry source;
+  private Item source;
 
   @Type(type = ContentType.NAME)
   @Columns(columns = { @Column(name = "targetType"), @Column(name = "targetId") })
@@ -39,7 +39,7 @@ public class Reference {
     return path;
   }
 
-  public Entry getSource() {
+  public Item getSource() {
     return source;
   }
 
@@ -63,7 +63,7 @@ public class Reference {
     this.path = path;
   }
 
-  public void setSource(Entry source) {
+  public void setSource(Item source) {
     this.source = source;
   }
 

@@ -3,7 +3,7 @@
 <header class="g-hd">
   <div class="m-header">
     <div class="m-logo">
-      <a href="/" title="多看精品书城" hidefocus="hidefocus">多看精品书城</a>
+      <a href="/" title="睿泰书城" hidefocus="hidefocus">睿泰书城</a>
     </div>
     <nav class="m-nav">
       <ul itemprop="breadcrumb">

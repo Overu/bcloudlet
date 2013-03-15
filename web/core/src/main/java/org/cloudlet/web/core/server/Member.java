@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType
 @Entity(name = Member.TYPE_NAME)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public class Member extends Entry {
+public class Member extends Item {
   public static Logger logger = Logger.getLogger(Member.class.getName());
 
   private String roleName;

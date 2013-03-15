@@ -17,7 +17,8 @@ textarea{resize:none;}
 pre{white-space:pre-wrap;white-space:-moz-pre-wrap;white-space:-o-pre-wrap;*word-wrap:break-word;*white-space:normal;}
 
 /* 统一调用背景图 */
-.m-logo a,.m-sns a,.w-box4 .logo,.w-reader li a,.w-device span,.w-starfive li,.w-starfive-big li,.w-reply-doc .arr,.w-paylist .itm,
+.m-logo a {background:url(../images/logo.png) no-repeat;}
+.m-sns a,.w-box4 .logo,.w-reader li a,.w-device span,.w-starfive li,.w-starfive-big li,.w-reply-doc .arr,.w-paylist .itm,
 .w-dropdown-menu0 .btn span,.w-comm-ok .info em,.w-tab-btn a,.m-catalogue em,.m-readerhelp .prev,.m-readerhelp .next,.w-exchange a,
 .w-hpimg .arr,.w-dropdown-menu .btn,.w-fbox .gotop a,.w-tab2 .go{background:url(../images/sprite.png) -9999px -9999px no-repeat;}
 .w-search .searchform,.w-search .searchform .btn,.w-more,.w-other a,.w-more-close,.w-more-open,.m-readerhelp .step1, .m-readerhelp .step2,.w-close,.w-msg,.w-icon-gift,.w-icon-question,.w-icon-read,.w-icon-time,.w-icon-question2{background:url(../images/icon.png) -9999px -9999px no-repeat;}

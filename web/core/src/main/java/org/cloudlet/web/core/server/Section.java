@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType
 @Entity(name = Section.TYPE_NAME)
-public class Section extends Entry {
+public class Section extends Item {
   @OneToOne
   private Media media;
   public static final String TYPE_NAME = CoreUtil.PREFIX + "Section";

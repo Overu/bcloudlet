@@ -57,7 +57,7 @@ import com.sencha.gxt.widget.core.client.toolbar.LabelToolItem;
 import com.sencha.gxt.widget.core.client.toolbar.PagingToolBar;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
-import org.cloudlet.web.core.server.Feed;
+import org.cloudlet.web.core.server.Folder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -270,7 +270,7 @@ public abstract class ResourceGrid extends ContentPanel implements TakesResource
 
               @Override
               public void onSuccess(final Resource result) {
-                List<Resource> books = result.getList(Feed.ITEMS);
+                List<Resource> books = result.getList(Folder.ITEMS);
                 builder.clear();
                 callback.onSuccess(new PagingLoadResultBean<Resource>(books, result.getQueryCount().intValue(), loadConfig.getOffset()));
               }
@@ -466,7 +466,7 @@ public abstract class ResourceGrid extends ContentPanel implements TakesResource
   private void selectBase(SelectButtonCar car) {
     switch (car) {
       case ADD:
-        Resource place = getValue().getChild(Feed.NEW);
+        Resource place = getValue().getChild(Folder.NEW);
         resourceManager.goTo(place);
         break;
       case REFRESH:

@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType
 @Entity(name = Tag.TYPE_NAME)
-public class Tag extends Entry {
+public class Tag extends Item {
 
   public static final String TYPE_NAME = CoreUtil.PREFIX + "Tag";
 

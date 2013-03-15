@@ -22,12 +22,11 @@ import javax.xml.bind.annotation.XmlType;
 @Template
 @Path("/")
 @Produces("text/html;qs=5")
-public final class Repository extends Entry {
+public final class Repository extends Item {
 
-  /**
-   * 
-   */
   private static final String HOT_BOOKS = "r/hot";
+
+  private static final String MONTHLY_BOOKS = "r/monthly";
 
   public static final String TYPE_NAME = CoreUtil.PREFIX + "Repository";
 
@@ -66,6 +65,9 @@ public final class Repository extends Entry {
   @Transient
   private HotBooks hotBooks;
 
+  @Transient
+  private MonthlyBooks monthlyBooks;
+
   @Path(BOOKS)
   public Books getBooks() {
     return books;
@@ -84,6 +86,16 @@ public final class Repository extends Entry {
       hotBooks.setPath(HOT_BOOKS);
     }
     return hotBooks;
+  }
+
+  @Path(MONTHLY_BOOKS)
+  public MonthlyBooks getMonthlyBooks() {
+    if (monthlyBooks == null) {
+      monthlyBooks = new MonthlyBooks();
+      monthlyBooks.setParent(this);
+      monthlyBooks.setPath(MONTHLY_BOOKS);
+    }
+    return monthlyBooks;
   }
 
   @Path(ORDERS)

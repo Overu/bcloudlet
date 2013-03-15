@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType
 @Entity(name = Reply.TYPE_NAME)
-public class Reply extends Entry {
+public class Reply extends Item {
 
   public static final String TYPE_NAME = CoreUtil.PREFIX + "Reply";
 

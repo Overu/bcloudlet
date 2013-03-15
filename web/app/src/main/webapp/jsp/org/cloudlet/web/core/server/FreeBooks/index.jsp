@@ -30,7 +30,6 @@
     <jsp:include page="../sider.jsp"></jsp:include>
     <jsp:include page="../footer.jsp"></jsp:include>
   </div>
-  <jsp:include page="../Book/template.html"></jsp:include>
   <script>
 			seajs.use([ 'duokan/store/1/page/book',
 					'duokan/store/1/page/patched' ])

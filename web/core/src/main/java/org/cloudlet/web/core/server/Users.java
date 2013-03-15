@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlType;
 @Entity(name = Users.TYPE_NAME)
 @Path(Repository.USERS)
 @Produces("text/html;qs=5")
-public class Users extends Feed<User> {
+public class Users extends Folder<User> {
 
   public static final String TYPE_NAME = CoreUtil.PREFIX + "Users";
 

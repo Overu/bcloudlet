@@ -13,7 +13,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType
 @Entity(name = User.TYPE_NAME)
-public class User extends Entry implements Principal {
+public class User extends Item implements Principal {
   private String name;
   private String email;
 

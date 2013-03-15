@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType
 @Entity(name = Group.TYPE_NAME)
-public class Group extends Entry implements Principal {
+public class Group extends Item implements Principal {
 
   public static final String TYPE_NAME = CoreUtil.PREFIX + "Group";
 

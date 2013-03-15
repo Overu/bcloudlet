@@ -5,6 +5,6 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement
 @XmlType
-public class HotBooks extends BookQuery {
+public class MonthlyBooks extends BookQuery {
 
 }

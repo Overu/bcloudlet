@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType
 @Entity(name = Orders.TYPE_BAME)
-public class Orders extends Feed<Order> {
+public class Orders extends Folder<Order> {
 
   public static final String TYPE_BAME = CoreUtil.PREFIX + "Orders";
 

@@ -19,7 +19,7 @@ import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.Verti
 import com.sencha.gxt.widget.core.client.tree.Tree;
 
 import org.cloudlet.web.core.server.Content;
-import org.cloudlet.web.core.server.Entry;
+import org.cloudlet.web.core.server.Item;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ public class ResourceTree extends BorderLayoutContainer implements TakesResource
     @Override
     public List<Resource> read(final Object loadConfig, final Resource resource) {
       List<Resource> result = new ArrayList<Resource>();
-      List<Resource> children = resource.getList(Entry.REFERENCES);
+      List<Resource> children = resource.getList(Item.REFERENCES);
       for (Resource child : children) {
         result.add(child);
       }
@@ -76,7 +76,7 @@ public class ResourceTree extends BorderLayoutContainer implements TakesResource
     loader = new TreeLoader<Resource>(new DataProxy<Resource, Resource>() {
       @Override
       public void load(Resource resource, final Callback<Resource, Throwable> callback) {
-        resource.getQueryParameters().addFirst(Entry.REFERENCES, "true");
+        resource.getQueryParameters().addFirst(Item.REFERENCES, "true");
         resource.load(new AsyncCallback<Resource>() {
           @Override
           public void onFailure(Throwable caught) {

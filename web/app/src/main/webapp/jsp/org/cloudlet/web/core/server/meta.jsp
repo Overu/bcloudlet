@@ -14,3 +14,21 @@
 <!--[if IE]><script src="/static/lib/gallery/html5.js"></script><![endif]-->
 <!-- <script src="/static/lib/firebug-lite/build/firebug-lite.js"></script> -->
 <script src="/static/lib/seajs/2.0.0/sea.js"></script>
+<script>
+  seajs.config({
+    base : '/static/lib/',
+    alias : {
+      'jquery' : 'gallery/jquery/1.8.3/jquery',
+      'es5-safe' : 'gallery/es5-safe/es5-safe'
+    },
+    map : [ [ /^(.*\/static\/lib\/.*\.(?:css|js))(?:.*)$/i,
+        '$1?201303081413' ] ],
+    preload : [ Function.prototype.bind ? '' : 'es5-safe', 'jquery',
+        'gallery/underscore/1.0/underscore' ]
+  });
+  // FIXME 临时解决方案
+  window.onLoadImg = function(evt) {
+    evt.style.display = 'block'
+  }
+</script>
+<link type="text/css" rel="stylesheet" href="/static/lib/css/index.css?201303081413" />

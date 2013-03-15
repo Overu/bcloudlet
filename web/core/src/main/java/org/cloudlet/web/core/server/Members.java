@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType
 @Entity(name = Members.TYPE_NAME)
-public class Members extends Feed<Member> {
+public class Members extends Folder<Member> {
   public static final String TYPE_NAME = CoreUtil.PREFIX + "Members";
 
   @Override

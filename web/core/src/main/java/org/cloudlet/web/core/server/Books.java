@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
 @Entity(name = Books.TYPE_NAME)
 @Path(Repository.BOOKS)
 @Produces("text/html;qs=5")
-public class Books extends Feed<Book> {
+public class Books extends Folder<Book> {
 
   public static final String TYPE_NAME = CoreUtil.PREFIX + "Books";
 

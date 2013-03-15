@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType
 @Entity(name = Order.TYPE_NAME)
-public class Order extends Entry {
+public class Order extends Item {
 
   public static final String TYPE_NAME = CoreUtil.PREFIX + "Order";
 

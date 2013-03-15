@@ -4,7 +4,7 @@ import com.sencha.gxt.data.shared.SortInfo;
 import com.sencha.gxt.data.shared.loader.FilterConfig;
 
 import org.cloudlet.web.core.server.Content;
-import org.cloudlet.web.core.server.Feed;
+import org.cloudlet.web.core.server.Folder;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -73,7 +73,7 @@ public class QueryBuilder {
 
   public void sort(List<? extends SortInfo> sorts) {
     for (SortInfo sort : sorts) {
-      buildQuery(Feed.SORT, sort.getSortField(), sort.getSortDir().name());
+      buildQuery(Folder.SORT, sort.getSortField(), sort.getSortDir().name());
     }
   }
 

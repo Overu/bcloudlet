@@ -9,7 +9,7 @@ import org.cloudlet.web.core.client.Resource;
 import org.cloudlet.web.core.client.ResourceManager;
 import org.cloudlet.web.core.client.TakesResource;
 import org.cloudlet.web.core.server.Content;
-import org.cloudlet.web.core.server.Feed;
+import org.cloudlet.web.core.server.Folder;
 
 import java.util.List;
 
@@ -54,7 +54,7 @@ public class BookFeedViewer extends FlowPanel implements TakesResource {
 
   private void refresh() {
     clear();
-    List<Resource> books = resource.getList(Feed.ITEMS);
+    List<Resource> books = resource.getList(Folder.ITEMS);
     for (int i = 0; i < display; i++) {
       if (i >= books.size()) {
         break;

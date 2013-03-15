@@ -13,14 +13,14 @@ import javax.xml.bind.annotation.XmlElement;
 
 @MappedSuperclass
 @EntityListeners(InjectionListener.class)
-public abstract class Entry extends Content {
+public abstract class Item extends Content {
 
-  private static final Logger logger = Logger.getLogger(Entry.class.getName());
+  private static final Logger logger = Logger.getLogger(Item.class.getName());
 
   public static final String REFERENCES = "children";
 
   @Transient
-  @QueryParam(Entry.REFERENCES)
+  @QueryParam(Item.REFERENCES)
   protected boolean loadReferences;
 
   @Transient

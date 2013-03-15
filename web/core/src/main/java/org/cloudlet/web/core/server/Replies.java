@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType
 @Entity(name = Replies.TYPE_NAME)
-public class Replies extends Feed<Reply> {
+public class Replies extends Folder<Reply> {
 
   public static final String TYPE_NAME = CoreUtil.PREFIX + "Replies";
 

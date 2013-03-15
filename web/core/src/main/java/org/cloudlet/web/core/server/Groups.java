@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType
 @Entity(name = Groups.TYPE_NAME)
 @Path(Repository.GROUPS)
-public class Groups extends Feed<Group> {
+public class Groups extends Folder<Group> {
 
   public static final String TYPE_NAME = CoreUtil.PREFIX + "Groups";
 

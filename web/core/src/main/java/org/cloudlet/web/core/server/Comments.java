@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType
 @Entity(name = Comments.TYPE_NAME)
-public class Comments extends Feed<Comment> {
+public class Comments extends Folder<Comment> {
 
   public static final String TYPE_NAME = CoreUtil.PREFIX + "Comments";
 

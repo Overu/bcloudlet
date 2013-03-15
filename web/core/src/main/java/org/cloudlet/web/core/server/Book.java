@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType
 @Entity(name = Book.TYPE_NAME)
 @Produces("text/html;qs=5")
-public class Book extends Entry {
+public class Book extends Item {
 
   public static final String TYPE_NAME = CoreUtil.PREFIX + "Book";
 

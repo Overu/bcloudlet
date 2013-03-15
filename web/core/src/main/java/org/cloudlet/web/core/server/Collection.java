@@ -15,7 +15,7 @@ import javax.ws.rs.QueryParam;
 import javax.xml.bind.annotation.XmlTransient;
 
 @MappedSuperclass
-public abstract class Feed<E extends Entry> extends Content {
+public abstract class Collection<E extends Item> extends Content {
 
   @QueryParam("start")
   @DefaultValue("0")
@@ -28,7 +28,7 @@ public abstract class Feed<E extends Entry> extends Content {
   protected Integer limit;
 
   // sort=title|asc&sort=email|desc
-  @QueryParam(Feed.SORT)
+  @QueryParam(Collection.SORT)
   @Transient
   protected List<String> sort;
 
@@ -81,11 +81,9 @@ public abstract class Feed<E extends Entry> extends Content {
   public long countItems() {
     StringBuilder sql = new StringBuilder("select count(e) from ");
     joinSQL(sql);
-    sql.append(" where e.parent=:parent");
     prepareQuery(sql);
     buildSearch(sql);
     TypedQuery<Long> query = em().createQuery(sql.toString(), Long.class);
-    query.setParameter("parent", this);
     setParams(query);
     long count = query.getSingleResult().longValue();
     return count;
@@ -102,7 +100,6 @@ public abstract class Feed<E extends Entry> extends Content {
 
     StringBuilder sql = new StringBuilder("select e from ");
     joinSQL(sql);
-    sql.append(" where e.parent=:parent");
     prepareQuery(sql);
     buildSearch(sql);
     buildSort(sql);
@@ -114,7 +111,6 @@ public abstract class Feed<E extends Entry> extends Content {
     if (getLimit() != null && getLimit() > 0) {
       query.setMaxResults(getLimit());
     }
-    query.setParameter("parent", this);
     setParams(query);
     return query.getResultList();
   }
@@ -171,10 +167,12 @@ public abstract class Feed<E extends Entry> extends Content {
 
   @Override
   public void joinSQL(StringBuilder sql) {
+    super.joinSQL(sql);
     sql.append(getEntryType().getName()).append(" e");
+    sql.append(" where e.parent=:parent");
   }
 
-  @Path(Feed.NEW)
+  @Path(Collection.NEW)
   @GET
   public E newEntry() {
     return WebPlatform.get().getInstance(getEntryType());
@@ -199,7 +197,10 @@ public abstract class Feed<E extends Entry> extends Content {
     this.limit = limit;
   }
 
+  @Override
   public void setParams(TypedQuery query) {
+    super.setParams(query);
+    query.setParameter("parent", this);
   }
 
   public void setSearch(List<String> search) {

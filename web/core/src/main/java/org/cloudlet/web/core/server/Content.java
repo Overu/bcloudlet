@@ -32,6 +32,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
+import javax.persistence.TypedQuery;
 import javax.persistence.Version;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -411,6 +412,9 @@ public abstract class Content {
 
   public void setOwner(User owner) {
     this.owner = owner;
+  }
+
+  public void setParams(TypedQuery query) {
   }
 
   public void setParent(Content parent) {

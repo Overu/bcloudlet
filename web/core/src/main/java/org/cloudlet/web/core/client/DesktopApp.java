@@ -6,7 +6,7 @@ import com.google.inject.Singleton;
 
 import org.cloudlet.web.core.server.Books;
 import org.cloudlet.web.core.server.Content;
-import org.cloudlet.web.core.server.Feed;
+import org.cloudlet.web.core.server.Folder;
 import org.cloudlet.web.core.server.Repository;
 import org.cloudlet.web.core.server.Users;
 
@@ -32,8 +32,8 @@ public class DesktopApp extends Initializer {
   protected void init() {
     Registry.setWidget(Repository.TYPE_NAME, Content.HOME, explorer);
     Registry.setWidget(Users.TYPE_NAME, Content.HOME, userFeed);
-    Registry.setWidget(Users.TYPE_NAME, Feed.NEW, userEditor);
+    Registry.setWidget(Users.TYPE_NAME, Folder.NEW, userEditor);
     Registry.setWidget(Books.TYPE_NAME, Content.HOME, bookFeed);
-    Registry.setWidget(Books.TYPE_NAME, Feed.NEW, bookEditor);
+    Registry.setWidget(Books.TYPE_NAME, Folder.NEW, bookEditor);
   }
 }

@@ -21,7 +21,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import org.cloudlet.web.core.server.Content;
-import org.cloudlet.web.core.server.Feed;
+import org.cloudlet.web.core.server.Folder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -204,7 +204,7 @@ public class Resource extends Place {
   }
 
   public Long getQueryCount() {
-    Object result = getValue(Feed.QUERY_COUNT);
+    Object result = getValue(Folder.QUERY_COUNT);
     if (result != null && result instanceof Double) {
       return ((Double) result).longValue();
     }

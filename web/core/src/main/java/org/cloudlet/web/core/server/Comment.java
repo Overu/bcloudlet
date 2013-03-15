@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType
 @Entity(name = Comment.TYPE_NAME)
-public class Comment extends Entry {
+public class Comment extends Item {
   public static final String TYPE_NAME = CoreUtil.PREFIX + "Comment";
 
   public static final String REPLIES = "replies";
