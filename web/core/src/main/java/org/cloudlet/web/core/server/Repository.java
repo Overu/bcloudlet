@@ -162,6 +162,12 @@ public final class Repository extends Item {
   }
 
   @Override
+  protected void doLoad() {
+    super.doLoad();
+    tags.load();
+  }
+
+  @Override
   protected void initResource(Object result) {
     if (result != null) {
       if (resourceContext != null) {
