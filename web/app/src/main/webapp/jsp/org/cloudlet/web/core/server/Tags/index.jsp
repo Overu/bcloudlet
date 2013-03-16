@@ -11,68 +11,7 @@
 <body id="page-duokan-com" itemscope itemtype="http://schema.org/WebPage">
   <noscript>请使用支持脚本的浏览器！</noscript>
   <div class="g-doc">
-    <header class="g-hd">
-      <div class="m-header">
-        <div class="m-logo">
-          <a href="/" title="多看精品书城" hidefocus="hidefocus">多看精品书城</a>
-        </div>
-        <nav class="m-nav">
-          <ul itemprop="breadcrumb">
-            <li id="index"><a href="/" hidefocus="hidefocus">首页</a></li>
-            <li id="rank"><a href="/r/%E7%95%85%E9%94%80%E6%A6%9C" hidefocus="hidefocus">排行榜</a></li>
-            <li id="bargain"><a href="/r/%E7%83%AD%E9%97%A8%E6%8E%A8%E8%8D%90" hidefocus="hidefocus">精品<span class="dot">·</span>特价
-            </a></li>
-
-            <li id="category"><a href="/%E5%B0%8F%E8%AF%B4/c/14-1" class="usename" hidefocus="hidefocus">分类</a></li>
-            <li><a href="http://home.duokan.com/index.html" target="_blank" hidefocus="hidefocus">客户端</a></li>
-            <li><a href="http://bbs.duokan.com/" target="_blank" hidefocus="hidefocus">论坛</a></li>
-          </ul>
-        </nav>
-        <div class="w-search">
-          <div class="searchform" href="javascript:void(0);" hidefocus="hidefocus">
-            <input type="text" id="dk-text" class="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"
-              hidefocus="hidefocus" value="搜索书名或者作者..." /> <span title="搜索" class="btn" id="searchbotton" style="display: none"></span>
-          </div>
-        </div>
-        <div class="m-pctrl">
-          <div id='w-login' style="display: none">
-            <a href="/login" id="gotologin" hidefocus="hidefocus">登录</a><span class="w-sep">|</span><a href="/reg" hidefocus="hidefocus">注册</a>
-          </div>
-          <div class="m-person" id="w-person" style="display: none">
-            <div class="w-dropdown-menu">
-              <div class="ttl">
-                <a href="/u/mybook" class="username" id="username" hidefocus="hidefocus"></a><a class="btn" href="javascript:void(0);"
-                  hidefocus="hidefocus">&nbsp;</a>
-              </div>
-              <div class="cnt">
-                <ul class="list">
-                  <li><a href="/u/mybook" hidefocus="hidefocus">已购图书 </a></li>
-                  <li><a href="/u/redeem" hidefocus="hidefocus">我的兑换码 </a></li>
-                  <li><a href="/u/invite" hidefocus="hidefocus">我的邀请码</a></li>
-                  <li><a href="/u/settings" hidefocus="hidefocus">帐号设置</a></li>
-                </ul>
-                <a href="javascript:void(0);" class="exit" id="exit" hidefocus="hidefocus">退出</a> <span class="arr0"></span> <span
-                  class="arr1"></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    <jsp:include page="../header.jsp"></jsp:include>
     <div class="g-bd">
       <div class="g-mn">
         <div class="g-mnc">
@@ -86,7 +25,6 @@
                     <li class=""><a href="/%E4%BC%A0%E8%AE%B0/c/13-1-1" hidefocus="hidefocus"> 最新更新 </a></li>
                   </ul>
                 </div>
-
                 <div class="w-page2">
                   <em><span id='one-page'>1</span>/<span id='total-page'>12</span></em> <a class="pre init" href="javascript:void(0);"
                     hidefocus="hidefocus">上一页</a> <a class="next " href="/%E4%BC%A0%E8%AE%B0/c/13-2" hidefocus="hidefocus">下一页</a>
@@ -561,53 +499,12 @@
         </div>
       </div>
       <!--导航 end-->
-
     </div>
-
-    <div class="w-fbox js-fixed" style="display: none">
-      <div class="gotop">
-        <a href="javascript:void(0);" hidefocus="hidefocus" title="回到顶部"><span class="cnt">回到顶部</span></a>
-      </div>
-      <div class="m-sns m-sns-2 js-sns">
-        <div class="wrap">
-          <ul>
-            <li><a href="http://e.weibo.com/duokan" class="sina first" hidefocus="hidefocus"><span class="cnt"><span
-                  class="img"></span>
-                  <p>@多看阅读</p></span><span class="line"></span></a></li>
-            <li><a href="http://e.t.qq.com/duokan_book" class="qq" hidefocus="hidefocus"><span class="cnt"><span class="img"></span>
-                  <p>@多看阅读</p></span><span class="line"></span></a></li>
-            <li class=""><a href="javascript:void(0);" class="weixin" hidefocus="hidefocus"><span class="cnt cnt2"><span
-                  class="img"></span>
-                  <p>
-                    微信：<em>duokan</em>
-                  </p></span><span class="line"></span></a></li>
-            <li class="final"><a href="javascript:void(0);" class="miliao" hidefocus="hidefocus"><span class="cnt cnt2"><span
-                  class="img"></span>
-                  <p>
-                    米聊：<em>800383</em>
-                  </p></span><span class="line"></span></a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <footer class="g-ft">
-      <div class="m-cprt">
-        Copyright&copy;duokan.com <a href="http://www.miibeian.gov.cn/" target="_blank" hidefocus="hidefocus">京ICP备10047083号</a> <a
-          href="http://www.gapp.gov.cn/" target="_blank" hidefocus="hidefocus">电复证字第01D010号</a>
-      </div>
-    </footer>
+    <jsp:include page="../sider.jsp"></jsp:include>
+    <jsp:include page="../footer.jsp"></jsp:include>
   </div>
-
-
-
-
-
-
-
-  <script>
-			seajs.use([ 'duokan/store/1/page/book',
-					'duokan/store/1/page/patched' ])
-		</script>
-
+<script>
+seajs.use([ 'duokan/store/1/page/book','duokan/store/1/page/patched' ])
+</script>
 </body>
 </html>
