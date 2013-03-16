@@ -14,7 +14,8 @@
 .m-directory .w-ttl h3{font:700 14px/40px '宋体','黑体';}
 .m-directory .w-box{width:228px;padding:0;margin:0;}
 .m-directory .cnt{padding:10px;}
-.m-directory .w-txtlist2 li{margin-bottom:10px;}
+.m-directory .w-txtlist2 li{margin-bottom:10px !important;float: initial!important;width: initial!important;}
+.w-txtlist2 em{display: initial!important;}
 .m-directory .w-txtlist2 li a{padding-left:14px;margin-left:13px;}
 .m-directory .w-txtlist2 .crt{height:20px;line-height:20px;}
 .m-directory .w-txtlist2 .crt a{border-left:3px solid #FF6A04;color:#FF6A04;}

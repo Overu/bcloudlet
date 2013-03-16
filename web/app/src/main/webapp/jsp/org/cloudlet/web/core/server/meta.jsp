@@ -28,4 +28,4 @@
     evt.style.display = 'block'
   }
 </script>
-<link type="text/css" rel="stylesheet" href="/static/lib/css/index.css?201303081413" />
+<link id="indexstyle" type="text/css" rel="stylesheet" href="/static/lib/css/index.css?201303081413" />
