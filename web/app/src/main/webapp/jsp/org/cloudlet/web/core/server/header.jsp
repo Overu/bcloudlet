@@ -12,7 +12,7 @@
         <li id="bargain"><a href="/r/free" hidefocus="hidefocus">精品<span class="dot">·</span>特价
         </a></li>
 
-        <li id="category"><a href="/%E5%B0%8F%E8%AF%B4/c/14-1" class="usename" hidefocus="hidefocus">分类</a></li>
+        <li id="category"><a href="/tags" class="usename" hidefocus="hidefocus">分类</a></li>
         <li><a href="http://home.duokan.com/index.html" target="_blank" hidefocus="hidefocus">客户端</a></li>
         <li><a href="http://bbs.duokan.com/" target="_blank" hidefocus="hidefocus">论坛</a></li>
       </ul>
