@@ -1,0 +1,152 @@
+.inner{width:800px;margin-left:auto;margin-right:auto;}
+.hidden{display:none;}
+.slide p{width:800px;margin-left:auto;margin-right:auto;}
+.slide img{height:303px;margin-top:0px;margin-bottom:29px;}
+#topbar{height:56px;line-height:56px;background:#37312a url(http://b.duokan.com/static/portal/img/nav.bg.png) repeat-x 0 0;position:fixed;width:100%;top:0;left:0;z-index:10;}
+#topbar a{float:left;width:110px;color:#a78058;font-size:20px;text-align:center;text-decoration:none;position:relative;z-index:2;font-family:Times New Roman;text-shadow:0 1px 2px rgba(0, 0, 0, 0.7);}
+#topbar a.all{font-size:16px;margin-left:20px;}
+#topbar a img{vertical-align:inherit;}
+#topbar .inner{position:relative;overflow:hidden;}
+#topbar .cursor{position:absolute;top:10px;left:2px;width:108px;height:36px;z-index:1;background:url(http://b.duokan.com/static/portal/img/nav.cursor.png) no-repeat 50% 0;}
+#brand{height:332px;text-align:center;position:fixed;width:100%;top:71px;left:0;z-index:0;}
+#ctrl_bar{width:200px;height:20px;position:absolute;left:50%;margin-left:-100px;text-align:center;bottom:4px;}
+#ctrl_bar img{width:10px;height:11px;display:inline;border:none;margin-left:10px;margin-left:10px;background: url(http://b.duokan.com/static/portal/img/switch_01.png) no-repeat;}
+#ctrl_bar .act{background: url(http://b.duokan.com/static/portal/img/switch_02.png) no-repeat;}
+#content {position:relative;z-index:9;margin-top:375px;padding-bottom:166px;background:#ffffff url(http://b.duokan.com/static/portal/img/content.bg.png) repeat 0 0;color:#333;font-size:14px;box-shadow:0 0 5px #333;}
+#content #apple{background-image:none;border:none}
+#content article{overflow:hidden;clear:both;padding-top:90px;padding-left:65px;padding-bottom:60px;position:relative;background:url(http://b.duokan.com/static/portal/img/content.line.png) no-repeat 50% 100%;}
+#content article .name{display:block;width:32px;overflow:hidden;text-indent:-10em;position:absolute;left:0;top:100px;background-image:url(http://b.duokan.com/static/portal/img/device.name.png);background-repeat:no-repeat;}
+#content article#kindle .name{height:100px;background-position:0 -368px;}
+#content article#android .name{height:140px;background-position:-32px -230px;}
+#content article#ios .name{height:60px;background-position:-64px -170px;}
+#content article#apple .name{height:160px;background-position:-96px 0;}
+#content article header{font-size:32px;font-family:"Hiragino Sans GB","微软雅黑","宋体";}
+#content article .meta{color:#999999;line-height:20px;margin-bottom:40px;font-size:12px;}
+#content article ul{border-radius:5px;box-shadow:0 1px 0 rgba(0, 0, 0, 0.1);border:1px solid #f0f0f0;padding:15px 25px 20px;background:#faf9f6;position:relative;}
+#content article ul li{clear:both;padding:5px 0;padding-left:75px;}
+#content article ul span{color:#ed6c00;float:left;margin-left:-75px;font-size:14px;}
+#content article ul:after{content:' ';display:block;width:15px;height:26px;/*background:url(http://b.duokan.com/static/portal/img/box.arrow.png) no-repeat 0 0;*/position:absolute;}
+#content article#kindle ul:after{right:-14px;top:130px;background-position:100% 0;}
+#content article#android ul:after{left:-14px;top:130px;}
+#content article#ios ul:after{right:-14px;top:30px;background-position:100% 0;}
+#content article#apple ul:after{left:-14px;top:100px;}
+
+#content article .box,
+#content article .preview{float:left;margin-right:19px;}
+#content article#kindle .preview,
+#content article#ios .preview,
+#content article#windowsphone .box,
+#content article#apple .preview{margin-right:0;}
+
+#content article#apple ul li{padding-left:0;}
+#content article .act a{display:block; float:left;margin-top:32px;height:49px;overflow:hidden;background-image:url(http://b.duokan.com/static/portal/img/more.btn.png);background-repeat:no-repeat;}
+#content article .act a.down{width:151px;background-position:0 0;margin-right:15px;}
+#content article .act a.more{width:121px;background-position:100% 0;}
+#content article .act a.down:hover{background-position:0 100%;}
+#content article .act a.more:hover{background-position:100% 100%;}
+#content article .col{clear:both;padding-left:105px;}
+#content article .col .icon{float:left;margin-left:-105px;width:80px;height:81px;background: url(http://b.duokan.com/static/portal/img/bg_icon_detailpage.png)}
+#content article .col .icon img{
+  position:relative;
+  left:4px;
+  top:4px;
+}
+#content article .col .meta{margin:5px 0;}
+#content article .col h2 a{font:normal 24px "Hiragino Sans GB","微软雅黑","宋体";color:#333333;}
+#content article .col .more{
+  display:block;
+  width:82px;
+  height:33px;
+  background:url(http://b.duokan.com/static/portal/img/smore.btn.png) no-repeat 0 0;
+  overflow:hidden;
+  text-indent:-10em;
+  margin-top:20px;
+  padding-bottom:40px;
+}
+.detail #topbar{position:static;}
+.android #brand { background-image:url(http://b.duokan.com/static/portal/img/brand.android.bg.png); }
+.detail #brand{height:637px;background-color:#ed6d91;background-image:url(http://b.duokan.com/static/portal/img/brand.ios.bg.png);position:static;}.detail #brand img{margin-top:36px;}
+.detail #brand .act a{display:inline-block;width:203px;height:77px;overflow:hidden;text-indent:-30em;margin:15px 20px 0;background-image:url(http://b.duokan.com/static/portal/img/marry.ios.btn.png);background-repeat:no-repeat;}
+.detail #brand .act a.appstore{background-position:0 0;}
+.detail #brand .act a.online{background-position:100% 0;}
+.detail #content{margin-top:0;}
+.detail dt{font:normal 24px "Hiragino Sans GB","微软雅黑","宋体";color:#666;padding:50px 0 25px;}
+.detail dd{line-height:2;color:#333;}
+.detail .ar{text-align:right;}
+#footer{
+  height:55px;
+  line-height:55px;
+  background:#eeede9;
+  color:#666;
+  position:relative;
+
+  z-index:10;
+}
+#footer a{
+  color:#666;
+}
+#footer .inner .left {
+  float: left;
+}
+#footer .inner .right {
+  float: right;
+}
+.dk-dialog-wrap{width:100%;height:100%;position:absolute;left:0;top:0;z-index:20;}
+.dk-dialog-box{width:740px;padding:85px 0 40px;background:#ffffff url(http://b.duokan.com/static/portal/img/content.bg.png) repeat 0 0;border-radius:10px;box-shadow:0 3px 5px rgba(0, 0, 0, 0.5);position:absolute;left:50%;margin-left:-370px;top:200px;z-index:11;}.dk-dialog-box .dk-dialog-bd{height:100%;padding-left:60px;padding-right:60px;overflow-y:auto;font-size:16px;}
+.dk-dialog-box .dk-dialog-bd h1,.dk-dialog-box .dk-dialog-bd h2,.dk-dialog-box .dk-dialog-bd .chapter-nav{font:normal 24px "Hiragino Sans GB","微软雅黑","宋体";margin-bottom:1em;text-align:right;}
+.dk-dialog-box .dk-dialog-bd .chapter-order,.dk-dialog-box .dk-dialog-bd .pink,.dk-dialog-box .dk-dialog-bd .chapter-nav{color:#df3667;font-weight:normal;}
+.dk-dialog-box .dk-dialog-bd .chapter-order{margin:2em 0;}
+.dk-dialog-box .dk-dialog-bd p{margin-top:8px;line-height:30px;text-indent:2em;}
+.dk-dialog-box .dk-dialog-bd .grey{color:#666;}
+.dk-dialog-box .dk-dialog-bd .marginbt{margin-bottom:2em;}
+.dk-dialog-box .dk-dialog-bd .nomargin{margin:8px 0 0;}
+.dk-dialog-close{position:absolute;right:25px;top:25px;width:35px;height:34px;background:url(http://b.duokan.com/static/portal/img/close.btn.png) no-repeat 0 0;cursor:pointer;}
+.dk-dialog-close:hover{text-decoration:none;}
+.dk-dialog-shadow{width:100%;height:100%;background:#000;opacity:.4;filter:alpha(opacity=60);}
+@media handheld, only screen and (max-width: 980px){#content .box ul{padding:10px 15px 15px;}
+#content .box ul li{padding-left:65px;}
+#content #kindle .preview{width:250px;}
+#content #ios .preview{width:280px;margin-bottom:50px;}}
+
+/* ie6.fix */
+#topbar { _position: relative; }
+#topbar .forum { _height:56px; }
+#topbar .inner .duokan { *padding-top:16px; }
+#topbar .cursor{ _background: none;_filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=noscale, src="http://b.duokan.com/static/portal/img/nav.cursor.png");}
+#brand { _position: relative; _top: 0px; }
+#ctrl_bar img { _background: none; _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=noscale, src="http://b.duokan.com/static/portal/img/switch_01.png"); }
+#ctrl_bar .act{ _background: none; _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=noscale, src="http://b.duokan.com/static/portal/img/switch_02.png"); }
+#content { _margin-top:0; }
+#content article{ _background: none; _border-bottom: #CCC solid 1px; }
+#content article .name{ _background: none; _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=noscale, src="http://b.duokan.com/static/portal/img/device.name.png"); }
+#content article#kindle .name{ _margin-top:-369px; _clip: rect(368px 32px 469px 0px); }
+#content article#android .name{ _margin-top:-232px; _margin-left:-32px; _clip: rect(229px 64px 368px 32px); }
+#content article#ios .name{ _margin-top:-170px; _margin-left:-64px; _clip: rect(170px 96px 230px 64px); }
+#content article#apple .name{ _margin-top:0px; _margin-left:-96px; _clip: rect(0px 128px 160px 96px); }
+#content article .act a{ _background: none; }
+#content article .act a.down img{ _width: 150px; _height: 49px; _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=crop, src="http://b.duokan.com/static/portal/img/more.btn.png"); }
+#content article .act a.more img{ _width: 300px; _height: 49px; _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=crop, src="http://b.duokan.com/static/portal/img/more.btn.png"); _margin-left:-180px;}
+#content article .act a.down:hover img{ _width: 150px; _height: 98px; _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=crop, src="http://b.duokan.com/static/portal/img/more.btn.png"); _margin-top:-49px; }
+#content article .act a.more:hover img{ _width: 300px; _height: 98px; _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=crop, src="http://b.duokan.com/static/portal/img/more.btn.png"); _margin-left:-180px; _margin-top:-49px; }
+#content article .col .more{
+  _background: none;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=noscale, src="http://b.duokan.com/static/portal/img/smore.btn.png");
+  _cursor:hand;
+}
+#content article .col .icon{
+  _margin-left: -50px;
+  _background: none;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=noscale, src="http://b.duokan.com/static/portal/img/bg_icon_detailpage.png");
+}
+.box ul li span { _position:relative; }
+.act { _overflow:hidden; }
+.act .more,
+.act .down { _float:left; }
+.push { _clear:both; }
+/**/
+.setup_box{margin-top:13px; padding:0px!important;}
+.setup_box .setup_usehlpe{height:60px; border-bottom:1px solid #e3e2e1; margin:0px!important; padding:0!important; line-height:66px;}
+.setup_box .setup_usehlpe em{width:44px; height:44; line-height:44px; display:block; background:url(http://b.duokan.com/static/portal/img/setupicon.png) 2px 1px no-repeat;  margin:8px 20px 8px 25px; clear:both; list-style:none; overflow:hidden; float:left;}
+.setup_box a{color:#ED6C00;}
+.setup_box .setup_threesixzreo{height:60px; margin:0px!important; padding:0!important; line-height:66px;}
+.setup_box .setup_threesixzreo em{width:44px; height:44; line-height:44px; display:block; background:url(http://b.duokan.com/static/portal/img/setupicon.png) 2px -45px no-repeat;  margin:8px 20px 8px 25px; clear:both; list-style:none; overflow:hidden; float:left;}

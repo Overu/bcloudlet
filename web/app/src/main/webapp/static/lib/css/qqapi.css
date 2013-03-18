@@ -1,0 +1,121 @@
+/* CSS Document */
+.tencent_qqapi_popwin .tencent_qqapi_close{
+	background:url(http://resource.app.qq.com/api/images/ico_sprite.png) no-repeat;
+}
+.tencent_qqapi_popwin .tencent_qqapi_pheader{
+	background:url(http://resource.app.qq.com/api/images/block_sprite.png) no-repeat;
+}
+.tencent_qqapi_popwin{
+	background-color:#FFF;
+	border:1px solid #429ad2;
+	width:488px;
+	font-size:12px;
+	position:absolute;
+	display:none;
+	z-index:9999;
+	left:50%;
+	margin-left:-244px;
+}
+.tencent_qqapi_popwin a{
+	color:#21659a;
+	text-decoration:none;
+}
+.tencent_qqapi_popwin a:hover{
+	text-decoration:underline;
+}
+.tencent_qqapi_popwin .tencent_qqapi_pheader{
+	height:21px;
+	background-position:0 -452px;
+	color:#FFF;
+	padding:8px;
+	font-weight:bold;
+	position:relative;
+	font-size:14px;
+	z-index:9999;
+}
+.tencent_qqapi_popwin .tencent_qqapi_close{
+	background-position:-186px -781px;
+	display:block;
+	height:12px;
+	width:13px;
+	border:none;
+	position:absolute;
+	right:10px;
+	top:10px;
+	cursor:pointer;
+	text-indent:-999em;
+	z-index:9999;
+}
+.tencent_qqapi_popwin .tencent_qqapi_pcontent{
+	background:url(http://resource.app.qq.com/api/images/bg_block.jpg) repeat-x;
+	padding-top:20px;
+	z-index:9999;
+}
+.tencent_qqapi_popwin .tencent_qqapi_pcontent .tencent_qqapi_tip{
+	font-weight:bold;
+	margin-left:30px;
+	margin-bottom:15px;
+	line-height:1.5;
+	z-index:9999;
+}
+.tencent_qqapi_popwin .tencent_qqapi_pcontent .tencent_qqapi_popimg{
+	background:url(http://resource.app.qq.com/api/images/pop_install.jpg) no-repeat;
+	height:90px;
+	margin-left:30px;
+	line-height:1.5;
+	z-index:9999;
+}
+.tencent_qqapi_popwin .tencent_qqapi_step{
+	line-height:1.5;
+	margin-bottom:15px;
+}
+.tencent_qqapi_popwin .tencent_qqapi_step span{
+	margin:0 15px 0 28px;
+	color:#617482;
+	z-index:9999;
+}
+.tencent_qqapi_popwin .tencent_qqapi_pcontent .tencent_qqapi_popinstall{
+	margin-bottom:0;
+	background:url(http://resource.app.qq.com/api/images/downloadapp.jpg) no-repeat 122px 13px;
+	height:75px;
+	line-height:1.5;
+	z-index:9999;
+}
+.tencent_qqapi_popwin .tencent_qqapi_pcontent .tencent_qqapi_downloadapp{
+	width:250px;
+	display:inline-block;
+	height:40px;
+	text-indent:-999em;
+	margin:15px 10px 0 120px;
+	text-indent:0;
+	line-height:200px;
+	overflow:hidden;
+	color:#21659A;
+	z-index:9999;
+}
+.tencent_qqapi_popwin .tencent_qqapi_pcontent .tencent_qqapi_detailmsg{
+	line-height:16px;
+	vertical-align:bottom;
+	z-index:9999;
+}
+.tencent_qqapi_popwin .tencent_qqapi_pfooter{
+	height:30px;
+	background-color:#eef3f5;
+	padding:15px 0 0 10px;
+	font-size:12px;
+	z-index:9999;
+}
+
+ .tencent_qqapi_pcontentp{
+    line-height: 1.5;
+    margin-bottom: 15px;
+	text-align: center;
+	font-size: 16px;
+}
+
+ .tencent_qqapi_pcontentPtip{
+	text-align: center;
+	line-height:1.5;
+	color:#5C5C5C
+}
+

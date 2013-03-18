@@ -13,8 +13,7 @@
         </a></li>
 
         <li id="category"><a href="/tags" class="usename" hidefocus="hidefocus">分类</a></li>
-        <li><a href="http://home.duokan.com/index.html" target="_blank" hidefocus="hidefocus">客户端</a></li>
-        <li><a href="http://bbs.duokan.com/" target="_blank" hidefocus="hidefocus">论坛</a></li>
+        <li><a href="/client.jsp" target="_blank" hidefocus="hidefocus">客户端</a></li>
       </ul>
     </nav>
     <div class="w-search">
