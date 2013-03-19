@@ -354,6 +354,9 @@
 					var content = "";
 					for ( var i = 0; i < data.count; i++) {
 						item = data.items[i];
+						if(!item) {
+							break;
+						}
 						content += buildCategory(item);
 					}
 					$('#category_list').append(content);

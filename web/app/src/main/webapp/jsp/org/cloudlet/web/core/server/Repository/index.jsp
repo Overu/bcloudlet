@@ -1211,7 +1211,7 @@
             </ul>
           </div>
         </div>
-        <div class="w-box">
+        <!-- <div class="w-box">
           <div class="m-reader">
             <div class="w-ttl4">
               <h3>
@@ -1226,8 +1226,8 @@
                   href="http://www.duokan.com/download/android" hidefocus="hidefocus"><span></span>Android</a>
               </div>
             </div>
-          </div>
-          <div class="m-readerhelp">
+          </div> -->
+          <!-- <div class="m-readerhelp">
             <div class="tab">
               <ul>
                 <li class="step1"><a class="crt" href="javascript:void(0);" hidefocus="hidefocus">选书</a></li>
@@ -1253,20 +1253,19 @@
             </div>
             <a href="javascript:void(0);" class="prev dk-prev" hidefocus="hidefocus"></a><a href="javascript:void(0);" class="next dk-next"
               hidefocus="hidefocus"></a>
-          </div>
-        </div>
+          </div> 
+        </div>-->
         <div class="w-box">
           <div class="w-other">
             <h4>商务合作</h4>
-            <p>刘阳</p>
-            <a class="qq" href="tencent://message/?uin=319896383" hidefocus="hidefocus">319896383</a> <a class="sina"
-              href="http://weibo.com/u/3181359071" hidefocus="hidefocus">weibo.com/u/3181359071</a> <a class="mail"
-              href="mailto:lujuan@xiaomi.com" hidefocus="hidefocus">yang.liu@xiaomi.com</a>
+            <p>张景全</p>
+            <a class="qq" href="tencent://message/?uin=283883119" hidefocus="hidefocus">283883119</a> <a class="sina"
+              href="http://t.qq.com/zhangjqd/profile?pgv_ref=im.perinfo.icon&ptlang=2052" hidefocus="hidefocus">weibo.com/u/283883119</a> <a
+              class="mail" href="mailto:zhangjqd@vip.qq.com" hidefocus="hidefocus">zhangjqd@vip.qq.com</a>
           </div>
           <div class="w-other">
             <h4>反馈邮箱</h4>
-            <a class="mail" href="mailto:readerfeedback@duokan.com?subject=%E4%B9%A6%E5%9F%8E%E9%97%AE%E9%A2%98%E5%8F%8D%E9%A6%88"
-              hidefocus="hidefocus">readerfeedback@duokan.com</a>
+            <a class="mail" href="mailto:zhangjqd@vip.qq.com" hidefocus="hidefocus">zhangjqd@vip.qq.com</a>
           </div>
         </div>
       </div>
