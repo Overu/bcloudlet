@@ -45,7 +45,7 @@ public class Books extends Folder<Book> {
   }
 
   @GET
-  @Path("{path}")
+  @Path("/{path}")
   public Response defaultForward(@PathParam("path") String path) {
     java.net.URI location = null;
     try {

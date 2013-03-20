@@ -12,7 +12,7 @@
         <li id="bargain"><a href="/books/r/free" hidefocus="hidefocus">精品<span class="dot">·</span>特价
         </a></li>
 
-        <li id="category"><a href="/tags" class="usename" hidefocus="hidefocus">分类</a></li>
+        <li id="category"><a href="/books/t" class="usename" hidefocus="hidefocus">分类</a></li>
         <li><a href="/client.jsp" target="_blank" hidefocus="hidefocus">客户端</a></li>
       </ul>
     </nav>
