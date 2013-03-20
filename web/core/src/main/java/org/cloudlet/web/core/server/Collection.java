@@ -55,6 +55,11 @@ public abstract class Collection<E extends Item> extends Content {
   @Transient
   protected Long count;
 
+  @Override
+  public void addJoin(StringBuilder sql) {
+    sql.append(getEntryType().getName()).append(" e");
+  }
+
   public void buildSearch(StringBuilder sql) {
     if (search != null && search.size() > 0) {
       sql.append(" and (");
@@ -80,7 +85,8 @@ public abstract class Collection<E extends Item> extends Content {
 
   public long countItems() {
     StringBuilder sql = new StringBuilder("select count(e) from ");
-    joinSQL(sql);
+    addJoin(sql);
+    addWhere(sql);
     prepareQuery(sql);
     buildSearch(sql);
     TypedQuery<Long> query = em().createQuery(sql.toString(), Long.class);
@@ -99,7 +105,8 @@ public abstract class Collection<E extends Item> extends Content {
     // cq.select(root_);
 
     StringBuilder sql = new StringBuilder("select e from ");
-    joinSQL(sql);
+    addJoin(sql);
+    addWhere(sql);
     prepareQuery(sql);
     buildSearch(sql);
     buildSort(sql);
@@ -163,13 +170,6 @@ public abstract class Collection<E extends Item> extends Content {
 
   public long getTotal() {
     return total;
-  }
-
-  @Override
-  public void joinSQL(StringBuilder sql) {
-    super.joinSQL(sql);
-    sql.append(getEntryType().getName()).append(" e");
-    sql.append(" where e.parent=:parent");
   }
 
   @Path(Collection.NEW)

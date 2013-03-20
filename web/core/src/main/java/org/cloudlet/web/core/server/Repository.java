@@ -74,19 +74,6 @@ public final class Repository extends Item {
     return orders;
   }
 
-  @Path("r/{rank}")
-  public BookQuery getRankedBooks(@PathParam("rank") String path) {
-    BookRank rank = BookRank.getByPath(path);
-    if (rank != null) {
-      BookQuery query = WebPlatform.get().getInstance(rank.type);
-      query.setParent(this);
-      query.setPath(path);
-      query.setRank(rank);
-      return query;
-    }
-    return null;
-  }
-
   @Path(TAGS)
   public Tags getTags() {
     return tags;

@@ -5,7 +5,7 @@
 <div id="navFix" class="w-tab1 rank-nav">
   <ul>
     <c:forEach var="i" items="${it.ranks}" varStatus="status">
-      <li class="<c:if test="${it.path eq i.path}">crt</c:if>"><a href="/r/${i.path}" hidefocus="hidefocus">${i.title}</a></li>
+      <li class="<c:if test="${it.path eq i.path}">crt</c:if>"><a href="/books/r/${i.path}" hidefocus="hidefocus">${i.title}</a></li>
     </c:forEach>
   </ul>
 </div>

@@ -7,6 +7,12 @@ import javax.persistence.TypedQuery;
 public abstract class Folder<E extends Item> extends Collection<E> {
 
   @Override
+  public void addWhere(StringBuilder sql) {
+    super.addWhere(sql);
+    sql.append(" where e.parent=:parent");
+  }
+
+  @Override
   public void setParams(TypedQuery query) {
     super.setParams(query);
     query.setParameter("parent", this);

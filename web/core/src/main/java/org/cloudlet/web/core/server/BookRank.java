@@ -2,8 +2,8 @@ package org.cloudlet.web.core.server;
 
 public enum BookRank {
 
-  HOT("畅销榜", "hot", BookQuery.class), MONTHLY("月度榜", "monthly", BookQuery.class), RATED("好评榜", "rated", BookQuery.class), FREE("免费榜",
-      "free", BookQuery.class), LATEST("最新上架", "latest", BookQuery.class);
+  HOT("畅销榜", "hot", RankedBooks.class), MONTHLY("月度榜", "monthly", RankedBooks.class), RATED("好评榜", "rated", RankedBooks.class), FREE("免费榜",
+      "free", RankedBooks.class), LATEST("最新上架", "latest", RankedBooks.class);
 
   public static BookRank getByPath(String path) {
     for (BookRank rank : values()) {
@@ -18,9 +18,9 @@ public enum BookRank {
 
   public final String path;
 
-  public final Class<? extends BookQuery> type;
+  public final Class<? extends RankedBooks> type;
 
-  private BookRank(String title, String path, Class<? extends BookQuery> type) {
+  private BookRank(String title, String path, Class<? extends RankedBooks> type) {
     this.title = title;
     this.path = path;
     this.type = type;
@@ -43,7 +43,7 @@ public enum BookRank {
   /**
    * @return the type
    */
-  public Class<? extends BookQuery> getType() {
+  public Class<? extends RankedBooks> getType() {
     return type;
   }
 

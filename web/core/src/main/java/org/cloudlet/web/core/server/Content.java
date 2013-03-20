@@ -126,7 +126,7 @@ public abstract class Content {
   protected User owner;
 
   @Type(type = ContentType.NAME)
-  @Columns(columns = { @Column(name = "parentType"), @Column(name = "parentId") })
+  @Columns(columns = {@Column(name = "parentType"), @Column(name = "parentId")})
   protected Content parent;
 
   public static final String SEARCH = "search";
@@ -151,9 +151,15 @@ public abstract class Content {
 
   public static final String URI = "uri";
 
+  public void addJoin(StringBuilder sql) {
+  }
+
+  public void addWhere(StringBuilder sql) {
+  }
+
   @POST
-  @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
-  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_ATOM_XML })
+  @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
+  @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_ATOM_XML})
   public final Content create() {
     Content content = null;
     return createChild(content);
@@ -175,8 +181,8 @@ public abstract class Content {
   }
 
   @POST
-  @Consumes({ MediaType.MULTIPART_FORM_DATA })
-  @Produces({ MediaType.APPLICATION_JSON })
+  @Consumes({MediaType.MULTIPART_FORM_DATA})
+  @Produces({MediaType.APPLICATION_JSON})
   public Content createFromMultipartFormData(@Context UriInfo uriInfo, @HeaderParam("Content-Length") final Integer contentLength,
       @HeaderParam("Content-Type") final String contentType, final InputStream inputStream) {
     Content result = null;
@@ -362,22 +368,26 @@ public abstract class Content {
     return version;
   }
 
-  public void joinSQL(StringBuilder sql) {
-  }
-
   @GET
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml" })
+  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml"})
   public Content load() {
     doLoad();
     return this;
   }
 
   @GET
-  @Produces({ MediaType.TEXT_HTML })
+  @Produces({MediaType.TEXT_HTML})
   @Template
   public Content loadHtml() {
     doLoad();
     return this;
+  }
+
+  public <T extends Content> T newChild(String path, Class<T> clz) {
+    T result = WebPlatform.get().getInstance(clz);
+    result.setParent(this);
+    result.setPath(path);
+    return result;
   }
 
   public void readFrom(Content delta) {
