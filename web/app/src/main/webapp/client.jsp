@@ -60,7 +60,7 @@ div#wrap li a {
     <div id="content">
       <section class="inner">
         <article id="ios">
-          <header>多看阅读 for iOS</header>
+          <header>睿泰阅读 for iOS</header>
           <div class="box">
             <p class="meta">
               版本: 2.0.0 文件大小: 57.2MB<br> 适合机型: iOS 4.3+ 更新时间: 2013-03-09
@@ -81,7 +81,7 @@ div#wrap li a {
           <img class="preview" src="/static/lib/images/device.ios.png" alt="duokan for ios preview"> <i class="name">ios</i>
         </article>
         <article id="android">
-          <header>多看阅读 for Android</header>
+          <header>睿泰阅读 for Android</header>
           <p class="meta">
             版本: 1.9.1 文件大小: 8.2MB<br> 适合机型: Android 2.2+ 更新时间: 2012-12-18
           </p>
