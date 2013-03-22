@@ -56,7 +56,7 @@
           <div class="w-box2">
             <div class="w-ttl">
               <h3>推荐阅读</h3>
-              <a href="/r/%E7%83%AD%E9%97%A8%E6%8E%A8%E8%8D%90" class="w-more" hidefocus="hidefocus">更多</a>
+              <a href="/books/r/recommendation" class="w-more" hidefocus="hidefocus">更多</a>
             </div>
             <div class="w-booklist">
               <ul id="boutiquebook">
@@ -432,7 +432,7 @@
           <div class="w-box2">
             <div class="w-ttl">
               <h3>最新上架</h3>
-              <a href="/r/%E6%9C%80%E6%96%B0" class="w-more" hidefocus="hidefocus">更多</a>
+              <a href="/books/r/latest" class="w-more" hidefocus="hidefocus">更多</a>
             </div>
             <div class="w-booklist">
               <ul id="newbook">
@@ -713,7 +713,7 @@
           <div class="w-box2">
             <div class="w-ttl">
               <h3>最新特价</h3>
-              <a href="/r/%E9%99%90%E5%85%8D%E7%89%B9%E4%BB%B7" class="w-more" hidefocus="hidefocus">更多</a>
+              <a href="/books/r/newsale" class="w-more" hidefocus="hidefocus">更多</a>
             </div>
             <div class="w-booklist">
               <ul id="special-offer">

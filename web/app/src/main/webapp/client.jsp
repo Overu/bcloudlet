@@ -43,9 +43,9 @@ div#wrap>header>div {
   margin: 0 auto;
 }
 
-div#wrap li a {
+/* div#wrap li a {
   color: rgb(89, 182, 3);
-}
+} */
 </style>
 </head>
 <body>
@@ -53,7 +53,7 @@ div#wrap li a {
     <jsp:include page="/jsp/org/cloudlet/web/core/server/header.jsp"></jsp:include>
     <div id="brand">
       <div class="slide"
-        style="height: 303px; margin-top: 0px; margin-bottom: 29px; background: url(/static/lib/images/webbookstor-bg.jpg) repeat-x 0 0;">
+        style="height: 303px; margin-top: 0px; margin-bottom: 29px; background: url(/static/lib/images/webbookstor-bg2.jpg) repeat-x 0 0;">
         <!-- <a href="http://book.duokan.com/"><img src="./client_files/webbookstor.png"></a> -->
       </div>
     </div>
