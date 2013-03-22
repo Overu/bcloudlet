@@ -76,10 +76,10 @@
               <!--w-page-->
 
               <div class="w-page">
-                <div class="wrap">
-                  <a href="javascript:void(0);" class="pre init" hidefocus="hidefocus">上一页</a>
+                 <div class="wrap">
+                <a href="javascript:void(0);" class="pre init" hidefocus="hidefocus">上一页</a>
                   <ul id="bookpage-a">
-
+ <!-- 
                     <li class="crt"><a href="javascript:void(0);" hidefocus="hidefocus">1</a></li>
 
                     <li class=""><a href="/%E4%BC%A0%E8%AE%B0/c/13-2" hidefocus="hidefocus">2</a></li>
@@ -89,10 +89,10 @@
                     <li class="ellipsis">...</li>
 
                     <li class=""><a href="/%E4%BC%A0%E8%AE%B0/c/13-12" hidefocus="hidefocus">12</a></li>
-
+-->
                   </ul>
                   <a href="/%E4%BC%A0%E8%AE%B0/c/13-2" class="next " hidefocus="hidefocus">下一页</a>
-                </div>
+                </div> 
               </div>
 
               <!--w-page-->
@@ -124,7 +124,7 @@
   </div>
   <script>
 			seajs.use([ 'duokan/store/1/page/book',
-					'duokan/store/1/page/patched' ])
-		</script>
+					'duokan/store/1/page/patched', 'duokan/store/1/page/test' ]);
+	</script>
 </body>
 </html>

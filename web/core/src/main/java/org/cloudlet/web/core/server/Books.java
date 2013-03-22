@@ -78,10 +78,10 @@ public class Books extends Folder<Book> {
   }
 
   @Path("r/{rank}")
-  public RankedBooks getRankedBooks(@PathParam("rank") String path) {
+  public SalesBooks getRankedBooks(@PathParam("rank") String path) {
     BookRank rank = BookRank.getByPath(path);
     if (rank != null) {
-      RankedBooks query = newChild(path, rank.type);
+      SalesBooks query = newChild(path, rank.type);
       query.setRank(rank);
       return query;
     }
