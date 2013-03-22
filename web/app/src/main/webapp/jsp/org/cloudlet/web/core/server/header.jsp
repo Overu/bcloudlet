@@ -14,6 +14,7 @@
 
         <li id="category"><a href="/books/t" class="usename" hidefocus="hidefocus">分类</a></li>
         <li><a href="/client.jsp" target="_blank" hidefocus="hidefocus">客户端</a></li>
+        <li><a href="/admin" target="_blank" hidefocus="hidefocus">管理</a></li>
       </ul>
     </nav>
     <div class="w-search">
