@@ -1,0 +1,356 @@
+﻿<html>
+<head>
+<title>精品推荐</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable = no">
+<link rel="stylesheet" href="static/ipad.css">
+<script language="javascript" src="/__duokan_appapi/libs/jquery/jquery-1.7.2.min.js"></script>
+<script language="javascript" src="static/ios_support.js"></script>
+</head>
+<body >
+<!---上方循环展示条--->
+<div id="scroll">
+  <div id="wrapper"> </div>
+  <div id="bar">
+    <center>
+    </center>
+  </div>
+</div>
+
+<!---推荐列表--->
+<div class="recommend_section initial_hide" onclick="">
+	<h2>重磅推荐<span><a href="ipad_book_list.html?type=recommend">查看更多<div class="recommend_section_arrow"></div></a></span></h2>
+</div>
+<ul class="book_list initial_hide no_mar_padd">
+</ul>
+<div class="zt_banner initial_hide"><div class='top_border'></div><div class='ads_box'></div></div>
+
+<!---最新上架--->
+<div class="recommend_section initial_hide" onclick="">
+	<h2>最新上架<span><a href="ipad_book_list.html?type=fresh">查看更多<div class="recommend_section_arrow"></div></a></span></h2>
+</div>
+<ul class="book_list initial_hide no_mar_padd">
+</ul>
+<div class="zt_banner zt_banner_last initial_hide"><div class='top_border'></div><div class='ads_box'></div></div>
+
+<div class='no_result' style='display:none'>暂无数据，请稍候再试！</div>
+<script language="javascript">
+var recommend_count = 9;	// 推荐数
+var fresh_count = 9;			// 最新上架数
+var maxBanners = [4, 4];	// 每个二级广告条允许的最多广告数
+var current_direct = null;
+var slide = null
+var build = getCookie('build');
+if (build == null) build = getArgs('build');
+var device = getCookie('device');
+var device = "D002-F5805035-921D-4426-BF91-81F65004FEFC";
+if (device == null) device = getArgs('device');
+
+function hideAll() {
+  $('#scroll').hide();
+  $('.recommend_section').hide();
+  $('.book_list').hide();
+  $('.zt_banner').hide();
+  $('.no_result').show();
+}
+
+function hideUnusedCells() {
+  if (current_direct == null)
+    return;
+  
+  $('.book_list').each(function() {
+	  var cells = $(this).children('li');
+	  cells.show();
+	  var count = cells.size();
+	  if (current_direct == 'h')
+	    count = count%3;
+	  else
+	    count = count%2;
+	  
+		for (var i = cells.size() - count; i < cells.size(); i++) {
+			cells.eq(i).hide();
+		}
+  });
+}
+
+function changeStauts(book_id, status, content_type) {
+  if (content_type == 'full') {
+    var p = $('.book_list li[book_id="' + book_id + '"]');
+    if (p.size() > 0) {
+      p.find('.price').attr('status', '').attr('free', '');
+      p.find('.price p:nth-child(2)').html('');
+      
+      if (status == 'notstarted') {
+        p.find('.price p:nth-child(1)').html('已购买');
+      } else if (status == 'downloading') {
+        p.find('.price').attr('status','downloading').find('p:nth-child(1)').html('下载中');
+      } else if (status == 'downloaded') {
+        p.find('.price').attr('status','downloaded').find('p:nth-child(1)').html('已下载');
+      } else if (status == 'update') {
+        p.find('.price p:nth-child(1)').html('有更新');
+      }
+    }
+  }
+}
+function refreshStatus() {
+  $.getJSON('/__duokan_appapi/data/books/purchased.json', function(data) {
+      for (var i in data) {
+        changeStauts(data[i].book_id, data[i].status, data[i].contenttype);
+      }
+  });
+}
+
+function buildBook(book) {
+  var li = "<li book_id=" + book.id + " >"
+    + "<img class=cover _src=" + book.coverUrl + " />";
+  
+  if (book.hasOwnProperty('new_price')) {
+    if (book.new_price == 0) {
+      li += "<div class=price status=discount free=yes><p>免费</p><p>￥"
+        + book.price.toFixed(2) + "</p></div>";
+    } else {
+      li += "<div class=price status=discount><p>￥" + book.new_price.toFixed(2)
+        + "</p><p>￥" + book.price.toFixed(2) + "</p></div>";
+    }
+  } else if (book.price == 0) {
+    li += "<div class=price free=yes><p>免费</p></div>";
+  } else {
+    li += "<div class=price><p>￥" + book.price.toFixed(2) + "</p></div>";
+  }
+  
+  li += "<p class=title>" + book.title + "</p>"
+  if ((book.authors == null || book.authors == ""||book.authors == undefined ) && (book.editors == null || book.editors == ""|| book.editors ==  undefined)){
+    li += "<p class=author>作者：未知</p>";
+  } else if (book.authors == null || book.authors == ""||book.authors == undefined){
+    li += "<p class=author>编者："+book.editors+"</p>";
+  } else if(book.authors != null &&book.authors != ""&&book.authors != undefined){
+    li += "<p class=author>作者：" + book.authors + "</p>"; 
+  }
+  li+= "<p class=abst>" + book.summary + "</p>";
+  li = $(li);
+  li.click(function () {
+    navigateTo(ipadBookURL(book.id, book.title));
+  });
+  
+  return li;
+}
+
+function buildList(list) {
+  var li = "<li list_id=" + list.list_id + " >"
+    + "<img class=cover _src=" + list.cover + " />"
+    + "<p class=l_name>" + list.label  + "</p>"
+    + "<p class=ts>" + list.description + "</p>"
+    + "<p class=time>创建时间：" + list.updated + "</p>"
+    + "<img src='static/zhuanti.png' class=special_list />";
+  
+  if (list.weight > 10000) {
+    // 权重大于10000认为是重点推荐
+    li += "<div class=hot>热<span class=top></span></div>";
+  } else {
+    var now = new Date();
+    if(now.getTime()-parseDate(list.updated) < 259200000) {
+      // 3天内
+      li += "<div class=new>新<span class=top></span></div>";
+    }
+  }
+  
+  li += "</li>";
+  
+  li = $(li);
+  li.click(function () {
+    navigateTo(ipadListURL(list.list_id, list.label));
+  });
+  
+  return li;
+}
+
+function getItems(data, index) {
+  if (data.hasOwnProperty('items')) {
+      if (data) {
+      var content = "";
+      for (var i=0; i<data.limit; i++) {
+        item = data.items[i];
+        if(!item) {
+        	return;
+        }
+        if (item.hasOwnProperty('id'))
+          content = buildBook(item);
+        else
+          content = buildList(item);
+        $('.book_list').eq(index).append(content);
+        setHover(content);
+      }
+      
+      if (data.limit == 0) {
+        hideAll();
+      } else {
+        $('.recommend_section').eq(index).removeClass('initial_hide');
+        $('.book_list').eq(index).removeClass('initial_hide');
+        hideUnusedCells();
+        refreshStatus();
+        lazyLoadImage('img[_src]');
+      }
+    } else {
+      handleError(data.result, hideAll);
+    }
+  }
+}
+
+function getRecommendItems(data) {
+	return getItems(data, 0);
+}
+
+function getFreshItems(data) {
+	return getItems(data, 1);
+}
+
+function appendBannerAd(banner, adData) {
+  var c = $('<span><img _src="'+adData.ad_pic_url+'"/></span>');
+  var f = (function (ad) {
+    return function () {
+      if (ad.ad_type == 1) {
+        navigateTo(ipadBookURL(ad.reference_id, ad.ad_name));
+      } 
+     else if (ad.ad_type == 2) {
+       navigateTo(ipadListURL(ad.reference_id, ad.ad_name));
+     }
+     else if (ad.ad_type == 3) {
+       navigateTo(ad.reference_id);
+     }
+   }
+  })(adData);
+  c.click(f);
+  banner.append(c);
+}
+
+function getBanner(data) { //生成banner;
+  if (!data.hasOwnProperty('ads') || !data.hasOwnProperty('count')|| !data.hasOwnProperty('code') ) {
+  	handleError(status.UNEXPECTED_ERROR, function() {return flase});
+  }
+  else if(data.code == 0){ 
+    if(data.count <= 0){
+      return false;
+    }
+    
+    var endIndex = 0;
+    for (var k = 0; k < maxBanners.length; k++) {
+    	var startIndex = endIndex;
+    	endIndex += maxBanners[k];
+    	if (startIndex >= data.count) {
+    		break;
+    	}
+    	
+	  	$('.zt_banner').eq(k).removeClass('initial_hide');
+	  	var adsbox = $('.ads_box').eq(k);
+	  	for (var i = startIndex; i < Math.min(data.count, endIndex); i++) {
+	  		appendBannerAd(adsbox, data.ads[i]);
+			}
+    }
+  	
+    lazyLoadImage('img[_src]');
+  }
+}
+
+function getAds(data) {
+  if (data.hasOwnProperty('code') && data.code == 0 && data.hasOwnProperty('count') && data.count > 0) {
+    var count = data.count < 6 ? data.count : 5;
+    $('#wrapper').css('width', count+'00%');
+    for (var i = 0; i < count; i++) {
+      var s, b;
+      s = $("<div class=slide><img /></div>");
+      s.find('img').attr('_src', data.ads[i].ad_pic_url);
+      
+      var f = (function (ad) {
+        return function () {
+          if (ad.ad_type == 1) {
+            navigateTo(ipadBookURL(ad.reference_id));
+          } else if (ad.ad_type == 2) {
+            navigateTo(ipadListURL(ad.reference_id));
+          } else if (ad.ad_type == 3) {
+            navigateTo(ad.reference_id);
+          }
+        }
+      })(data.ads[i]);
+      
+      s.click(f);
+      
+      if (count != 1) {
+        if (i == 0)
+          b = "<div class=circle active=yes></div>";
+        else
+          b = "<div class=circle></div>";
+      }
+      
+      $('#wrapper').append(s);
+      $('#bar center').append(b);
+    }
+    
+    $('#wrapper img').eq(0).load(function () {
+      if (count != 1) {
+        slide = bindTouchScroll('#wrapper .slide', function (index) {
+          $('#bar div').removeAttr('active');
+          $('#bar div').eq(index).attr('active', 'yes');
+        }, 7000);
+      }
+    });
+  
+    lazyLoadImage('img[_src]');
+  }
+}
+
+// api
+function dkSetLayout(direct) {
+  current_direct = direct;
+  hideUnusedCells();
+}
+function dkWillShowPage() {
+  refreshStatus();
+  if (slide != null)
+    slide.start();
+}
+function dkWillHidePage () {
+  if (slide != null) {
+    slide.stop();
+  }
+}
+function dkGetBgColor() {
+  return '[204,204,204]';
+}
+
+$(document).ready(function () {
+  /* $('body').ajaxError(function () {
+	  window.alert("body");
+    hideAll();
+  }); */
+
+  $.ajax({
+    url: '/books?start=0&limit='+recommend_count,
+    success: getRecommendItems,
+    dataType: 'json',
+    complete: function () {
+ 			setTimeout(notifyAppLoaded, 100);
+    }
+  });
+		
+  $.ajax({
+    url: '/books?start=11&limit='+recommend_count,
+    success: getFreshItems,
+    dataType: 'json'
+  });
+  
+  $.ajax({
+    url: '/store/v0/ad.key=main&deviceid=D002-F5805035-921D-4426-BF91-81F65004FEFC&build=2012120701.json',
+    success: getAds,
+    dataType: 'json'
+  });
+ 
+  $.ajax({
+    url:'/store/v0/ad.key=ipad_r2&deviceid=D002-F5805035-921D-4426-BF91-81F65004FEFC&build=2012120701.json',
+    success: getBanner,
+    dataType: 'json',
+  });
+});
+</script>
+</body>
+</html>

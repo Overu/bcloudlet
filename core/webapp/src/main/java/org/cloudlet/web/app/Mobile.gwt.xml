@@ -1,0 +1,13 @@
+<module rename-to='mobile'>
+  <inherits name='org.cloudlet.web.core.Core' />
+  <source path='client' />
+  <source path='shared' />
+
+  <extend-configuration-property name="gin.module" value="org.cloudlet.web.core.client.mobile.MobileClientModule" />
+
+  <!-- Default Locale. -->
+  <extend-property name="locale" values="zh" />
+  <set-property name="locale" value="zh" />
+  <set-property-fallback name="locale" value="zh" />
+
+</module>

@@ -18,7 +18,7 @@
     <slf4j.version>1.6.1</slf4j.version>
     <jsp.version>2.0</jsp.version>
     <jstl.version>1.2</jstl.version>
-    
+
     <datanucleus.version>3.0.2</datanucleus.version>
     <hibernate.version>4.1.0.Final</hibernate.version>
 
@@ -693,11 +693,11 @@
             <wtpversion>2.0</wtpversion>
             <additionalBuildcommands>
               <buildCommand>
-                <name>com.google.gwt.eclipse.core.gwtProjectValidator</name>
+                <!-- <name>com.google.gwt.eclipse.core.gwtProjectValidator</name> -->
               </buildCommand>
             </additionalBuildcommands>
             <additionalProjectnatures>
-              <projectnature>com.google.gwt.eclipse.core.gwtNature</projectnature>
+              <!-- <projectnature>com.google.gwt.eclipse.core.gwtNature</projectnature> -->
               <!-- <projectnature>com.google.appengine.eclipse.core.gaeNature</projectnature> -->
             </additionalProjectnatures>
           </configuration>
@@ -801,6 +801,9 @@
     <!-- <repository> <id>thirdparty</id> <url>http://dev.retechcorp.com:8081/nexus/content/repositories/thirdparty</url> </repository> -->
   </repositories>
   <modules>
-    <module>web</module>
+    <module>boot</module>
+    <module>test</module>
+    <module>logging</module>
+    <module>core</module>
   </modules>
 </project>

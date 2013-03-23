@@ -1,0 +1,91 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+  xmlns:o="urn:import:org.apache.xpath.operations">
+
+  <!-- <ui:style field='landscape' src='bookSummary.landscape.css' type='org.cloudlet.web.core.client.mobile.BookSummary.BookSummaryStyle'> 
+    </ui:style> -->
+
+  <ui:style>
+/*
+.root {
+ float: left;
+ border: 1px dashed gray;
+height: 100px;
+}
+ */
+    .left {
+      padding: 5px;
+    }
+    
+    .image {
+      width: 50px !important;
+      height: 80px !important;
+      background-color: #cccccc;
+      padding: 5px;
+      background-size: cover!important;
+    }
+    
+    .right {
+      display: -webkit-box;
+      -webkit-box-flex: 1;
+    }
+    
+    .information {
+      margin: 8px 0 0 0;
+      -webkit-box-flex: 1;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+    }
+    
+    .ellipsis {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    
+    
+    .title {
+      font-weight: 600;
+      font-size: 1.1em;
+    }
+    
+    .author {
+      color: gray;
+      margin: 10px 0 0 0;
+      font-size: 0.8em;
+    }
+    
+    .description {
+      font-size: 0.8em;
+      color: gray;
+      -webkit-box-flex: 1;
+      margin: 10px 0 0 0;
+     
+    }
+    
+    .price {
+      -webkit-box-pack: center;
+      -webkit-box-orient: vertical;
+      display: -webkit-box;
+      font-size: 0.8em;
+      margin: 0 15px;
+    }
+  </ui:style>
+
+  <g:FlowPanel ui:field="root">
+    <g:HTMLPanel ui:field="leftPanel" styleName="{style.left}">
+      <g:Image ui:field="bookImage" styleName="{style.image}"></g:Image>
+    </g:HTMLPanel>
+    <g:HTMLPanel ui:field="rightPanel" styleName="{style.right}">
+      <g:HTMLPanel styleName="{style.information}">
+        <g:Label ui:field="titleLabel" styleName="{style.title} {style.ellipsis}"></g:Label>
+        <g:Label ui:field="authorLabel" styleName="{style.author}"></g:Label>
+        <g:Label ui:field="descLabel" styleName="{style.description} {style.ellipsis}"></g:Label>
+      </g:HTMLPanel>
+      <div class="{style.price}">
+        <div ui:field="originalPrice"></div>
+        <div ui:field="discountedPrice"></div>
+      </div>
+    </g:HTMLPanel>
+  </g:FlowPanel>
+</ui:UiBinder>

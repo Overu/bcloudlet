@@ -1,0 +1,146 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+  <ui:style type="org.cloudlet.web.core.client.mobile.HeaderView.HeaderViewStyle">
+    .root {
+      position: relative;
+      z-index: 100;
+      padding: 0 0 25px;
+      height: 62px;
+      width: 1010px;
+      margin: 0 auto;
+    }
+    
+    @sprite 
+    .logo {
+      gwt-image: "sprite";
+      float: left;
+      width: 175px !important;
+      height: 62px !important;
+      background-position: 0px 0px !important;
+    }
+    
+    .nav {
+      margin: 0 0 0 227px;
+      padding-top: 33px;
+    }
+    
+    .nav>ul>li {
+      float: left;
+      padding: 0 12px;
+      font: 700 16px/20px STheiti, microsoft yahei;
+      color: rgb(112, 70, 40);
+      cursor: pointer;
+    }
+    
+    .nav>ul>li:HOVER {
+      color: rgb(155, 130, 112);
+    }
+    
+    .navactive {
+      color: rgb(255, 106, 4) !important;
+    }
+    
+    .search {
+      position: absolute;
+      right: 145px;
+      top: 28px;
+      width: 200px;
+      z-index: 100;
+      text-align: left;
+    }
+    
+    @sprite 
+    .search>a {
+      gwt-image: "sprite";
+      display: block;
+      height: 28px;
+      width: initial;;
+      border-radius: 14px;
+      background-color: rgb(220, 215, 210);
+background-position: 6px -91px;
+    }
+    
+    .search>a>input {
+      width: 146px;
+      height: 24px;
+      margin-left: 28px;
+      border: 0;
+      background: transparent;
+      line-height: 20px;
+      padding-top: 3px;
+      color: rgb(153, 153, 153);
+      font-family: 'microsoft yahei';
+      outline: 0;
+    }
+    
+    @sprite 
+    .search>a>span {
+      gwt-image: "sprite";
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 28px;
+      width: 22px;
+      background-position: 0 -63px;
+      cursor: pointer;
+    }
+    
+    .search>a:HOVER,.inputting {
+      -webkit-transition: background-color .08s ease-in;
+      background-position: 6px -130px !important;
+      background-color: rgb(102, 102, 102) !important;
+      text-decoration: none !important;
+    }
+    
+    .search>a:HOVER>input,.inputting>input {
+      color: white !important;
+    }
+    
+    .login {
+      position: absolute;
+      top: 34px;
+      right: 5px;
+      z-index: 200
+    }
+    
+    .login>a {
+      font-size: 12px;
+      font-family: 'microsoft yahei';
+      color: rgb(112, 70, 40);
+      margin-left: 15px;
+      outline: 0;
+      text-decoration: none;
+    }
+  </ui:style>
+
+  <ui:image field="sprite" />
+  <g:HTMLPanel addStyleNames="{style.root}">
+    <div ui:field="logoElm" class="{style.logo}"></div>
+    <div class="{style.nav}">
+      <ul mobile="" ui:field="navUlElm">
+        <li ui:field="indexElm">首页</li>
+        <li ui:field="rankElm">排行榜</li>
+        <li ui:field="bargainElm">
+          精品
+          <span style="font-family: 'simsun';">·</span>
+          特价
+        </li>
+        <li ui:field="categoryElm">分类</li>
+        <li ui:field="clientElm">客户端</li>
+        <li ui:field="bbsElm">论坛</li>
+      </ul>
+    </div>
+    <div class="{style.search}">
+      <a herf="#">
+        <input ui:field="searchTextElm" type="text" placeholder="搜索书名或者作者..." />
+        <span ui:field="searchButton"></span>
+      </a>
+    </div>
+    <div class="{style.login}">
+      <a href="#">登录</a>
+      <a href="#">注册</a>
+    </div>
+  </g:HTMLPanel>
+</ui:UiBinder> 

@@ -1,0 +1,1435 @@
+﻿<html><head>
+  <title>书籍详情</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable = no">
+    <link rel="stylesheet" href="static/ipad.css">
+    <script language="javascript" src="/__duokan_appapi/libs/iscroll/iscroll.js"></script>
+    <script language="javascript" src="/__duokan_appapi/libs/jquery/jquery-1.7.2.min.js"></script>
+    <script language="javascript" src="static/ios_support.js"></script>
+</head>
+<body style='background: #EBEEF0'>
+  <!---图书基本信息--->
+  <div id="detail_basic">
+    <div class="detail_cover_wrapper"> 
+      <img class="detail_cover" />
+    </div>
+  
+<div class="detail_price_wrapper">
+  <div class="detail_price" style="display:none">购买</div>
+      <div class="detail_trial" style="display:none">免费试读</div>
+      <p class="detail_old_price"></p>
+    </div>
+
+    <div class="line"></div>
+    <div class="detail_author_label"></div>
+    <div class="detail_author"></div>
+    <div class="detail_published_label"></div>
+    <div class="detail_published"></div>
+    <p class="detail_issued"></p>
+    <p class="detail_updated"></p>
+    <p class="detail_size"></p>
+  </div>
+  <!---图书简介--->
+  <div id="detail_wrapper" class='initial_hide'>
+    <div id="detail_advanced">
+      <p class="detail_title"></p>
+      <div class="book_five"><ul class="five"><li></li><li></li><li></li><li></li><li></li></ul><span><a id="comment_url"><city class="total_commtents"></city></a></span></div>
+      <div id="detail_intro"></div>
+      <div id="comments_box">
+        <div id="reply_title2">
+          <div class="five_layout2">
+          	<span>我的评分</span>
+          	<span style="float: left; width: 10px;">&nbsp;</span>
+          	<ul class='five'><li></li><li></li><li></li><li></li><li></li></ul>
+          	<span class='star_word'>（ 快速评分 ）</span>
+          	</div>
+        </div>
+        <div class="comment_title"><h3>用户评论</h3>
+        	<span style="float: left; width: 20px;">&nbsp;</span>
+        	<div class="comment_order" active="yes" ontouchstart="showUseful()">最热</div>
+        	<div class="comment_order" ontouchstart="showNewest()">最新</div>
+        	<div class="comment_title_line"><span class="comment_title_line" style="display: none;"></span></div>
+        	<a href='javascript:;'class="iwantprly">我要评论</a>
+        </div>
+        <div class="no_comment1" style="display:none">暂无评论~</div>
+        <div class="Br_content">
+         <section id="inside_loading1"> <span>点击获取更多...</span><div class='spin'>&nbsp;</div></section>
+        </div>
+      </div>
+      
+      <!---相关图书--->
+      <div id="detail_related_label">看过此书的人还看过</div>
+			<div id="detail_related_scroll">
+				<div id="detail_related_wrapper"></div>
+			</div>
+			<div id="detail_related_placeholder"></div> <!--占用和detail_related_scroll同样的大小，解决iOS6上滑动闪烁-->
+			<div id="detail_related_bar"><center></center></div>
+      <div class="BdIntro" style="display:none">
+        <h2>更多图书信息</h2>
+        <dl></dl>
+      </div>
+      <div class="detail_changelog" style="display:none">
+        <h2>最近更新</h2>
+        <div class="changelog_wrapper">
+        	<ul>
+        		<li id="changelog_more"><div>共&nbsp<span id="changelog_count"></span>&nbsp次更新...</div></li>        	
+        	</ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class='no_result' style='display:none'>暂无数据，请稍候再试！</div>
+  <!--回复评论-->
+  <div id="write_reply" style='display: none' >
+    <h1><span>关闭</span><span class="publish_reply">回复</span>回复评论</h1>
+     <div id='reply_title3'>
+        <h2>回复:<p></p></h2>
+     </div>
+    <div class="reply_title">
+      <textarea cols="140" name="write_reply" class='replval'></textarea>
+    </div>
+  </div>
+<!--写书评-->
+  <div id="write_comment" style='display: none'>
+    <h1><span>关闭</span><span class="reply_send">发送</span>写书评</h1>
+     <div id="reply_title">
+       <div class="five_layout"><ul class='five'><li></li><li><li><li></li><li></li></ul></div>
+     </div>
+      <div id="title_box"><input name="title" class='ctitle' value="" /></div>
+      <form>
+         <textarea class='reply_box' name="reply_box"></textarea>
+      </form>
+  </div>
+<div class="balck_bc" style="display: none;"></div>
+<div class="white_bc" style="display: none;"></div>
+<span id='warning_pl' style="display: none;">请君购买后，再发表评论～</span>
+<span class='votesuccess' style="display: none;">投票成功</span>
+<span class='had_voted' style="display: none;">您已经投过票了~</span>
+<span class='addsuccess' style="display: none;">发送成功，审核中...</span>
+<span class='clickfast' style="display: none;">慢点，您发的太快了</span>
+<div id='add_load3' style='display:none; margin:0px auto;'><div class='spin'>&nbsp;</div></div>
+<img src='static/red_star.png'style='display: none;'>
+<img src='static/blue_star.png'style='display: none;'>
+<script>
+var current_direct = null;
+var scrollContent;
+var start=1;
+var scrollContent2;
+var b_id = getArgs('book_id');
+var ri=0;
+var send_lock='open';
+var commentClock='open';
+var titleVal='标题 （必填）';
+var contentVal='评论 （不得少于20个字）';
+var replVal='请输入回复内容';
+var related_books = null;
+function changeStauts(book_id, status, content_type) {
+  if (content_type == 'full') {
+    $('#detail_basic .detail_old_price').hide();
+    $('#detail_basic .detail_trial').hide();
+    $('#detail_basic .detail_price').attr('status', '');
+    
+    if (status == 'notstarted') {
+      $('#detail_basic .detail_price').html('下载');
+    } else if (status == 'downloading') {
+      $('#detail_basic .detail_price').attr('status', 'downloading').html('下载中');
+    } else if (status == 'downloaded') {
+      $('#detail_basic .detail_price').attr('status', 'downloaded').html('阅读');
+      openReading('div[status=downloaded]')
+       var build=getCookie('build');
+       if(build<2012090401){
+         $('div[status=downloaded]').unbind('click')
+         $('#detail_basic .detail_price').attr('status', 'downloaded2').html('已下载');
+       }
+    } else if (status == 'update') {
+      $('#detail_basic .detail_price').html('更新');
+    }
+    
+    if (status != 'notstarted') {
+		  var user_id = getCookie('userid');
+		  if (user_id == null) {
+		    user_id = getArgs('userid')
+		  }
+		  if(user_id!=null && user_id!='' && user_id != undefined) {
+			  $('#reply_title2').show();
+		    scrollContent.refresh();
+		  }
+		  getCommentQualification();
+    }
+  } else if (content_type == 'trial') {
+    if (status == 'downloading') {
+      $('#detail_basic .detail_trial').attr('status', 'downloading').html('下载试读中');
+    } else if (status == 'downloaded') {
+      $('#detail_basic .detail_trial').attr('status', 'downloaded').html('打开试读');
+      openReading('div[status=downloaded]')
+       var build=getCookie('build');
+       if(build<2012090401){
+         $('div[status=downloaded]').unbind('click')
+        $('#detail_basic .detail_trial').attr('status', 'downloaded2').html('已下载试读');
+       }
+    }
+  }
+}
+function refreshStatus() {
+  $.getJSON('/__duokan_appapi/data/books/purchased', function(data) {
+    var book_id = getCookie('book_id');
+      if (book_id == null) {
+      book_id = getArgs('book_id')
+    };
+      for (var i in data) {
+        if ( data[i].book_id == book_id ) {
+          changeStauts(data[i].book_id, data[i].status, data[i].contenttype);
+        }
+      }
+  });
+}
+//载入动画
+function loadingIconDetail(ele) {
+  notifyAppLoaded();
+  var spinner = new Spinner({
+    lines: 10,
+    length: 3,
+    width: 2,
+    radius: 4,
+    color: '#333',
+    speed: 1,
+    trail: 38,
+    shadow: false,
+    hwaccel: true, 
+    className: 'spinner',
+    top: 'auto',
+    left: 'auto'
+  });
+  var target = $(ele+' .spin')[0];
+    $(ele).show();
+    spinner.spin(target);
+}
+
+//载入动画
+function loadingIconDetail2(ele) {
+  notifyAppLoaded();
+  var spinner = new Spinner({
+    lines: 12,
+    length: 10,
+    width: 4,
+    radius: 15,
+    color: '#fff',
+    speed: 1,
+    trail: 38,
+    shadow: false,
+    hwaccel: true, 
+    className: 'spinner',
+    top: 'auto',
+    left: 'auto'
+  });
+  var target = $(ele+' .spin')[0];
+    $(ele).show();
+    spinner.spin(target);
+}
+
+function hideAll() { 
+ /*$('#detail_basic').hide();
+  $('#detail_wrapper').hide();
+  $('.no_result').hide();
+   $('.BdIntro').hide();*/
+  return false;
+}
+
+function buildContent(str) {
+  var sep = '\n';
+  if (str.search('\r\n') != -1)
+    sep = '\r\n';
+  var paras = str.split(sep+sep);
+  var content = "";
+  var regex = new RegExp(sep, 'g');
+  for (var i in paras) {
+    content += '<p>' + paras[i].replace(regex, '<br/>') + '</p>';
+  }
+  return content;
+}
+
+function noFind(wich){return  wich!=null&&wich!=undefined&&wich!="";}
+
+//更多版权信息
+function showEditor(data) {
+  if (noFind(data.book.editors)){$("<dd>编者："+buildContent(data.book.editors)+"</dd>").appendTo($('.BdIntro>dl'));$('.BdIntro').show();};
+  if (noFind(data.book.translators)){$("<dd>译者："+buildContent(data.book.translators)+"</dd>").appendTo($('.BdIntro>dl'));$('.BdIntro').show();};
+  if (noFind(data.book.illustrators)){$("<dd>插图："+buildContent(data.book.illustrators)+"</dd>").appendTo($('.BdIntro>dl'));$('.BdIntro').show();};
+  if (noFind(data.book.identifier)){$("<dd>书号："+buildContent(data.book.identifier)+"</dd>").appendTo($('.BdIntro>dl'));$('.BdIntro').show();};
+}
+
+function buildAuthor(str) {
+  var sep = '\n';
+  if (str.search('\r\n') != -1)
+    sep = '\r\n';
+  var content = "";
+  var paras = str.split(sep);
+  var count = paras.length > 2 ? 2 : paras.length;
+  for (var i = 0; i < count; i++) {
+    content += '<p>' + paras[i] + '</p>';
+  }
+  if (paras.length > 2) {
+    content += '<p>' + paras[3];
+    if (paras.length > 3) 
+      content += '&nbsp;等</p>';
+    else
+      content += '</p>';
+  }
+  return content;
+}
+
+function showBook(data) {
+  if (data.hasOwnProperty('id')) {
+    $('.detail_cover').attr('src', data.coverUrl);
+
+    $('.detail_author_label').html('<p>作者：</p>');
+    $('.detail_author').html('<p>retech</p>');
+    if ( (data.authors==null || data.authors==undefined || data.authors=="") && (data.editors==null||data.editors==undefined||data.editors=="")){
+      $('.detail_author_label').html('<p>作者：</p>');
+      $('.detail_author').html('<p>未知</p>');
+    } else if( data.authors!=null && data.authors!=undefined && data.authors!="" ){
+      $('.detail_author_label').html('<p>作者：</p>');
+      $('.detail_author').html(buildAuthor(data.book.authors));
+    } else if((data.authors==null || data.authors==undefined || data.authors=="") && (data.editors!=null||data.editors!=undefined||data.editors!="")){
+      $('.detail_author_label').html('<p>编者：</p>');
+      $('.detail_author').html('<p>'+data.editors+'</p>');
+    }
+    $('.detail_published_label').html('<p>版权：</p>');
+    if (data.rights==null||data.rights==undefined||data.rights=="")
+      $('.detail_published').html('<p>retech</p>');
+    else
+      $('.detail_published').html('<p>' + data.rights + '</p>');
+    
+	$('.detail_issued').html('出版：'+(data.issued? data.issued : "retech"));
+    $('.detail_updated').html('更新：'+ (data.updated ? data.updatad : "2012-01-02"));
+    
+    var price = data.price;
+    if (data.hasOwnProperty('price')) {
+      $('.detail_old_price').show();
+      $('.detail_old_price').html('￥'+price.toFixed(2));
+      price = data.price;
+    }
+    
+    if (price==0)
+      $('.detail_price').html('免费');
+    else
+      $('.detail_price').html('￥'+price.toFixed(2));
+    
+    $('.detail_title').html(data.title);
+    
+    $('#detail_wrapper').removeClass('initial_hide');
+    $('#detail_intro').html($(buildContent(data.summary)));
+    
+    $('div.detail_price').show();
+    $('div.detail_price').click(function () {
+      clickFullBook(data.id, data.title, data.fullUrl, data.coverUrl, price, data.revision);
+    });
+    setHover($('div.detail_price'));
+    if (data.book.hasOwnProperty('epub_size') && data.book.epub_size != null && data.book.epub_size > 0) {
+      $('.detail_size').html('大小：'+getSizeText(data.book.epub_size));
+    }
+    /* if (data.book.epub != null && data.book.epub != "") {
+      $('div.detail_price').show();
+      $('div.detail_price').click(function () {
+        clickFullBook(data.book.book_id, data.book.title, data.book.epub, data.book.cover, price, data.book.revision);
+      });
+      setHover($('div.detail_price'));
+      if (data.book.hasOwnProperty('epub_size') && data.book.epub_size != null && data.book.epub_size > 0) {
+        $('.detail_size').html('大小：'+getSizeText(data.book.epub_size));
+      }
+    } else {
+      $('div.detail_price').hide();
+    } */
+    
+    if (data.book.trial != null && data.book.trial != "") {
+      $('div.detail_trial').show();
+      $('div.detail_trial').click(function () {
+        clickTrialBook(data.book.book_id, data.book.title, data.book.trial, data.book.cover, data.book.revision);
+      });
+      setHover($('div.detail_trial'));
+    } else {
+      $('div.detail_trial').hide();
+    }
+    
+		
+		related_books = data.related;
+		buildRelatedBooks();
+    
+    notifyAppLoaded();
+    scrollContent.refresh();
+    refreshStatus();
+    
+    setTimeout(function () {
+      $('.detail_cover').attr('src', data.book.cover);
+      lazyLoadImageForIScroll('img[_src]','#detail_wrapper', '#detail_advanced');
+    }, 200);
+  } else {
+    handleError(data.result, hideAll);
+  }
+  
+  showEditor(data);
+  
+  scrollContent.refresh();
+}
+
+function showChangeLog(data) {
+  if (!data.hasOwnProperty('result') || !data.hasOwnProperty('items')
+      || data.v != 0
+      || data.result != Status.OK || data.items.length == 0) {
+    $('.detail_changelog').hide();
+  }
+  else if (data.result == Status.OK) {
+    $('.detail_changelog').show();
+    
+    var lastRow = $('#changelog_more');
+    var count = data.items.length;
+    for (var i = 0; i < count; i++) {
+    	var time = data.items[i].updated.split(' ')[0];
+    	var li = '<li>'+
+    					 '<div class="time">'+time+'</div>'+
+    					 '<div class="log">'+buildContent(data.items[i].log)+'</div>'+
+    					 '</li>';
+    	li = $(li);
+    	
+    	if (i != 0) {
+    		li.hide();
+    	}
+    	li.insertBefore(lastRow);
+    }
+    
+    if (count == 1) {
+    	lastRow.remove();
+    } else {
+    	$('#changelog_count').text(count);
+    	lastRow.click(function() {
+    		$('.changelog_wrapper li').show();
+    		lastRow.remove();
+			  scrollContent.refresh();
+    	});
+    }
+  }
+  
+  scrollContent.refresh();
+}
+
+function buildRelatedBooks() {
+	var pageSize = (current_direct == 'h') ? 5 : 3;
+	var count = related_books ? related_books.length : 0;
+	
+	// 不满一页则补足默认封面，否则显示整页
+	var pageCount = 0;
+	if (count <= pageSize) {
+		pageCount = 1;
+	} else {
+		if (count % pageSize != 0) {
+			count -= count % pageSize;
+		}
+		pageCount = count / pageSize;
+	}
+	
+	var wrapper = $('#detail_related_wrapper');
+	wrapper.empty();
+	wrapper.css('width', ''+pageCount+'00%');
+	var bar = $('#detail_related_bar center');
+	bar.empty();
+	
+	for (var i = 0; i < pageCount; i++) {
+		var page = $('<div class="detail_related_page"></div>');
+		page.css('width', ''+(100/pageCount)+'%');
+		wrapper.append(page);
+		
+		for (var j = 0; j < pageSize; j++) {
+			var index = i * pageSize + j;
+			var d = (index >= count) ? null : related_books[index];
+			var html = '<div class="detail_related_book">';
+			html += '<img class="related_cover"' + (d ? ' _src="' + d.cover + '"/>' : '/>');
+			html += '<p>'+ (d ? d.title : '') + '</p>';
+			html += '</div>';
+		
+			var book = $(html);
+			if (d) {
+				var f = (function(book) {
+	        return function() {
+	          navigateTo(ipadBookURL(book.book_id, book.title));
+	        }
+      	})(d);
+				book.click(f);
+			}
+			
+			page.append(book);
+		}
+		
+		var circle = (i == 0) ? '<div class="detail_related_circle" active="yes"></div>' : '<div class="detail_related_circle"></div>';
+		bar.append(circle);
+	}
+	
+	$('#detail_related_placeholder').height($('#detail_related_scroll').height());
+	
+  if (pageCount > 1) {
+    bindTouchScroll('.detail_related_page', function (index) {
+      $('#detail_related_bar div').removeAttr('active');
+      $('#detail_related_bar div').eq(index).attr('active', 'yes');
+    }, 3600 * 24 * 1000);
+    $('#detail_related_bar').show();
+  } else {
+  	$('#detail_related_bar').hide();
+  }
+}
+
+function replyPostion(wich){
+  var _rheight=$('#'+wich).height();
+  var _wheiht=$(window).height();
+  var _rwidth=$('#'+wich).width();
+  var _wwidth=$(window).width();
+  var top=(_wheiht-_rheight)/2;
+  var left=(_wwidth-_rwidth)/2;
+  $('#'+wich).css({top:top,left:left})
+}
+
+function remind(classname,value){
+  $('.'+classname).val(value);
+  var obj=$('.'+classname);
+  obj.css('color','#999');
+  obj.focus(function(){
+    if($(this).val()==value){
+      $(this).val('');
+      $(this).css('color','#333')
+    }   
+  })
+  obj.blur(function(){
+    if($(this).val()==''){
+      $(this).val(value)
+      $(this).css('color','#999')
+    }
+  })
+}
+// apixc/v;xc.vzx/.
+function dkSetLayout(direct) {
+  current_direct = direct;
+
+  // 等待旋转生效后再改变滚动条
+  setTimeout(function () {
+  	buildRelatedBooks();
+    if (scrollContent!=null) {
+      scrollContent.refresh();
+    }
+    lazyLoadImageForIScroll('img[_src]','#detail_wrapper', '#detail_advanced');
+  },200);
+}
+function dkWillShowPage() {
+  refreshStatus();
+}
+function dkWillHidePage () {
+  // do nothing
+}
+function dkGetBgColor() {
+  return '[204,204,204]';
+}
+
+function reply() {
+  var book_id = getCookie('book_id');
+  if (book_id == null) {
+    book_id = getArgs('book_id')
+  };
+  var device_id = getCookie('device');
+  if (device_id == null) {
+    device_id = getArgs('device')
+  };
+  var user_id = getCookie('userid');
+  if (user_id == null) {
+    user_id = getArgs('userid')
+  };
+  var token = getCookie('token');
+  if (token == null) {
+    token = getArgs('token')
+  };
+  var app_id ='DkReader.iPad';
+  var count=4;
+  var order = ($('.comment_order').eq(0).attr('active') == 'yes') ? 1 : 0;
+  loadAjaxSpin('#inside_loading1', function () {
+    return '/books/'+b_id+'/comments'/*?start='+start+'&limit='+count+'&order_type='+order*/;
+    }, replyInfor, hideAll);
+   if(start==1){
+    $('#inside_loading1').click()
+  }
+}
+
+function reloadAllComments() {
+	$('.Br_content>section[comments_id]').remove();
+  start = 1;
+  $('.no_result').hide();
+  $('#inside_loading1').show();
+  reply();
+}
+
+function showUseful() {
+	var btns = $('.comment_order');
+	if (btns.eq(0).attr('active') != 'yes') {
+		btns.eq(0).attr('active', 'yes');
+		btns.eq(1).removeAttr('active');
+		reloadAllComments();
+	}
+}
+
+function showNewest() {
+	var btns = $('.comment_order');
+	if (btns.eq(1).attr('active') != 'yes') {
+		btns.eq(1).attr('active', 'yes');
+		btns.eq(0).removeAttr('active');
+		reloadAllComments();
+	}
+}
+
+//创建评论
+function replyInfor(data){
+  if (data){
+    if(data.count==0){
+      $('#discount_select').hide();
+      $('.Br_content').hide();
+      $('.no_result').hide();
+      $('.my_comment:eq(0)').hide();
+      $('.no_comment1').show();
+     }
+     
+    for(var i=0; i<data.items.length; i++){
+     var comments=data.items[i];
+      var com=data.items[i].replies;
+      var total=comments.count;
+      if(total==undefined||total==null||total==''){
+        total=0;
+      }
+      var comments_id=comments.id;
+      var useful=comments.useful;
+      var score=comments.score;
+      var replyBox="<section comments_id="+comments_id+"><h3>"+comments.title+"</h3>"+
+      "<div class='publish'>"+showStar2(score)+
+      "<span class=autor>"+removeNickEmail(comments.nick_name)+"</span>"+
+      "<span class=times>"+comments.publish_time+"</span>"+
+      "</div><pre>"+buildContent(comments.content)+"</pre>"+
+      "<div class=comm_operate><span class=useful onclick='voteComment(this)'>有用&nbsp;(&nbsp;"+useful+"&nbsp;)</span>&nbsp;|&nbsp;"+
+      "<span class=reply onclick='myReply(this)'>回复&nbsp;(&nbsp;"+total+"&nbsp;)</span>"+
+      "<span class=loading_icon></span>"+
+      "</div><div class=reply_boc style='display:none'><ul></ul><span class=reply_com >回复评论</span></div> </section>"
+      $(replyBox).insertBefore('#inside_loading1');
+    }
+    start=start+data.count;
+    if (data.more) {
+      $('#inside_loading1').show();
+    } else{
+    	$('.br_content section:nth-last-child(2)').css('border-bottom', 'none');
+      $('#inside_loading1').hide();
+    }
+  }else if(data.result == 40002){
+    $('#discount_select').hide();
+    $('.Br_content').hide();
+    $('.no_result').hide();
+    $('.my_comment:eq(0)').hide();
+    $('.no_comment1').show();
+  }
+  
+  scrollContent.refresh();
+}
+
+// 获得用户的评论权限
+function getCommentQualification(){
+  $.getJSON('/__duokan_appapi/data/books/purchased', function (data) {
+    var user_id = getCookie('userid');
+    if (user_id == null) {
+      user_id = getArgs('userid')
+    };
+     var book_id = getCookie('book_id');
+      if (book_id == null) {
+        book_id = getArgs('book_id')
+      };
+    if(user_id!=null && user_id!='' && user_id != undefined){
+       for (var i in data) {
+         if (data[i].book_id==book_id && data[i].contenttype=='full') {
+           //点击发送评论
+            $('.reply_send').unbind('click')
+            $(".iwantprly").unbind('click');
+           $('.reply_send').click(addComment);
+           $(".iwantprly").click(iWantcomment);
+         } 
+      }
+    }
+  });
+  $(".iwantprly").click(function(){
+    dkLogin();
+    var user_id = getCookie('userid');
+    if (user_id == null) {
+      user_id = getArgs('userid')
+    };
+    if(user_id!=null && user_id!='' && user_id != undefined){
+      postioncenter('#warning_pl');
+      $("#warning_pl").show();
+      $("#warning_pl").fadeOut(2500);
+    }
+  });
+}
+
+// 写评论
+function iWantcomment() {
+  $(".iwantprly").unbind('click');
+  $("#warning_pl").hide();
+  $('.balck_bc').fadeIn(300);
+  $('#write_comment').fadeIn(200);
+  postiontop('#write_comment');
+  setTimeout(function () {
+    $(".iwantprly").bind('click', iWantcomment);
+  }, 300);
+}
+
+
+//回复评论显示
+function IWantReply(){
+  $('#write_reply>h1>span:eq(0)').click(function(){
+    $('.balck_bc').fadeOut(300);
+     var wich_bot=$(window).height()+$('#write_reply').height()-( $(window).height()-$('#write_reply').height() )/2; 
+    $('#write_reply').animate({top:wich_bot},300,function(){
+      $('#write_reply').hide();
+  });
+ });
+}
+
+
+//关闭回复框
+function closeRply(){
+    $('#write_comment>h1>span:eq(0)').click(function() {
+    $('.balck_bc').fadeOut(300);
+     var wich_bot=$(window).height()+$('#write_reply').height()-( $(window).height()-$('#write_reply').height() )/2; 
+    $('#write_comment').animate({top:wich_bot},300,function(){
+      $('#write_comment').hide();
+    });
+  });
+}
+//写评论1
+function addComment() {
+  var reply = $('.reply_box').val();
+  var score=$('.five_layout>.five>li.Five_red').size();
+  var starindex=score-1;
+  var title = $('input[name=title]').val();
+   if( (score==0) && ($.trim(title)==''||title==titleVal ) && ($.trim(reply)!=''&&reply!=contentVal)) {
+    alert('请选择评分并输入标题')
+    return false;
+  } else if(score==0 && ($.trim(title)!=''&&title!=titleVal)){
+    alert('请选择评分')
+    return false;
+  }else if(($.trim(title)==''||title==titleVal) && ($.trim(reply)==''||reply==contentVal)){
+    alert('请输入评论内容')
+    return false;
+  }else if(score!=0 && ($.trim(title)!='' && title!=titleVal) && ($.trim(reply)==''||reply==contentVal)){
+    alert('请输入评论内容')
+    $('.reply_box').focus();
+    return false;
+  }else if(score!=0 && ($.trim(title)==''||title==titleVal) && ($.trim(reply)==''&&reply==contentVal)){
+    alert('请输入标题和评论')
+    return false;
+  }else if(score!=0 && ($.trim(title)==''||title==titleVal) && ($.trim(reply)!=''&&reply!=contentVal)){
+    alert('请输入标题')
+    $('.ctitle').focus()
+    return false;
+  }
+   /*$('.reply_send').unbind('click');*/
+  var book_id = getCookie('book_id');
+  if (book_id == null) {
+    book_id = getArgs('book_id')
+  };
+  var device_id = getCookie('device');
+  if (device_id == null) {
+    device_id = getArgs('device')
+  };
+  var user_id = getCookie('userid');
+  if (user_id == null) {
+    user_id = getArgs('userid')
+  };
+  var token = getCookie('token');
+  if (token == null) {
+    token = getArgs('token')
+  };
+  if(reply== contentVal){
+   reply='';
+  }
+  var app_id ='DkReader.iPad';
+ /* var param2 = 'device_id='+device_id+'&book_id='+book_id+'&user_id='+user_id+'&token='+token+'&app_id='+app_id+'&score='+score;
+  if(score!=0&& ($.trim(title)!=''||title!=titleVal) && ($.trim(reply)!=''&&reply!= contentVal)){
+    $.post('/comment/v0/add_book_score',param2, function(data) {
+      var obj = jQuery.parseJSON(data);
+      alert(obj.result)
+      if (obj.result == 0){
+          if (title==''|| title=='标题：（必填）' ){
+           alert('评分成功');
+           }
+    }); 
+    
+  }*/
+ $('.white_bc').show();
+ postioncenter('#add_load3');
+ loadingIconDetail2('#add_load3');  
+ 
+ 
+  var param = 'device_id='+device_id+'&book_id='+book_id+'&user_id='+user_id+'&token='+token+'&app_id='+app_id+'&content='+reply+'&score='+score+'&title='+title;
+  $.ajax({
+    url: '/comment/v0/add_book_comment',
+    data: param,
+    type: "post",
+    success: function (data) {
+      var obj = data;
+      if (obj.result == 0) {
+        $('#reply_title2 .five>li').removeClass('Five_red');
+        if( starindex>-1 ){
+          $('#reply_title2 .five>li:eq('+starindex+')').prevAll().addClass('Five_red');
+          $('#reply_title2 .five>li:eq('+starindex+')').addClass('Five_red');
+        }
+        remind('reply_box',contentVal);
+        remind('ctitle',titleVal);
+        postioncenter('.addsuccess');
+        $(".addsuccess").show();
+        $(".addsuccess").fadeOut(2500);
+        $('.balck_bc').fadeOut(300);
+        $('#write_comment').fadeOut(300);
+      } else if(obj.result ==40010){
+        alert(obj.info)
+      } else if(obj.result ==40011){
+        alert(obj.info)
+      } else if(obj.result ==1003){
+        reLogin();
+      } else if(obj.result ==40001){
+        postioncenter('.clickfast');
+        $(".clickfast").show();
+        $(".clickfast").fadeOut(2500);
+      }
+    },
+    complete: function () {
+      $('.white_bc').fadeOut(300);
+      $('#add_load3').fadeOut(300);
+
+     /* $('.reply_send').bind('click', addComment);*/
+    },
+    dataType:'json',
+    error :function () { return false; }
+  });
+}
+function showStar2(score) {
+  if (score >= 2 && score < 2.5){
+    var star="<ul class='five'><li class=Five_red></li><li></li><li></li><li></li><li></li></ul>";
+    return star;
+  } else if (score >= 2.5 && score < 3.5) {
+    var star="<ul class='five'><li class=Five_red></li><li class=halfive></li><li></li><li></li><li></li></ul>";
+    return star;
+  } else if (score >= 3.5 && score < 4.5) {
+    var star="<ul class='five'><li class=Five_red></li><li class=Five_red></li><li></li><li></li><li></li></ul>";
+    return star;
+  } else if (score >= 4.5 && score < 5.5) {
+    var star="<ul class='five'> <li class=Five_red></li> <li class=Five_red></li> <li class=halfive></li> <li></li> <li></li></ul>";
+    return star;
+  } else if (score >= 5.5 && score < 6.5){
+    var star="<ul class='five'><li class=Five_red></li> <li class=Five_red></li> <li class=Five_red></li> <li></li> <li></li></ul>";
+    return star;
+  } else if(score >= 6.5 && score < 7.5){
+    var star="<ul class='five'><li class=Five_red></li> <li class=Five_red></li> <li class=Five_red></li> <li class=halfive></li> <li></li></ul>";
+    return star;
+  } else if(score >= 7.5 && score < 8.5){
+    var star="<ul class='five'><li class=Five_red></li> <li class=Five_red></li> <li class=Five_red></li> <li class=Five_red></li> <li></li></ul>";
+    return star;
+  } else if(score > 8.5 && score < 9.5){
+    var star="<ul class='five'><li class=Five_red></li> <li class=Five_red></li> <li class=Five_red></li> <li class=Five_red></li> <li class=halfive></li></ul>";
+    return star;
+  } else if (score >= 9.5) {
+    var star="<ul class='five'><li class=Five_red></li> <li class=Five_red></li> <li class=Five_red></li> <li class=Five_red></li> <li class=Five_red></li> </ul>";
+    return star;
+  } else {
+    var star="<ul class='five'><li></li><li></li><li></li><li></li><li></li></ul>";
+    return star;
+  }
+}
+
+//快速评星
+function fivestar(wich,tagclass){
+  var book_id = getCookie('book_id');
+  if (book_id == null) {
+    book_id = getArgs('book_id')
+  };
+  var device_id = getCookie('device');
+  if (device_id == null) {
+    device_id = getArgs('device')
+  };
+  var user_id = getCookie('userid');
+  if (user_id == null) {
+    user_id = getArgs('userid')
+  };
+  var token = getCookie('token');
+  if (token == null) {
+    token = getArgs('token')
+  };
+  var app_id ='DkReader.iPad';
+  $.ajax({
+    url:'/books/'+b_id+'/comments?start=1&limit=1',
+    success:function(data){
+             if (data.count != 0){
+               /* var starIndex=data.user_last_score-1;
+               if(starIndex>-1){ */
+            	if(data.count) {
+                 $('#reply_title2 .five>li:eq('+1+')').addClass('Five_red');
+                 $('#write_comment .five>li:eq('+2+')').addClass('Five_red');
+                 $('#reply_title2 .five>li:eq('+3+')').prevAll().addClass('Five_red');
+                 $('#write_comment .five>li:eq('+4+')').prevAll().addClass('Five_red');
+                  switch(3)
+                  {
+                    case 0:
+                     $('.star_word').html('（浪费时间）')
+                     return false;
+                    case 1:
+                     $('.star_word').html('（不置可否）')
+                     return false;
+                    case 2:
+                     $('.star_word').html('（马马虎虎）')
+                     return false;
+                    case 3:
+                     $('.star_word').html('（值得一看）')
+                     return false;
+                    case 4:
+                     $('.star_word').html('（强烈推荐）')
+                     return false;
+                  }
+               }
+             } else if(data.result != 0) {
+               return false;
+             }
+    },
+    dataType:'json',
+    error:function(data){
+           return false;
+    }
+  })
+    
+  $(wich).click(function(){
+    if($(this).parent().next().is('.star_word')){
+      var oneIndex=$(this).index();
+      switch (oneIndex)
+        {
+          case 0:
+            $('.star_word').html('（浪费时间）')
+             if( $(this).hasClass(tagclass)&& $(this).nextAll().hasClass(tagclass) ){
+               $(this).nextAll().removeClass(tagclass)
+             /*} else if( $(this).hasClass(tagclass)&!$(this).nextAll().hasClass(tagclass) ){
+               $(this).removeClass(tagclass)*/
+             } else if( !$(this).hasClass(tagclass)){
+               $(this).addClass(tagclass)
+             }
+            postStar(oneIndex)
+            $('#write_comment .five>li').removeClass('Five_red')
+            $('#write_comment .five>li:eq(0)').addClass('Five_red')
+             break;
+          case 1:
+            $('.star_word').html('（不置可否）')
+            this_star(this,tagclass)
+            postStar(oneIndex)
+            $('#write_comment .five>li').removeClass('Five_red')
+            $('#write_comment .five>li:eq(1)').addClass('Five_red')
+            $('#write_comment .five>li:eq(1)').prevAll().addClass('Five_red')
+            break;
+          case 2:
+            $('.star_word').html('（马马虎虎）')
+            this_star(this,tagclass)
+            postStar(oneIndex)
+            $('#write_comment .five>li').removeClass('Five_red')
+            $('#write_comment .five>li:eq(2)').addClass('Five_red')
+            $('#write_comment .five>li:eq(2)').prevAll().addClass('Five_red')
+            break;
+          case 3:
+            $('.star_word').html('（值得一看）')
+            this_star(this,tagclass)
+            postStar(oneIndex)
+            $('#write_comment .five>li').removeClass('Five_red')
+            $('#write_comment .five>li:eq(3)').addClass('Five_red')
+            $('#write_comment .five>li:eq(3)').prevAll().addClass('Five_red')
+            break;
+          case 4:
+            $('.star_word').html('（强烈推荐）')
+             /*if( $(this).hasClass(tagclass)){
+               $(this).removeClass(tagclass)
+             } else */if( !$(this).hasClass(tagclass)){
+               $(this).addClass(tagclass)
+               $(this).prevAll().addClass(tagclass)
+            }
+            postStar(oneIndex);
+            $('#write_comment .five>li').removeClass('Five_red')
+            $('#write_comment .five>li:eq(4)').addClass('Five_red')
+            $('#write_comment .five>li:eq(4)').prevAll().addClass('Five_red')
+            break;
+       }
+     }
+  })
+}
+
+function this_star(eve,tagclass){
+  if ($(eve).hasClass(tagclass)) {
+    $(eve).nextAll().removeClass(tagclass)
+  } else if ($(eve).hasClass(tagclass)&! $(eve).nextAll().hasClass(tagclass)) {
+    $(eve).removeClass(tagclass)
+  } else if (!$(eve).hasClass(tagclass)&! $(eve).nextAll().hasClass(tagclass)) {
+    $(eve).addClass(tagclass)
+    $(eve).prevAll().addClass(tagclass)
+  };
+
+}
+function postStar( oneIndex ){
+  var book_id = getCookie('book_id');
+  if (book_id == null) {
+    book_id = getArgs('book_id')
+  };
+  var device_id = getCookie('device');
+  if (device_id == null) {
+    device_id = getArgs('device')
+  };
+  var user_id = getCookie('userid');
+  if (user_id == null) {
+    user_id = getArgs('userid')
+  };
+  var token = getCookie('token');
+  if (token == null) {
+    token = getArgs('token')
+  };
+  var score=oneIndex+1;
+  var app_id ='DkReader.iPad';
+   var param3 = 'device_id='+device_id+'&book_id='+book_id+'&user_id='+user_id+'&token='+token+'&app_id='+app_id+'&score='+score;
+  if( user_id!=null && user_id!='' && user_id != undefined){
+    $.post('/comment/v0/add_book_score',param3, function(data) {
+      var obj = jQuery.parseJSON(data);
+      if (obj.result == 0){
+       setTimeout(function(){ $('.star_word').html('（ 多谢了 ）')},1000)
+      } else if (obj.result == 1003){
+        reLogin();
+      }
+    })
+  }
+}
+
+
+//写评论评星
+function fivestar2(){
+  $('#write_comment .five>li').click(function() {
+    var index=$(this).index();
+    if($(this).index()==0){
+      if( $(this).hasClass('Five_red')&&$(this).nextAll().hasClass('Five_red') ){
+        $(this).nextAll().removeClass('Five_red')
+      } else if( $(this).hasClass('Five_red')&&!$(this).nextAll().hasClass('Five_red') ){
+        $(this).removeClass('Five_red')
+      } else if( !$(this).hasClass('Five_red')){
+        $(this).addClass('Five_red')
+      }
+    };
+    if($(this).index()==4){
+      if( $(this).hasClass('Five_red')){
+        $(this).removeClass('Five_red')
+      } else if( !$(this).hasClass('Five_red')){
+        $(this).addClass('Five_red')
+        $(this).prevAll().addClass('Five_red')
+      }
+    };
+    if($(this).index()>0&&$(this).index()<=3){
+      if ($(this).hasClass('Five_red')) {
+        $(this).nextAll().removeClass('Five_red')
+      } else if ($(this).hasClass('Five_red')&&! $(this).nextAll().hasClass('Five_red')) {
+        $(this).removeClass('Five_red')
+      } else if (!$(this).hasClass('Five_red')&&! $(this).nextAll().hasClass('Five_red')) {
+        $(this).addClass('Five_red')
+        $(this).prevAll().addClass('Five_red')
+      };
+    }   
+  })
+}
+//系统评星
+
+function showStar(data) {
+  if (data.result == 0) {
+    var score=data.score;
+    if (score>0 && score<=1) {
+      
+    } else if (score>=2 && score<2.5) {
+      $('.book_five .five>li:eq(0)').addClass('Five_red')
+    } else if (score>=2.5 && score<3.5) {
+      $('.book_five .five>li:eq(0)').addClass('Five_red')
+      $('.book_five .five>li:eq(1)').addClass('halfive')
+    } else if (score>=3.5 && score<4.5) {
+      $('.book_five .five>li:lt(2)').addClass('Five_red')
+    } else if (score>=4.5 && score<5.5) {
+      $('.book_five .five>li:lt(2)').addClass('Five_red')
+      $('.book_five .five>li:eq(2)').addClass('halfive')
+    } else if (score>=5.5 && score<6.5) {
+      $('.book_five .five>li:lt(3)').addClass('Five_red')
+    } else if (score>=6.5 && score<7.5) {
+      $('.book_five .five>li:lt(3)').addClass('Five_red')
+      $('.book_five .five>li:eq(3)').addClass('halfive')
+    } else if (score>=7.5 && score<8.5) {
+      $('.book_five .five>li:lt(4)').addClass('Five_red')
+    } else if (score>=8.5 && score<9.5) {
+      $('.book_five .five>li:lt(4)').addClass('Five_red')
+      $('.book_five .five>li:eq(4)').addClass('halfive')
+    } else if (score>=9.5 && score<=10) {
+      $('.book_five .five>li:lt(5)').addClass('Five_red')
+    }
+  } 
+}
+
+//回复总计
+function totalPrly() {
+  var book_id = getCookie('book_id');
+  if (book_id == null) {
+    book_id = getArgs('book_id')
+  };
+  var device_id = getCookie('device');
+  if (device_id == null) {
+    device_id = getArgs('device')
+  };
+  var user_id = getCookie('userid');
+  if (user_id == null) {
+    user_id = getArgs('userid')
+  };
+  var token = getCookie('token');
+  if (token == null) {
+    token = getArgs('token')
+  };
+  var app_id ='DkReader.iPad';
+}
+
+function totalcomment (data) {
+  if (data.result == 0){
+    var total=data.total+' 条书评';
+    if(total==undefined||total==null||total=='' ) {
+        data.total=0+' 条书评';
+      }
+    $('.total_commtents').append(total);
+  }else if(data.result == 40002){
+     var total=0+' 条书评';
+    $('.total_commtents').append(total);
+  }
+  
+  showStar(data);
+}
+
+//投票
+function voteComment(dk){
+  dkLogin()
+  var comment_id=$(dk).parents('section').attr('comments_id');
+  var use_i=$(dk).parents('section').index();
+  var useful=1;
+  var book_id = getCookie('book_id');
+  if (book_id == null) {
+    book_id = getArgs('book_id')
+  };
+  var device_id = getCookie('device');
+  if (device_id == null) {
+    device_id = getArgs('device')
+  };
+  var user_id = getCookie('userid');
+  if (user_id == null) {
+    user_id = getArgs('userid')
+  };
+  var token = getCookie('token');
+  if (token == null) {
+    token = getArgs('token')
+  };
+  var app_id ='DkReader.iPad';
+  var param = 'device_id='+device_id+'&book_id='+book_id+'&user_id='+user_id+'&token='+token+'&app_id='+app_id+'&useful='+useful+'&comment_id='+comment_id;
+  $.post('/comment/v0/vote_comment', param, function(data){
+    var obj = jQuery.parseJSON(data);
+    if (obj.result == 0){
+      postioncenter(".votesuccess");
+      $(".votesuccess").show();
+      $(".votesuccess").fadeOut(2500);
+      $(dk).css({'background':'none','color':'#999'})
+      $('.useful:eq('+use_i+')').empty();
+      $('.useful:eq('+use_i+')').append('有用&nbsp;(&nbsp;')
+      $('.useful:eq('+use_i+')').append(obj.useful)
+      $('.useful:eq('+use_i+')').append('&nbsp;)')
+    } else if (obj.result == 40007){
+      postioncenter(".had_voted");
+      $(".had_voted").show();
+      $(".had_voted").fadeOut(2500);
+     } else if (obj.result == 1003){
+      reLogin();
+     }
+  });
+}
+
+function replyShow(){
+  dkLogin();
+  var user_id = getCookie('userid');
+    if (user_id == null) {
+      user_id = getArgs('userid')
+    };
+  if( user_id!=null && user_id!='' && user_id != undefined){
+    $('.balck_bc').fadeIn(300);
+    $('#write_reply').fadeIn(200);
+    postiontop('#write_reply');
+    remind('replval',replVal);
+  }
+}
+//回复评论列表
+function myReply(dk){
+  $(dk).parents("section").find('.reply_boc').toggle(); 
+  $('.no_comment').hide();
+  var count=20000000;
+  var start=1;
+  var book_id = getCookie('book_id');
+  if (book_id == null) {
+    book_id = getArgs('book_id')
+  };
+  var device_id = getCookie('device');
+  if (device_id == null) {
+    device_id = getArgs('device')
+  };
+  var user_id = getCookie('userid');
+  if (user_id == null) {
+    user_id = getArgs('userid')
+  };
+  var token = getCookie('token');
+  if (token == null) {
+    token = getArgs('token')
+  };
+  var app_id ='DkReader.iPad';
+  var reply_i=$(dk).parents("section").index();
+  var comments_id=$(dk).parents("section").attr('comments_id');
+  $('.reply_com').unbind('click');
+  $('.reply_com').click(function(){
+    replyShow();
+  });
+  $('.publish_reply').unbind( "click" );
+  $('.publish_reply').click(function(){
+    addCommentReply(comments_id);
+  });
+  
+  var loadlogo="<div id='add_load2' style='display:none; margin:0px auto;'><div class='spin'>&nbsp;</div></div>" 
+  if($('.reply_boc:eq('+reply_i+')>ul>li').size()==0) {
+    $(loadlogo).appendTo('.loading_icon:eq('+reply_i+')');
+     loadingIconDetail('#add_load2');  
+  } 
+  $.ajax({
+    url:'/comment/v0/get_reply?book_id='+book_id+'&comment_id='+comments_id+'&user_id='+user_id+'&device_id='+device_id+'&start_index='+start+'&count='+count+'',
+    success: function(data){
+	    if (data.result == 0){
+	      $('#add_load2').empty();
+	      $('#add_load2').remove();
+	      $('.reply_boc:eq('+reply_i+')').remove('#add_load2');
+	      var com=data.reply;
+	      var title_text=data.title;
+	      var reply_total=data.reply_count;
+	      if(reply_total==''||reply_total==null||reply_total==undefined){
+	        reply_total=0;
+	      }
+	      $('#reply_title3>h2>p').empty();
+	      $('#reply_title3>h2>p').append('\“&nbsp;');
+	      $('#reply_title3>h2>p').append(title_text);
+	      $('#reply_title3>h2>p').append('&nbsp;\”');
+	      
+	      var replyNum = $('.reply:eq('+reply_i+')');
+	      replyNum.empty();
+	      replyNum.append('回复&nbsp;(&nbsp;' + reply_total + '&nbsp;)');
+	      
+	      if(reply_total==0){
+	        $('.reply_com').show();
+	        $('.reply_boc:eq('+reply_i+')>ul').html('<li style=color:#999>暂无回复~</li>')
+	        return false;
+	
+	      }
+	      $(dk).parents("section").find('.reply_boc>ul').empty();
+	      $('.reply_com').hide();
+	      $.each(com,function(key,val){
+	        var name=removeNickEmail(com[key].nick_name);
+	        var time=com[key].publish_time;
+	        var content=com[key].content;
+	        var reply_reply="<li><h3>"+name+"<span>"+time+"</span></h3><div>"+buildContent(content)+"</div></li>";
+	         $('.reply_boc:eq('+reply_i+')>ul').append($(reply_reply))
+	         $('.reply_com').show();
+	         $('.no_comment').hide(); 
+	      })
+	   }
+	    
+    },
+    complete: function() {
+			scrollContent.refresh();
+			
+			// 当前评论滚动到屏幕上部
+		  if($(dk).parents("section").find('.reply_boc').is(':visible')){
+		    var dkoffset = $(dk).parents("section").find('.reply_boc').offset().top;
+		    var maxoffset = $('#detail_advanced').offset().top + $('#detail_advanced').height() - $('#detail_wrapper').offset().top - $('#detail_wrapper').height();
+	      scrollContent.scrollTo(0, Math.min(dkoffset - 250, maxoffset), 300, true);
+		  }
+    },
+    dataType:'json',
+    error:function(data){
+      hideAll()
+    }
+  }) 
+}
+//回复评论 
+
+function addCommentReply(comments_id){
+  var comment_id=comments_id;
+  reply = $("textarea[name='write_reply']").val();
+  if ($.trim(reply) == ''||reply=='请输入回复内容'){
+    alert('请输入回复内容');
+    return false;
+  }
+  /*$('.publish_reply').unbind( "click" );*/
+  var book_id = getCookie('book_id');
+  if (book_id == null) {
+    book_id = getArgs('book_id')
+  };
+  var device_id = getCookie('device');
+  if (device_id == null) {
+    device_id = getArgs('device')
+  };
+  var user_id = getCookie('userid');
+  if (user_id == null) {
+    user_id = getArgs('userid')
+  };
+  var token = getCookie('token');
+  if (token == null) {
+    token = getArgs('token')
+  };
+  var app_id ='DkReader.iPad';
+  $('.white_bc').show();
+  postioncenter('#add_load3');
+  loadingIconDetail2('#add_load3');  
+  var param = 'device_id='+device_id+'&book_id='+book_id+'&user_id='+user_id+'&token='+token+'&app_id='+app_id+'&comment_id='+comment_id+'&content='+reply
+  if ($.trim(reply) != '' && reply!='请输入回复内容'){
+    $.ajax({
+      url:'/comment/v0/add_comment_reply',
+      data:param,
+      type:'post',
+      dataType:'json',
+      success:function(data){
+        var obj = data;
+        if (obj.result == 0){
+
+          $("textarea[name='write_reply']").val('');
+          postioncenter('.addsuccess');
+           $(".addsuccess").show();
+          $(".addsuccess").fadeOut(2500);
+          $('.balck_bc').fadeOut(300);
+          $('#write_reply').fadeOut(300);
+        } else if(obj.result == 40012){
+          alert(obj.info)
+        } else if(obj.result == 1003){
+          reLogin();
+        } else if(obj.result ==40001){
+        postioncenter('.clickfast');
+        $(".clickfast").show();
+        $(".clickfast").fadeOut(2500);
+      }
+      },
+     complete:function(){
+       $('#add_load3').fadeOut(300);
+       $('.white_bc').fadeOut(300);
+       /*$('.publish_reply').bind( "click",function(){addCommentReply(comments_id)} );*/
+     },
+     error:function(){
+       return false;
+     }
+    })
+  }  
+}
+//如果购买过此书，显示评论按钮
+function refreshbotton() {
+  $.getJSON('/__duokan_appapi/data/books/purchased', function(data) {
+     var book_id = getCookie('book_id');
+     if (book_id == null) {
+       book_id = getArgs('book_id')
+     };
+     var user_id = getCookie('userid');
+     if (user_id == null) {
+       user_id = getArgs('userid')
+     };
+    if( user_id!=null && user_id!='' && user_id != undefined){
+      for (var i in data) {
+       if ( data[i].book_id==book_id ){
+         if(data[i].contenttype=='full'){
+          $('#reply_title2').show();
+         }
+       }
+      }
+    }
+  });
+}
+
+function seTouchHover(ele) {
+  ele.live("touchstart", function (event) {
+  if (!$(this).hasClass('bottonhover')) 
+      $(this).addClass('bottonhover');
+  });
+  ele.live("touchmove", function (event) {
+    $(this).removeClass('bottonhover');
+  });
+  ele.live("touchend", function (event) {
+    $(this).removeClass('bottonhover');
+  });
+}
+
+$(document).ready(function () {
+  postioncenter('#warning_pl');
+  postioncenter(".votesuccess");
+  postioncenter(".had_voted");
+  $.getJSON('/books/'+b_id, function(data) {
+    showBook(data);
+  });
+  $.getJSON('/store/v0/ios/book/'+b_id+'/change_log?start=0&page_length=50', function(data) {
+    showChangeLog(data);
+  });
+  var book_id = getCookie('book_id');
+  if (book_id == null) {
+    book_id = getArgs('book_id')
+  };
+  var device_id = getCookie('device');
+  if (device_id == null) {
+    device_id = getArgs('device')
+  };
+  var user_id = getCookie('userid');
+  if (user_id == null) {
+    user_id = getArgs('userid')
+  };
+  var token = getCookie('token');
+  if (token == null) {
+    token = getArgs('token')
+  };
+  var app_id ='DkReader.iPad';
+
+   scrollContent = new iScroll('detail_wrapper', {
+    useTransition:true,
+    onScrollEnd: function () {
+      lazyLoadImageForIScroll('img[_src]','#detail_wrapper', '#detail_advanced');
+    }
+  });
+  /*$('.no_result').ajaxError(function () {
+    hideAll();
+  });
+*/
+
+  
+  $('.balck_bc').click(function(){
+    $("#write_comment").stop();
+    $("#write_reply").stop();
+    $('#write_reply>h1>span:eq(0)').click();
+    $('#write_comment>h1>span:eq(0)').click();
+  });
+ 
+  reply();
+  refreshbotton();
+  getCommentQualification();
+  remind('reply_box',contentVal);
+  remind('ctitle',titleVal);
+  remind('replval',replVal)
+  fivestar2()
+  fivestar('#reply_title2 .five>li','Five_red')
+  totalPrly();
+  IWantReply();
+  closeRply();
+  seTouchHover($('.comm_operate span'))
+  seTouchHover($('.iwantprly'))
+ 
+});
+</script>
+</div>
+</body></html>

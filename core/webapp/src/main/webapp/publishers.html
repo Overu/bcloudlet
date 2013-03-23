@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh" lang="zh">
+<head>
+<title>出版社列表 - 多看精品书城</title>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="author" content="duokan"/>
+<meta property="wb:webmaster" content="614a83f3edbfc3be" />
+
+<meta name="keywords" content="多看,免费,小说,电子书,计算机,心理学,旅游,经管,名著,励志"/>
+<meta name="description" content="多看精品书城提供畅销、计算机、经营、名著等正版电子书，精致排版、专业校对、每天更新、每周限免，人性化交互，打造极致阅读体验，让您静享“精品阅读时光”。"/>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+<link type="text/css" rel="stylesheet" href="/static/lib/css/style.css?201303081413"/>
+<!--[if IE 6]><script type="text/javascript">document.execCommand("BackgroundImageCache", false, true);</script><![endif]-->
+<!--[if IE]><script src="/static/lib/gallery/html5.js"></script><![endif]-->
+<!-- <script src="/static/lib/firebug-lite/build/firebug-lite.js"></script> -->
+<script src="/static/lib/seajs/2.0.0/sea.js"></script>
+<script>
+seajs.config({
+base: '/static/lib/',
+alias: {
+'jquery': 'gallery/jquery/1.8.3/jquery',
+'es5-safe': 'gallery/es5-safe/es5-safe'
+},
+map: [
+[ /^(.*\/static\/lib\/.*\.(?:css|js))(?:.*)$/i, '$1?201303081413' ]
+],
+preload: [
+Function.prototype.bind ? '' : 'es5-safe',
+'jquery',
+'gallery/underscore/1.0/underscore'
+]
+});
+// FIXME 临时解决方案
+window.onLoadImg = function(evt) {
+evt.style.display='block'
+}
+</script>
+
+<style type="text/css">
+.m-publish-list .list a,.m-publish-list .list img{display:block;height:50px;margin:0 auto;}
+.m-publish-list .list .itm{float:left;_display:inline;width:188px;height:120px;text-align:center;border: 1px solid #f5f5f5;margin:0 -1px -1px 0}
+.m-publish-list .itm a{width:188px;padding:35px 0;}
+.m-publish-list .itm a:hover{background-color:#f5f5f5;}
+.m-publish-list .list ul{padding-bottom:1px;}
+.m-publish-list .list .corp{height:120px;text-align:left;background:#f9f9f9;}
+.m-publish-list .corp h4{margin-bottom:6px;line-height:24px;font-size:12px;color:#aaa;text-align:center;font-weight:400;}
+.m-publish-list .w-other{padding:0 15px;margin-top:26px;}
+.m-publish-list .w-other a{width:18px;height:22px;padding:0;margin:0 auto;}
+.m-publish-list .w-other a em{display:none;position:absolute;width:180px;top:25px;left:-30px;font-weight:400;text-align:center;}
+.m-publish-list .w-other a:hover em{display:block;color:#aaa}
+.w-other ul{position:relative;zoom:1;width:120px;margin:0 auto;}
+.w-other li{float:left;width:40px;}
+</style>
+
+</head>
+<body id="page-duokan-com" itemscope itemtype="http://schema.org/WebPage">
+<noscript>请使用支持脚本的浏览器！</noscript>
+<div class="g-doc">
+<header class="g-hd">
+<div class="m-header">
+<div class="m-logo"><a href="/" title="多看精品书城" hidefocus="hidefocus">多看精品书城</a></div>
+<nav class="m-nav">
+<ul itemprop="breadcrumb">
+<li id="index"><a href="/" hidefocus="hidefocus">首页</a></li>
+<li id="rank"><a href="/r/%E7%95%85%E9%94%80%E6%A6%9C" hidefocus="hidefocus">排行榜</a></li>
+<li id="bargain"><a href="/r/%E7%83%AD%E9%97%A8%E6%8E%A8%E8%8D%90" hidefocus="hidefocus">精品<span class="dot">·</span>特价</a></li>
+
+<li id="category"><a href="/%E5%B0%8F%E8%AF%B4/c/14-1" class="usename" hidefocus="hidefocus">分类</a></li>
+<li><a href="http://home.duokan.com/index.html" target="_blank" hidefocus="hidefocus">客户端</a></li>
+<li><a href="http://bbs.duokan.com/" target="_blank" hidefocus="hidefocus">论坛</a></li>
+</ul>
+</nav>
+<div class="w-search">
+<div class="searchform" href="javascript:void(0);" hidefocus="hidefocus">
+<input type="text" id="dk-text" class="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" hidefocus="hidefocus" value="搜索书名或者作者..."/>
+<span title="搜索" class="btn" id="searchbotton" style="display:none"></span>
+</div>
+</div>
+<div class="m-pctrl">
+<div id='w-login' style="display:none"><a href="/login" id="gotologin" hidefocus="hidefocus">登录</a><span class="w-sep">|</span><a href="/reg" hidefocus="hidefocus">注册</a></div>
+<div class="m-person" id="w-person" style="display:none">
+<div class="w-dropdown-menu">
+<div class="ttl"><a href="/u/mybook" class="username" id="username" hidefocus="hidefocus"></a><a class="btn" href="javascript:void(0);" hidefocus="hidefocus">&nbsp;</a></div>
+<div class="cnt">
+<ul class="list">
+<li><a href="/u/mybook" hidefocus="hidefocus">已购图书 </a></li>
+<li><a href="/u/redeem" hidefocus="hidefocus">我的兑换码 </a></li>
+<li><a href="/u/invite" hidefocus="hidefocus">我的邀请码</a></li>
+<li><a href="/u/settings" hidefocus="hidefocus">帐号设置</a></li>
+</ul>
+<a href="javascript:void(0);" class="exit" id="exit" hidefocus="hidefocus">退出</a>
+<span class="arr0"></span>
+<span class="arr1"></span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+
+<div class="g-bd1">
+<div class="m-publish-list j-png">
+<div class="w-crumbs"><span>当前位置：</span><a href="/" hidefocus="hidefocus">首页</a><span class="sep">&gt;</span><span>出版社列表</span></div>
+<div class="list">
+<ul>
+
+
+
+
+
+
+<li class="itm">
+<a href="/%E5%8C%97%E4%BA%AC%E7%B4%AB%E5%9B%BE%E5%9B%BE%E4%B9%A6%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/p/117" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/d1b0c11fe357c1b9.png" alt="北京紫图图书有限公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E4%B8%AD%E4%BF%A1%E5%87%BA%E7%89%88%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/p/12" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/1e0f83648c6444a4.png" alt="中信出版股份有限公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E5%8C%97%E4%BA%AC%E6%97%B6%E4%BB%A3%E5%8D%8E%E8%AF%AD%E5%9B%BE%E4%B9%A6%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/p/2" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/88721602c7afcb25.png" alt="北京时代华语图书股份有限公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E5%8C%97%E4%BA%AC%E5%8D%8E%E6%96%87%E7%BB%8F%E5%85%B8%E5%9B%BE%E4%B9%A6%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/p/347" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/85d117e93ba8aafb.png" alt="北京华文经典图书有限公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E8%AF%BB%E5%AE%A2%E5%9B%BE%E4%B9%A6%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/p/137" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/2333c1b4d544362d.png" alt="读客图书有限公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E5%8C%97%E4%BA%AC%E8%AF%BB%E5%93%81%E8%81%94%E5%90%88%E6%96%87%E5%8C%96%E4%BC%A0%E5%AA%92%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/p/7" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/ff6adfd3f18bb157.png" alt="北京读品联合文化传媒有限公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E4%B8%AD%E5%8D%97%E5%8D%9A%E9%9B%86%E5%A4%A9%E5%8D%B7%E6%96%87%E5%8C%96%E4%BC%A0%E5%AA%92%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/p/32" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/70e074b97f4f2421.png" alt="中南博集天卷文化传媒有限公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E6%9D%AD%E5%B7%9E%E8%93%9D%E7%8B%AE%E5%AD%90%E6%96%87%E5%8C%96%E5%88%9B%E6%84%8F%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/p/107" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/4e41eddfaf64089c.png" alt="杭州蓝狮子文化创意有限公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E5%8C%97%E4%BA%AC%E7%A3%A8%E9%93%81%E6%95%B0%E7%9B%9F%E4%BF%A1%E6%81%AF%E6%8A%80%E6%9C%AF%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/p/27" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/13aabdea91721272.png" alt="北京磨铁数盟信息技术有限公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E5%8C%97%E4%BA%AC%E6%97%A5%E7%9F%A5%E5%9B%BE%E4%B9%A6%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/p/42" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/b99fad7c68c4ba9c.png" alt="北京日知图书有限公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E5%8C%97%E4%BA%AC%E5%8D%8E%E6%96%87%E5%A4%A9%E4%B8%8B%E5%9B%BE%E4%B9%A6%E5%8F%91%E8%A1%8C%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/p/57" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/4a4646ed4293fc22.png" alt="北京华文天下图书发行有限公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E5%8C%97%E4%BA%AC%E5%9B%BE%E7%81%B5%E6%96%87%E5%8C%96%E5%8F%91%E5%B1%95%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/p/52" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/aebc626b6c147df7.png" alt="北京图灵文化发展有限公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E5%8C%97%E4%BA%AC%E6%96%B0%E5%8D%8E%E5%85%88%E9%94%8B%E6%96%87%E5%8C%96%E4%BC%A0%E5%AA%92%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/p/47" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/1e759b828763667f.png" alt="北京新华先锋文化传媒有限公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E5%8C%97%E4%BA%AC%E6%97%B6%E4%BB%A3%E5%85%89%E5%8D%8E%E5%9B%BE%E4%B9%A6%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/p/62" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/26949ef173a8f0c5.png" alt="北京时代光华图书有限公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E4%B8%AD%E5%A4%AE%E7%BC%96%E8%AF%91%E5%87%BA%E7%89%88%E7%A4%BE/p/152" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/1bd72f346c99d207.png" alt="中央编译出版社" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E5%8C%97%E4%BA%AC%E4%B8%AD%E4%BD%9C%E5%8D%8E%E6%96%87%E6%95%B0%E5%AD%97%E4%BC%A0%E5%AA%92%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/p/87" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/7efa14749e78c923.png" alt="北京中作华文数字传媒股份有限公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E4%BA%BA%E6%B0%91%E6%96%87%E5%AD%A6%E5%87%BA%E7%89%88%E7%A4%BE/p/82" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/c5f5763a4e4563c1.png" alt="人民文学出版社" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E4%BA%BA%E6%B0%91%E9%82%AE%E7%94%B5%E5%87%BA%E7%89%88%E7%A4%BE/p/142" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/e1212edbefe4c618.png" alt="人民邮电出版社" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E4%B8%8A%E6%B5%B7%E8%B4%9D%E8%B4%9D%E7%89%B9%E6%96%87%E5%8C%96%E4%BC%A0%E6%92%AD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/p/92" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/94e47a9f5a0686e7.png" alt="上海贝贝特文化传播有限公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E5%A4%96%E8%AF%AD%E6%95%99%E5%AD%A6%E4%B8%8E%E7%A0%94%E7%A9%B6%E5%87%BA%E7%89%88%E7%A4%BE/p/112" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/25a222a578a20523.png" alt="外语教学与研究出版社" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E4%B8%AD%E5%9B%BD%E4%BA%BA%E6%B0%91%E5%A4%A7%E5%AD%A6%E5%87%BA%E7%89%88%E7%A4%BE/p/102" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/79f21e2d34ffb87a.png" alt="中国人民大学出版社" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E4%B8%AD%E4%BF%A1%E5%87%BA%E7%89%88%E9%9B%86%E5%9B%A2/p/67" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/ad08ae31f1ebc9fa.png" alt="中信出版集团" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E5%8C%97%E4%BA%AC%E4%B8%96%E7%BA%AA%E6%99%AF%E9%A3%8E%E6%96%87%E5%8C%96%E4%BC%A0%E5%AA%92%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/p/157" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/d1875c75da8bdb89.png" alt="北京世纪景风文化传媒有限公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E5%A4%A9%E6%B4%A5%E8%81%9A%E7%9F%B3%E6%96%87%E5%8D%8E%E5%9B%BE%E4%B9%A6%E9%94%80%E5%94%AE%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/p/167" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/87e2d67032839957.png" alt="天津聚石文华图书销售有限公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E4%B8%AD%E5%9B%BD%E6%96%87%E5%AD%97%E8%91%97%E4%BD%9C%E6%9D%83%E5%8D%8F%E4%BC%9A/p/187" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/66591516c2141218.png" alt="中国文字著作权协会" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E4%B8%AD%E5%8D%97%E5%87%BA%E7%89%88%E4%BC%A0%E5%AA%92%E9%9B%86%E5%9B%A2%E5%8C%97%E4%BA%AC%E6%B6%8C%E6%80%9D%E5%9B%BE%E4%B9%A6%E6%9C%89%E9%99%90%E8%B4%A3%E4%BB%BB%E5%85%AC%E5%8F%B8/p/197" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/4220e579b58ff38f.png" alt="中南出版传媒集团北京涌思图书有限责任公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E7%A7%91%E5%AD%A6%E5%87%BA%E7%89%88%E7%A4%BE/p/207" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/0db3357621445e6b.png" alt="科学出版社" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E5%B1%B1%E8%A5%BF%E6%98%A5%E7%A7%8B%E7%94%B5%E5%AD%90%E9%9F%B3%E5%83%8F%E5%87%BA%E7%89%88%E7%A4%BE/p/192" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/1450779c69c2e9ef.png" alt="山西春秋电子音像出版社" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E5%8C%97%E4%BA%AC%E5%A4%A7%E5%AD%A6%E5%87%BA%E7%89%88%E7%A4%BE/p/222" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/75bb321468899f9a.png" alt="北京大学出版社" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E4%B8%AD%E5%9B%BD%E7%A4%BE%E4%BC%9A%E7%A7%91%E5%AD%A6%E5%87%BA%E7%89%88%E7%A4%BE/p/212" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/b6825329f638956a.png" alt="中国社会科学出版社" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E9%A6%96%E9%83%BD%E7%BB%8F%E6%B5%8E%E8%B4%B8%E6%98%93%E5%A4%A7%E5%AD%A6%E5%87%BA%E7%89%88%E7%A4%BE%E6%9C%89%E9%99%90%E8%B4%A3%E4%BB%BB%E5%85%AC%E5%8F%B8/p/242" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/438b01a055f73455.png" alt="首都经济贸易大学出版社有限责任公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E4%B8%8A%E6%B5%B7%E6%9C%AC%E5%91%A8%E5%9B%BE%E4%B9%A6%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/p/252" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/9405c58a46a125f1.png" alt="上海本周图书有限公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E5%8C%97%E4%BA%AC%E9%82%AE%E7%94%B5%E5%A4%A7%E5%AD%A6%E5%87%BA%E7%89%88%E7%A4%BE/p/262" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/f0b78be6e598a727.png" alt="北京邮电大学出版社" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E6%96%B0%E4%B8%96%E7%95%8C%E5%87%BA%E7%89%88%E7%A4%BE/p/247" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/5a8ada80f1c56cff.png" alt="新世界出版社" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E4%B8%AD%E8%88%AA%E5%87%BA%E7%89%88%E4%BC%A0%E5%AA%92%E6%9C%89%E9%99%90%E8%B4%A3%E4%BB%BB%E5%85%AC%E5%8F%B8/p/272" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/bd3597be562904e6.png" alt="中航出版传媒有限责任公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E5%8C%97%E4%BA%AC%E5%85%B4%E7%9B%9B%E4%B9%90%E4%B9%A6%E5%88%8A%E5%8F%91%E8%A1%8C%E6%9C%89%E9%99%90%E8%B4%A3%E4%BB%BB%E5%85%AC%E5%8F%B8/p/312" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/cad94f7026442844.png" alt="北京兴盛乐书刊发行有限责任公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E6%B1%9F%E8%8B%8F%E8%AF%91%E6%9E%97%E5%87%BA%E7%89%88%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/p/302" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/f9867e68116b19ee.png" alt="江苏译林出版有限公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E4%B8%8A%E6%B5%B7%E4%B8%96%E7%BA%AA%E6%96%87%E7%9D%BF%E6%96%87%E5%8C%96%E4%BC%A0%E6%92%AD%E5%85%AC%E5%8F%B8/p/322" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/08c5849318f14a40.png" alt="上海世纪文睿文化传播公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E5%8C%97%E4%BA%AC%E5%8D%8E%E7%AB%A0%E5%90%8C%E4%BA%BA%E6%96%87%E5%8C%96%E4%BC%A0%E6%92%AD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/p/282" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/56806b714aca9fb8.png" alt="北京华章同人文化传播有限公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E5%8C%97%E4%BA%AC%E8%81%9A%E8%83%BD%E9%BC%8E%E5%8A%9B%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/p/292" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/47f3947f5ffe921b.png" alt="北京聚能鼎力科技有限公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E4%B8%8A%E6%B5%B7%E8%90%A8%E7%A6%8F%E6%96%87%E5%8C%96%E4%BC%A0%E6%92%AD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/p/352" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/dd81e53305c34248.png" alt="上海萨福文化传播有限公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E5%8C%97%E4%BA%AC%E5%B4%87%E8%B4%A4%E9%A6%86%E5%9B%BE%E4%B9%A6%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/p/362" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/de031a32f65d0be4.png" alt="北京崇贤馆图书有限公司" /></a>
+</li>
+
+
+
+<li class="itm">
+<a href="/%E5%8C%96%E5%AD%A6%E5%B7%A5%E4%B8%9A%E5%87%BA%E7%89%88%E7%A4%BE/p/332" hidefocus="hidefocus"><img class="j-png" src ="http://i.duokan.com/i/2013/02/08bbe74b9a12be13.png" alt="化学工业出版社" /></a>
+</li>
+
+
+<li class="itm corp j-ignore">
+<div class="w-other">
+<h4>与多看合作</h4>
+<ul>
+<li><a class="qq" href="tencent://message/?uin=319896383" hidefocus="hidefocus"><em>319896383</em></a></li>
+<li><a class="sina" href="http://weibo.com/u/3181359071" hidefocus="hidefocus"><em>weibo.com/u/3181359071</em></a></li>
+<li><a class="mail" href="mailto:yang.liu@xiaomi.com" hidefocus="hidefocus"><em>yang.liu@xiaomi.com</em></a></li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div class="w-fbox js-fixed" style="display:none">
+<div class="gotop"><a href="javascript:void(0);" hidefocus="hidefocus" title="回到顶部"><span class="cnt">回到顶部</span></a></div>
+<div class="m-sns m-sns-2 js-sns">
+<div class="wrap">
+<ul>
+<li><a href="http://e.weibo.com/duokan" class="sina first" hidefocus="hidefocus"><span class="cnt"><span class="img"></span><p>@多看阅读</p></span><span class="line"></span></a></li>
+<li><a href="http://e.t.qq.com/duokan_book" class="qq" hidefocus="hidefocus"><span class="cnt"><span class="img"></span><p>@多看阅读</p></span><span class="line"></span></a></li>
+<li class=""><a href="javascript:void(0);" class="weixin" hidefocus="hidefocus"><span class="cnt cnt2"><span class="img"></span><p>微信：<em>duokan</em></p></span><span class="line"></span></a></li>
+<li class="final"><a href="javascript:void(0);" class="miliao" hidefocus="hidefocus"><span class="cnt cnt2"><span class="img"></span><p>米聊：<em>800383</em></p></span><span class="line"></span></a></li>
+</ul>
+</div>
+</div>
+</div>
+<footer class="g-ft">
+<div class="m-cprt">Copyright&copy;duokan.com　<a href="http://www.miibeian.gov.cn/" target="_blank" hidefocus="hidefocus">京ICP备10047083号</a>　<a href="http://www.gapp.gov.cn/" target="_blank" hidefocus="hidefocus">电复证字第01D010号</a></div>
+</footer>
+</div>
+
+
+
+
+
+
+
+<script>seajs.use(['duokan/store/1/page/book','duokan/store/1/page/patched'])</script>
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+@CHARSET "UTF-8";
+
+.base {
+  float: left;
+  height: 100px;
+  box-sizing: border-box;
+  display: -webkit-box
+}
+
+.more {
+  padding: 45px;
+  margin: 0 auto;
+  -webkit-box-flex: 1
+}
+
+.root {
+  border-right: 1px outset rgb(239, 239, 239);
+  border-left: 1px outset white;
+  width: 33.333333%;
+}
+
+.root:nth-child\(6n\+1\) {
+  background: rgb(216, 216, 216);
+}
+
+.root:nth-child\(6n\+2\) {
+  background: rgb(216, 216, 216);
+}
+
+.root:nth-child\(6n\+3\) {
+  background: rgb(216, 216, 216);
+}
+
+.root1 {
+  border-right: 2px outset rgb(239, 239, 239);
+  border-left: 2px outset white;
+  width: 50%;
+}
+
+.root1:nth-child\(2n\+1\) {
+  background: rgb(254, 254, 254);
+}
+
+.root1:nth-child\(2n\+2\) {
+  background: rgb(254, 254, 254);
+}
+
+.root1:nth-child\(4n\+3\) {
+  background: inherit;
+}
+
+.root1:nth-child\(4n\+4\) {
+  background: inherit;
+}
