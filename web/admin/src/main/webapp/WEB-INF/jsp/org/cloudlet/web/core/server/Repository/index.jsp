@@ -10,10 +10,10 @@
 <meta name="author" content="">
 
 <!-- Le styles -->
-<link href="assets/css/bootstrap.css" rel="stylesheet">
-<link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
-<link href="assets/css/docs.css" rel="stylesheet">
-<link href="assets/js/google-code-prettify/prettify.css" rel="stylesheet">
+<link href="/admin/assets/css/bootstrap.css" rel="stylesheet">
+<link href="/admin/assets/css/bootstrap-responsive.css" rel="stylesheet">
+<link href="/admin/assets/css/docs.css" rel="stylesheet">
+<link href="/admin/assets/js/google-code-prettify/prettify.css" rel="stylesheet">
 
 <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 <!--[if lt IE 9]>
