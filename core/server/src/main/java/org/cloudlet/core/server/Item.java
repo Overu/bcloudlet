@@ -40,6 +40,29 @@ public abstract class Item extends Content {
     return count;
   }
 
+  @Override
+  public <T extends Content> T doCreate(T target) {
+    final Reference ref = new Reference();
+    ref.setId(CoreUtil.randomID());
+    ref.setSource(this);
+    ref.setTarget(target);
+    ref.setPath(target.getPath());
+    if (!em().contains(target)) {
+      super.doCreate(target);
+      ref.setContaiment(true);
+    }
+    em().persist(ref);
+    return target;
+  }
+
+  @Override
+  public void doLoad() {
+    if (loadReferences) {
+      references = findReferences();
+      count = countReferences();
+    }
+  }
+
   public List<Reference> findReferences() {
     TypedQuery<Reference> query = em().createQuery("from " + Reference.class.getName() + " ref where ref.source=:source", Reference.class);
     query.setParameter("source", this);
@@ -83,29 +106,6 @@ public abstract class Item extends Content {
 
   public void setReferences(List<Reference> refs) {
     this.references = refs;
-  }
-
-  @Override
-  protected <T extends Content> T doCreate(T target) {
-    final Reference ref = new Reference();
-    ref.setId(CoreUtil.randomID());
-    ref.setSource(this);
-    ref.setTarget(target);
-    ref.setPath(target.getPath());
-    if (!em().contains(target)) {
-      super.doCreate(target);
-      ref.setContaiment(true);
-    }
-    em().persist(ref);
-    return target;
-  }
-
-  @Override
-  protected void doLoad() {
-    if (loadReferences) {
-      references = findReferences();
-      count = countReferences();
-    }
   }
 
 }

@@ -16,8 +16,7 @@
 
   <modules>
     <module>server</module>
-    <module>webapp</module>
-    <module>admin</module>
+    <module>web</module>
     <!-- <module>client</module> -->
   </modules>
 </project>

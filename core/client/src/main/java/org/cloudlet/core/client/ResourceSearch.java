@@ -39,21 +39,21 @@ import javax.ws.rs.core.MultivaluedMap;
 
 public abstract class ResourceSearch extends SimpleContainer implements TakesResource {
 
+  public interface ResourceStyle extends CssResource {
+    String searchItem();
+  }
+
+  public interface Template extends XTemplates {
+    @XTemplate("<div class='{style.searchItem}'>{resource}</div>")
+    SafeHtml render(String resource, ResourceStyle style);
+  }
+
   interface Bundle extends ClientBundle {
     @Source("ResourceComboBox.css")
     ResourceStyle css();
   }
 
-  interface ResourceStyle extends CssResource {
-    String searchItem();
-  }
-
-  interface Template extends XTemplates {
-    @XTemplate("<div class='{style.searchItem}'>{resource}</div>")
-    SafeHtml render(String resource, ResourceStyle style);
-  }
-
-  protected static Template template = GWT.create(Template.class);
+  public static Template template = GWT.create(Template.class);
 
   @Inject
   ResourceManager resourceManager;

@@ -90,6 +90,12 @@ public abstract class Collection<E extends Item> extends Content {
     return count;
   }
 
+  @Override
+  public void doLoad() {
+    items = findItems();
+    count = countItems();
+  }
+
   public List<E> findItems() {
     Class<E> entryClass = getEntryType();
     // CriteriaBuilder cb = em().getCriteriaBuilder();
@@ -221,12 +227,6 @@ public abstract class Collection<E extends Item> extends Content {
     total = total + 1;
     update();
     return super.doCreate(entry);
-  }
-
-  @Override
-  protected void doLoad() {
-    items = findItems();
-    count = countItems();
   }
 
 }

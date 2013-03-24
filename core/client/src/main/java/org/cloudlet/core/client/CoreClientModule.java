@@ -14,7 +14,6 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-import org.cloudlet.core.client.style.BaseResources;
 import org.cloudlet.core.server.Root;
 
 import java.util.logging.Logger;

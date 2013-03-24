@@ -21,7 +21,7 @@ public class ResourceEditor extends ContentPanel implements Editor<Resource>, Ta
   private Resource resource;
 
   @Inject
-  ResourceManager resourceManager;
+  protected ResourceManager resourceManager;
 
   public void edit() {
     for (IsField field : FormPanelHelper.getFields(this)) {

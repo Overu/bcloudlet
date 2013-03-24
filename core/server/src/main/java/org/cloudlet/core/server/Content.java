@@ -63,11 +63,7 @@ import javax.xml.bind.annotation.XmlTransient;
 public abstract class Content {
 
   @Transactional
-  static class ContentService {
-
-    protected void addTag(Book parent, Tag tag) {
-      parent.doAddTag(tag);
-    }
+  public static class ContentService {
 
     protected <T extends Content> T createChild(Content parent, T child) {
       return parent.doCreate(child);
@@ -126,7 +122,7 @@ public abstract class Content {
   protected User owner;
 
   @Type(type = ContentType.NAME)
-  @Columns(columns = {@Column(name = "parentType"), @Column(name = "parentId")})
+  @Columns(columns = { @Column(name = "parentType"), @Column(name = "parentId") })
   protected Content parent;
 
   public static final String SEARCH = "search";
@@ -158,8 +154,8 @@ public abstract class Content {
   }
 
   @POST
-  @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
-  @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_ATOM_XML})
+  @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_ATOM_XML })
   public final Content create() {
     Content content = null;
     return createChild(content);
@@ -181,8 +177,8 @@ public abstract class Content {
   }
 
   @POST
-  @Consumes({MediaType.MULTIPART_FORM_DATA})
-  @Produces({MediaType.APPLICATION_JSON})
+  @Consumes({ MediaType.MULTIPART_FORM_DATA })
+  @Produces({ MediaType.APPLICATION_JSON })
   public Content createFromMultipartFormData(@Context UriInfo uriInfo, @HeaderParam("Content-Length") final Integer contentLength,
       @HeaderParam("Content-Type") final String contentType, final InputStream inputStream) {
     Content result = null;
@@ -256,6 +252,68 @@ public abstract class Content {
   @DELETE
   public final void delete() {
     WebPlatform.get().getInstance(ContentService.class).delete(this);
+  }
+
+  public <T extends Content> T doCreate(T child) {
+    child.setParent(this);
+    String id = child.getId();
+    String path = child.getPath();
+    if (path != null) {
+      Content exist = getChild(path);
+      if (exist != null) {
+        throw new EntityExistsException("A child with path=" + path + " already exists");
+      }
+    }
+
+    if (id == null) {
+      child.setId(CoreUtil.randomID());
+    }
+
+    if (path == null) {
+      child.setPath(child.getId());
+    }
+    em().persist(child);
+    if (child.doInit()) {
+      em().persist(child);
+    }
+    return child;
+  }
+
+  public void doDelete() {
+    em().remove(this);
+  }
+
+  public void doLoad() {
+  }
+
+  public void doSave() {
+    if (id == null) {
+      id = CoreUtil.randomID();
+    }
+    if (path == null) {
+      path = id;
+    }
+    em().persist(this);
+    if (doInit()) {
+      em().persist(this);
+    }
+  }
+
+  public void doUpdate() {
+    // TODO validation
+    Set<ConstraintViolation<?>> violations = new HashSet<ConstraintViolation<?>>();
+    if (path == null) {
+    }
+    if (!violations.isEmpty()) {
+      throw new ConstraintViolationException("", violations);
+    }
+    if (parent != null) {
+      Content exist = parent.getChild(path);
+      if (exist != null && !exist.equals(this)) {
+        throw new EntityExistsException("A child with path=" + path + " already exists");
+      }
+    }
+    em().persist(this);
   }
 
   /*
@@ -369,14 +427,14 @@ public abstract class Content {
   }
 
   @GET
-  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml"})
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml" })
   public Content load() {
     doLoad();
     return this;
   }
 
   @GET
-  @Produces({MediaType.TEXT_HTML})
+  @Produces({ MediaType.TEXT_HTML })
   @Template
   public Content loadHtml() {
     doLoad();
@@ -498,70 +556,8 @@ public abstract class Content {
     return null;
   }
 
-  protected <T extends Content> T doCreate(T child) {
-    child.setParent(this);
-    String id = child.getId();
-    String path = child.getPath();
-    if (path != null) {
-      Content exist = getChild(path);
-      if (exist != null) {
-        throw new EntityExistsException("A child with path=" + path + " already exists");
-      }
-    }
-
-    if (id == null) {
-      child.setId(CoreUtil.randomID());
-    }
-
-    if (path == null) {
-      child.setPath(child.getId());
-    }
-    em().persist(child);
-    if (child.doInit()) {
-      em().persist(child);
-    }
-    return child;
-  }
-
-  protected void doDelete() {
-    em().remove(this);
-  }
-
   protected boolean doInit() {
     return false;
-  }
-
-  protected void doLoad() {
-  }
-
-  protected void doSave() {
-    if (id == null) {
-      id = CoreUtil.randomID();
-    }
-    if (path == null) {
-      path = id;
-    }
-    em().persist(this);
-    if (doInit()) {
-      em().persist(this);
-    }
-  }
-
-  protected void doUpdate() {
-    // TODO validation
-    Set<ConstraintViolation<?>> violations = new HashSet<ConstraintViolation<?>>();
-    if (path == null) {
-    }
-    if (!violations.isEmpty()) {
-      throw new ConstraintViolationException("", violations);
-    }
-    if (parent != null) {
-      Content exist = parent.getChild(path);
-      if (exist != null && !exist.equals(this)) {
-        throw new EntityExistsException("A child with path=" + path + " already exists");
-      }
-    }
-    em().persist(this);
   }
 
   protected EntityManager em() {

@@ -66,6 +66,12 @@ import javax.ws.rs.core.MultivaluedMap;
 
 public abstract class ResourceGrid extends ContentPanel implements TakesResource {
 
+  @FormatterFactories(@FormatterFactory(factory = ShortenFactory.class, name = "shorten"))
+  public interface Renderer extends XTemplates {
+    @XTemplate(source = "ResourceGrid.html")
+    public SafeHtml renderItem(String name, String imageUrl, Style style);
+  }
+
   public interface Resources extends ClientBundle {
     ImageResource add();
 
@@ -93,12 +99,6 @@ public abstract class ResourceGrid extends ContentPanel implements TakesResource
     String getName() {
       return name;
     }
-  }
-
-  @FormatterFactories(@FormatterFactory(factory = ShortenFactory.class, name = "shorten"))
-  interface Renderer extends XTemplates {
-    @XTemplate(source = "ResourceGrid.html")
-    public SafeHtml renderItem(String name, String imageUrl, Style style);
   }
 
   enum SelectButtonCar {
@@ -167,7 +167,8 @@ public abstract class ResourceGrid extends ContentPanel implements TakesResource
 
   public final static String LIST = "list";
 
-  static Renderer r;
+  public static Renderer r;
+
   public static Resources resources;
 
   @Inject
@@ -465,52 +466,52 @@ public abstract class ResourceGrid extends ContentPanel implements TakesResource
 
   private void selectBase(SelectButtonCar car) {
     switch (car) {
-      case ADD:
-        Resource place = getValue().getChild(Folder.NEW);
-        resourceManager.goTo(place);
-        break;
-      case REFRESH:
-        refresh();
-        break;
-      case DELETE:
-        if (selectedItem == null || selectedItem.equals("")) {
-          return;
+    case ADD:
+      Resource place = getValue().getChild(Folder.NEW);
+      resourceManager.goTo(place);
+      break;
+    case REFRESH:
+      refresh();
+      break;
+    case DELETE:
+      if (selectedItem == null || selectedItem.equals("")) {
+        return;
+      }
+      selectedItem.delete(new AsyncCallback<Resource>() {
+        @Override
+        public void onFailure(Throwable caught) {
         }
-        selectedItem.delete(new AsyncCallback<Resource>() {
-          @Override
-          public void onFailure(Throwable caught) {
-          }
 
-          @Override
-          public void onSuccess(Resource result) {
-            refresh();
-          }
-        });
-        break;
-      case EDIT:
-        if (selectedItem == null) {
-          return;
+        @Override
+        public void onSuccess(Resource result) {
+          refresh();
         }
-        resourceManager.goTo(selectedItem);
-        break;
-      default:
-        break;
+      });
+      break;
+    case EDIT:
+      if (selectedItem == null) {
+        return;
+      }
+      resourceManager.goTo(selectedItem);
+      break;
+    default:
+      break;
     }
   }
 
   private void selectView(ViewButtonCar car) {
     switch (car) {
-      case TABLE:
-        con.remove(grid);
-        con.add(listView, new VerticalLayoutData(1, 1));
-        listView.setSize("100%", "100%");
-        break;
-      case GRID:
-        con.remove(listView);
-        con.add(grid, new VerticalLayoutData(1, 1));
-        break;
-      default:
-        break;
+    case TABLE:
+      con.remove(grid);
+      con.add(listView, new VerticalLayoutData(1, 1));
+      listView.setSize("100%", "100%");
+      break;
+    case GRID:
+      con.remove(listView);
+      con.add(grid, new VerticalLayoutData(1, 1));
+      break;
+    default:
+      break;
     }
     con.onResize();
   }

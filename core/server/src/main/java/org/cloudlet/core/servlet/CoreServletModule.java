@@ -20,14 +20,13 @@ public class CoreServletModule extends ServletModule {
   @Override
   protected void configureServlets() {
     logger.finest("installPersistModule begin");
-    filter("/*").through(ProxyFilter.class);
+    // filter("/*").through(ProxyFilter.class);
     filter("/*").through(PersistFilter.class);
 
     requestStaticInjection(DatabaseConnectionProvider.class);
     filter("/*").through(DatabaseConnectionFilter.class);
 
     filter("/*").through(GuiceShiroFilter.class);
-    serve("/import").with(ImporterServlet.class);
 
     Map<String, String> jaxRsParams = new HashMap<String, String>();
     jaxRsParams.put(ServletProperties.JAXRS_APPLICATION_CLASS, CoreResourceConfig.class.getName());

@@ -3,12 +3,13 @@ package org.cloudlet.core.server;
 import org.glassfish.jersey.server.mvc.Template;
 
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriBuilder;
@@ -20,14 +21,13 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType
 @Entity(name = Repository.TYPE_NAME)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Template
 @Path("/")
 @Produces("text/html;qs=5")
-public final class Repository extends Item {
+public class Repository extends Item {
 
   public static final String TYPE_NAME = CoreUtil.PREFIX + "Repository";
-
-  public static final String BOOKS = "books";
 
   public static final String USERS = "users";
 
@@ -35,19 +35,11 @@ public final class Repository extends Item {
 
   public static final String TAGS = "tags";
 
-  public static final String ORDERS = "orders";
-
   @OneToOne
   private Users users;
 
   @OneToOne
   private Groups groups;
-
-  @OneToOne
-  private Books books;
-
-  @OneToOne
-  private Orders orders;
 
   @OneToOne
   private Tags tags;
@@ -59,19 +51,15 @@ public final class Repository extends Item {
   @Transient
   private HttpServletResponse response;
 
-  @Path(BOOKS)
-  public Books getBooks() {
-    return books;
+  @Override
+  public void doLoad() {
+    super.doLoad();
+    tags.load();
   }
 
   @Path(GROUPS)
   public Groups getGroups() {
     return groups;
-  }
-
-  @Path(ORDERS)
-  public Orders getOrders() {
-    return orders;
   }
 
   @Path(TAGS)
@@ -103,16 +91,8 @@ public final class Repository extends Item {
     WebPlatform.get().getInstance(ContentService.class).save(this);
   }
 
-  public void setBooks(Books books) {
-    this.books = books;
-  }
-
   public void setGroups(Groups groups) {
     this.groups = groups;
-  }
-
-  public void setOrders(Orders orders) {
-    this.orders = orders;
   }
 
   public void setTags(Tags tags) {
@@ -127,15 +107,8 @@ public final class Repository extends Item {
   protected boolean doInit() {
     super.doInit();
     users = createChild(USERS, Users.class);
-    books = createChild(BOOKS, Books.class);
     tags = createChild(TAGS, Tags.class);
     return true;
-  }
-
-  @Override
-  protected void doLoad() {
-    super.doLoad();
-    tags.load();
   }
 
   @Override

@@ -47,8 +47,8 @@ public final class WebPlatform {
     return injector.getInstance(resourceType);
   }
 
-  public Repository getRepository() {
-    return repositoryProvider.get();
+  public <T extends Repository> T getRepository() {
+    return (T) repositoryProvider.get();
   }
 
   public void injectMembers(Object instance) {

@@ -49,6 +49,19 @@ public class CoreUtil {
     return dataLocation;
   }
 
+  public static <T> T newInstance(Class<T> type) {
+    try {
+      return type.newInstance();
+    } catch (InstantiationException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (IllegalAccessException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return null;
+  }
+
   public static UUID parseUUID(String id) {
     if (id.length() == 32) {
       String[] components = new String[5];
