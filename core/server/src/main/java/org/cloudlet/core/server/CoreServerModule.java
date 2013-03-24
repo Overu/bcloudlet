@@ -31,6 +31,7 @@ public class CoreServerModule extends AbstractModule {
     while (providers.hasNext()) {
       provider = providers.next();
       bind(Repository.class).toProvider(provider);
+      bind(provider.getType()).toProvider(provider);
       break;
     }
 
