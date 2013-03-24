@@ -42,7 +42,7 @@ public class CoreServletModule extends ServletModule {
     Map<String, String> jaxRsParams = new HashMap<String, String>();
     jaxRsParams.put(ServletProperties.JAXRS_APPLICATION_CLASS, CoreResourceConfig.class.getName());
     jaxRsParams.put(ServletProperties.FILTER_FORWARD_ON_404, Boolean.TRUE.toString());
-    jaxRsParams.put(ServletProperties.JSP_TEMPLATES_BASE_PATH, "/WEB-INF/jsp/");
+    jaxRsParams.put(ServletProperties.JSP_TEMPLATES_BASE_PATH, "/jsp/");
     // /store/ios/test.html
     jaxRsParams.put(ServletProperties.FILTER_STATIC_CONTENT_REGEX, "/(static|store)/.*");
 
