@@ -1,1 +1,1 @@
-org.cloudlet.web.core.server.WebResourceMethodInvocationHandlerProvider
+org.cloudlet.core.server.WebResourceMethodInvocationHandlerProvider

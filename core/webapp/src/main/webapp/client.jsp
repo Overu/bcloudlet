@@ -4,7 +4,7 @@
 <html>
 <head>
 <title>睿泰-客户端</title>
-<jsp:include page="/jsp/org/cloudlet/web/core/server/meta.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/jsp/org/cloudlet/core/server/meta.jsp"></jsp:include>
 <link rel="stylesheet" type="text/css" href="/static/lib/css/client_style.css">
 <link rel="stylesheet" type="text/css" href="/static/lib/css/reset.css">
 <style type="text/css">
@@ -50,7 +50,7 @@ div#wrap>header>div {
 </head>
 <body>
   <div id="wrap">
-    <jsp:include page="/jsp/org/cloudlet/web/core/server/header.jsp"></jsp:include>
+    <jsp:include page="/WEB-INF/jsp/org/cloudlet/core/server/header.jsp"></jsp:include>
     <div id="brand">
       <div class="slide"
         style="height: 303px; margin-top: 0px; margin-bottom: 29px; background: url(/static/lib/images/webbookstor-bg2.jpg) repeat-x 0 0;">
@@ -121,7 +121,7 @@ div#wrap>header>div {
         </article>
       </section>
     </div>
-    <jsp:include page="/jsp/org/cloudlet/web/core/server/footer.jsp"></jsp:include>
+    <jsp:include page="/WEB-INF/jsp/org/cloudlet/core/server/footer.jsp"></jsp:include>
   </div>
   <script>
 			seajs.use([ 'duokan/store/1/page/book' ]);
