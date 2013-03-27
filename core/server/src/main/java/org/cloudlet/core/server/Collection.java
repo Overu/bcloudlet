@@ -159,14 +159,18 @@ public abstract class Collection<E extends Item> extends Content {
     if (isLastPage()) {
       return null;
     }
+    return getPageUri(start + limit);
+  }
+
+  public String getPageUri(int start) {
     UriBuilder builder = getUriBuilder();
     Map<Character, Integer> condition = getCondition();
-    condition.put(START_KEY, start + limit);
+    condition.put(START_KEY, start);
     StringBuilder sb = new StringBuilder();
     for (Entry<Character, Integer> e : condition.entrySet()) {
       sb.append(e.getKey()).append(e.getValue());
     }
-    builder.path(sb.toString());
+    builder.path("c").path(sb.toString());
     return builder.build().toString();
   }
 
@@ -174,15 +178,7 @@ public abstract class Collection<E extends Item> extends Content {
     if (isFirstPage()) {
       return null;
     }
-    UriBuilder builder = getUriBuilder();
-    Map<Character, Integer> condition = getCondition();
-    condition.put(START_KEY, start - limit);
-    StringBuilder sb = new StringBuilder();
-    for (Entry<Character, Integer> e : condition.entrySet()) {
-      sb.append(e.getKey()).append(e.getValue());
-    }
-    builder.path(sb.toString());
-    return builder.build().toString();
+    return getPageUri(start - limit);
   }
 
   @Override

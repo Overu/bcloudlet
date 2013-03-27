@@ -338,7 +338,7 @@ public abstract class Content {
     return (this.id.equals(that.id));
   }
 
-  // @Path("{path}")
+  @Path("{path}")
   public <T extends Content> T getChild(@PathParam("path") String path) {
     return null;
   }
@@ -429,7 +429,7 @@ public abstract class Content {
   }
 
   @GET
-  @Path("{condition}")
+  @Path("c/{condition}")
   @Produces({ MediaType.TEXT_HTML })
   @Template
   public Content getView(@PathParam("condition") String condition) {
