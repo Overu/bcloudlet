@@ -584,7 +584,7 @@ public abstract class Content {
     }
   }
 
-  public void setQueryPath(String query) {
+  public final void setQueryPath(String query) {
     if (query != null) {
       Map<Character, Integer> params = new LinkedHashMap<Character, Integer>();
       Character key = null;
@@ -599,9 +599,9 @@ public abstract class Content {
           lastIndex = i;
         }
       }
-      readQueryPath(params);
+      setQueryPath(params);
     } else {
-      resetQueryPath();
+      unsetQueryPath();
     }
   }
 
@@ -695,10 +695,10 @@ public abstract class Content {
     getParent().initResource(result);
   }
 
-  protected void readQueryPath(Map<Character, Integer> params) {
+  protected void unsetQueryPath() {
   }
 
-  protected void resetQueryPath() {
+  protected void setQueryPath(Map<Character, Integer> params) {
   }
 
 }

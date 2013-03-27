@@ -267,13 +267,13 @@ public abstract class Collection<E extends Item> extends Content {
   }
 
   @Override
-  protected void readQueryPath(Map<Character, Integer> params) {
+  protected void setQueryPath(Map<Character, Integer> params) {
     start = params.containsKey(START_KEY) ? params.get(START_KEY) : 0;
     limit = params.containsKey(LIMIT_KEY) ? params.get(LIMIT_KEY) : 10;
   }
 
   @Override
-  protected void resetQueryPath() {
+  protected void unsetQueryPath() {
     start = 0;
     limit = 10;
   }
