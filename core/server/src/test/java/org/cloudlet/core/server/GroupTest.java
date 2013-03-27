@@ -36,10 +36,10 @@ public class GroupTest extends CoreTest {
       group.load();
     }
     users.load();
-    Long total = users.getCount();
+    long total = users.getCount();
     for (int i = 1; i <= 10; i++) {
       User user = users.newEntry();
-      Long count = total + i;
+      long count = total + i;
       user.setName("User " + count);
       user.setPath("user" + count);
       user.setEmail("user" + count + "@gmail.com");

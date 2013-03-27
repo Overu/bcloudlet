@@ -1,6 +1,8 @@
 package org.cloudlet.core.server;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.persistence.MappedSuperclass;
 import javax.persistence.NoResultException;
@@ -10,6 +12,7 @@ import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.UriBuilder;
 import javax.xml.bind.annotation.XmlTransient;
 
 @MappedSuperclass
@@ -18,12 +21,12 @@ public abstract class Collection<E extends Item> extends Content {
   @QueryParam("start")
   @DefaultValue("0")
   @Transient
-  protected Integer start;
+  protected int start;
 
   @QueryParam("limit")
   @DefaultValue("10")
   @Transient
-  protected Integer limit;
+  protected int limit;
 
   // sort=title|asc&sort=email|desc
   @QueryParam(Collection.SORT)
@@ -48,7 +51,11 @@ public abstract class Collection<E extends Item> extends Content {
   protected long total;
 
   @Transient
-  protected Long count;
+  protected long count;
+
+  public static final char START_KEY = 's';
+
+  public static final char LIMIT_KEY = 'l';
 
   @Override
   public void addJoin(StringBuilder sql) {
@@ -113,11 +120,11 @@ public abstract class Collection<E extends Item> extends Content {
     buildSort(sql);
 
     TypedQuery<E> query = em().createQuery(sql.toString(), entryClass);
-    if (getStart() != null) {
-      query.setFirstResult(getStart());
+    if (start > 0) {
+      query.setFirstResult(start);
     }
-    if (getLimit() != null && getLimit() > 0) {
-      query.setMaxResults(getLimit());
+    if (limit > 0) {
+      query.setMaxResults(limit);
     }
     setParams(query);
     return query.getResultList();
@@ -137,7 +144,7 @@ public abstract class Collection<E extends Item> extends Content {
     }
   }
 
-  public Long getCount() {
+  public long getCount() {
     return count;
   }
 
@@ -148,8 +155,34 @@ public abstract class Collection<E extends Item> extends Content {
     return items;
   }
 
-  public Integer getLimit() {
-    return limit;
+  public String getNextPageUri() {
+    if (isLastPage()) {
+      return null;
+    }
+    UriBuilder builder = getUriBuilder();
+    Map<Character, Integer> condition = getCondition();
+    condition.put(START_KEY, start + limit);
+    StringBuilder sb = new StringBuilder();
+    for (Entry<Character, Integer> e : condition.entrySet()) {
+      sb.append(e.getKey()).append(e.getValue());
+    }
+    builder.path(sb.toString());
+    return builder.build().toString();
+  }
+
+  public String getPreviousPageUri() {
+    if (isFirstPage()) {
+      return null;
+    }
+    UriBuilder builder = getUriBuilder();
+    Map<Character, Integer> condition = getCondition();
+    condition.put(START_KEY, start - limit);
+    StringBuilder sb = new StringBuilder();
+    for (Entry<Character, Integer> e : condition.entrySet()) {
+      sb.append(e.getKey()).append(e.getValue());
+    }
+    builder.path(sb.toString());
+    return builder.build().toString();
   }
 
   @Override
@@ -165,12 +198,16 @@ public abstract class Collection<E extends Item> extends Content {
     return sort;
   }
 
-  public Integer getStart() {
-    return start;
-  }
-
   public long getTotal() {
     return total;
+  }
+
+  public boolean isFirstPage() {
+    return start == 0;
+  }
+
+  public boolean isLastPage() {
+    return start + limit >= count;
   }
 
   @Path(Collection.NEW)
@@ -227,6 +264,30 @@ public abstract class Collection<E extends Item> extends Content {
     total = total + 1;
     update();
     return super.doCreate(entry);
+  }
+
+  @Override
+  protected Map<Character, Integer> getCondition() {
+    Map<Character, Integer> params = super.getCondition();
+    if (start != 0) {
+      params.put(START_KEY, start);
+    }
+    if (limit != 10) {
+      params.put(LIMIT_KEY, limit);
+    }
+    return params;
+  }
+
+  @Override
+  protected void parseCondition(Map<Character, Integer> params) {
+    start = params.containsKey(START_KEY) ? params.get(START_KEY) : 0;
+    limit = params.containsKey(LIMIT_KEY) ? params.get(LIMIT_KEY) : 10;
+  }
+
+  @Override
+  protected void resetCondition() {
+    start = 0;
+    limit = 10;
   }
 
 }

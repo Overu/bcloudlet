@@ -10,7 +10,6 @@ import org.apache.commons.fileupload.RequestContext;
 import org.apache.commons.fileupload.util.Streams;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.server.mvc.Template;
-import org.glassfish.jersey.server.mvc.Viewable;
 import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -20,6 +19,8 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -337,7 +338,7 @@ public abstract class Content {
     return (this.id.equals(that.id));
   }
 
-  @Path("{path}")
+  // @Path("{path}")
   public <T extends Content> T getChild(@PathParam("path") String path) {
     return null;
   }
@@ -428,12 +429,13 @@ public abstract class Content {
   }
 
   @GET
-  @Path("{template}")
+  @Path("{condition}")
   @Produces({ MediaType.TEXT_HTML })
-  public Viewable getView(@PathParam("template") String templateName) {
+  @Template
+  public Content getView(@PathParam("condition") String condition) {
+    setCondition(condition);
     doLoad();
-    Viewable v = new Viewable(templateName, this);
-    return v;
+    return this;
   }
 
   @GET
@@ -445,7 +447,7 @@ public abstract class Content {
 
   @GET
   @Produces({ MediaType.TEXT_HTML })
-  @Template(name = "home.jsp")
+  @Template
   public Content loadHtml() {
     doLoad();
     return this;
@@ -457,6 +459,15 @@ public abstract class Content {
     result.setPath(path);
     return result;
   }
+
+  // @GET
+  // @Path("{template}")
+  // @Produces({ MediaType.TEXT_HTML })
+  // public Viewable getView(@PathParam("template") String templateName) {
+  // doLoad();
+  // Viewable v = new Viewable(templateName, this);
+  // return v;
+  // }
 
   public void readFrom(Content delta) {
     if (delta.title != null) {
@@ -478,6 +489,27 @@ public abstract class Content {
     }
     if (title != null) {
       this.title = title;
+    }
+  }
+
+  public void setCondition(String condition) {
+    if (condition != null) {
+      Map<Character, Integer> params = new LinkedHashMap<Character, Integer>();
+      Character key = null;
+      int value = 0;
+      int lastIndex = 0;
+      for (int i = 0; i < condition.length(); i++) {
+        char c = condition.charAt(i);
+        if (i > 0 && (i == condition.length() - 1 || (c >= 'a' && c <= 'z'))) {
+          key = condition.charAt(lastIndex);
+          value = Integer.parseInt(condition.substring(lastIndex + 1, i == condition.length() - 1 ? condition.length() : i));
+          params.put(key, value);
+          lastIndex = i;
+        }
+      }
+      parseCondition(params);
+    } else {
+      resetCondition();
     }
   }
 
@@ -574,6 +606,12 @@ public abstract class Content {
     return WebPlatform.get().getEntityManager();
   }
 
+  @XmlTransient
+  protected Map<Character, Integer> getCondition() {
+    Map<Character, Integer> params = new LinkedHashMap<Character, Integer>();
+    return params;
+  }
+
   protected Object getObject(String type, String id) {
     try {
       Class<?> cls = Class.forName(type);
@@ -598,6 +636,12 @@ public abstract class Content {
       return;
     }
     getParent().initResource(result);
+  }
+
+  protected void parseCondition(Map<Character, Integer> params) {
+  }
+
+  protected void resetCondition() {
   }
 
 }

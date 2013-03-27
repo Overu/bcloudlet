@@ -26,8 +26,8 @@
                   </ul>
                 </div>
                 <div class="w-page2">
-                  <em><span id='one-page'>1</span>/<span id='total-page'>12</span></em> <a class="pre init"
-                    hidefocus="hidefocus">上一页</a> <a class="next " hidefocus="hidefocus">下一页</a>
+                  <em><span id='one-page'>1</span>/<span id='total-page'>12</span></em> <a class="pre init" hidefocus="hidefocus">上一页</a> <a
+                    class="next " hidefocus="hidefocus">下一页</a>
                 </div>
               </div>
               <div class="w-booklist w-booklist-2">
@@ -76,10 +76,10 @@
               <!--w-page-->
 
               <div class="w-page">
-                 <div class="wrap">
-                <a class="pre init" hidefocus="hidefocus">上一页</a>
+                <div class="wrap">
+                  <a class="pre init" hidefocus="hidefocus" href="${it.previousPageUri}">上一页</a>
                   <ul id="bookpage-a">
- <!-- 
+                    <!-- 
                     <li class="crt"><a href="javascript:void(0);" hidefocus="hidefocus">1</a></li>
 
                     <li class=""><a href="/%E4%BC%A0%E8%AE%B0/c/13-2" hidefocus="hidefocus">2</a></li>
@@ -91,8 +91,8 @@
                     <li class=""><a href="/%E4%BC%A0%E8%AE%B0/c/13-12" hidefocus="hidefocus">12</a></li>
 -->
                   </ul>
-                  <a class="next " hidefocus="hidefocus">下一页</a>
-                </div> 
+                  <a class="next " hidefocus="hidefocus" href="${it.nextPageUri}">下一页</a>
+                </div>
               </div>
 
               <!--w-page-->
@@ -124,7 +124,9 @@
   </div>
   <script>
 			seajs.use([ 'duokan/store/1/page/book',
-					'duokan/store/1/page/patched', 'duokan/store/1/page/test' ]);
-	</script>
+					'duokan/store/1/page/patched'
+			// ,'duokan/store/1/page/test'
+			]);
+		</script>
 </body>
 </html>

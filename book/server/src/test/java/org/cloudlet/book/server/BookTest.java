@@ -55,7 +55,7 @@ public class BookTest extends CoreTest {
   public void testCreateBook() throws Exception {
     Books books = repo.getBooks();
     books.load();
-    Long total = books.getCount();
+    long total = books.getCount();
     Book book = books.newEntry();
     total = total + 1;
     book.setPath("book" + total);

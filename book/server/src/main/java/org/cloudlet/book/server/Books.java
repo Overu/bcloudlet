@@ -50,18 +50,6 @@ public class Books extends Folder<Book> {
     }
   }
 
-  @GET
-  @Path("/{path}")
-  public Response defaultForward(@PathParam("path") String path) {
-    java.net.URI location = null;
-    try {
-      location = new java.net.URI(path.equals("r") ? "r/hot" : path.equals("t") ? "t/文学" : "r/hot");
-    } catch (URISyntaxException e) {
-      e.printStackTrace();
-    }
-    return Response.status(Status.FOUND).location(location).build();
-  }
-
   @Override
   @POST
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -76,6 +64,30 @@ public class Books extends Folder<Book> {
     featured = true;
     doLoad();
     return this;
+  }
+
+  @GET
+  @Path("/r")
+  public Response getDefaultRank() {
+    java.net.URI location = null;
+    try {
+      location = new java.net.URI("r/hot");
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+    }
+    return Response.status(Status.FOUND).location(location).build();
+  }
+
+  @GET
+  @Path("/t")
+  public Response getDefaultTag() {
+    java.net.URI location = null;
+    try {
+      location = new java.net.URI("t/文学");
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+    }
+    return Response.status(Status.FOUND).location(location).build();
   }
 
   @Override
@@ -104,7 +116,7 @@ public class Books extends Folder<Book> {
     Repository repo = (Repository) getRoot();
     query.setParameter("parent", repo.getTags());
     Tag tag = query.getSingleResult();
-    TaggedBooks result = newChild(path, TaggedBooks.class);
+    TaggedBooks result = newChild("t/" + tagValue, TaggedBooks.class);
     result.setTag(tag);
     return result;
   }

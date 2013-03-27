@@ -6,6 +6,8 @@ import org.cloudlet.core.server.Tag;
 import org.cloudlet.core.server.WebPlatform;
 
 import javax.persistence.TypedQuery;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
