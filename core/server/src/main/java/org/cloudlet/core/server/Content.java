@@ -10,6 +10,7 @@ import org.apache.commons.fileupload.RequestContext;
 import org.apache.commons.fileupload.util.Streams;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.server.mvc.Template;
+import org.glassfish.jersey.server.mvc.Viewable;
 import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -427,6 +428,15 @@ public abstract class Content {
   }
 
   @GET
+  @Path("{template}")
+  @Produces({ MediaType.TEXT_HTML })
+  public Viewable getView(@PathParam("template") String templateName) {
+    doLoad();
+    Viewable v = new Viewable(templateName, this);
+    return v;
+  }
+
+  @GET
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml" })
   public Content load() {
     doLoad();
@@ -435,7 +445,7 @@ public abstract class Content {
 
   @GET
   @Produces({ MediaType.TEXT_HTML })
-  @Template
+  @Template(name = "home.jsp")
   public Content loadHtml() {
     doLoad();
     return this;
