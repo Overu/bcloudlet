@@ -47,7 +47,7 @@ public class BookImporter {
     importTags();
     BookStore store = repo.get();
     Tags tags = store.getTags();
-    tags.load();
+    tags.doLoad();
     for (Tag tag : tags.getItems()) {
       importBooks(tag);
     }

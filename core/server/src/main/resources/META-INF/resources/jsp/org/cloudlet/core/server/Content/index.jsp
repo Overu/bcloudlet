@@ -6,15 +6,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Books</title>
+<title>${it.title}</title>
 </head>
 <body>
   <h1>${it.title}</h1>
-  <h2>Item List</h2>
-  <ul>
-    <c:forEach var="i" items="${it.items}">
-      <li><a href="${i.uri}">${i.title}</a>
-    </c:forEach>
-  </ul>
+  <p>${it.uri}</p>
+  <p>${it.uri}</p>
 </body>
 </html>

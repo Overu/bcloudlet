@@ -159,26 +159,18 @@ public abstract class Collection<E extends Item> extends Content {
     if (isLastPage()) {
       return null;
     }
-    return getPageUri(start + limit);
-  }
-
-  public String getPageUri(int start) {
-    UriBuilder builder = getUriBuilder();
-    Map<Character, Integer> condition = getCondition();
-    condition.put(START_KEY, start);
-    StringBuilder sb = new StringBuilder();
-    for (Entry<Character, Integer> e : condition.entrySet()) {
-      sb.append(e.getKey()).append(e.getValue());
-    }
-    builder.path("c").path(sb.toString());
-    return builder.build().toString();
+    Map<Character, Integer> params = getQueryPathMap();
+    params.put(START_KEY, start + limit);
+    return getUri(params);
   }
 
   public String getPreviousPageUri() {
     if (isFirstPage()) {
       return null;
     }
-    return getPageUri(start - limit);
+    Map<Character, Integer> params = getQueryPathMap();
+    params.put(START_KEY, start - limit);
+    return getUri(params);
   }
 
   @Override
@@ -263,8 +255,8 @@ public abstract class Collection<E extends Item> extends Content {
   }
 
   @Override
-  protected Map<Character, Integer> getCondition() {
-    Map<Character, Integer> params = super.getCondition();
+  protected Map<Character, Integer> getQueryPathMap() {
+    Map<Character, Integer> params = super.getQueryPathMap();
     if (start != 0) {
       params.put(START_KEY, start);
     }
@@ -275,13 +267,13 @@ public abstract class Collection<E extends Item> extends Content {
   }
 
   @Override
-  protected void parseCondition(Map<Character, Integer> params) {
+  protected void readQueryPath(Map<Character, Integer> params) {
     start = params.containsKey(START_KEY) ? params.get(START_KEY) : 0;
     limit = params.containsKey(LIMIT_KEY) ? params.get(LIMIT_KEY) : 10;
   }
 
   @Override
-  protected void resetCondition() {
+  protected void resetQueryPath() {
     start = 0;
     limit = 10;
   }

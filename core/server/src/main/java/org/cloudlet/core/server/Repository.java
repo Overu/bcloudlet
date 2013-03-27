@@ -54,7 +54,7 @@ public class Repository extends Item {
   @Override
   public void doLoad() {
     super.doLoad();
-    tags.load();
+    tags.doLoad();
   }
 
   @Path(GROUPS)

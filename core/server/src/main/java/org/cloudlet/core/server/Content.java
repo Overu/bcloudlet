@@ -10,17 +10,18 @@ import org.apache.commons.fileupload.RequestContext;
 import org.apache.commons.fileupload.util.Streams;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.server.mvc.Template;
+import org.glassfish.jersey.server.mvc.Viewable;
 import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -120,6 +121,8 @@ public abstract class Content {
   @Version
   protected long version;
 
+  protected String view;
+
   @ManyToOne
   protected User owner;
 
@@ -148,6 +151,10 @@ public abstract class Content {
   public static final String VERSION = "version";
 
   public static final String URI = "uri";
+
+  public static final String QUERY_PATH = "q";
+
+  public static final String VIEW_PATH = "v";
 
   public void addJoin(StringBuilder sql) {
   }
@@ -355,6 +362,44 @@ public abstract class Content {
     return id;
   }
 
+  @GET
+  @Produces({ MediaType.TEXT_HTML })
+  @Template(name = "index")
+  @XmlTransient
+  public Content getIndexView() {
+    doLoad();
+    return this;
+  }
+
+  @GET
+  @Path(QUERY_PATH + "/{query}")
+  @Produces({ MediaType.TEXT_HTML })
+  @Template(name = "index")
+  public Content getIndexView(@PathParam("query") String query) {
+    setQueryPath(query);
+    doLoad();
+    return this;
+  }
+
+  @GET
+  @Path(QUERY_PATH + "/{query}")
+  @Produces({ MediaType.APPLICATION_JSON })
+  @Template(name = "json")
+  public Content getJsonView(@PathParam("query") String query) {
+    setQueryPath(query);
+    doLoad();
+    return this;
+  }
+
+  @GET
+  @Produces({ MediaType.APPLICATION_JSON })
+  @Template(name = "json")
+  @XmlTransient
+  public Content getJSONView() {
+    doLoad();
+    return this;
+  }
+
   public User getOwner() {
     return owner;
   }
@@ -376,6 +421,14 @@ public abstract class Content {
       return path;
     }
     return null;
+  }
+
+  @GET
+  @Path(QUERY_PATH + "/{query}/" + VIEW_PATH + "/{view}")
+  @Produces({ MediaType.WILDCARD })
+  public Viewable getQueryView(@PathParam("query") String query, @PathParam("view") String view) {
+    setQueryPath(query);
+    return getView(view);
   }
 
   @XmlTransient
@@ -413,8 +466,28 @@ public abstract class Content {
 
   @XmlElement
   public String getUri() {
-    URI uri = getUriBuilder().build();
-    return uri.getPath();
+    // URI uri = getUriBuilder().build();
+    // return uri.getPath();
+    return getUri(getQueryPathMap());
+  }
+
+  public String getUri(Map<Character, Integer> params) {
+    return getUri(params, view);
+  }
+
+  public String getUri(Map<Character, Integer> params, String view) {
+    UriBuilder builder = getUriBuilder();
+    if (!params.isEmpty()) {
+      StringBuilder sb = new StringBuilder();
+      for (Entry<Character, Integer> e : params.entrySet()) {
+        sb.append(e.getKey()).append(e.getValue());
+      }
+      builder.path(QUERY_PATH).path(sb.toString());
+    }
+    if (view != null) {
+      builder.path(VIEW_PATH).path(view);
+    }
+    return builder.build().getPath();
   }
 
   @XmlTransient
@@ -429,28 +502,12 @@ public abstract class Content {
   }
 
   @GET
-  @Path("c/{condition}")
-  @Produces({ MediaType.TEXT_HTML })
-  @Template
-  public Content getView(@PathParam("condition") String condition) {
-    setCondition(condition);
+  @Path(VIEW_PATH + "/{view}")
+  @Produces({ MediaType.APPLICATION_JSON })
+  public Viewable getView(@PathParam("view") String view) {
+    this.view = view;
     doLoad();
-    return this;
-  }
-
-  @GET
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml" })
-  public Content load() {
-    doLoad();
-    return this;
-  }
-
-  @GET
-  @Produces({ MediaType.TEXT_HTML })
-  @Template
-  public Content loadHtml() {
-    doLoad();
-    return this;
+    return new Viewable(view, this);
   }
 
   public <T extends Content> T newChild(String path, Class<T> clz) {
@@ -458,6 +515,15 @@ public abstract class Content {
     result.setParent(this);
     result.setPath(path);
     return result;
+  }
+
+  public void readFrom(Content delta) {
+    if (delta.title != null) {
+      this.title = delta.title;
+    }
+    if (delta.path != null) {
+      this.path = delta.path;
+    }
   }
 
   // @GET
@@ -468,15 +534,6 @@ public abstract class Content {
   // Viewable v = new Viewable(templateName, this);
   // return v;
   // }
-
-  public void readFrom(Content delta) {
-    if (delta.title != null) {
-      this.title = delta.title;
-    }
-    if (delta.path != null) {
-      this.path = delta.path;
-    }
-  }
 
   public void readMedia(MultivaluedMap<String, Media> params) {
   }
@@ -489,27 +546,6 @@ public abstract class Content {
     }
     if (title != null) {
       this.title = title;
-    }
-  }
-
-  public void setCondition(String condition) {
-    if (condition != null) {
-      Map<Character, Integer> params = new LinkedHashMap<Character, Integer>();
-      Character key = null;
-      int value = 0;
-      int lastIndex = 0;
-      for (int i = 0; i < condition.length(); i++) {
-        char c = condition.charAt(i);
-        if (i > 0 && (i == condition.length() - 1 || (c >= 'a' && c <= 'z'))) {
-          key = condition.charAt(lastIndex);
-          value = Integer.parseInt(condition.substring(lastIndex + 1, i == condition.length() - 1 ? condition.length() : i));
-          params.put(key, value);
-          lastIndex = i;
-        }
-      }
-      parseCondition(params);
-    } else {
-      resetCondition();
     }
   }
 
@@ -545,6 +581,27 @@ public abstract class Content {
       title = value;
     } else if (Content.PATH.equals(name)) {
       path = value;
+    }
+  }
+
+  public void setQueryPath(String query) {
+    if (query != null) {
+      Map<Character, Integer> params = new LinkedHashMap<Character, Integer>();
+      Character key = null;
+      int value = 0;
+      int lastIndex = 0;
+      for (int i = 0; i < query.length(); i++) {
+        char c = query.charAt(i);
+        if (i > 0 && (i == query.length() - 1 || (c >= 'a' && c <= 'z'))) {
+          key = query.charAt(lastIndex);
+          value = Integer.parseInt(query.substring(lastIndex + 1, i == query.length() - 1 ? query.length() : i));
+          params.put(key, value);
+          lastIndex = i;
+        }
+      }
+      readQueryPath(params);
+    } else {
+      resetQueryPath();
     }
   }
 
@@ -606,12 +663,6 @@ public abstract class Content {
     return WebPlatform.get().getEntityManager();
   }
 
-  @XmlTransient
-  protected Map<Character, Integer> getCondition() {
-    Map<Character, Integer> params = new LinkedHashMap<Character, Integer>();
-    return params;
-  }
-
   protected Object getObject(String type, String id) {
     try {
       Class<?> cls = Class.forName(type);
@@ -627,6 +678,12 @@ public abstract class Content {
     return null;
   }
 
+  @XmlTransient
+  protected Map<Character, Integer> getQueryPathMap() {
+    Map<Character, Integer> params = new LinkedHashMap<Character, Integer>();
+    return params;
+  }
+
   protected void initResource() {
     initResource(this);
   }
@@ -638,10 +695,10 @@ public abstract class Content {
     getParent().initResource(result);
   }
 
-  protected void parseCondition(Map<Character, Integer> params) {
+  protected void readQueryPath(Map<Character, Integer> params) {
   }
 
-  protected void resetCondition() {
+  protected void resetQueryPath() {
   }
 
 }

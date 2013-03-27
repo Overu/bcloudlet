@@ -6,7 +6,6 @@ import org.apache.shiro.crypto.hash.SimpleHash;
 import javax.persistence.Entity;
 import javax.persistence.NoResultException;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -49,14 +48,6 @@ public class Users extends Folder<User> {
   @Override
   public String getType() {
     return Users.TYPE_NAME;
-  }
-
-  @Override
-  @GET
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, "application/ios+xml" })
-  public Users load() {
-    doLoad();
-    return this;
   }
 
   @Override

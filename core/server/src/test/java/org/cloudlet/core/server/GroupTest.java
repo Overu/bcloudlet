@@ -33,9 +33,9 @@ public class GroupTest extends CoreTest {
       group.setPath("mygroup");
       group = groups.doCreate(group);
     } else {
-      group.load();
+      group.doLoad();
     }
-    users.load();
+    users.doLoad();
     long total = users.getCount();
     for (int i = 1; i <= 10; i++) {
       User user = users.newEntry();
@@ -45,10 +45,10 @@ public class GroupTest extends CoreTest {
       user.setEmail("user" + count + "@gmail.com");
       user.setPhone(Long.toString(count));
       users.doCreate(user);
-      users.load();
+      users.doLoad();
       assertEquals(count, users.getCount());
     }
-    repo.load();
+    repo.doLoad();
 
     JAXBContext jc = JAXBContext.newInstance(Repository.class, Groups.class, Users.class, User.class, Media.class);
     Marshaller marshaller = jc.createMarshaller();

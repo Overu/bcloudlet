@@ -6,22 +6,15 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>图书详情</title>
+<title>${it.title}</title>
 </head>
 <body>
   <h1>${it.title}</h1>
-  <p>作者：${it.authors}</p>
-  <p>${it.summary}</p>
-  <h2>分类</h2>
+  <p>Collection</p>
+  <p>${it.uri}</p>
   <ul>
-    <c:forEach var="i" items="${it.tags}">
-      <li><a href="${i.uri}">${i.value}</a>
-    </c:forEach>
-  </ul>
-  <h2>点评</h2>
-  <ul>
-    <c:forEach var="i" items="${it.comments.items}">
-      <li>${i.content}</a>
+    <c:forEach var="i" items="${it.items}" varStatus="status">
+      <li><a href="${i.uri}">${i.title}</a></li>
     </c:forEach>
   </ul>
 </body>

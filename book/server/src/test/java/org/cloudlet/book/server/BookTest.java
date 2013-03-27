@@ -54,7 +54,7 @@ public class BookTest extends CoreTest {
   @Test
   public void testCreateBook() throws Exception {
     Books books = repo.getBooks();
-    books.load();
+    books.doLoad();
     long total = books.getCount();
     Book book = books.newEntry();
     total = total + 1;
@@ -91,7 +91,7 @@ public class BookTest extends CoreTest {
     book.setCover(cover);
 
     book.update();
-    books.load();
+    books.doLoad();
     assertEquals(total, books.getCount());
     for (int i = 0; i < 10; i++) {
       Section section = new Section();
@@ -101,7 +101,7 @@ public class BookTest extends CoreTest {
       book.createChild(section);
     }
 
-    books.load();
+    books.doLoad();
 
     JAXBContext jc = JAXBContext.newInstance(Repository.class, Groups.class, Users.class, User.class, Media.class, Books.class);
     Marshaller marshaller = jc.createMarshaller();
