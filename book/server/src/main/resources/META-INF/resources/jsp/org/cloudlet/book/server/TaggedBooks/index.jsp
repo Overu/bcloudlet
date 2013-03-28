@@ -7,6 +7,8 @@
 <title>${it.tag.value}- 多看精品书城</title>
 <jsp:include page="../meta.jsp"></jsp:include>
 <link type="text/css" rel="stylesheet" href="/static/lib/css/category.css?201303081413" />
+<style type="text/css">
+</style>
 </head>
 <body id="page-duokan-com" itemscope itemtype="http://schema.org/WebPage">
   <noscript>请使用支持脚本的浏览器！</noscript>
@@ -26,8 +28,9 @@
                   </ul>
                 </div>
                 <div class="w-page2">
-                  <!-- <em><span id='one-page'>1</span>/<span id='total-page'>12</span></em> --> <a class="pre<c:if test='${it.firstPage}'> init</c:if>" hidefocus="hidefocus" href="${it.previousPageUri}">上一页</a>
-                  <a class="next<c:if test='${it.lastPage}'> init</c:if>"hidefocus="hidefocus" href="${it.nextPageUri}">下一页</a>
+                  <!-- <em><span id='one-page'>1</span>/<span id='total-page'>12</span></em> -->
+                  <a class="pre<c:if test='${it.firstPage}'> init</c:if>" hidefocus="hidefocus" href="${it.previousPageUri}">上一页</a> <a
+                    class="next<c:if test='${it.lastPage}'> init</c:if>" hidefocus="hidefocus" href="${it.nextPageUri}">下一页</a>
                 </div>
               </div>
               <div class="w-booklist w-booklist-2">
@@ -35,14 +38,12 @@
                   <c:forEach var="i" items="${it.items}">
                     <li class="itm">
                       <div class="cover">
-                        <a href="/%E6%A2%81%E5%90%AF%E8%B6%85%E4%BC%A0%EF%BC%88%E5%85%A8%E4%BA%8C%E5%86%8C%EF%BC%89/b/13357"
-                          hidefocus="hidefocus"> <img src="${i.coverUrl}" alt="${i.title}" onload="onLoadImg(this)"
+                        <a href="${ i.uri }" hidefocus="hidefocus"> <img src="${i.coverUrl}" alt="${i.title}" onload="onLoadImg(this)"
                           style="display: none" />
                         </a>
                       </div>
                       <div class="info">
-                        <a href="/%E6%A2%81%E5%90%AF%E8%B6%85%E4%BC%A0%EF%BC%88%E5%85%A8%E4%BA%8C%E5%86%8C%EF%BC%89/b/13357"
-                          hidefocus="hidefocus">
+                        <a href="${ i.uri }" hidefocus="hidefocus">
                           <h4>${i.title}</h4>
                         </a>
                         <p class="author">
@@ -91,7 +92,7 @@
                     <li class=""><a href="/%E4%BC%A0%E8%AE%B0/c/13-12" hidefocus="hidefocus">12</a></li>
 -->
                   </ul>
-                  <a class="next<c:if test='${it.lastPage}'> init</c:if>"hidefocus="hidefocus" href="${it.nextPageUri}">下一页</a>
+                  <a class="next<c:if test='${it.lastPage}'> init</c:if>" hidefocus="hidefocus" href="${it.nextPageUri}">下一页</a>
                 </div>
               </div>
 

@@ -155,6 +155,10 @@ public abstract class Collection<E extends Item> extends Content {
     return items;
   }
 
+  public int getLimit() {
+    return limit;
+  }
+
   public String getNextPageUri() {
     if (isLastPage()) {
       return null;
@@ -184,6 +188,10 @@ public abstract class Collection<E extends Item> extends Content {
 
   public List<String> getSort() {
     return sort;
+  }
+
+  public int getStart() {
+    return start;
   }
 
   public long getTotal() {

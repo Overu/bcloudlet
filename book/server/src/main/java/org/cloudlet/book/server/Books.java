@@ -52,8 +52,8 @@ public class Books extends Folder<Book> {
 
   @Override
   @POST
-  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
   public Book doCreate(Book book) {
     return super.doCreate(book);
   }

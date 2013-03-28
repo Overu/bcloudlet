@@ -1025,10 +1025,10 @@ function() {
 	var d = function() {
 		if ( - 1 == location.href.indexOf("ctest")) {
 			window._hmt = window._hmt || [];
-			var a = document.createElement("script");
+			/*var a = document.createElement("script");
 			a.src = "//hm.baidu.com/hm.js?2d8f9b400e4b1e50b94358d8bb45b3de";
 			var b = document.getElementsByTagName("script")[0];
-			b.parentNode.insertBefore(a, b)
+			b.parentNode.insertBefore(a, b)*/
 		}
 	};
 	return d
