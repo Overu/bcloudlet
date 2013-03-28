@@ -363,7 +363,7 @@ public abstract class Content {
   }
 
   @GET
-  @Produces({ MediaType.TEXT_HTML })
+  @Produces("text/html;qs=5")
   @Template(name = "index")
   @XmlTransient
   public Content getIndexView() {
@@ -372,27 +372,7 @@ public abstract class Content {
   }
 
   @GET
-  @Path(QUERY_PATH + "/{query}")
-  @Produces({ MediaType.TEXT_HTML })
-  @Template(name = "index")
-  public Content getIndexView(@PathParam("query") String query) {
-    setQueryPath(query);
-    doLoad();
-    return this;
-  }
-
-  @GET
-  @Path(QUERY_PATH + "/{query}")
-  @Produces({ MediaType.APPLICATION_JSON })
-  @Template(name = "json")
-  public Content getJsonView(@PathParam("query") String query) {
-    setQueryPath(query);
-    doLoad();
-    return this;
-  }
-
-  @GET
-  @Produces({ MediaType.APPLICATION_JSON })
+  @Produces(MediaType.APPLICATION_JSON)
   @Template(name = "json")
   @XmlTransient
   public Content getJSONView() {
@@ -423,12 +403,10 @@ public abstract class Content {
     return null;
   }
 
-  @GET
-  @Path(QUERY_PATH + "/{query}/" + VIEW_PATH + "/{view}")
-  @Produces({ MediaType.WILDCARD })
-  public Viewable getQueryView(@PathParam("query") String query, @PathParam("view") String view) {
+  @Path(QUERY_PATH + "/{query}")
+  public Content getQuery(@PathParam("query") String query) {
     setQueryPath(query);
-    return getView(view);
+    return this;
   }
 
   @XmlTransient
@@ -503,7 +481,7 @@ public abstract class Content {
 
   @GET
   @Path(VIEW_PATH + "/{view}")
-  @Produces({ MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.TEXT_HTML })
   public Viewable getView(@PathParam("view") String view) {
     this.view = view;
     doLoad();
@@ -525,15 +503,6 @@ public abstract class Content {
       this.path = delta.path;
     }
   }
-
-  // @GET
-  // @Path("{template}")
-  // @Produces({ MediaType.TEXT_HTML })
-  // public Viewable getView(@PathParam("template") String templateName) {
-  // doLoad();
-  // Viewable v = new Viewable(templateName, this);
-  // return v;
-  // }
 
   public void readMedia(MultivaluedMap<String, Media> params) {
   }
@@ -695,10 +664,10 @@ public abstract class Content {
     getParent().initResource(result);
   }
 
-  protected void unsetQueryPath() {
+  protected void setQueryPath(Map<Character, Integer> params) {
   }
 
-  protected void setQueryPath(Map<Character, Integer> params) {
+  protected void unsetQueryPath() {
   }
 
 }

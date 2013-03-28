@@ -10,7 +10,6 @@ import javax.persistence.Transient;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.ext.RuntimeDelegate;
@@ -24,7 +23,6 @@ import javax.xml.bind.annotation.XmlType;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Template
 @Path("/")
-@Produces("text/html;qs=5")
 public class Repository extends Item {
 
   public static final String TYPE_NAME = CoreUtil.PREFIX + "Repository";
@@ -65,11 +63,6 @@ public class Repository extends Item {
   @Path(TAGS)
   public Tags getTags() {
     return tags;
-  }
-
-  @Override
-  public String getTitle() {
-    return "Repository";
   }
 
   @Override
