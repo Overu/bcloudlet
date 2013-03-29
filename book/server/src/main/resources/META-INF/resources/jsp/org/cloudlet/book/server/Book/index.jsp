@@ -109,7 +109,7 @@
             </div>
           </div>
         </div>
-        <<%-- h1>${it.title}</h1>
+        <%-- <h1>${it.title}</h1>
         <p>作者：${it.authors}</p>
         <p>${it.summary}</p>
         <h2>分类</h2>
@@ -130,9 +130,9 @@
     <jsp:include page="../footer.jsp"></jsp:include>
 
   </div>
-  <script>
+  <script type="text/javascript">
 			seajs.use([ 'duokan/store/1/page/book',
-					'duokan/store/1/page/patched' ])
+					'duokan/store/1/page/patched' ]);
 		</script>
 </body>
 </html>

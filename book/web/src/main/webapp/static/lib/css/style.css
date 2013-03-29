@@ -25,7 +25,7 @@ pre{white-space:pre-wrap;white-space:-moz-pre-wrap;white-space:-o-pre-wrap;*word
 .m-readbook .close,.m-readbook .mode,.m-readbook .page-pre em,.m-readbook .page-next em,.m-readbook .page-first em,.m-readbook .page-final em{background:url(../images/reader.png) no-repeat;}
 .w-booklist .cover,.w-aimg a,.m-bookdetail,.w-bookitm .cover,.w-slider,.m-invitesuccess .cover{background:url(../images/cover.png) no-repeat;}
 .w-slider .slides_nav{background:url(../images/arr.gif);}
-.w-slider .slides,.w-bookitm .cover.img,.m-special .img,.m-bookdetail .cover{background:url(../images/loading-big.gif) center no-repeat;}
+/* .w-slider .slides,.w-bookitm .cover.img,.m-special .img,.m-bookdetail .cover{background:url(../images/loading-big.gif) center no-repeat;} */
 .m-readbook ul li{background:#555 url(../images/loading2.gif) center 340px no-repeat;}
 .w-ellipsis{background:url(../images/ellipsis.png) center no-repeat;}
 .m-readerhelp .img,.w-hpimg .img{background: url(../images/help.png) no-repeat;}
