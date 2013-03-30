@@ -41,6 +41,81 @@
             <a class="w-more-open" href="javascript:void(0);" hidefocus="hidefocus">显示全部</a>
           </div>
           </section>
+
+          <section class="m-comm">
+          <div class="w-ttl3">
+            <h3>
+              用户评论<a href="/%E9%87%8D%E5%8F%A3%E5%91%B3%E5%BF%83%E7%90%86%E5%AD%A6/b/1432/comment" class="w-commentotal">( <em>${
+                  it.comments.count }</em> 条 )
+              </a>
+            </h3>
+            <div class="m-comm-order">
+              <ul class="w-tab">
+                <li class="crt comment-hot"><a href="javascript:void(0);" hidefocus="hidefocus">最热</a></li>
+                <li class="comment-new"><a href="javascript:void(0);" hidefocus="hidefocus">最新</a></li>
+              </ul>
+            </div>
+            <div class="act" id="icomment">
+              <div class="w-write">
+                <a href="/login" class="gotoload">登录</a>&nbsp;后发表评论
+              </div>
+            </div>
+          </div>
+
+          <div class="cnt">
+            <div class="w-commlist" id="commlist">
+              <ul id="hottest" style="height: auto;">
+                <c:forEach var="i" items="${it.comments.items}">
+
+                  <li comments_id="${ i.id }" class="itm"><h3>
+                      <a href="/%E9%87%8D%E5%8F%A3%E5%91%B3%E5%BF%83%E7%90%86%E5%AD%A6/b/1432/comment/5032cb8a402b514719c339dd">${ i.title }</a>
+                    </h3>
+                    <div class="w-starfive">
+                      <ul class="five">
+                        <li class="red"></li>
+                        <li class="red"></li>
+                        <li class="red"></li>
+                        <li class="red"></li>
+                        <li class="red"></li>
+                      </ul>
+                      <span class="autor">huxd</span>
+                    </div>
+                    <div class="content">
+                      <p>${ i.content }</p>
+                    </div>
+                    <div class="comm_operate">
+                      <span class="times">2012-08-21</span>
+                      <div class="act">
+                        <a class="useful">有用&nbsp;(&nbsp;<span class="useful-number">14</span>&nbsp;)
+                          <div class="w-tips1 younoload" style="display: none"></div></a><span class="sep">-</span><a
+                          href="/%E9%87%8D%E5%8F%A3%E5%91%B3%E5%BF%83%E7%90%86%E5%AD%A6/b/1432/comment/5032cb8a402b514719c339dd"
+                          class="reply">回复&nbsp;(&nbsp;0&nbsp;)</a><span class="loading_icon"></span>
+                      </div>
+                    </div>
+                    <div class="reply_doc" style="display: none">
+                      <div class="form">
+                        <textarea style="minHeight: 20px" name="write_reply" class="w-txt"></textarea>
+                        <input type="button" class="w-btn2 publish_reply" value="回复">
+                      </div>
+                      <div class="w-tips1 buy-reply" style="display: none">
+                        登录后，可回复评论。
+                        <div class="close" title="关闭"></div>
+                      </div>
+                      <div class="w-msg w-msg-error reply-error"></div>
+                    </div></li>
+                </c:forEach>
+              </ul>
+
+              <ul id="newest"></ul>
+              <div class="no_comment" style="display: none">暂无评论~</div>
+              <div class="more residue">
+                <a href="/%E9%87%8D%E5%8F%A3%E5%91%B3%E5%BF%83%E7%90%86%E5%AD%A6/b/1432/comment" class="w-more" id="commentlist-more"
+                  hidefocus="hidefocus">后面还有 <em id="comm_total">${ it.comments.count }</em> 条评论，查看全部
+                </a>
+              </div>
+            </div>
+          </div>
+          </section>
         </div>
       </div>
 

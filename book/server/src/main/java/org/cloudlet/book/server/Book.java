@@ -133,6 +133,12 @@ public class Book extends Item {
   }
 
   @Override
+  public void doLoad() {
+    super.doLoad();
+    comments.doLoad();
+  }
+
+  @Override
   public void doUpdate() {
     if (addTags != null) {
       for (String value : addTags) {
