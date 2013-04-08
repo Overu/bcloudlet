@@ -1,7 +1,7 @@
 <script type="text/template" id="jst-more">
 {@each items as itm, index}
 <li class="itm" book_id ="$${ itm.id }">
-<a class="cover" href="$${ itm.cover.source }" hidefocus = "hidefocus">
+<a class="cover" href="$${ itm.uri }" hidefocus = "hidefocus">
 <div class="wrap">
 <img src="$${ itm.coverUrl }" ondragstart="return false;" oncontextmenu="return false;" onload="onLoadImg(this)" style="display:none" />
 <div class="desc"><p>$${ itm.summary }</p></div>
