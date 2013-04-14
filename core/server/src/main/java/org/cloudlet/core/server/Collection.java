@@ -131,7 +131,6 @@ public abstract class Collection<E extends Item> extends Content {
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public E getChild(String path) {
     try {
       Class<E> entryClass = getEntryType();

@@ -152,9 +152,7 @@ public abstract class Content {
 
   public static final String URI = "uri";
 
-  public static final String QUERY_PATH = "q";
-
-  public static final String VIEW_PATH = "v";
+  public static final String QUERY = "q";
 
   public void addJoin(StringBuilder sql) {
   }
@@ -346,7 +344,8 @@ public abstract class Content {
   }
 
   @Path("{path}")
-  public <T extends Content> T getChild(@PathParam("path") String path) {
+  public Content getChild(@PathParam("path") String path) {
+    System.out.println(path);
     return null;
   }
 
@@ -358,13 +357,22 @@ public abstract class Content {
     return createdBy;
   }
 
+  @GET
+  @Path("{view}.html")
+  @Produces({ MediaType.TEXT_HTML })
+  public Viewable getHtmlView(@PathParam("view") String view) {
+    this.view = view;
+    doLoad();
+    return new Viewable(view + ".html", this);
+  }
+
   public String getId() {
     return id;
   }
 
   @GET
   @Produces("text/html;qs=5")
-  @Template(name = "index")
+  @Template(name = "index.html")
   @XmlTransient
   public Content getIndexView() {
     doLoad();
@@ -373,11 +381,20 @@ public abstract class Content {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Template(name = "json")
+  @Template(name = "index.json")
   @XmlTransient
-  public Content getJSONView() {
+  public Content getJsonView() {
     doLoad();
     return this;
+  }
+
+  @GET
+  @Path("{view}.json")
+  @Produces({ MediaType.APPLICATION_JSON })
+  public Viewable getJsonView(@PathParam("view") String view) {
+    this.view = view;
+    doLoad();
+    return new Viewable(view + ".json", this);
   }
 
   public User getOwner() {
@@ -403,9 +420,9 @@ public abstract class Content {
     return null;
   }
 
-  @Path(QUERY_PATH + "/{query}")
+  @Path(QUERY + "/{query}")
   public Content getQuery(@PathParam("query") String query) {
-    setQueryPath(query);
+    setQuery(query);
     return this;
   }
 
@@ -460,10 +477,10 @@ public abstract class Content {
       for (Entry<Character, Integer> e : params.entrySet()) {
         sb.append(e.getKey()).append(e.getValue());
       }
-      builder.path(QUERY_PATH).path(sb.toString());
+      builder.path(QUERY).path(sb.toString());
     }
     if (view != null) {
-      builder.path(VIEW_PATH).path(view);
+      builder.path(view);
     }
     return builder.build().getPath();
   }
@@ -477,15 +494,6 @@ public abstract class Content {
 
   public long getVersion() {
     return version;
-  }
-
-  @GET
-  @Path(VIEW_PATH + "/{view}")
-  @Produces({ MediaType.TEXT_HTML })
-  public Viewable getView(@PathParam("view") String view) {
-    this.view = view;
-    doLoad();
-    return new Viewable(view, this);
   }
 
   public <T extends Content> T newChild(String path, Class<T> clz) {
@@ -553,7 +561,7 @@ public abstract class Content {
     }
   }
 
-  public final void setQueryPath(String query) {
+  public final void setQuery(String query) {
     if (query != null) {
       Map<Character, Integer> params = new LinkedHashMap<Character, Integer>();
       Character key = null;

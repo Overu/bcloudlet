@@ -70,13 +70,13 @@ public abstract class Item extends Content {
   }
 
   @Override
-  public <T extends Content> T getChild(String path) {
+  public Content getChild(String path) {
     try {
       TypedQuery<Reference> query =
           em().createQuery("from " + Reference.class.getName() + " rel where rel.source=:source and rel.path=:path", Reference.class);
       query.setParameter("source", this);
       query.setParameter("path", path);
-      return (T) query.getSingleResult().getTarget();
+      return (Content) query.getSingleResult().getTarget();
     } catch (NoResultException e) {
       return null;
     }

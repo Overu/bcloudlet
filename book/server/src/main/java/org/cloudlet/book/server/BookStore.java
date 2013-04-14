@@ -2,7 +2,6 @@ package org.cloudlet.book.server;
 
 import org.cloudlet.core.server.CoreUtil;
 import org.cloudlet.core.server.Repository;
-import org.glassfish.jersey.server.mvc.Template;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
@@ -13,7 +12,6 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType
 @Entity(name = BookStore.TYPE_NAME)
-@Template
 @Path("/")
 public final class BookStore extends Repository {
 

@@ -1,7 +1,5 @@
 package org.cloudlet.core.server;
 
-import org.glassfish.jersey.server.mvc.Template;
-
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -21,7 +19,6 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType
 @Entity(name = Repository.TYPE_NAME)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@Template
 @Path("/")
 public class Repository extends Item {
 

@@ -18,7 +18,7 @@
         <div id='book-rank'>
           <div class="content">
             <div class="w-booklist w-booklist-1">
-              <jsp:include page="../Books/list.jsp"></jsp:include>
+              <jsp:include page="../Books/list.html.jsp"></jsp:include>
             </div>
           </div>
           <div class="w-load">

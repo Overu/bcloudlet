@@ -13,8 +13,8 @@
         </a></li>
 
         <li id="category"><a href="/books/t" class="usename" hidefocus="hidefocus">分类</a></li>
-        <li><a href="/v/client" target="_blank" hidefocus="hidefocus">客户端</a></li>
-        <li><a href="/v/admin" target="_blank" hidefocus="hidefocus">管理</a></li>
+        <li><a href="/client.html" target="_blank" hidefocus="hidefocus">客户端</a></li>
+        <li><a href="/admin.html" target="_blank" hidefocus="hidefocus">管理</a></li>
       </ul>
     </nav>
     <div class="w-search">

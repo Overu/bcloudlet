@@ -7,13 +7,13 @@
       <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
         <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
       </button>
-      <a class="brand" href="/v/admin">睿泰书城管理控制台</a>
+      <a class="brand" href="/admin.html">睿泰书城管理控制台</a>
       <div class="nav-collapse collapse">
         <ul class="nav">
-          <li class="active"><a href="/v/admin">概况</a></li>
-          <li class=""><a href="/books/v/admin">书库</a></li>
-          <li class=""><a href="/users/v/admin">用户</a></li>
-          <li class=""><a href="/settings">设置</a></li>
+          <li class="active"><a href="/admin.html">概况</a></li>
+          <li class=""><a href="/books/admin.html">书库</a></li>
+          <li class=""><a href="/users/admin.html">用户</a></li>
+          <li class=""><a href="/settings/admin.html">设置</a></li>
         </ul>
       </div>
     </div>
