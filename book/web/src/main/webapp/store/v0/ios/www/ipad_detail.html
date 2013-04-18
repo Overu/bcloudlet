@@ -238,8 +238,9 @@ function hideAll() {
 
 function buildContent(str) {
   var sep = '\n';
-  if (str.search('\r\n') != -1)
+  if (str.search('\r\n') != -1) {
     sep = '\r\n';
+  }
   var paras = str.split(sep+sep);
   var content = "";
   var regex = new RegExp(sep, 'g');
