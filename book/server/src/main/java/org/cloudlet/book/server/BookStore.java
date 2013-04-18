@@ -27,6 +27,12 @@ public final class BookStore extends Repository {
   @OneToOne
   private Orders orders;
 
+  @Override
+  public void doLoad() {
+    super.doLoad();
+    books.doLoad();
+  }
+
   @Path(BOOKS)
   public Books getBooks() {
     return books;

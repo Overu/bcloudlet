@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>睿泰-客户端</title>
+<title>睿泰-客户端1</title>
 <jsp:include page="../meta.jsp"></jsp:include>
 <link rel="stylesheet" type="text/css" href="/static/lib/css/client_style.css">
 <link rel="stylesheet" type="text/css" href="/static/lib/css/reset.css">
