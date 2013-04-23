@@ -1,0 +1,43 @@
+.header {
+  position: absolute;
+  height: 100px;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  background-color: gray;
+}
+
+.left {
+  position: absolute;
+  top: 104;
+  width: 230px;
+  bottom: 2px;
+  left: 2px;
+  border: 1px solid gray;
+  -webkit-border-radius: 4px;
+}
+
+.left>div:FIRST-CHILD {
+  background-color: black;
+  height: 30px;
+  -webkit-border-radius: 3px 3px 0 0;
+  line-height: 25px;
+  color: white;
+}
+
+.left>div:LAST-CHILD {
+  overflow-y: auto;
+  top: 30px;
+  bottom: 0;
+  width: 100%;
+  position: absolute;
+}
+
+.right {
+  top: 104px;
+  position: absolute;
+  left: 236px;
+  right: 2px;
+  bottom: 2px;
+  background-color: gray;
+}
