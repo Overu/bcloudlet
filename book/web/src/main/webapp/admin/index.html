@@ -5,13 +5,13 @@
 <link href="styles/index.css" rel="stylesheet" />
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/kendo.web.min.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
 </head>
 <body>
-  <div>
-    <div class="header">Retech Book Manager Center</div>
-    <div class="left">
-      <div>Category</div>
-      <div>
+  <div class="header">Retech Book Manager Center</div>
+  <div class="content">
+    <div id="splitter">
+      <div id="left">
         <ul id="panelBar">
           <li>book
             <ul>
@@ -36,30 +36,11 @@
           </li>
         </ul>
       </div>
+      <div class="center"></div>
     </div>
-    <div class="right"></div>
   </div>
   <script id="template" type="text/x-kendo-template">
     <span>#: firstName # #: lastName #</span>
-  </script>
-  <script>
-  	function content(elm) {
-  		var $elm = $(elm);
-  		if($elm.attr("aria-expanded")) {
-  			return;
-  		}
-  		$(".right").text($elm.text());
-  	}
-  	function onSelect(e) {
-  		content(e.item);
-  	}
-	$(function() {
-		$("#panelBar").kendoPanelBar({
-			
-			select : onSelect
-		});
-		var panelBar = $("#panelBar").data("kendoPanelBar");
-	});
   </script>
 </body>
 </html>
