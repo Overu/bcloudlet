@@ -674,7 +674,7 @@ function clickFullBook(book_id, title, url, cover, price, revision) {
   var s = '/__duokan_appapi/cmd/books/get?bookid=' + book_id
     + '&contenttype=full'
     + '&coverurl=' + encodeURIComponent(cover)
-    + '&bookurl='  + encodeURIComponent(url)
+    + '&bookurl='  + url
     + '&title=' + encodeURIComponent(title)
     + '&price=' + price
     + '&currency=CNY'
