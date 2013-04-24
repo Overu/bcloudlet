@@ -381,7 +381,6 @@ public abstract class Content {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Template(name = "index.json")
   @XmlTransient
   public Content getJsonView() {
     doLoad();
