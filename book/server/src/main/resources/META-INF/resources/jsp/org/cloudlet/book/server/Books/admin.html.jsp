@@ -27,15 +27,25 @@
     <div class="row">
       <div class="span3 bs-docs-sidebar">
         <ul class="nav nav-list bs-docs-sidenav">
-          <li><a href="#dropdowns"><i class="icon-chevron-right"></i> 上传新书</a></li>
-          <li><a href="#buttonGroups"><i class="icon-chevron-right"></i> 我的图书</a></li>
+          <li><a href="#newbook" onclick='javascript:$("#newbook"）.show()'><i class="icon-chevron-right"></i> 上传新书</a></li>
+          <li><a href="#mybooks"><i class="icon-chevron-right"></i> 我的图书</a></li>
           <li><a href="#progress"><i class="icon-chevron-right"></i> 已购图书</a></li>
           <li><a href="#media"><i class="icon-chevron-right"></i> 我的收藏</a></li>
           <li><a href="#misc"><i class="icon-chevron-right"></i> 推荐新书</a></li>
         </ul>
       </div>
       <div class="span9">
-        <section id="dropdowns">
+        <section id="newbook" style="display: none">
+          <div class="page-header">
+            <h1>上传新书</h1>
+          </div>
+          <form action="../">
+             <input name="title">
+             <input type="file" name="source">
+             <input type="submit" value="上传">
+          </form>
+        </section>
+        <section id="mybooks">
           <div class="page-header">
             <h1>我的图书</h1>
           </div>
@@ -45,8 +55,7 @@
                 <th>#</th>
                 <th>书名</th>
                 <th>作者</th>
-                <th>出版
-                </td>
+                <th>出版</th>
                 <th>更新日期</th>
               </tr>
               <c:forEach var="i" items="${it.items}" varStatus="status">
