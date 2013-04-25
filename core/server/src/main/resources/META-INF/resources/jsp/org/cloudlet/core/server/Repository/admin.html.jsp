@@ -5,7 +5,7 @@
 <head>
 <meta charset="utf-8">
 <title>Repository Administration</title>
-<jsp:include page="../admin/meta.jsp"></jsp:include>
+<jsp:include page="../../../../../admin/meta.jsp"></jsp:include>
 <script type="text/javascript">
 	var _gaq = _gaq || [];
 	_gaq.push([ '_setAccount', 'UA-146052-10' ]);
@@ -23,7 +23,7 @@
 </script>
 </head>
 <body data-spy="scroll" data-target=".bs-docs-sidebar">
-  <jsp:include page="../admin/navbar.jsp"></jsp:include>
+  <jsp:include page="../../../../../admin/navbar.jsp"></jsp:include>
   <div class="jumbotron masthead">
     <div class="container">
       <h1>Bootstrap</h1>

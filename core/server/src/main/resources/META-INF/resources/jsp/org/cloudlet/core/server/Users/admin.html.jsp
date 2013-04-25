@@ -5,10 +5,10 @@
 <head>
 <meta charset="utf-8">
 <title>用户</title>
-<jsp:include page="../admin/meta.jsp"></jsp:include>
+<jsp:include page="../../../../../admin/meta.jsp"></jsp:include>
 </head>
 <body data-spy="scroll" data-target=".bs-docs-sidebar">
-  <jsp:include page="../admin/navbar.jsp"></jsp:include>
+  <jsp:include page="../../../../../admin/navbar.jsp"></jsp:include>
 
   <!-- Subhead
 ================================================== -->
