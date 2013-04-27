@@ -28,7 +28,7 @@
     <div class="row">
       <div class="span3 bs-docs-sidebar">
         <ul class="nav nav-list bs-docs-sidenav">
-          <li><a href="#newbook" onclick='javascript:$("#newbook"）.show()'><i class="icon-chevron-right"></i> 上传新书</a></li>
+          <li><a href="#newbook" onclick="showNewbookFrom();"><i class="icon-chevron-right"></i> 上传新书</a></li>
           <li><a href="#mybooks"><i class="icon-chevron-right"></i> 我的图书</a></li>
           <li><a href="#progress"><i class="icon-chevron-right"></i> 已购图书</a></li>
           <li><a href="#media"><i class="icon-chevron-right"></i> 我的收藏</a></li>
@@ -36,21 +36,35 @@
         </ul>
       </div>
       <div class="span9">
-        <section id="newbook" style="display: none">
+        <section id="newbook">
           <div class="page-header">
             <h1>上传新书</h1>
           </div>
-          <form action="../">
-             <input name="title">
-             <input type="file" name="source">
-             <input type="submit" value="上传">
+          <form class="form-horizontal">
+            <div class="control-group">
+              <label class="control-label" for="bookname">书籍名称</label>
+              <div class="controls">
+                <input type="text" id="bookname" placeholder="bookname">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="summny">描述</label>
+              <div class="controls">
+                 <textarea rows="3" id="summy"></textarea>               
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="controls">               
+                <button type="submit" class="btn">上传</button>
+              </div>
+            </div>
           </form>
         </section>
         <section id="mybooks">
           <div class="page-header">
             <h1>我的图书</h1>
           </div>
-          <table class="table table-striped">
+          <table class="table table-striped table-hover">
             <tbody>
               <tr>
                 <th>#</th>
@@ -163,13 +177,17 @@
           $url.append($li);
         }       
         $url.append($li_next);      
-      }); 
+      });
+      
+      function showNewbookFrom(){
+    	  $("#newbook").show();
+      }
     </script>
   <!-- Footer
     ================================================== -->
   <footer class="footer">
-    <div class="container">
-      <p>
+    <div class="container" style="height: 10%;">
+      <!-- <p>
         Designed and built with all the love in the world by <a href="http://twitter.com/mdo" target="_blank">@mdo</a> and <a
           href="http://twitter.com/fat" target="_blank">@fat</a>.
       </p>
@@ -187,8 +205,25 @@
         <li><a href="https://github.com/twitter/bootstrap/issues?state=open">Issues</a></li>
         <li class="muted">&middot;</li>
         <li><a href="https://github.com/twitter/bootstrap/blob/master/CHANGELOG.md">Changelog</a></li>
-      </ul>
+      </ul> -->
+      <jsp:include page="../footer.jsp"></jsp:include>
     </div>
-  </footer>
+  </footer>  
+  <!--<script src="../admin/js/bootstrap-transition.js"></script>
+   <script src="../admin/js/bootstrap-alert.js"></script>
+  <script src="../admin/js/bootstrap-modal.js"></script>
+  <script src="../admin/js/bootstrap-dropdown.js"></script> -->
+  <script src="../admin/js/bootstrap-scrollspy.js"></script>
+  <!-- <script src="../admin/js/bootstrap-tab.js"></script>
+  <script src="../admin/js/bootstrap-tooltip.js"></script>
+  <script src="../admin/js/bootstrap-popover.js"></script>
+  <script src="../admin/js/bootstrap-button.js"></script> -->
+  <script src="../admin/js/bootstrap-collapse.js"></script>
+  <!-- <script src="../admin/js/bootstrap-carousel.js"></script>
+  <script src="../admin/js/bootstrap-typeahead.js"></script> -->
+  <script src="../admin/js/bootstrap-affix.js"></script>
+  <!-- <script src="../admin/js/holder/holder.js"></script> -->
+  <!-- <script src="../admin/js/prettify.js"></script> -->
+  <script src="../admin/js/application.js"></script>
 </body>
 </html>
