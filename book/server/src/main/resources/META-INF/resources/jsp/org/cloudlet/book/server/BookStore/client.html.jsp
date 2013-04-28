@@ -53,8 +53,8 @@ div#wrap>header>div {
     <jsp:include page="../header.jsp"></jsp:include>
     <div id="brand">
       <div class="slide"
-        style="height: 303px; margin-top: 0px; margin-bottom: 29px; background: url(/static/lib/images/webbookstor-bg2.jpg) repeat-x 0 0;">
-        <!-- <a href="http://book.duokan.com/"><img src="./client_files/webbookstor.png"></a> -->
+        style="height: 303px; margin-top: 0px; margin-bottom: 29px; background: url(/static/lib/images/webbookstor-bg1.png) repeat-x 0 0;">
+        <a href="http://book.duokan.com/"><img src="/static/lib/images/webbookstor-bg2.png"></a>
       </div>
     </div>
     <div id="content">
