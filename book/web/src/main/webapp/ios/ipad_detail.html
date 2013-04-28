@@ -3,10 +3,10 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable = no">
-    <link rel="stylesheet" href="static/ipad.css">
-    <script language="javascript" src="/__duokan_appapi/libs/iscroll/iscroll.js"></script>
-    <script language="javascript" src="/__duokan_appapi/libs/jquery/jquery-1.7.2.min.js"></script>
-    <script language="javascript" src="static/ios_support.js"></script>
+    <link rel="stylesheet" href="css/ipad.css">
+    <script language="javascript" src="js/iscroll.js"></script>
+    <script language="javascript" src="js/jquery-1.7.2.min.js"></script>
+    <script language="javascript" src="js/ios_support.js"></script>
 </head>
 <body style='background: #EBEEF0'>
   <!---图书基本信息--->
@@ -109,8 +109,8 @@
 <span class='addsuccess' style="display: none;">发送成功，审核中...</span>
 <span class='clickfast' style="display: none;">慢点，您发的太快了</span>
 <div id='add_load3' style='display:none; margin:0px auto;'><div class='spin'>&nbsp;</div></div>
-<img src='static/red_star.png'style='display: none;'>
-<img src='static/blue_star.png'style='display: none;'>
+<img src='css/image/red_star.png'style='display: none;'>
+<img src='css/image/blue_star.png'style='display: none;'>
 <script>
 var current_direct = null;
 var scrollContent;
@@ -172,7 +172,7 @@ function changeStauts(book_id, status, content_type) {
   }
 }
 function refreshStatus() {
-  $.getJSON('/__duokan_appapi/data/books/purchased', function(data) {
+  $.getJSON('support/purchased.json', function(data) {
     var book_id = getCookie('book_id');
       if (book_id == null) {
       book_id = getArgs('book_id')
@@ -327,9 +327,9 @@ function showBook(data) {
       clickFullBook(data.id, data.title, data.fullUrl, data.coverUrl, price, data.revision);
     });
     setHover($('div.detail_price'));
-    if (data.book.hasOwnProperty('epub_size') && data.book.epub_size != null && data.book.epub_size > 0) {
+    /* if (data.book.hasOwnProperty('epub_size') && data.book.epub_size != null && data.book.epub_size > 0) {
       $('.detail_size').html('大小：'+getSizeText(data.book.epub_size));
-    }
+    } */
     /* if (data.book.epub != null && data.book.epub != "") {
       $('div.detail_price').show();
       $('div.detail_price').click(function () {
@@ -342,7 +342,7 @@ function showBook(data) {
     } else {
       $('div.detail_price').hide();
     } */
-    
+    return;
     if (data.book.trial != null && data.book.trial != "") {
       $('div.detail_trial').show();
       $('div.detail_trial').click(function () {
@@ -634,7 +634,7 @@ function replyInfor(data){
 
 // 获得用户的评论权限
 function getCommentQualification(){
-  $.getJSON('/__duokan_appapi/data/books/purchased', function (data) {
+  $.getJSON('support/purchased.json', function (data) {
     var user_id = getCookie('userid');
     if (user_id == null) {
       user_id = getArgs('userid')
@@ -1335,7 +1335,7 @@ function addCommentReply(comments_id){
 }
 //如果购买过此书，显示评论按钮
 function refreshbotton() {
-  $.getJSON('/__duokan_appapi/data/books/purchased', function(data) {
+  $.getJSON('support/purchased.json', function(data) {
      var book_id = getCookie('book_id');
      if (book_id == null) {
        book_id = getArgs('book_id')

@@ -4,10 +4,10 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable = no">
-<link rel="stylesheet" href="static/ipad.css">
-<script language="javascript" src="/__duokan_appapi/libs/jquery/jquery-1.7.2.min.js"></script>
-<script language="javascript" src="/__duokan_appapi/libs/iscroll/iscroll.js"></script>
-<script language="javascript" src="static/ios_support.js"></script>
+<link rel="stylesheet" href="css/ipad.css">
+<script language="javascript" src="js/jquery-1.7.2.min.js"></script>
+<script language="javascript" src="js/iscroll.js"></script>
+<script language="javascript" src="js/ios_support.js"></script>
 </head>
 <body>
 
@@ -119,7 +119,7 @@
 			}
 
 			function refreshStatus() {
-				$.getJSON('/__duokan_appapi/data/books/purchased.json',
+				$.getJSON('suport/purchased.json',
 						function(data) {
 							for ( var i in data) {
 								changeStauts(data[i].book_id, data[i].status,

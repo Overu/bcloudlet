@@ -602,7 +602,7 @@ function handleError(code, callback) {
 }
 
 var base_url = window.location.protocol + '//' + window.location.host;
-base_url += '/store/v0/ios/www/';
+base_url += '/ios/';
 
 function ipadBookURL(book_id, title) {
   return base_url + 'ipad_detail.html?book_id=' + book_id + '&title=' + encodeURIComponent(title);
@@ -631,17 +631,17 @@ function iphoneSearchURL(key) {
   return base_url + 'iphone_search.html?s=' + encodeURIComponent(key);
 }
 function navigateTo(url){
-  document.location = '/__duokan_appapi/cmd/navigate/opennew?url=' + encodeURIComponent(url);
+  document.location = '/ios/support/cmd/navigate/opennew?url=' + encodeURIComponent(url);
 }
 function navigateToDefault(url){
-  document.location = '/__duokan_appapi/cmd/navigate/opendefault?url=' + encodeURIComponent(url);
+  document.location = '/ios/support/cmd/navigate/opendefault?url=' + encodeURIComponent(url);
 }
 function navigateToChannel(name){
-  document.location = '/__duokan_appapi/cmd/navigate/store?channel='+name;
+  document.location = '/ios/support/cmd/navigate/store?channel='+name;
 }
 function notifyAppLoaded() {
   if (getCookie('build') != null) {
-    document.location = '/__duokan_appapi/cmd/navigate/didload';
+    document.location = '/ios/support/cmd/navigate/didload';
   }
 }
 function openReading(wich){
@@ -652,7 +652,7 @@ function openReading(wich){
   };
   if(build>2012080101){
     $(wich).click(function(){
-       document.location='/__duokan_appapi/cmd/books/open?bookid='+book_id;
+       document.location='/ios/support/cmd/books/open?bookid='+book_id;
     })
   }
 }
@@ -662,16 +662,16 @@ function dkLogin(){
     user_id = getArgs('userid')
   }
   if( user_id==null || user_id=='' || user_id == undefined){
-    document.location = '/__duokan_appapi/cmd/account/login';
+    document.location = '/ios/support/cmd/account/login';
   }
   return false;
 }
 
 function reLogin(){
-  document.location = '/__duokan_appapi/cmd/account/login';
+  document.location = '/ios/support/cmd/account/login';
 }
 function clickFullBook(book_id, title, url, cover, price, revision) {
-  var s = '/__duokan_appapi/cmd/books/get?bookid=' + book_id
+  var s = '/ios/support/cmd/books/get?bookid=' + book_id
     + '&contenttype=full'
     + '&coverurl=' + encodeURIComponent(cover)
     + '&bookurl='  + url
@@ -683,7 +683,7 @@ function clickFullBook(book_id, title, url, cover, price, revision) {
   document.location = s;
 }
 function clickTrialBook(book_id, title, url, cover, revision) {
-  document.location = '/__duokan_appapi/cmd/books/get?bookid=' + book_id
+  document.location = '/ios/support/cmd/books/get?bookid=' + book_id
     + '&contenttype=trial'
     + '&coverurl=' + encodeURIComponent(cover)
     + '&bookurl=' + encodeURIComponent(url)
@@ -691,12 +691,12 @@ function clickTrialBook(book_id, title, url, cover, revision) {
     + '&revision=' + encodeURIComponent(revision);
 }
 function clickExportBookNotes(book_id, title, author) {
-  document.location = '/__duokan_appapi/cmd/books/export/readingnotes?bookid=' + book_id
+  document.location = '/ios/support/cmd/books/export/readingnotes?bookid=' + book_id
     + '&title=' + encodeURIComponent(title)
     + '&author=' + encodeURIComponent(author);
 }
 function showGift(book_id,status){
-  document.location = '/__duokan_appapi/data/?bookid=' + book_id
+  document.location = '/ios/support/data/?bookid=' + book_id
     +'&type='+type;
 }
 function setHover(ele) {
@@ -777,7 +777,7 @@ function postioncenter(showBox){
 }
 //返回上级页面
 function returnpage(){
-  document.location = '/__duokan_appapi/cmd/navigate/close';
+  document.location = '/ios/support/cmd/navigate/close';
 }
 
 (function($){
@@ -801,7 +801,7 @@ function returnpage(){
    },
    update:function(){
             return $(this).click(function(){
-              document.location.href='/__duokan_appapi/cmd/books/updateall';
+              document.location.href='/ios/support/cmd/books/updateall';
               $(this).empty().text('正在下载');
               $(this).unbind('click');
               $(this).removeClass('infor_new').addClass('infor_over');

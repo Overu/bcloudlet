@@ -18,18 +18,18 @@
   </mime-mapping>
   <servlet>
     <servlet-name>opennew.jsp</servlet-name>
-    <jsp-file>/__duokan_appapi/cmd/navigate/opennew.jsp</jsp-file>
+    <jsp-file>/ios/support/cmd/navigate/opennew.jsp</jsp-file>
   </servlet>
   <servlet>
     <servlet-name>get.jsp</servlet-name>
-    <jsp-file>/__duokan_appapi/cmd/books/get.jsp</jsp-file>
+    <jsp-file>/ios/support/cmd/books/get.jsp</jsp-file>
   </servlet>
   <servlet-mapping>
     <servlet-name>opennew.jsp</servlet-name>
-    <url-pattern>/__duokan_appapi/cmd/navigate/opennew</url-pattern>
+    <url-pattern>/ios/support/cmd/navigate/opennew</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>get.jsp</servlet-name>
-    <url-pattern>/__duokan_appapi/cmd/books/get</url-pattern>
+    <url-pattern>/ios/support/cmd/books/get</url-pattern>
   </servlet-mapping>
 </web-app>

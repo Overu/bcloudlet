@@ -16,7 +16,7 @@ h1,h2,h3,h4,h5,h6{font-weight:normal; list-style-type:none;}
 .circle { width:6px; height:6px; margin: 0 6px 0 6px; background: rgba(255, 255, 255, 0.3); display: inline-block; -webkit-border-radius:3px; }
 .circle[active='yes'] { background:#FFF; }
 .initial_hide { display: none !important; }
-#scroll { position:relative;width:100%; height:350px; overflow:hidden; background: url(/__duokan_appapi/libs/resource/image/bg_webview.png); }
+#scroll { position:relative;width:100%; height:350px; overflow:hidden; background: url(image/bg_webview.png); }
 #wrapper { position:absolute; height:350px; z-index: 1;}
 .slide { width:1024px; overflow:hidden; display:inline-block}
 .slide img { width:1024px; height:350px; }
@@ -69,12 +69,12 @@ h1,h2,h3,h4,h5,h6{font-weight:normal; list-style-type:none;}
   }*/
 }
 .book_list_banner { width: 100%; overflow: hidden; }
-.book_list_banner img { position:relative; width:1024px; height:350px; overflow:hidden; background: url(/__duokan_appapi/libs/resource/image/bg_webview.png); }
+.book_list_banner img { position:relative; width:1024px; height:350px; overflow:hidden; background: url(image/bg_webview.png); }
 @media screen and (max-width: 768px) { .book_list_banner img { margin-left:-128px;}}
 .book_list_intro { background: #EBEFF0; padding: 20px 16px 20px 16px; border-bottom: 1px solid #C8C8C8; }
 .book_list_intro p { margin-top: 10px; font-size: 16px; text-align: justify; line-height: 28px; word-wrap: break-word; color: #666; text-shadow: rgba(255, 255, 255, 0.5) 0px 1px 0px; }
 .book_list_intro p:first-child { margin-top: 0px; }
-.cover { float:left; margin-top: 3px; width: 54px; height: 72px; -webkit-box-shadow: 2px 2px 3px rgba(103, 89, 79, 0.3), 0px 0px 3px rgba(103, 89, 79, 0.3); background-image: url(/__duokan_appapi/libs/resource/image/bookcover_default.png); background-size: cover; }
+.cover { float:left; margin-top: 3px; width: 54px; height: 72px; -webkit-box-shadow: 2px 2px 3px rgba(103, 89, 79, 0.3), 0px 0px 3px rgba(103, 89, 79, 0.3); background-image: url(/image/bookcover_default.png); background-size: cover; }
 .app_icon {float:left; margin-top: 3px; width:72px; height:72px; background:-webkit-gradient(linear, 0 0%, 0 100%, from(#EEE), to(#CCC)); -webkit-border-radius:10px; -webkit-box-shadow: 1px 1px 3px rgba(103, 89, 79, 0.3);}
 .special_list { position:absolute; width:41px; height:41px; left: 34px; top: 22px; background: none; }
 .title, .author, .abst, .time, .l_name, .ts, .app_title, .app_abst { float:left; margin-left: 15px; width:175px; text-overflow:ellipsis; overflow:hidden; }
@@ -209,7 +209,7 @@ h1,h2,h3,h4,h5,h6{font-weight:normal; list-style-type:none;}
 #detail_basic { float:left; padding:0px 20px 0 20px; width:196px; background:#E1E6E8; min-height:100%; -webkit-box-shadow: -2px 0px 5px rgba(80, 80, 80, 0.1) inset; }
 .detail_cover_wrapper, .detail_author_label, .detail_author, .detail_published_label, .detail_published, .detail_issued, .detail_updated, .detail_size, .detail_price_wrapper, .line { float:left; width:196px; line-height:24px; }
 .detail_cover_wrapper { margin-top:30px; height: 320px; width:236px; margin-left:-20px; overflow:hidden; }
-.detail_cover { margin-top:10px; margin-left:20px; width:196px; height:256px; -webkit-box-shadow: 2px 0px 5px rgba(80, 80, 80, 0.3), 0px -1px 1px rgba(100, 100, 100, 0.1), -2px 0px 5px rgba(80, 80, 80, 0.3), 0px 2px 1px rgba(100, 100, 100, 0.3); -webkit-box-reflect:below 4px -webkit-gradient(linear, 0 80%, 0 100%, from(transparent), to(rgba(150, 150, 150, 0.2))); background-image: url(/__duokan_appapi/libs/resource/image/bookcover_default.png); background-size: cover; }
+.detail_cover { margin-top:10px; margin-left:20px; width:196px; height:256px; -webkit-box-shadow: 2px 0px 5px rgba(80, 80, 80, 0.3), 0px -1px 1px rgba(100, 100, 100, 0.1), -2px 0px 5px rgba(80, 80, 80, 0.3), 0px 2px 1px rgba(100, 100, 100, 0.3); -webkit-box-reflect:below 4px -webkit-gradient(linear, 0 80%, 0 100%, from(transparent), to(rgba(150, 150, 150, 0.2))); background-image: url(image/bookcover_default.png); background-size: cover; }
 .detail_price_wrapper { height: 65px; }
 .detail_price[status='downloaded2']{color: #999;  height:28px; line-height:28px; -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2) inset; background: #D2D4D6; color: #999; text-shadow: none; }
 .detail_price, .detail_trial, .detail_old_price { float:left; margin-top: 5px; height:28px; line-height:28px; width:84px; font-size: 13px; text-align:center; }
@@ -257,7 +257,7 @@ h1,h2,h3,h4,h5,h6{font-weight:normal; list-style-type:none;}
 .detail_related_circle { width:6px; height:6px; margin: 0 6px 0 6px; background:#AAA ; display: inline-block; -webkit-border-radius:3px; }
 .detail_related_circle[active='yes'] { background:#555; }
 
-.related_cover { width: 96px; height: 128px; -webkit-box-shadow: 2px 2px 3px rgba(103, 89, 79, 0.3), 0px 0px 3px rgba(103, 89, 79, 0.3); background-image: url(/__duokan_appapi/libs/resource/image/bookcover_default.png); background-size: cover; }
+.related_cover { width: 96px; height: 128px; -webkit-box-shadow: 2px 2px 3px rgba(103, 89, 79, 0.3), 0px 0px 3px rgba(103, 89, 79, 0.3); background-image: url(image/bookcover_default.png); background-size: cover; }
 .inside_loading, #inside_loading1, #inside_loading2, #inside_loading3 { height: 80px; line-height: 80px; position:relative; text-align: center; text-shadow: rgba(255, 255, 255, 0.5) 0px 1px 0px; }
 .inside_loading span, #inside_loading1 span, #inside_loading2 span, #inside_loading3 span  { font-size:16px; }
 .inside_loading .spin, #inside_loading1 .spin, #inside_loading2 .spin,#inside_loading3 .spin { display:inline-block; margin-top:-2px; overflow:hidden; }
@@ -336,7 +336,7 @@ h1,h2,h3,h4,h5,h6{font-weight:normal; list-style-type:none;}
 .bought_books{width:240px; height:44px; -webkit-box-sizing:border-box; margin:0px auto; line-height:44px;-webkit-border-radius: 5px; border:1px solid #B9B3AE!important; font-size:14px; text-shadow: rgba(255, 255, 255, 0.3) 0px 2px 0px; display:block; color:#000; margin-top:15px;}
 .duokan_id{-webkit-border-radius:4px; background: -webkit-gradient(linear, left top, left bottom, from(#4D9FE0), to(#3478D3)); -webkit-box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2) inset, 0px 1px 3px rgba(255, 255, 255, 0.3);width:240px; height:44px; -webkit-box-sizing:border-box;  margin:30px auto 0px auto; line-height:44px;-webkit-border-radius: 5px;font-size:14px; color:#fff;text-shadow: rgba(0, 0, 0, 0.5) 0px -1px 0px; display:block; }
 .dk_id{ background: -webkit-gradient(linear, left top, left bottom, from(#4D9FE0), to(#3478D3)); -webkit-box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2) inset, 0px 1px 3px rgba(255, 255, 255, 0.3); text-align:center; line-height:26px; color: #FFF; font-size: 14px; text-shadow: rgba(0, 0, 0, 0.5) 0px -1px 0px; height:28px; line-height:28px; float:right;-webkit-border-radius:4px; padding:0px 10px; margin:9px 20px; position:absolute; top:0px; right:0px;}
-.find_book1 a,.find_book2 a{ text-align:center; vertical-align:middle; display:block; height:100%; line-height:84px; color:#000; background:url(/__duokan_appapi/libs/resource/image/restore_book.png) 75px 52% no-repeat;background-size:20px;  -webkit-box-sizing:border-box;}
+.find_book1 a,.find_book2 a{ text-align:center; vertical-align:middle; display:block; height:100%; line-height:84px; color:#000; background:url(image/restore_book.png) 75px 52% no-repeat;background-size:20px;  -webkit-box-sizing:border-box;}
 #comments_box .comment_title h3{width:80px; line-height:24px;color:#647181; font-size:18px;float:left; font-weight:normal; }
 div.comment_title_line {margin:0px 100px 0px 200px; height:2px; padding:14px 0px;}
 .iwantprly { display:inline-block; float:right; margin-top:-32px; color:#000;}
@@ -354,9 +354,9 @@ span.comment_title_line {  border-top:1px solid #d3d6d8; border-bottom:1px solid
 .Br_content section .publish  span{ margin:3px 0 0 10px; }
 .Br_content section pre { color:#333; line-height:22px; padding:5px 0px 5px 0px; font-size:14px; word-wrap:break-word; overflow:hidden; white-space: normal; text-align: justify;}
 .Br_content section ul.five{ position:absolute; top:6px;}
-.Br_content section ul.five li.Five_red,.book_five ul.five li.Five_red  { background:url(red_star.png) 0% 0% no-repeat;  height:14px; width:14px; overflow:hidden; background-size:14px 14px;}
-.Br_content section ul.five li,.book_five ul.five li{ height:14px; width:14px; overflow:hidden; background:url(gray_star.png) 0% 0% no-repeat; background-size:14px 14px; float:left; margin-right:4px; padding:0; }
-.Br_content section ul.five li.halfive,.book_five ul.five li.halfive  { background:url(halfive.png) 0% 0% no-repeat; height:14px; width:14px;  background-size:14px 14px; overflow:hidden; }
+.Br_content section ul.five li.Five_red,.book_five ul.five li.Five_red  { background:url(image/red_star.png) 0% 0% no-repeat;  height:14px; width:14px; overflow:hidden; background-size:14px 14px;}
+.Br_content section ul.five li,.book_five ul.five li{ height:14px; width:14px; overflow:hidden; background:url(image/gray_star.png) 0% 0% no-repeat; background-size:14px 14px; float:left; margin-right:4px; padding:0; }
+.Br_content section ul.five li.halfive,.book_five ul.five li.halfive  { background:url(image/halfive.png) 0% 0% no-repeat; height:14px; width:14px;  background-size:14px 14px; overflow:hidden; }
 section .publish .useful,section .publish .reply{ float:right; border-radius:5px; background:#a6b3bf; padding:2px 10px; color:#fff;  margin-left:10px; font:12px/18px 'Helvetica', 'FZLTHK--GBK1-0','Microsoft YaHei'; display:inline-block; cursor:pointer; }
 .Br_content section .publish .autor{ margin-left:100px; width:120px; min-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px; }
 .Br_content section .publish .times{ margin-left:15px;font-size:12px;}
@@ -372,8 +372,8 @@ section .publish .useful,section .publish .reply{ float:right; border-radius:5px
 #write_reply h2{font-size:16px; color:#90a3b5; position:relative; float:left;width:410px; overflow:hidden; line-height:49px; height:49px; }
 #write_reply h2 p{ position:absolute; width:370px;top:0;left:40px; overflow:hidden; color:#90a3b5;font-size:14px; overflow: hidden; line-height:49px; height:49px; display:block;  }
 #write_reply .reply_title  textarea{line-height:24px;font-size:16px;  padding:10px;width:456px; margin:0px 2px;-webkit-border-radius:0px;-webkit-box-sizing:border-box;height:310px; overflow:auto;position:relative; z-index: 9999; }
-.reply_boc{ overflow:auto; zoom:1; padding:0px;  padding:0px 40px;margin-top:10px; background:url(douhao2.png) 4px 10px no-repeat;}
-.douhao{background:url(douhao2.png) 4px 10px no-repeat;}
+.reply_boc{ overflow:auto; zoom:1; padding:0px;  padding:0px 40px;margin-top:10px; background:url(image/douhao2.png) 4px 10px no-repeat;}
+.douhao{background:url(image/douhao2.png) 4px 10px no-repeat;}
 .reply_boc .reply_c{width:280px;  height:40px; line-height:40px; font-size:14px; margin:20px auto; }
 .reply_boc li{ padding:15px 0px;border-bottom:1px solid #d9dde0; }
 .reply_boc p{ font-size:14px; line-height:22px; color:#333333; padding:15px 0x 0px 0px!important; word-wrap:break-word;overflow:hidden; text-align: justify; }
@@ -383,10 +383,10 @@ section .publish .useful,section .publish .reply{ float:right; border-radius:5px
 #reply_title,#reply_title3{height:49px; border-bottom:1px solid #c6cbce; line-height:49px;  background:#dee3e6; font-size:14px;}
 #reply_title h1,#reply_title ul.five{width:270px; font-size:14px; padding:0px 15px;  float:left;-webkit-box-sizing:border-box; overflow:hidden; display:block;text-overflow:ellipsis;white-space:nowrap;
 }
-#reply_title h1{ background:url(douhao2.png) 10px 6px no-repeat; padding-left:30px; background-size:12px;}
+#reply_title h1{ background:url(image/douhao2.png) 10px 6px no-repeat; padding-left:30px; background-size:12px;}
 #reply_title ul.five{ height:49px; padding:12px 15px 0px 12px; margin-left:95px; }
-#reply_title ul.five li { height:28px; width:27px; overflow:hidden; background:url(gray_star.png) 2px 0% no-repeat; background-size:23px!important; float:left; margin:0px 10px;padding:0; }
-#reply_title ul.five li.Five_red { background:url(red_star.png) 0 0 no-repeat!important; height:28px; width:27px; overflow:hidden;background-size:23px!important;}
+#reply_title ul.five li { height:28px; width:27px; overflow:hidden; background:url(image/gray_star.png) 2px 0% no-repeat; background-size:23px!important; float:left; margin:0px 10px;padding:0; }
+#reply_title ul.five li.Five_red { background:url(image/red_star.png) 0 0 no-repeat!important; height:28px; width:27px; overflow:hidden;background-size:23px!important;}
 #reply_title .reply_send{width:99px; border-left:1px solid #fff;  float:left; text-align:center;-webkit-box-sizing:border-box; padding:0px 15px;}
 #reply_title .arrow4{ float:left; margin-top:15px;}
 #write_comment{background:#ebeef0;}
@@ -399,7 +399,7 @@ textarea[name='reply_box']{ background:#ebeef0; padding:10px 14px; width:458px;h
 .my_comment{height:35px; text-align:center;background:#EBEEF0; padding-top:20px;}
 .my_comment a{ display:block; width:250px;height:32px;margin:0 auto;line-height: 32px; float:none; background:#dfe2e4;}
 .no_data{width:100%; height:100%; background:#EBEEF0; text-align:center; padding:40% 20px 20px 20px; -webkit-box-sizing:border-box; }
-.no_data .nodata_img{ background:#EBEEF0 url(no_comment.png) 45% 45% no-repeat; background-size:120px 120px; height:120px; width:120px; margin:0 auto; overflow-y:visible }
+.no_data .nodata_img{ background:#EBEEF0 url(image/no_comment.png) 45% 45% no-repeat; background-size:120px 120px; height:120px; width:120px; margin:0 auto; overflow-y:visible }
 #write_comment h1 span,#write_reply h1 span{width:50px; height:28px; line-height:28px; display:block;-webkit-box-shadow: 0px 1px 2px rgba(255, 255, 255, 0.3) inset, 0px 1px 0px rgba(255, 255, 255, 0.3);  border:1px solid #5e6873; font-size:14px; text-shadow: rgba(0, 0, 0, 0.3) 0px -1px 0px;-webkit-border-radius:5px; position:absolute; background:-webkit-gradient(linear, left top, left bottom, from(#a7b5c1), to(#8393a3)) }
 #write_comment h1 span:nth-child(1),#write_reply h1 span:nth-child(1){left:10px;top:8px;}
 #write_comment h1 span:nth-child(2),#write_reply h1 span:nth-child(2){right:10px;top:8px;}
@@ -420,10 +420,10 @@ textarea[name='reply_box']{ background:#ebeef0; padding:10px 14px; width:458px;h
 #reply_title2 h1,#reply_title2 ul.five{width:270px; font-size:14px; padding:0px 15px;  float:left;-webkit-box-sizing:border-box; overflow:hidden; display:block;text-overflow:ellipsis;white-space:nowrap;
 }
 #reply_title2 span{float:left; line-height:48px;color:#647181; font-size:18px;}
-#reply_title2 h1{ background:url(douhao2.png) 10px 6px no-repeat; padding-left:30px; background-size:12px;}
+#reply_title2 h1{ background:url(image/douhao2.png) 10px 6px no-repeat; padding-left:30px; background-size:12px;}
 #reply_title2 ul.five{ height:49px; padding:12px 5px 0px 10px; width:210px }
-#reply_title2 ul.five li.Five_red { background:url(blue_star.png) 0% 0% no-repeat; height:28px; width:27px; overflow:hidden;background-size:23px!important;}
-#reply_title2 ul.five li { height:28px; width:27px; overflow:hidden; background:url(gray_star.png) 0px 0px no-repeat;  background-size:23px!important; float:left; margin:0px 5px;padding:0;}
+#reply_title2 ul.five li.Five_red { background:url(image/blue_star.png) 0% 0% no-repeat; height:28px; width:27px; overflow:hidden;background-size:23px!important;}
+#reply_title2 ul.five li { height:28px; width:27px; overflow:hidden; background:url(image/gray_star.png) 0px 0px no-repeat;  background-size:23px!important; float:left; margin:0px 5px;padding:0;}
 #reply_title2 span.star_word{font-size:12px;}
 .reply_boc span.reply_com{border-radius:4px;background:#a6b3bf;height:26px; line-height:26px;width:84px;  color:#fff;  font-size: 14px; text-align:center; display:inline-block; cursor:pointer; margin-top:10px; }
 #reply_title3{padding:0 20px}
