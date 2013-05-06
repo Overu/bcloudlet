@@ -13,6 +13,19 @@
 $(function(){
    var href = window.location.href;
    var lastSlash = href.lastIndexOf("/");
+   if (lastSlash != href.length-1) {
+	   var end = href.substring(lastSlash+1);
+	   if(end.length>5){
+		   if(end.substring(end.length-5)!=".html"){
+			   href = href +"/index.html" ;
+		   }
+	   }else{
+		   href = href +"/index.html" ;
+	   }	  
+   } else {
+	   href = href +"index.html" ;
+   }
+   lastSlash = href.lastIndexOf("/");
    var parent = href.substring(0, lastSlash);
    $('.nav :first').children().each(function(){
        var ahref = $(this).children().attr('href');
