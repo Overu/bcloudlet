@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh" lang="zh">
 <head>
 <title>${it.tag.value}- 多看精品书城</title>
-<jsp:include page="../meta.jsp"></jsp:include>
+<jsp:include page="/meta.jsp"></jsp:include>
 <link type="text/css" rel="stylesheet" href="/static/lib/css/category.css?201303081413" />
 <style type="text/css">
 </style>
@@ -13,7 +13,7 @@
 <body id="page-duokan-com" itemscope itemtype="http://schema.org/WebPage">
   <noscript>请使用支持脚本的浏览器！</noscript>
   <div class="g-doc">
-    <jsp:include page="../header.jsp"></jsp:include>
+    <jsp:include page="/header.jsp"></jsp:include>
     <div class="g-bd">
       <div class="g-mn">
         <div class="g-mnc">
@@ -120,8 +120,8 @@
       </div>
       <!--导航 end-->
     </div>
-    <jsp:include page="../sider.jsp"></jsp:include>
-    <jsp:include page="../footer.jsp"></jsp:include>
+    <jsp:include page="/sider.jsp"></jsp:include>
+    <jsp:include page="/footer.jsp"></jsp:include>
   </div>
   <script>
 			seajs.use([ 'duokan/store/1/page/book',

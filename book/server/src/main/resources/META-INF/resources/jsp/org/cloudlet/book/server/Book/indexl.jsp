@@ -5,7 +5,7 @@
    "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<jsp:include page="../meta.jsp"></jsp:include>
+<jsp:include page="/meta.jsp"></jsp:include>
 <title>图书详情</title>
 <link type="text/css" rel="stylesheet" href="/static/lib/css/other.css">
 <link type="text/css" rel="stylesheet" href="/static/lib/css/book.css">
@@ -15,7 +15,7 @@
 </head>
 <body>
   <div class="g-doc">
-    <jsp:include page="../header.jsp"></jsp:include>
+    <jsp:include page="/header.jsp"></jsp:include>
 
     <div class="g-bd1">
 
@@ -202,7 +202,7 @@
       </div>
     </div>
 
-    <jsp:include page="../footer.jsp"></jsp:include>
+    <jsp:include page="/footer.jsp"></jsp:include>
 
   </div>
   <script type="text/javascript">

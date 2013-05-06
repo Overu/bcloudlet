@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh" lang="zh">
 <head>
 <title>睿泰书城</title>
-<jsp:include page="../meta.jsp"></jsp:include>
+<jsp:include page="/meta.jsp"></jsp:include>
 <style>
 .hidestar div.w-starfive {
   display: none;
@@ -18,7 +18,7 @@
 <body id="page-duokan-com" itemscope itemtype="http://schema.org/WebPage">
   <noscript>请使用支持脚本的浏览器！</noscript>
   <div class="g-doc">
-    <jsp:include page="../header.jsp"></jsp:include>
+    <jsp:include page="/header.jsp"></jsp:include>
     <div class="g-bd">
       <div class="g-mn">
         <div class="g-mnc">
@@ -148,7 +148,7 @@
           <div class="w-box">
             <h2 class="ttl">图书分类</h2>
             <div class="cnt">
-              <jsp:include page="../category.jsp"></jsp:include>
+              <jsp:include page="/category.jsp"></jsp:include>
             </div>
           </div>
         </div>
@@ -1353,8 +1353,8 @@
         </ul>
       </div>
     </div>
-    <jsp:include page="../sider.jsp"></jsp:include>
-    <jsp:include page="../footer.jsp"></jsp:include>
+    <jsp:include page="/sider.jsp"></jsp:include>
+    <jsp:include page="/footer.jsp"></jsp:include>
   </div>
   <script>
 			seajs.use([ 'duokan/store/1/page/book',
