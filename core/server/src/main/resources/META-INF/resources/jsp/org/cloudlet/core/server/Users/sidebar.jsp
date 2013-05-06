@@ -10,3 +10,24 @@
     <li><a href="archived.html"><i class="icon-chevron-right"></i>归档用户</a></li>
   </ul>
 </div>
+<script type="text/javascript">
+$(function(){
+	var href = window.location.href;
+	 //去掉http的URL
+	 var temphref = href.substr(7);
+	 //得到URI目录的二级地址
+	 var splithref = temphref.split("/")[2];
+	 //alert(splithref);
+	 if(splithref==null||splithref==""){
+		 splithref = "index.html"; 
+	 }
+	 //alert(splithref);
+	 //取得navbar的值
+	 $('.nav :last').children().each(function(){
+		 var ahref = $(this).children().attr('href');
+		 if(ahref==splithref){
+			 $(this).addClass('active');
+		 }			
+	});		
+});
+</script>

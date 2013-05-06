@@ -6,6 +6,7 @@
 <meta charset="utf-8">
 <title>图书库</title>
 <jsp:include page="/admin/meta.jsp"></jsp:include>
+  <script src="../static/bootstrap/js/bootstrap.js"></script> 
 </head>
 <body data-spy="scroll" data-target=".bs-docs-sidebar">
   <jsp:include page="/admin/navbar.jsp"></jsp:include>
@@ -27,30 +28,6 @@
     <div class="row">
       <jsp:include page="sidebar.jsp"></jsp:include>
       <div class="span9">
-        <section id="newbook">
-          <div class="page-header">
-            <h1>上传新书</h1>
-          </div>
-          <form class="form-horizontal">
-            <div class="control-group">
-              <label class="control-label" for="bookname">书籍名称</label>
-              <div class="controls">
-                <input type="text" id="bookname" placeholder="bookname">
-              </div>
-            </div>
-            <div class="control-group">
-              <label class="control-label" for="summny">描述</label>
-              <div class="controls">
-                <textarea rows="3" id="summy"></textarea>
-              </div>
-            </div>
-            <div class="control-group">
-              <div class="controls">
-                <button type="submit" class="btn">上传</button>
-              </div>
-            </div>
-          </form>
-        </section>
         <section id="mybooks">
           <div class="page-header">
             <h1>我的图书</h1>
@@ -91,22 +68,11 @@
 			$(function() {
 				var index = 1;
 				//取得查询数据的总结果
-				var count = $
-				{
-					it.count
-				}
-				;
+				var count = ${it.count};
 				//取得当前查询的开始值与结束值
-				var start = $
-				{
-					it.start
-				}
-				;
-				var limit = $
-				{
-					it.limit
-				}
-				;
+				var start = ${it.start};
+				var limit = ${it.limit};
+				
 				if (count == 0) {
 					return;
 				}
@@ -185,10 +151,8 @@
 				}
 				$url.append($li_next);
 			});
-
-			function showNewbookFrom() {
-				$("#newbook").show();
-			}
+			
+			
 		</script>
   <!-- Footer
     ================================================== -->
@@ -216,21 +180,5 @@
       <jsp:include page="../footer.jsp"></jsp:include>
     </div>
   </footer>
-  <!--<script src="../admin/js/bootstrap-transition.js"></script>
-   <script src="../admin/js/bootstrap-alert.js"></script>
-  <script src="../admin/js/bootstrap-modal.js"></script>
-  <script src="../admin/js/bootstrap-dropdown.js"></script> -->
-  <script src="../admin/js/bootstrap-scrollspy.js"></script>
-  <!-- <script src="../admin/js/bootstrap-tab.js"></script>
-  <script src="../admin/js/bootstrap-tooltip.js"></script>
-  <script src="../admin/js/bootstrap-popover.js"></script>
-  <script src="../admin/js/bootstrap-button.js"></script> -->
-  <script src="../admin/js/bootstrap-collapse.js"></script>
-  <!-- <script src="../admin/js/bootstrap-carousel.js"></script>
-  <script src="../admin/js/bootstrap-typeahead.js"></script> -->
-  <script src="../admin/js/bootstrap-affix.js"></script>
-  <!-- <script src="../admin/js/holder/holder.js"></script> -->
-  <!-- <script src="../admin/js/prettify.js"></script> -->
-  <script src="../admin/js/application.js"></script>
 </body>
 </html>

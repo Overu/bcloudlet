@@ -18,3 +18,24 @@
     </div>
   </div>
 </div>
+<script type="text/javascript">
+//设置navbar选中高亮显示
+$(function(){
+	 //alert(window.location.href);
+	 //alert(window.location.host);
+	 //var host = window.location.host;
+	 var href = window.location.href;
+	 //去掉http的URL
+	 var temphref = href.substr(7);
+	 //得到URI目录的二级地址
+	 var splithref = temphref.split("/")[1];
+	 //取得navbar的值
+	 $('.nav :first').children().each(function(){
+		 var ahref = $(this).children().attr('href');
+		 if(ahref.indexOf(splithref)>0){
+			 $(this).addClass('active');
+		 }			
+	});				 
+});				
+
+</script>
