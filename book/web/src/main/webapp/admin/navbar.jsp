@@ -11,8 +11,8 @@
       <div class="nav-collapse collapse">
         <ul class="nav">
           <li class=""><a href="/books/admin.html">书库</a></li>
-          <li class=""><a href="/users/admin.html">用户2</a></li>
-          <li class=""><a href="/settings/admin.html">设置</a></li>
+          <li class=""><a href="/users/admin.html">用户</a></li>
+          <li class=""><a href="/settings.html">系统设置</a></li>
         </ul>
       </div>
     </div>

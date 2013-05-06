@@ -70,7 +70,7 @@
             </div>
             <div class="w-booklist">
               <ul id="boutiquebook" class="hideauthor">
-                <jsp:include page="booklist.html.jsp"></jsp:include>
+                <jsp:include page="booklist.jsp"></jsp:include>
               </ul>
             </div>
           </div>
@@ -96,7 +96,7 @@
             </div>
             <div class="w-booklist">
               <ul id="newbook" class="hidestar">
-                <jsp:include page="booklist.html.jsp"></jsp:include>
+                <jsp:include page="booklist.jsp"></jsp:include>
               </ul>
             </div>
           </div>
@@ -121,7 +121,7 @@
             </div>
             <div class="w-booklist">
               <ul id="special-offer" class="hidestar">
-                <jsp:include page="booklist.html.jsp"></jsp:include>
+                <jsp:include page="booklist.jsp"></jsp:include>
               </ul>
             </div>
           </div>
@@ -162,7 +162,7 @@
               <a href="/books/r/hot" class="more" hidefocus="hidefocus">更多</a>
             </div>
             <ul id="paybooklist">
-              <jsp:include page="ranklist.html.jsp"></jsp:include>
+              <jsp:include page="ranklist.jsp"></jsp:include>
             </ul>
           </div>
           <div class="w-txtlist">
@@ -171,7 +171,7 @@
               <a href="/books/r/monthly" class="more" hidefocus="hidefocus">更多</a>
             </div>
             <ul id="month-list">
-              <jsp:include page="ranklist.html.jsp"></jsp:include>
+              <jsp:include page="ranklist.jsp"></jsp:include>
             </ul>
           </div>
           <div class="w-txtlist">
@@ -180,7 +180,7 @@
               <a href="/books/r/rated" class="more" hidefocus="hidefocus">更多</a>
             </div>
             <ul id="reputation">
-              <jsp:include page="ranklist.html.jsp"></jsp:include>
+              <jsp:include page="ranklist.jsp"></jsp:include>
             </ul>
           </div>
         </div>

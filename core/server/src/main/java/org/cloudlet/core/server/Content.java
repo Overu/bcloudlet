@@ -363,7 +363,7 @@ public abstract class Content {
   public Viewable getHtmlView(@PathParam("view") String view) {
     this.view = view;
     doLoad();
-    return new Viewable(view + ".html", this);
+    return new Viewable(view, this);
   }
 
   public String getId() {
@@ -372,7 +372,7 @@ public abstract class Content {
 
   @GET
   @Produces("text/html;qs=5")
-  @Template(name = "index.html")
+  @Template(name = "index")
   @XmlTransient
   public Content getIndexView() {
     doLoad();

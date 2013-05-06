@@ -4,54 +4,51 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>上传新书</title>
+<title>用户管理</title>
 <jsp:include page="/admin/meta.jsp"></jsp:include>
 </head>
 <body data-spy="scroll" data-target=".bs-docs-sidebar">
   <jsp:include page="/admin/navbar.jsp"></jsp:include>
   <header class="jumbotron subhead" id="overview">
     <div class="container">
-      <h2>图书</h2>
+      <h2>用户管理</h2>
       <p class="lead">Dozens of reusable components built to provide navigation, alerts, popovers, and more.</p>
     </div>
   </header>
-
 
   <div class="container">
 
     <!-- Docs nav
     ================================================== -->
     <div class="row">
-      <div class="span3 bs-docs-sidebar">
-        <ul class="nav nav-list bs-docs-sidenav">
-          <li><a href="new.html"><i class="icon-chevron-right"></i> 上传新书</a></li>
-          <li><a href="admin.html"><i class="icon-chevron-right"></i> 我的图书</a></li>
-          <li><a href="#progress"><i class="icon-chevron-right"></i> 已购图书</a></li>
-          <li><a href="#media"><i class="icon-chevron-right"></i> 我的收藏</a></li>
-          <li><a href="#misc"><i class="icon-chevron-right"></i> 推荐新书</a></li>
-        </ul>
-      </div>
+      <jsp:include page="sidebar.jsp"></jsp:include>
       <div class="span9">
         <section id="newbook">
           <div class="page-header">
-            <h1>上传新书</h1>
+            <h1>添加新用户</h1>
           </div>
           <form class="form-horizontal">
             <div class="control-group">
-              <label class="control-label" for="bookname">书籍名称</label>
+              <label class="control-label" for="bookname">姓名</label>
               <div class="controls">
-                <input type="text" id="bookname" placeholder="bookname">
+                <input type="text" id="name" placeholder="输入用户真实姓名">
               </div>
             </div>
             <div class="control-group">
-              <label class="control-label" for="summny">描述</label>
+              <label class="control-label" for="summny">邮箱</label>
               <div class="controls">
-                <textarea rows="3" id="summy"></textarea>
+                <input type="text" id="email" placeholder="e.g. mike@example.com">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="summny">手机</label>
+              <div class="controls">
+                <input type="text" id="phone" placeholder="e.g. +86-13800138000">
               </div>
             </div>
             <div class="control-group">
               <div class="controls">
-                <button type="submit" class="btn">上传</button>
+                <button type="submit" class="btn">保存</button>
               </div>
             </div>
           </form>

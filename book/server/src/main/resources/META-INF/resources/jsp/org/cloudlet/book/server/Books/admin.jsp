@@ -5,11 +5,10 @@
 <head>
 <meta charset="utf-8">
 <title>图书库</title>
-<jsp:include page="../../../../../admin/meta.jsp"></jsp:include>
-<script type="text/javascript" src="../admin/js/jquery.min.js"></script>
+<jsp:include page="/admin/meta.jsp"></jsp:include>
 </head>
 <body data-spy="scroll" data-target=".bs-docs-sidebar">
-  <jsp:include page="../../../../../admin/navbar.jsp"></jsp:include>
+  <jsp:include page="/admin/navbar.jsp"></jsp:include>
 
   <!-- Subhead
 ================================================== -->
@@ -26,15 +25,7 @@
     <!-- Docs nav
     ================================================== -->
     <div class="row">
-      <div class="span3 bs-docs-sidebar">
-        <ul class="nav nav-list bs-docs-sidenav">
-          <li><a href="#newbook" onclick="showNewbookFrom();"><i class="icon-chevron-right"></i> 上传新书</a></li>
-          <li><a href="#mybooks"><i class="icon-chevron-right"></i> 我的图书</a></li>
-          <li><a href="#progress"><i class="icon-chevron-right"></i> 已购图书</a></li>
-          <li><a href="#media"><i class="icon-chevron-right"></i> 我的收藏</a></li>
-          <li><a href="#misc"><i class="icon-chevron-right"></i> 推荐新书</a></li>
-        </ul>
-      </div>
+      <jsp:include page="sidebar.jsp"></jsp:include>
       <div class="span9">
         <section id="newbook">
           <div class="page-header">
@@ -50,11 +41,11 @@
             <div class="control-group">
               <label class="control-label" for="summny">描述</label>
               <div class="controls">
-                 <textarea rows="3" id="summy"></textarea>               
+                <textarea rows="3" id="summy"></textarea>
               </div>
             </div>
             <div class="control-group">
-              <div class="controls">               
+              <div class="controls">
                 <button type="submit" class="btn">上传</button>
               </div>
             </div>
@@ -84,105 +75,121 @@
                   <td>更新日期</td>
                   <td>修改</td>
                   <td>删除</td>
-                </tr>                
-              </c:forEach>               
-            </tbody>                     
+                </tr>
+              </c:forEach>
+            </tbody>
           </table>
-            <div id="page" class="pagination pagination-centered">
-              <ul id="ul_page">               
-              </ul>
-            </div>           
+          <div id="page" class="pagination pagination-centered">
+            <ul id="ul_page">
+            </ul>
+          </div>
         </section>
       </div>
     </div>
   </div>
   <script type="text/javascript">
-      $(function(){    	
-        var index = 1;
-        //取得查询数据的总结果
-        var count = ${it.count};
-        //取得当前查询的开始值与结束值
-        var start = ${it.start};
-        var limit = ${it.limit};
-        if(count==0){
-        	return;
-        }
-        
-        var pageCount = count%10==0?count/10:count/10+1;
-        var $url = $("#ul_page");
-        
-        
-        //设置前翻页的属性
-        var pre_href = "javaScript:void()";
-        var next_href = "javaScript:void()";
-        
-        if(pageCount==1){
-        	
-        }else if(pageCount==2){
-        	if(start==0){
-            	pre_href = "javaScript:void()";
-            	next_href = "?start="+(start+10)+"&limit="+(count-10);
+			$(function() {
+				var index = 1;
+				//取得查询数据的总结果
+				var count = $
+				{
+					it.count
+				}
+				;
+				//取得当前查询的开始值与结束值
+				var start = $
+				{
+					it.start
+				}
+				;
+				var limit = $
+				{
+					it.limit
+				}
+				;
+				if (count == 0) {
+					return;
+				}
 
-            }else {        	
-            	pre_href = "?start="+(start-10)+"&limit="+10;
-            	next_href = "javaScript:void()";
-            }
-        }else{
-        	 if(start==0){
-             	pre_href = "javaScript:void()";             	
-             }else {        	
-             	pre_href = "?start="+(start-10)+"&limit="+10;
-             }
-        	 if((count-start-10)<=0){
-        		 next_href = "javaScript:void()";
-        		     		 
-        	 }else{
-        		 if((count-start-10)<10){
-    	 			 next_href = "?start="+(start+10)+"&limit="+(count-start-10);    
-        		 }else{
-        			 next_href = "?start="+(start+10)+"&limit="+10; 
-        		 }        		
-        	 }
-        }        
-       
-        var $a_prev = $("<a href="+pre_href+">Prev</a>");
-        var $a_next = $("<a href="+next_href+">next</a>");
-        if(start==0){
-        	$a_prev.attr("unable",true);
-        	$a_prev.addClass("disable");
-        }
-        if((count-start-10)<=0){
-        	$a_next.attr("unable",true);
-        	$a_next.addClass("disable");
-        }
-        var $li_per = $("<li></li>").append($a_prev);
-        var $li_next = $("<li></li>").append($a_next);
-        
-        $url.append($li_per);
-        for(index;index<=pageCount;index++){
-          $li = $("<li></li>"); 
-          var href="";
-          if(index==1){
-            href="?start=0&limit=10";
-          }else if(index==pageCount){
-            href="?start="+(index-1)*10+"&limit="+(count-(index-1)*10);
-          }else{
-            href="?start="+(index-1)*10+"&limit="+10;
-          }
-          var $a = $("<a href="+href+" id="+index+">"+index+"</a>");
-          $li.append($a);
-          if((start/10+1)==index){
-        	  $li.addClass("active");
-          }
-          $url.append($li);
-        }       
-        $url.append($li_next);      
-      });
-      
-      function showNewbookFrom(){
-    	  $("#newbook").show();
-      }
-    </script>
+				var pageCount = count % 10 == 0 ? count / 10 : count / 10 + 1;
+				var $url = $("#ul_page");
+
+				//设置前翻页的属性
+				var pre_href = "javaScript:void()";
+				var next_href = "javaScript:void()";
+
+				if (pageCount == 1) {
+
+				} else if (pageCount == 2) {
+					if (start == 0) {
+						pre_href = "javaScript:void()";
+						next_href = "?start=" + (start + 10) + "&limit="
+								+ (count - 10);
+
+					} else {
+						pre_href = "?start=" + (start - 10) + "&limit=" + 10;
+						next_href = "javaScript:void()";
+					}
+				} else {
+					if (start == 0) {
+						pre_href = "javaScript:void()";
+					} else {
+						pre_href = "?start=" + (start - 10) + "&limit=" + 10;
+					}
+					if ((count - start - 10) <= 0) {
+						next_href = "javaScript:void()";
+
+					} else {
+						if ((count - start - 10) < 10) {
+							next_href = "?start=" + (start + 10) + "&limit="
+									+ (count - start - 10);
+						} else {
+							next_href = "?start=" + (start + 10) + "&limit="
+									+ 10;
+						}
+					}
+				}
+
+				var $a_prev = $("<a href="+pre_href+">Prev</a>");
+				var $a_next = $("<a href="+next_href+">next</a>");
+				if (start == 0) {
+					$a_prev.attr("unable", true);
+					$a_prev.addClass("disable");
+				}
+				if ((count - start - 10) <= 0) {
+					$a_next.attr("unable", true);
+					$a_next.addClass("disable");
+				}
+				var $li_per = $("<li></li>").append($a_prev);
+				var $li_next = $("<li></li>").append($a_next);
+
+				$url.append($li_per);
+				for (index; index <= pageCount; index++) {
+					$li = $("<li></li>");
+					var href = "";
+					if (index == 1) {
+						href = "?start=0&limit=10";
+					} else if (index == pageCount) {
+						href = "?start=" + (index - 1) * 10 + "&limit="
+								+ (count - (index - 1) * 10);
+					} else {
+						href = "?start=" + (index - 1) * 10 + "&limit=" + 10;
+					}
+					var $a = $("<a href="+href+" id="+index+">" + index
+							+ "</a>");
+					$li.append($a);
+					if ((start / 10 + 1) == index) {
+						$li.addClass("active");
+					}
+					$url.append($li);
+				}
+				$url.append($li_next);
+			});
+
+			function showNewbookFrom() {
+				$("#newbook").show();
+			}
+		</script>
   <!-- Footer
     ================================================== -->
   <footer class="footer">
@@ -208,7 +215,7 @@
       </ul> -->
       <jsp:include page="../footer.jsp"></jsp:include>
     </div>
-  </footer>  
+  </footer>
   <!--<script src="../admin/js/bootstrap-transition.js"></script>
    <script src="../admin/js/bootstrap-alert.js"></script>
   <script src="../admin/js/bootstrap-modal.js"></script>
