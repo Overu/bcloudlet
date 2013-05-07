@@ -15,7 +15,6 @@
 		if (pathname.length <= 0) {
 			return;
 		}
-		$(this).parent().removeClass("active");
 		$("ul.nav>li>a").each(function() {
 			if (pathname == $(this).attr("href")) {
 				$(this).parent().addClass("active");
