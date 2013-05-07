@@ -9,39 +9,17 @@
 <script src="/static/jquery/jquery.min.js"></script>
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript">
-//设置navbar选中高亮显示
-$(function(){
-   var href = window.location.href;
-   var lastSlash = href.lastIndexOf("/");
-   if (lastSlash != href.length-1) {
-	   var end = href.substring(lastSlash+1);
-	   if(end.length>5){
-		   if(end.substring(end.length-5)!=".html"){
-			   href = href +"/index.html" ;
-		   }
-	   }else{
-		   href = href +"/index.html" ;
-	   }	  
-   } else {
-	   href = href +"index.html" ;
-   }
-   lastSlash = href.lastIndexOf("/");
-   var parent = href.substring(0, lastSlash);
-   $('.nav :first').children().each(function(){
-       var ahref = $(this).children().attr('href');
-       if (ahref.charAt(0)=="/") {
-    	   ahref = window.location.protocol + "//"+window.location.host+ahref;
-       }
-       if(ahref.indexOf(parent)==0){
-         $(this).addClass('active');
-       }      
-  });   
-   $('.nav :last').children().each(function(){
-       var ahref = $(this).children().attr('href');
-       ahref = parent +"/"+ ahref;
-       if(ahref==href){
-         $(this).addClass('active');
-       }      
-  });
-});       
+	//设置navbar选中高亮显示
+	$(function() {
+		var pathname = location.pathname;
+		if (pathname.length <= 0) {
+			return;
+		}
+		$(this).parent().removeClass("active");
+		$("ul.nav>li>a").each(function() {
+			if (pathname == $(this).attr("href")) {
+				$(this).parent().addClass("active");
+			}
+		});
+	});
 </script>
