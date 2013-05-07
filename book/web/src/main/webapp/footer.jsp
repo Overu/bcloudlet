@@ -6,7 +6,7 @@
       href="http://www.gapp.gov.cn/" target="_blank" hidefocus="hidefocus">电复证字第XXX号</a>
   </div>
 </footer>
-<script src="http://code.jquery.com/jquery.js"></script>
+<script src="/static/jquery/jquery.min.js"></script>
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript">
 //设置navbar选中高亮显示
