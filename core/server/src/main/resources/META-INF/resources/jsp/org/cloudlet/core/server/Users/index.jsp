@@ -9,13 +9,7 @@
 </head>
 <body data-spy="scroll" data-target=".bs-docs-sidebar">
   <jsp:include page="/admin/navbar.jsp"></jsp:include>
-  <header class="jumbotron subhead" id="overview">
-    <div class="container">
-      <h2>用户管理</h2>
-      <p class="lead">Dozens of reusable components built to provide navigation, alerts, popovers, and more.</p>
-    </div>
-  </header>
-
+  <jsp:include page="header.jsp"></jsp:include>
   <div class="container">
 
     <!-- Docs nav
@@ -46,7 +40,7 @@
                   <td>${i.email}</td>
                   <td>${i.phone}</td>
                   <td>修改</td>
-                  <td>删除</td>
+                  <td><button onclick="deleteItem('${i.uri}')">删除</button></td>
                 </tr>
               </c:forEach>
             </tbody>
@@ -59,6 +53,21 @@
       </div>
     </div>
   </div>
-  <jsp:include page="/footer.jsp"></jsp:include>
+  <footer class="footer">
+    <div class="container" style="height: 5%;">
+      <jsp:include page="/footer.jsp"></jsp:include>
+    </div>
+  </footer>
+  <script type="text/javascript">
+			function deleteItem(uri) {
+				$.ajax({
+					type : 'delete',
+					url : uri,
+					success : function() {
+						window.location.reload();
+					}
+				});
+			}
+		</script>
 </body>
 </html>

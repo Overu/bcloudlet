@@ -8,14 +8,7 @@
 <jsp:include page="/admin/meta.jsp"></jsp:include>
 </head>
 <body data-spy="scroll" data-target=".bs-docs-sidebar">
-  <jsp:include page="/admin/navbar.jsp"></jsp:include>
-  <header class="jumbotron subhead" id="overview">
-    <div class="container">
-      <h2>系統用户</h2>
-      <p class="lead">Dozens of reusable components built to provide navigation, alerts, popovers, and more.</p>
-    </div>
-  </header>
-
+  <jsp:include page="header.jsp"></jsp:include>
   <div class="container">
 
     <!-- Docs nav

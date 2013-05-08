@@ -6,6 +6,7 @@ import org.apache.shiro.crypto.hash.SimpleHash;
 import javax.persistence.Entity;
 import javax.persistence.NoResultException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -22,6 +23,15 @@ import javax.xml.bind.annotation.XmlType;
 public class Users extends Folder<User> {
 
   public static final String TYPE_NAME = CoreUtil.PREFIX + "Users";
+
+  // @POST
+  // @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
+  // @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_ATOM_XML })
+  // public final Content createUser(@FormParam("name") String name) {
+  // User content = newContent();
+  // content.setName(name);
+  // return createChild(content);
+  // }
 
   @Override
   @POST

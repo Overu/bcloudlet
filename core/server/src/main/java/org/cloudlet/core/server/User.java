@@ -7,6 +7,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -62,6 +63,23 @@ public class User extends Item implements Principal {
 
   public String getZip() {
     return zip;
+  }
+
+  @Override
+  public void readParams(MultivaluedMap<String, String> params) {
+    super.readParams(params);
+    if (params.containsKey(NAME)) {
+      String name = params.getFirst(NAME);
+      setName(name);
+    }
+    if (params.containsKey(EMAIL)) {
+      String email = params.getFirst(EMAIL);
+      setEmail(email);
+    }
+    if (params.containsKey(PHONE)) {
+      String phone = params.getFirst(PHONE);
+      setPhone(phone);
+    }
   }
 
   public User setEmail(final String value) {

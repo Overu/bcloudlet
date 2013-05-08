@@ -163,8 +163,9 @@ public abstract class Content {
   @POST
   @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
   @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_ATOM_XML })
-  public final Content create() {
+  public final Content create(MultivaluedMap<String, String> params) {
     Content content = newContent();
+    content.readParams(params);
     return createChild(content);
   }
 

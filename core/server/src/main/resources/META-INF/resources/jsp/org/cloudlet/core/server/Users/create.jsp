@@ -19,7 +19,7 @@
           <div class="page-header">
             <h1>添加用户</h1>
           </div>
-          <form class="form-horizontal" action="./" method="POST">
+          <form id="createFrom" class="form-horizontal">
             <div class="control-group">
               <label class="control-label" for="bookname">姓名</label>
               <div class="controls">
@@ -40,7 +40,7 @@
             </div>
             <div class="control-group">
               <div class="controls">
-                <button type="submit" class="btn">保存</button>
+                <button type="submit" class="btn" id="save_From">保存</button>
               </div>
             </div>
           </form>
@@ -48,6 +48,25 @@
       </div>
     </div>
   </div>
-  <jsp:include page="/footer.jsp"></jsp:include>
+  <footer class="footer">
+    <div class="container" style="height: 5%;">
+      <jsp:include page="/footer.jsp"></jsp:include>
+    </div>
+  </footer>
+  <script type="text/javascript">
+			$(function() {
+				$("#save_From").click(function() {
+					$.ajax({
+						type : 'POST',
+						url : './',
+						data : $("#createFrom").serialize(),//序列化表单里所有的内容
+						success : function(data) {
+							window.location.href = "index.html";
+						}
+					});
+					return false;
+				});
+			});
+		</script>
 </body>
 </html>
