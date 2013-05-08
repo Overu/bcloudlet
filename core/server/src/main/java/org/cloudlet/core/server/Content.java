@@ -164,7 +164,7 @@ public abstract class Content {
   @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
   @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_ATOM_XML })
   public final Content create() {
-    Content content = null;
+    Content content = newContent();
     return createChild(content);
   }
 
@@ -669,6 +669,10 @@ public abstract class Content {
       return;
     }
     getParent().initResource(result);
+  }
+
+  protected Content newContent() {
+    return null;
   }
 
   protected void setQueryPath(Map<Character, Integer> params) {

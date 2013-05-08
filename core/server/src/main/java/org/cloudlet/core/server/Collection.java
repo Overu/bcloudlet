@@ -2,7 +2,6 @@ package org.cloudlet.core.server;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.persistence.MappedSuperclass;
 import javax.persistence.NoResultException;
@@ -12,7 +11,6 @@ import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.UriBuilder;
 import javax.xml.bind.annotation.XmlTransient;
 
 @MappedSuperclass
@@ -205,9 +203,10 @@ public abstract class Collection<E extends Item> extends Content {
     return start + limit >= count;
   }
 
+  @Override
   @Path(Collection.NEW)
   @GET
-  public E newEntry() {
+  public E newContent() {
     return WebPlatform.get().getInstance(getEntryType());
   }
 

@@ -135,7 +135,7 @@ public class Books extends Folder<Book> {
   }
 
   @Override
-  public Book newEntry() {
+  public Book newContent() {
     Book result = new Book();
     result.setParent(this);
     return result;
@@ -172,7 +172,7 @@ public class Books extends Folder<Book> {
 
   @Override
   protected Book createFrom(MultivaluedMap<String, String> params) {
-    return newEntry();
+    return newContent();
   }
 
 }

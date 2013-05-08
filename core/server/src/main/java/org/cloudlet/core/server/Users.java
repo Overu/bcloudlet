@@ -51,7 +51,7 @@ public class Users extends Folder<User> {
   }
 
   @Override
-  public User newEntry() {
+  public User newContent() {
     User user = new User();
     user.setName("abc");
     user.setEmail("abc@mycompany.com");

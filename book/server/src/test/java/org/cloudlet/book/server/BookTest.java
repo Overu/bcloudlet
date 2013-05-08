@@ -56,7 +56,7 @@ public class BookTest extends CoreTest {
     Books books = repo.getBooks();
     books.doLoad();
     long total = books.getCount();
-    Book book = books.newEntry();
+    Book book = books.newContent();
     total = total + 1;
     book.setPath("book" + total);
     book.setTitle("娱乐 " + total);

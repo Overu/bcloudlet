@@ -29,7 +29,7 @@ public class GroupTest extends CoreTest {
     Users users = repo.getUsers();
     Group group = groups.getChild("mygroup");
     if (group == null) {
-      group = groups.newEntry();
+      group = groups.newContent();
       group.setPath("mygroup");
       group = groups.doCreate(group);
     } else {
@@ -38,7 +38,7 @@ public class GroupTest extends CoreTest {
     users.doLoad();
     long total = users.getCount();
     for (int i = 1; i <= 10; i++) {
-      User user = users.newEntry();
+      User user = users.newContent();
       long count = total + i;
       user.setName("User " + count);
       user.setPath("user" + count);

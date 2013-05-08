@@ -8,16 +8,8 @@
 <jsp:include page="/admin/meta.jsp"></jsp:include>
 </head>
 <body data-spy="scroll" data-target=".bs-docs-sidebar">
-  <jsp:include page="/admin/navbar.jsp"></jsp:include>
-  <header class="jumbotron subhead" id="overview">
-    <div class="container">
-      <h2>用户管理</h2>
-      <p class="lead">Dozens of reusable components built to provide navigation, alerts, popovers, and more.</p>
-    </div>
-  </header>
-
+  <jsp:include page="header.jsp"></jsp:include>
   <div class="container">
-
     <!-- Docs nav
     ================================================== -->
     <div class="row">
@@ -25,25 +17,25 @@
       <div class="span9">
         <section id="newbook">
           <div class="page-header">
-            <h1>添加新用户</h1>
+            <h1>添加用户</h1>
           </div>
-          <form class="form-horizontal">
+          <form class="form-horizontal" action="./" method="POST">
             <div class="control-group">
               <label class="control-label" for="bookname">姓名</label>
               <div class="controls">
-                <input type="text" id="name" placeholder="输入用户真实姓名">
+                <input type="text" name="name" placeholder="输入用户真实姓名">
               </div>
             </div>
             <div class="control-group">
               <label class="control-label" for="summny">邮箱</label>
               <div class="controls">
-                <input type="text" id="email" placeholder="e.g. mike@example.com">
+                <input type="text" name="email" placeholder="e.g. mike@example.com">
               </div>
             </div>
             <div class="control-group">
               <label class="control-label" for="summny">手机</label>
               <div class="controls">
-                <input type="text" id="phone" placeholder="e.g. +86-13800138000">
+                <input type="text" name="phone" placeholder="e.g. +86-13800138000">
               </div>
             </div>
             <div class="control-group">
