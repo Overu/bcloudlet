@@ -9,6 +9,11 @@
 <script src="/static/jquery/jquery.min.js"></script>
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript">
+	//提取URL中的模块的根路径
+	function subStrPath(str) {
+		return str.substring(0, str.lastIndexOf("/"));
+	}
+
 	//设置navbar选中高亮显示
 	$(function() {
 		var pathname = location.pathname;
@@ -16,7 +21,7 @@
 			return;
 		}
 		$("ul.nav>li>a").each(function() {
-			if (pathname == $(this).attr("href")) {
+			if (subStrPath(pathname) == subStrPath($(this).attr("href"))) {
 				$(this).parent().addClass("active");
 			}
 		});
