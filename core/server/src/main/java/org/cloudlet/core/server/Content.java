@@ -2,6 +2,7 @@ package org.cloudlet.core.server;
 
 import com.google.inject.persist.Transactional;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUpload;
@@ -17,9 +18,11 @@ import org.hibernate.annotations.TypeDef;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -127,7 +130,7 @@ public abstract class Content {
   protected User owner;
 
   @Type(type = ContentType.NAME)
-  @Columns(columns = { @Column(name = "parentType"), @Column(name = "parentId") })
+  @Columns(columns = {@Column(name = "parentType"), @Column(name = "parentId")})
   protected Content parent;
 
   public static final String SEARCH = "search";
@@ -161,11 +164,12 @@ public abstract class Content {
   }
 
   @POST
-  @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
-  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_ATOM_XML })
+  @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
+  @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_ATOM_XML})
   public final Content create(MultivaluedMap<String, String> params) {
     Content content = newContent();
     content.readParams(params);
+    content.readBean(params);
     return createChild(content);
   }
 
@@ -185,8 +189,8 @@ public abstract class Content {
   }
 
   @POST
-  @Consumes({ MediaType.MULTIPART_FORM_DATA })
-  @Produces({ MediaType.APPLICATION_JSON })
+  @Consumes({MediaType.MULTIPART_FORM_DATA})
+  @Produces({MediaType.APPLICATION_JSON})
   public Content createFromMultipartFormData(@Context UriInfo uriInfo, @HeaderParam("Content-Length") final Integer contentLength,
       @HeaderParam("Content-Type") final String contentType, final InputStream inputStream) {
     Content result = null;
@@ -360,7 +364,7 @@ public abstract class Content {
 
   @GET
   @Path("{view}.html")
-  @Produces({ MediaType.TEXT_HTML })
+  @Produces({MediaType.TEXT_HTML})
   public Viewable getHtmlView(@PathParam("view") String view) {
     this.view = view;
     doLoad();
@@ -390,7 +394,7 @@ public abstract class Content {
 
   @GET
   @Path("{view}.json")
-  @Produces({ MediaType.APPLICATION_JSON })
+  @Produces({MediaType.APPLICATION_JSON})
   public Viewable getJsonView(@PathParam("view") String view) {
     this.view = view;
     doLoad();
@@ -501,6 +505,18 @@ public abstract class Content {
     result.setParent(this);
     result.setPath(path);
     return result;
+  }
+
+  public void readBean(MultivaluedMap<String, String> params) {
+    try {
+      for (Entry<String, List<String>> param : params.entrySet()) {
+        BeanUtils.setProperty(this, param.getKey(), param.getValue().get(0));
+      }
+    } catch (IllegalAccessException e) {
+      e.printStackTrace();
+    } catch (InvocationTargetException e) {
+      e.printStackTrace();
+    }
   }
 
   public void readFrom(Content delta) {
