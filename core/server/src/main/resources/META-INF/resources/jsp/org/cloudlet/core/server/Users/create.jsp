@@ -19,23 +19,41 @@
           <div class="page-header">
             <h1>添加用户</h1>
           </div>
-          <form id="createFrom" class="form-horizontal">
+          <form id="createform" class="form-horizontal">
             <div class="control-group">
-              <label class="control-label" for="bookname">姓名</label>
+              <label class="control-label" for="username">姓名</label>
               <div class="controls">
-                <input type="text" name="name" placeholder="输入用户真实姓名">
+                <input type="text" id="username" name="name" placeholder="输入用户真实姓名" check-type="required" required-message="姓名不能为空！" />
               </div>
             </div>
             <div class="control-group">
-              <label class="control-label" for="summny">邮箱</label>
+              <label class="control-label" for="password">密码</label>
               <div class="controls">
-                <input type="text" name="email" placeholder="e.g. mike@example.com">
+                <input type="password" id="password" name="password" placeholder=".........." check-type="passWord"/>
               </div>
             </div>
             <div class="control-group">
-              <label class="control-label" for="summny">手机</label>
+              <label class="control-label" for="confirmPwd">确认密码</label>
               <div class="controls">
-                <input type="text" name="phone" placeholder="e.g. +86-13800138000">
+                <input type="password" id="confirmPwd" name="confirmPwd" placeholder=".........." check-type="confirmPwd"/>
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="inputEmail">邮箱</label>
+              <div class="controls">
+                <input type="text" id="inputEmail" name="email" placeholder="123@163.com" check-type="mail" mail-message="邮箱格式不正确！">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="phone">手机</label>
+              <div class="controls">
+                <input type="text" id="phone" name="phone" placeholder="13800138000" check-type="mobile" maxlength="11">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="state">籍贯</label>
+              <div class="controls">
+                <input type="text" id="state" name="state" placeholder="北京" check-type="mobile" maxlength="11">
               </div>
             </div>
             <div class="control-group">
@@ -53,20 +71,22 @@
       <jsp:include page="/footer.jsp"></jsp:include>
     </div>
   </footer>
+
   <script type="text/javascript">
-			$(function() {
-				$("#save_From").click(function() {
-					$.ajax({
-						type : 'POST',
-						url : './',
-						data : $("#createFrom").serialize(),//序列化表单里所有的内容
-						success : function(data) {
-							window.location.href = "index.html";
-						}
-					});
-					return false;
-				});
+			$('#createform').myValidate("save_From", function() {
+				$.ajax({
+					type : 'POST',
+					url : './',
+					data : $("#createform").serialize(),//序列化表单里所有的内容
+					success : function(data) {
+						window.location.href = "index.html";
+					},
+					complete:function() {
+						window.location.href = "index.html";
+					}
+				});				
 			});
 		</script>
+
 </body>
 </html>

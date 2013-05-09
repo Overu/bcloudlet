@@ -130,7 +130,7 @@ public abstract class Content {
   protected User owner;
 
   @Type(type = ContentType.NAME)
-  @Columns(columns = {@Column(name = "parentType"), @Column(name = "parentId")})
+  @Columns(columns = { @Column(name = "parentType"), @Column(name = "parentId") })
   protected Content parent;
 
   public static final String SEARCH = "search";
@@ -164,12 +164,12 @@ public abstract class Content {
   }
 
   @POST
-  @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
-  @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_ATOM_XML})
+  @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_ATOM_XML })
   public final Content create(MultivaluedMap<String, String> params) {
     Content content = newContent();
     content.readParams(params);
-    content.readBean(params);
+    // content.readBean(params);
     return createChild(content);
   }
 
@@ -189,8 +189,8 @@ public abstract class Content {
   }
 
   @POST
-  @Consumes({MediaType.MULTIPART_FORM_DATA})
-  @Produces({MediaType.APPLICATION_JSON})
+  @Consumes({ MediaType.MULTIPART_FORM_DATA })
+  @Produces({ MediaType.APPLICATION_JSON })
   public Content createFromMultipartFormData(@Context UriInfo uriInfo, @HeaderParam("Content-Length") final Integer contentLength,
       @HeaderParam("Content-Type") final String contentType, final InputStream inputStream) {
     Content result = null;
@@ -364,7 +364,7 @@ public abstract class Content {
 
   @GET
   @Path("{view}.html")
-  @Produces({MediaType.TEXT_HTML})
+  @Produces({ MediaType.TEXT_HTML })
   public Viewable getHtmlView(@PathParam("view") String view) {
     this.view = view;
     doLoad();
@@ -394,7 +394,7 @@ public abstract class Content {
 
   @GET
   @Path("{view}.json")
-  @Produces({MediaType.APPLICATION_JSON})
+  @Produces({ MediaType.APPLICATION_JSON })
   public Viewable getJsonView(@PathParam("view") String view) {
     this.view = view;
     doLoad();

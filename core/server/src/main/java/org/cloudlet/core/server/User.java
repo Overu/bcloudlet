@@ -65,22 +65,26 @@ public class User extends Item implements Principal {
     return zip;
   }
 
-  // @Override
-  // public void readParams(MultivaluedMap<String, String> params) {
-  // super.readParams(params);
-  // if (params.containsKey(NAME)) {
-  // String name = params.getFirst(NAME);
-  // setName(name);
-  // }
-  // if (params.containsKey(EMAIL)) {
-  // String email = params.getFirst(EMAIL);
-  // setEmail(email);
-  // }
-  // if (params.containsKey(PHONE)) {
-  // String phone = params.getFirst(PHONE);
-  // setPhone(phone);
-  // }
-  // }
+  @Override
+  public void readParams(MultivaluedMap<String, String> params) {
+    super.readParams(params);
+    if (params.containsKey(NAME)) {
+      String name = params.getFirst(NAME);
+      setName(name);
+    }
+    if (params.containsKey(EMAIL)) {
+      String email = params.getFirst(EMAIL);
+      setEmail(email);
+    }
+    if (params.containsKey(PHONE)) {
+      String phone = params.getFirst(PHONE);
+      setPhone(phone);
+    }
+    if (params.containsKey("password")) {
+      String password = params.getFirst("password");
+      setPasswordHash(password);
+    }
+  }
 
   public User setEmail(final String value) {
     this.email = value;
@@ -112,8 +116,8 @@ public class User extends Item implements Principal {
   }
 
   @PUT
-  @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public User update(User data) {
     readFrom(data);
     update();
