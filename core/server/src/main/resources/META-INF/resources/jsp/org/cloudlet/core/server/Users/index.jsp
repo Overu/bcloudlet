@@ -17,39 +17,6 @@
     <div class="row">
       <jsp:include page="sidebar.jsp"></jsp:include>
       <div class="span9">
-        <%-- <section id="newbook">
-          <div class="page-header">
-            <h1>系统用户</h1>
-          </div>
-          <table class="table table-striped table-hover">
-            <tbody>
-              <tr>
-                <th>#</th>
-                <th>姓名</th>
-                <th>登录名</th>
-                <th>Email</th>
-                <th>手机</th>
-                <th>修改</th>
-                <th>删除</th>
-              </tr>
-              <c:forEach var="i" items="${it.items}" varStatus="status">
-                <tr>
-                  <td>${status.count}</td>
-                  <td>${i.title}</td>
-                  <td>${i.name}</td>
-                  <td>${i.email}</td>
-                  <td>${i.phone}</td>
-                  <td>修改</td>
-                  <td><button onclick="deleteItem('${i.uri}')" class="btn">删除</button></td>
-                </tr>
-              </c:forEach>
-            </tbody>
-          </table>
-          <div id="page" class="pagination pagination-centered">
-            <ul id="ul_page">
-            </ul>
-          </div>
-        </section> --%>
         <section id="newbook">
           <div class="container-fluid">
             <div class="page-header">
@@ -163,8 +130,8 @@
 					type : 'delete',
 					url : item.id,
 					success : function() {
-						//window.location.reload();
-						$("#usersGrid").simplePagingGrid("refresh");
+						window.location.reload();
+						//$("#usersGrid").simplePagingGrid("refresh");
 					}
 				});
 			}
@@ -183,7 +150,7 @@
 										false ],
 								initialSortColumn : "name",
 								cellTemplates : [
-										null,
+										"",
 										null,
 										null,
 										null,

@@ -77,13 +77,10 @@
 				$.ajax({
 					type : 'POST',
 					url : './',
-					data : $("#createform").serialize(),//序列化表单里所有的内容
-					success : function(data) {
-						window.location.href = "www.baidu.com";
-					},
+					data : $("#createform").serialize(),//序列化表单里所有的内容					
 					complete:function() {
 						//window.location.href = "www.baidu.com";
-						window.location.replace("http://www.baidu.com");  
+						window.location.href = "http://localhost:8080/users/index.html";					
 					}
 				});				
 			});
