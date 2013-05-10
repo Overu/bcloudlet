@@ -629,9 +629,19 @@ public abstract class Content {
     this.version = version;
   }
 
+  //
+  // @PUT
+  // @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+  public final Content update() {
+    WebPlatform.get().getInstance(ContentService.class).update(this);
+    return this;
+  }
+
   @PUT
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-  public final Content update() {
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_ATOM_XML })
+  public final Content update(MultivaluedMap<String, String> params) {
+    this.readParams(params);
     WebPlatform.get().getInstance(ContentService.class).update(this);
     return this;
   }

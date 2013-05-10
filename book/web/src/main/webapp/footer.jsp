@@ -9,6 +9,8 @@
 <script src="/static/jquery/jquery.min.js"></script>
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
 <script src="/static/bootstrap/validation/bootstrap-validation.js"></script>
+<script src="/static/simpleGrid/js/handlebars-1.0.rc.1.js"></script>
+<script src="/static/simpleGrid/js/simplePagingGrid.js"></script>
 
 <script type="text/javascript">
 	//提取URL中的模块的根路径

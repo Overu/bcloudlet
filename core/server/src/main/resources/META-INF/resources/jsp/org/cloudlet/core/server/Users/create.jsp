@@ -26,16 +26,16 @@
                 <input type="text" id="username" name="name" placeholder="输入用户真实姓名" check-type="required" required-message="姓名不能为空！" />
               </div>
             </div>
-            <div class="control-group">
+           <div class="control-group">
               <label class="control-label" for="password">密码</label>
               <div class="controls">
-                <input type="password" id="password" name="password" placeholder=".........." check-type="passWord"/>
+                <input type="password" id="password" name="password" placeholder="输入密码" check-type="passWord"/>
               </div>
             </div>
             <div class="control-group">
               <label class="control-label" for="confirmPwd">确认密码</label>
               <div class="controls">
-                <input type="password" id="confirmPwd" name="confirmPwd" placeholder=".........." check-type="confirmPwd"/>
+                <input type="password" id="confirmPwd" name="confirmPwd" placeholder="输入确认密码" check-type="confirmPwd"/>
               </div>
             </div>
             <div class="control-group">
@@ -50,12 +50,12 @@
                 <input type="text" id="phone" name="phone" placeholder="13800138000" check-type="mobile" maxlength="11">
               </div>
             </div>
-            <div class="control-group">
+            <!-- <div class="control-group">
               <label class="control-label" for="state">籍贯</label>
               <div class="controls">
                 <input type="text" id="state" name="state" placeholder="北京" check-type="mobile" maxlength="11">
               </div>
-            </div>
+            </div> -->
             <div class="control-group">
               <div class="controls">
                 <button type="submit" class="btn" id="save_From">保存</button>
@@ -79,10 +79,11 @@
 					url : './',
 					data : $("#createform").serialize(),//序列化表单里所有的内容
 					success : function(data) {
-						window.location.href = "index.html";
+						window.location.href = "www.baidu.com";
 					},
 					complete:function() {
-						window.location.href = "index.html";
+						//window.location.href = "www.baidu.com";
+						window.location.replace("http://www.baidu.com");  
 					}
 				});				
 			});
