@@ -54,8 +54,8 @@
           <div class="container-fluid">
             <div class="page-header">
               <h1>系统用户</h1>
-              </div>              
-              <div id="usersGrid"></div>            
+            </div>
+            <div id="usersGrid"></div>
           </div>
         </section>
       </div>
@@ -75,16 +75,16 @@
     </div>
     <div class="modal-body">
       <form id="editform" class="form-horizontal">
-            <div>
-              <input type="hidden" id="uri" >
-            </div>
-            <div class="control-group">
-              <label class="control-label" for="username">姓名</label>
-              <div class="controls">
-                <input type="text" id="username" name="name" placeholder="输入用户真实姓名" check-type="required" required-message="姓名不能为空！" />
-              </div>
-            </div>
-            <!-- <div class="control-group">
+        <div>
+          <input type="hidden" id="uri">
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="username">姓名</label>
+          <div class="controls">
+            <input type="text" id="username" name="name" placeholder="输入用户真实姓名" check-type="required" required-message="姓名不能为空！" />
+          </div>
+        </div>
+        <!-- <div class="control-group">
               <label class="control-label" for="password">密码</label>
               <div class="controls">
                 <input type="password" id="password" name="password" placeholder=".........." check-type="passWord"/>
@@ -96,25 +96,25 @@
                 <input type="password" id="confirmPwd" name="confirmPwd" placeholder=".........." check-type="confirmPwd"/>
               </div>
             </div> -->
-            <div class="control-group">
-              <label class="control-label" for="inputEmail">邮箱</label>
-              <div class="controls">
-                <input type="text" id="inputEmail" name="email" placeholder="123@163.com" check-type="mail" mail-message="邮箱格式不正确！">
-              </div>
-            </div>
-            <div class="control-group">
-              <label class="control-label" for="phone">手机</label>
-              <div class="controls">
-                <input type="text" id="phone" name="phone" placeholder="13800138000" check-type="mobile" maxlength="11">
-              </div>
-            </div>
-            <!-- <div class="control-group">
+        <div class="control-group">
+          <label class="control-label" for="inputEmail">邮箱</label>
+          <div class="controls">
+            <input type="text" id="inputEmail" name="email" placeholder="123@163.com" check-type="mail" mail-message="邮箱格式不正确！">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="phone">手机</label>
+          <div class="controls">
+            <input type="text" id="phone" name="phone" placeholder="13800138000" check-type="mobile" maxlength="11">
+          </div>
+        </div>
+        <!-- <div class="control-group">
               <label class="control-label" for="state">籍贯</label>
               <div class="controls">
                 <input type="text" id="state" name="state" placeholder="北京" check-type="mobile" maxlength="11">
               </div>
-            </div> -->            
-          </form>
+            </div> -->
+      </form>
     </div>
     <div class="modal-footer">
       <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -125,108 +125,72 @@
 
   <script type="text/javascript">
   
-//响应修改按钮
-	function editItem(item) {
-		$.ajax({
-			type : 'get',
-			url : item.id,
-			dataType: 'json',
-			success : function(data) {
-				$("#username").val(data.name);
-				$("#inputEmail").val(data.email);
-				$("#phone").val(data.phone);
-				$("#uri").val(data.uri);
-				$('#myModal').modal('show')
-			}
-		});
-	}
-	
-	$('#editform').myValidate("save-edit", function() {
-		$.ajax({
-			type : 'put',
-			url : $("#uri").val(),
-			data : $("#editform").serialize(),//序列化表单里所有的内容
-			success : function(data) {
-				$('#myModal').modal('hide');
-				window.location.href = "index.html";
-			},
-			complete:function() {
-				window.location.href = "index.html";
-			}
-		});				
-	});
-	
-			//响应删除按钮
-  			function deleteItem(item) {
+
+			//响应修改按钮
+			function editItem(item) {
 				$.ajax({
-					type : 'delete',
+					type : 'get',
 					url : item.id,
-					success : function() {
-						window.location.reload();
+					dataType : 'json',
+					success : function(data) {
+						$("#username").val(data.name);
+						$("#inputEmail").val(data.email);
+						$("#phone").val(data.phone);
+						$("#uri").val(data.uri);
+						$('#myModal').modal('show')
 					}
 				});
 			}
 
-			//构建显示列表数据
-			function editTable(data){		        		
-    					        			        		
-    	    }
-			
-			//页面初始化查询数据
-/* 			$(function() {
-				
-				 $.ajax({
-  		        	type: 'get',
-  		        	url: '/users',
-  		        	dataType: 'json',
-  		        	success: function(data){ */
-  		        		
-  		        		$("#usersGrid").simplePagingGrid({
-  		        			dataUrl: '/users',
-  				            columnNames: ["#", 
-  				                          "姓名", 
-  				                          "Email",
-  				                          "手机",
-  				                          "修改",
-  				                          "删除"],
-  				            columnKeys: ["",
-  				                         "name",
-  				                         "email",
-  				                         "phone",
-  				                          "修改",
-  				                          "删除"],
-  				            columnWidths: ["5%", "15%", "25%","25%","10%","10%"],
-  				            sortable: [false,true, false, false, false, false],
-  				            initialSortColumn: "name",
-  				            cellTemplates:[
-  				                           null,
-  				                           null,
-  				                           null,
-  				                           null,
-  				                           "<button id='{{uri}}' onclick='editItem(this)' class='btn'>修改</button>",
-  				                           "<button id='{{uri}}' onclick='deleteItem(this)' class='btn'>删除</button>"],
-  				                         dataFunction: function(currentPage, pageSize, sortedColumn, sortOrder) {
-  				                        	 var start = currentPage*pageSize;
-  				                        	$.ajax({
-  				            		        	type: 'get',
-  				            		        	url: '/users?start='+start+"&limit="+pageSize,
-  				            		        	dataType: 'json',
-  				            		        	success: function(data){
-  				            		        		return data;	
-  				            		        	}
-  				            		        	});
-  				                        	return data;
-  				                         }
-  /* 				            data: {
-  				                currentPage: data.items,
-  				                totalRows: data.count
-  		                    } */
-  				        });
-/*   		        	}	        	
-  		        });
-				 
-				
-			}); */
+			$('#editform').myValidate("save-edit", function() {
+				$.ajax({
+					type : 'put',
+					url : $("#uri").val(),
+					data : $("#editform").serialize(),//序列化表单里所有的内容
+					success : function(data) {
+						$('#myModal').modal('hide');
+						window.location.href = "index.html";
+					},
+					complete : function() {
+						window.location.href = "index.html";
+					}
+				});
+			});
+
+			//响应删除按钮
+			function deleteItem(item) {
+				$.ajax({
+					type : 'delete',
+					url : item.id,
+					success : function() {
+						//window.location.reload();
+						$("#usersGrid").simplePagingGrid("refresh");
+					}
+				});
+			}
+
+			$("#usersGrid")
+					.simplePagingGrid(
+							{
+								dataUrl : '/users',
+								columnNames : [ "#", "姓名", "Email", "手机", "修改",
+										"删除" ],
+								columnKeys : [ "", "name", "email", "phone",
+										"修改", "删除" ],
+								columnWidths : [ "5%", "15%", "25%", "25%",
+										"10%", "10%" ],
+								sortable : [ false, true, false, false, false,
+										false ],
+								initialSortColumn : "name",
+								cellTemplates : [
+										null,
+										null,
+										null,
+										null,
+										"<button id='{{uri}}' onclick='editItem(this)' class='btn'>修改</button>",
+										"<button id='{{uri}}' onclick='deleteItem(this)' class='btn'>删除</button>" ]
+
+							});
 		</script>
 </body>
 </html>

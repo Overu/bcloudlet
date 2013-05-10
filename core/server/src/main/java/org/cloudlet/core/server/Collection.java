@@ -77,7 +77,7 @@ public abstract class Collection<E extends Item> extends Content {
       sql.append(" order by");
       for (String s : sort) {
         String[] split = s.split("\\|");
-        sql.append(" f.").append(split[0]).append(" ").append(split[1]).append(",");
+        sql.append(" e.").append(split[0]).append(" ").append(split[1]).append(",");
       }
       sql.deleteCharAt(sql.lastIndexOf(","));
     }

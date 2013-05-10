@@ -394,8 +394,7 @@
                             data: {
                                 start: currentPage * settings.pageSize,
                                 limit: settings.pageSize,
-                                sortColumn: sortedColumn,
-                                sortOrder: sortOrder
+                                sort: sortedColumn+"\|"+sortOrder
                             },
                             success: function (jsonData) {
                                 getPageDataFromSource(jsonData);
