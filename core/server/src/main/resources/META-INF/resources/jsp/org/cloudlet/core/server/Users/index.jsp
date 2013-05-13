@@ -51,18 +51,18 @@
             <input type="text" id="username" name="name" placeholder="输入用户真实姓名" check-type="required" required-message="姓名不能为空！" />
           </div>
         </div>
-        <!-- <div class="control-group">
+        <div class="control-group">
               <label class="control-label" for="password">密码</label>
               <div class="controls">
-                <input type="password" id="password" name="password" placeholder=".........." check-type="passWord"/>
+                <input type="password" id="password" name="password" placeholder="输入密码" check-type="passWord"/>
               </div>
             </div>
             <div class="control-group">
               <label class="control-label" for="confirmPwd">确认密码</label>
               <div class="controls">
-                <input type="password" id="confirmPwd" name="confirmPwd" placeholder=".........." check-type="confirmPwd"/>
+                <input type="password" id="confirmPwd" name="confirmPwd" placeholder="输入确认密码" check-type="confirmPwd"/>
               </div>
-            </div> -->
+            </div>
         <div class="control-group">
           <label class="control-label" for="inputEmail">邮箱</label>
           <div class="controls">
@@ -75,17 +75,11 @@
             <input type="text" id="phone" name="phone" placeholder="13800138000" check-type="mobile" maxlength="11">
           </div>
         </div>
-        <!-- <div class="control-group">
-              <label class="control-label" for="state">籍贯</label>
-              <div class="controls">
-                <input type="text" id="state" name="state" placeholder="北京" check-type="mobile" maxlength="11">
-              </div>
-            </div> -->
       </form>
     </div>
     <div class="modal-footer">
-      <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-      <button id="save-edit" class="btn btn-primary">Save changes</button>
+      <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+      <button id="save-edit" class="btn btn-primary">保存</button>
     </div>
   </div>
 
@@ -102,6 +96,8 @@
 					success : function(data) {
 						$("#username").val(data.name);
 						$("#inputEmail").val(data.email);
+						$("#password").val(data.passwordHash);
+						$("#confirmPwd").val(data.passwordHash);
 						$("#phone").val(data.phone);
 						$("#uri").val(data.uri);
 						$('#myModal').modal('show')
@@ -116,22 +112,23 @@
 					data : $("#editform").serialize(),//序列化表单里所有的内容
 					success : function(data) {
 						$('#myModal').modal('hide');
-						window.location.href = "index.html";
-					},
-					complete : function() {
-						window.location.href = "index.html";
+						$("#usersGrid").simplePagingGrid("refresh");
 					}
 				});
 			});
 
+		
 			//响应删除按钮
 			function deleteItem(item) {
+				if (!confirm("是否确定删除此数据?")) {
+					return false;
+				}
 				$.ajax({
 					type : 'delete',
 					url : item.id,
 					success : function() {
-						window.location.reload();
-						//$("#usersGrid").simplePagingGrid("refresh");
+						//刷新table
+						$("#usersGrid").simplePagingGrid("refresh");
 					}
 				});
 			}

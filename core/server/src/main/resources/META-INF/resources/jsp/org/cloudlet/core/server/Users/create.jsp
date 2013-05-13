@@ -57,8 +57,9 @@
               </div>
             </div> -->
             <div class="control-group">
-              <div class="controls">
-                <button type="submit" class="btn" id="save_From">保存</button>
+              <div class="controls">                
+                <a href="javascript:void(0)" id="save_From" role="button" class="btn">保存</a>
+                <a href="create.html" role="button" class="btn">重置</a>               
               </div>
             </div>
           </form>
@@ -73,14 +74,18 @@
   </footer>
 
   <script type="text/javascript">
-			$('#createform').myValidate("save_From", function() {
+			 $('#createform').myValidate("save_From", function() {				
 				$.ajax({
 					type : 'POST',
 					url : './',
 					data : $("#createform").serialize(),//序列化表单里所有的内容					
-					complete:function() {
-						//window.location.href = "www.baidu.com";
-						window.location.href = "http://localhost:8080/users/index.html";					
+					complete:function(data,textStatus) {
+						if(textStatus=="success"){
+							window.location.href='index.html';
+						}else{
+							window.location.href='create.html';
+						}
+											
 					}
 				});				
 			});
