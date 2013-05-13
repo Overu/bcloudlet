@@ -24,6 +24,7 @@ public class ImporterServlet extends HttpServlet {
     resp.setCharacterEncoding("UTF-8");
     PrintWriter w = resp.getWriter();
     try {
+      importer.importUser();
       importer.setWriter(w);
       importer.importDuoKan();
     } catch (Throwable t) {

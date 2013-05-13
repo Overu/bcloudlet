@@ -17,15 +17,15 @@
 	function subStrPath(str) {
 		return str.substring(0, str.lastIndexOf("/"));
 	}
-
 	//设置navbar选中高亮显示
 	$(function() {
 		var pathname = location.pathname;
 		if (pathname.length <= 0) {
 			return;
 		}
+		var split = pathname.split("/");
 		$("ul.nav>li>a").each(function() {
-			if (subStrPath(pathname) == subStrPath($(this).attr("href"))) {
+			if (subStrPath($(this).attr("href")) == subStrPath(pathname) || $(this).attr("href") == (split[2])) {
 				$(this).parent().addClass("active");
 			}
 		});

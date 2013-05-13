@@ -3,6 +3,8 @@ package org.cloudlet.book.server;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
+import static org.junit.Assert.assertEquals;
+
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -14,6 +16,8 @@ import org.cloudlet.core.server.Replies;
 import org.cloudlet.core.server.Reply;
 import org.cloudlet.core.server.Tag;
 import org.cloudlet.core.server.Tags;
+import org.cloudlet.core.server.User;
+import org.cloudlet.core.server.Users;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,6 +54,22 @@ public class BookImporter {
     tags.doLoad();
     for (Tag tag : tags.getItems()) {
       importBooks(tag);
+    }
+  }
+
+  public void importUser() {
+    Users users = repo.get().getUsers();
+    users.doLoad();
+    long total = users.getCount();
+    for (int i = 1; i <= 20; i++) {
+      User user = users.newContent();
+      long count = total + i;
+      user.setName("User " + count);
+      user.setPath("user" + count);
+      user.setEmail("user" + count + "@gmail.com");
+      user.setPhone(Long.toString(count));
+      users.doCreate(user);
+      users.doLoad();
     }
   }
 
