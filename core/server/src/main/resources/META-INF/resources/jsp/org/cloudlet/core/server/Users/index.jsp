@@ -31,6 +31,7 @@
   <footer class="footer">
     <div class="container" style="height: 5%;">
       <jsp:include page="/footer.jsp"></jsp:include>
+      <jsp:include page="/js.jsp"></jsp:include>
     </div>
   </footer>
 
@@ -147,7 +148,7 @@
 										false ],
 								initialSortColumn : "name",
 								cellTemplates : [
-										"",
+										"{{pageNumber}}",
 										null,
 										null,
 										null,

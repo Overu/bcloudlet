@@ -88,6 +88,7 @@
         <li><a href="https://github.com/twitter/bootstrap/blob/master/CHANGELOG.md">Changelog</a></li>
       </ul> -->
       <jsp:include page="/footer.jsp"></jsp:include>
+      <jsp:include page="/js.jsp"></jsp:include>
     </div>
   </footer>
    <script type="text/javascript">
