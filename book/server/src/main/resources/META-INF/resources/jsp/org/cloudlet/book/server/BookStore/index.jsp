@@ -10,6 +10,7 @@
   display: none;
 }
 
+
 .hideauthor p.author {
   display: none;
 }
