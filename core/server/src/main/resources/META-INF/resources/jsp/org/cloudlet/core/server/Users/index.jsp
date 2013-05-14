@@ -85,9 +85,8 @@
 
 
   <script type="text/javascript">
-  
-
 			//响应修改按钮
+			//查询数据并填充表单数据
 			function editItem(item) {
 				$.ajax({
 					type : 'get',
@@ -105,6 +104,7 @@
 				});
 			}
 
+			//提交表单数据更新数据库
 			$('#editform').myValidate("save-edit", function() {
 				$.ajax({
 					type : 'put',
@@ -117,7 +117,6 @@
 				});
 			});
 
-		
 			//响应删除按钮
 			function deleteItem(item) {
 				if (!confirm("是否确定删除此数据?")) {
@@ -133,6 +132,7 @@
 				});
 			}
 
+			//编辑Table数据
 			$("#usersGrid")
 					.simplePagingGrid(
 							{
@@ -141,8 +141,8 @@
 										"删除" ],
 								columnKeys : [ "", "name", "email", "phone",
 										"修改", "删除" ],
-								columnWidths : [ "5%", "15%", "25%", "25%",
-										"10%", "10%" ],
+								columnWidths : [ "5%", "15%", "25%", "20%",
+										"12%", "13%" ],
 								sortable : [ false, true, false, false, false,
 										false ],
 								initialSortColumn : "name",
