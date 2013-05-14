@@ -6,6 +6,11 @@
     <div class="page-header">
       <h1>系统用户</h1>
     </div>
+    <div class="input-append" align="right">
+      <input id="search-name" class="span2" id="appendedInputButtons" type="text">
+      <button id="search-btn" class="btn" onclick="searchData();" type="button">查询</button>
+    </div>
+
     <div id="usersGrid"></div>
   </div>
 </section>
@@ -62,74 +67,79 @@
 
 
 <script type="text/javascript">
-			//响应修改按钮
-			//查询数据并填充表单数据
-			function editItem(item) {
-				$.ajax({
-					type : 'get',
-					url : item.id,
-					dataType : 'json',
-					success : function(data) {
-						$("#username").val(data.name);
-						$("#inputEmail").val(data.email);
-						$("#password").val(data.passwordHash);
-						$("#confirmPwd").val(data.passwordHash);
-						$("#phone").val(data.phone);
-						$("#uri").val(data.uri);
-						$('#myModal').modal('show')
-					}
-				});
+	//响应查询按钮
+	function searchData() {
+		var searchname = $("#search-name").val();
+		var uri = searchname == "" ? "/users" : "/users" + "?search=name\|"
+				+ searchname;
+		$("#usersGrid").simplePagingGrid("refresh", uri);
+	}
+
+	//响应修改按钮
+	//查询数据并填充表单数据
+	function editItem(item) {
+		$.ajax({
+			type : 'get',
+			url : item.id,
+			dataType : 'json',
+			success : function(data) {
+				$("#username").val(data.name);
+				$("#inputEmail").val(data.email);
+				$("#password").val(data.passwordHash);
+				$("#confirmPwd").val(data.passwordHash);
+				$("#phone").val(data.phone);
+				$("#uri").val(data.uri);
+				$('#myModal').modal('show')
 			}
+		});
+	}
 
-			//提交表单数据更新数据库
-			$('#editform').myValidate("save-edit", function() {
-				$.ajax({
-					type : 'put',
-					url : $("#uri").val(),
-					data : $("#editform").serialize(),//序列化表单里所有的内容
-					success : function(data) {
-						$('#myModal').modal('hide');
-						$("#usersGrid").simplePagingGrid("refresh");
-					}
-				});
-			});
-
-			//响应删除按钮
-			function deleteItem(item) {
-				if (!confirm("是否确定删除此数据?")) {
-					return false;
-				}
-				$.ajax({
-					type : 'delete',
-					url : item.id,
-					success : function() {
-						//刷新table
-						$("#usersGrid").simplePagingGrid("refresh");
-					}
-				});
+	//提交表单数据更新数据库
+	$('#editform').myValidate("save-edit", function() {
+		$.ajax({
+			type : 'put',
+			url : $("#uri").val(),
+			data : $("#editform").serialize(),//序列化表单里所有的内容
+			success : function(data) {
+				$('#myModal').modal('hide');
+				$("#usersGrid").simplePagingGrid("refresh");
 			}
+		});
+	});
 
-			//编辑Table数据
-			$("#usersGrid")
-					.simplePagingGrid(
-							{
-								dataUrl : '/users',
-								columnNames : [ "#", "姓名", "Email", "手机", "修改",
-										"删除" ],
-								columnKeys : [ "", "name", "email", "phone",
-										"修改", "删除" ],
-								columnWidths : [ "5%", "15%", "25%", "20%",
-										"12%", "13%" ],
-								sortable : [ false, true, false, false, false,
-										false ],
-								initialSortColumn : "name",
-								cellTemplates : [
-										"{{pageNumber}}",
-										null,
-										null,
-										null,
-										"<button id='{{uri}}' onclick='editItem(this)' class='btn'>修改</button>",
-										"<button id='{{uri}}' onclick='deleteItem(this)' class='btn'>删除</button>" ]
+	//响应删除按钮
+	function deleteItem(item) {
+		if (!confirm("是否确定删除此数据?")) {
+			return false;
+		}
+		$.ajax({
+			type : 'delete',
+			url : item.id,
+			success : function() {
+				//刷新table
+				$("#usersGrid").simplePagingGrid("refresh");
+			}
+		});
+	}
 
-							});
-		</script>
+	//编辑Table数据
+	$("#usersGrid")
+			.simplePagingGrid(
+					{
+						dataUrl : '/users',
+						columnNames : [ "#", "姓名", "Email", "手机", "修改", "删除" ],
+						columnKeys : [ "", "name", "email", "phone", "修改", "删除" ],
+						columnWidths : [ "5%", "15%", "25%", "20%", "12%",
+								"13%" ],
+						sortable : [ false, true, false, false, false, false ],
+						initialSortColumn : "name",
+						cellTemplates : [
+								"{{pageNumber}}",
+								null,
+								null,
+								null,
+								"<button id='{{uri}}' onclick='editItem(this)' class='btn'>修改</button>",
+								"<button id='{{uri}}' onclick='deleteItem(this)' class='btn'>删除</button>" ]
+
+					});
+</script>

@@ -65,7 +65,7 @@ public abstract class Collection<E extends Item> extends Content {
       sql.append(" and (");
       for (String s : search) {
         String[] split = s.split("\\|");
-        sql.append("f.").append(split[0]).append(" like '").append(split[1]).append("%'").append(" or ");
+        sql.append("e.").append(split[0]).append(" like '").append(split[1]).append("%'").append(" or ");
       }
       sql.delete(sql.lastIndexOf(" or "), sql.length());
       sql.append(")");
