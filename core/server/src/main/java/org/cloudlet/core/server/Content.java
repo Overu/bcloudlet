@@ -534,11 +534,15 @@ public abstract class Content {
   public void readParams(MultivaluedMap<String, String> params) {
     String path = params.getFirst(Content.PATH);
     String title = params.getFirst(Content.TITLE);
+    String summary = params.getFirst("summary");
     if (path != null) {
       this.path = path;
     }
     if (title != null) {
       this.title = title;
+    }
+    if (summary != null) {
+      this.summary = summary;
     }
   }
 
