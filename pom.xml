@@ -443,6 +443,7 @@
           <version>2.5</version>
           <configuration>
             <includeEmptyDirs>true</includeEmptyDirs>
+            <encoding>UTF-8</encoding>
           </configuration>
         </plugin>
 
@@ -460,6 +461,9 @@
               </configuration>
             </execution>
           </executions>
+          <configuration>
+           <encoding>UTF-8</encoding>
+          </configuration>
         </plugin>
 
         <plugin>

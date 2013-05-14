@@ -3,8 +3,6 @@ package org.cloudlet.book.server;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import static org.junit.Assert.assertEquals;
-
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;

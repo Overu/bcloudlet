@@ -28,6 +28,11 @@ public class CoreServletModule extends ServletModule {
 
     filter("/*").through(GuiceShiroFilter.class);
 
+    Map<String, String> encodeParam = new HashMap<String, String>();
+    encodeParam.put("encoding", "UTF-8");
+    encodeParam.put("forceEncoding", "true");
+    filter("/*").through(CharacterEncodingFilter.class, encodeParam);
+
     Map<String, String> jaxRsParams = new HashMap<String, String>();
     jaxRsParams.put(ServletProperties.JAXRS_APPLICATION_CLASS, CoreResourceConfig.class.getName());
     jaxRsParams.put(ServletProperties.FILTER_FORWARD_ON_404, Boolean.TRUE.toString());
@@ -42,5 +47,4 @@ public class CoreServletModule extends ServletModule {
     install(new WebSecurityModule(getServletContext()));
     logger.finest("installPersistModule end");
   }
-
 }
