@@ -44,7 +44,7 @@ public class CoreResourceConfig extends ResourceConfig {
   @Inject
   public CoreResourceConfig() {
     // super(JaxbContextResolver.class);
-    super(WebPlatform.get().getRepository().getClass(), JacksonFeature.class, XmlResourceBinder.class);
+    super(WebPlatform.get().getRepository().getClass(), JacksonFeature.class, XmlResourceBinder.class, ShiroExceptionMapper.class);
     register(new ServiceFinderBinder<ResourceMethodInvocationHandlerProvider>(ResourceMethodInvocationHandlerProvider.class));
   }
 
