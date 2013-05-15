@@ -128,13 +128,13 @@
 					{
 						dataUrl : '/users',
 						columnNames : [ "#", "姓名", "Email", "手机", "修改", "删除" ],
-						columnKeys : [ "", "name", "email", "phone", "修改", "删除" ],
+						columnKeys : [ "rowId", "name", "email", "phone", "修改", "删除" ],
 						columnWidths : [ "5%", "15%", "25%", "20%", "12%",
 								"13%" ],
 						sortable : [ false, true, false, false, false, false ],
 						initialSortColumn : "name",
 						cellTemplates : [
-								"{{pageNumber}}",
+								null,
 								null,
 								null,
 								null,

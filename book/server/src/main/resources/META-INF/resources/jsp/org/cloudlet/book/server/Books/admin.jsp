@@ -134,13 +134,13 @@
 					{
 						dataUrl : '/books',
 						columnNames : [ "#", "书名", "作者", "修改", "删除" ],
-						columnKeys : [ "", "title", "authors", "修改", "删除" ],
+						columnKeys : [ "rowId", "title", "authors", "修改", "删除" ],
 						columnWidths : [ "5%", "30%","20%", "12%",
 								"13%" ],
 						sortable : [ false, true, false, false, false ],
 						initialSortColumn : "title",
 						cellTemplates : [
-								"{{pageNumber}}",
+								null,
 								null,
 								null,
 								"<button id='{{uri}}' onclick='editItem(this)' class='btn'>修改</button>",

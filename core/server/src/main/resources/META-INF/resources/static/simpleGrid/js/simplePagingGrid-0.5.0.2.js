@@ -334,6 +334,9 @@
             	/* this._pageData = sourceData.currentPage;
                  this._numberOfRows = sourceData.totalRows;*/
             	//修改查询结果返回数据填充
+            	$.each(sourceData.items, function(i,n){  
+            		n["rowId"]=i+1+sourceData.start;
+            	});
                 this._pageData = sourceData.items;
                 this._numberOfRows = sourceData.count;
             }
