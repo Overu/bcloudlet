@@ -25,6 +25,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.RuntimeDelegate;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -102,13 +103,7 @@ public class Repository extends Item {
     Subject subject = SecurityUtils.getSubject();
     AuthenticationToken token = new UsernamePasswordToken(username, password);
     subject.login(token);
-    URI uri = null;
-    try {
-      uri = new URI(forward);
-    } catch (URISyntaxException e) {
-      e.printStackTrace();
-    }
-    return Response.status(Status.FOUND).location(uri).build();
+    return redirect(forward);
   }
 
   @GET
@@ -116,17 +111,7 @@ public class Repository extends Item {
   public Response loginCheck(@QueryParam("forward") String forward) {
     Subject subject = SecurityUtils.getSubject();
     if (subject.isAuthenticated()) {
-      URI uri = null;
-      try {
-        uri = new URI(forward);
-      } catch (URISyntaxException e) {
-        e.printStackTrace();
-        try {
-          uri = new URI("/");
-        } catch (URISyntaxException e1) {
-        }
-      }
-      return Response.status(Status.FOUND).location(uri).build();
+      return redirect(forward);
     } else {
       return Response.ok(new Viewable(LOGIN)).build();
     }
@@ -137,13 +122,7 @@ public class Repository extends Item {
   public Response logout(@QueryParam("forward") String forward) {
     Subject subject = SecurityUtils.getSubject();
     subject.logout();
-    URI uri = null;
-    try {
-      uri = new URI(forward);
-    } catch (URISyntaxException e) {
-      e.printStackTrace();
-    }
-    return Response.status(Status.FOUND).location(uri).build();
+    return redirect(forward);
   }
 
   public final void save() {
@@ -177,5 +156,15 @@ public class Repository extends Item {
         resourceContext.initResource(result);
       }
     }
+  }
+
+  private Response redirect(String forward) {
+    URI uri = null;
+    try {
+      uri = forward == null ? uriInfo.getBaseUri() : new URI(forward);
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+    }
+    return Response.status(Status.FOUND).location(uri).build();
   }
 }

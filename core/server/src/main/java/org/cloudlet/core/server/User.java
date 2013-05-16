@@ -1,5 +1,7 @@
 package org.cloudlet.core.server;
 
+import org.apache.shiro.crypto.hash.SimpleHash;
+
 import java.security.Principal;
 
 import javax.persistence.Entity;
@@ -30,6 +32,7 @@ public class User extends Item implements Principal {
   public static final String PHONE = "phone";
   public static final String EMAIL = "email";
   public static final String NAME = "name";
+  public static final String PASSWORD = "password";
   public static final String TYPE_NAME = CoreUtil.PREFIX + "User";
 
   public String getEmail() {
@@ -80,9 +83,10 @@ public class User extends Item implements Principal {
       String phone = params.getFirst(PHONE);
       setPhone(phone);
     }
-    if (params.containsKey("password")) {
-      String password = params.getFirst("password");
-      setPasswordHash(password);
+    if (params.containsKey(PASSWORD)) {
+      String password = params.getFirst(PASSWORD);
+      String hashedPwd = new SimpleHash(JpaRealm.ALGORITHM_NAME, password).toHex();
+      setPasswordHash(hashedPwd);
     }
   }
 
