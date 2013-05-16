@@ -672,7 +672,7 @@
                                         </ul> \
                                     </div> \
                                 </div>',
-            tableTemplate: '<table><thead></thead><tbody></tbody></table>',
+            tableTemplate: '<table  class="table table-striped table-hover table-condensed"><thead></thead><tbody></tbody></table>',
             headerTemplate: '<th width="{{width}}">{{title}}</th>',
             sortableHeaderTemplate: '<th width="{{width}}"><div class="sort-container"><ul class="sort"><li class="sort-ascending"/><li class="sort-descending"/></ul>{{title}}</div></th>',
             emptyCellTemplate: '<td>&nbsp;</td>',
