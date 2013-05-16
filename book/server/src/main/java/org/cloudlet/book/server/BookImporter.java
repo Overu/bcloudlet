@@ -6,9 +6,11 @@ import com.google.inject.Provider;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.shiro.crypto.hash.SimpleHash;
 import org.cloudlet.core.server.Comment;
 import org.cloudlet.core.server.Comments;
 import org.cloudlet.core.server.CoreUtil;
+import org.cloudlet.core.server.JpaRealm;
 import org.cloudlet.core.server.Media;
 import org.cloudlet.core.server.Replies;
 import org.cloudlet.core.server.Reply;
@@ -29,6 +31,8 @@ import java.net.URL;
 public class BookImporter {
 
   PrintWriter writer;
+
+  String pwd = new SimpleHash(JpaRealm.ALGORITHM_NAME, "123456").toHex();
 
   @Inject
   Provider<BookStore> repo;
@@ -63,6 +67,7 @@ public class BookImporter {
       User user = users.newContent();
       long count = total + i;
       user.setName("User " + count);
+      user.setPasswordHash(pwd);
       user.setPath("user" + count);
       user.setEmail("user" + count + "@gmail.com");
       user.setPhone(Long.toString(count));
