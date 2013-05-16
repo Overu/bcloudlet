@@ -20,7 +20,7 @@
 <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h3 id="myModalLabel">修改用户</h3>
+    <h3 id="myModalLabel">修改用户信息</h3>
   </div>
   <div class="modal-body">
     <form id="editform" class="form-horizontal">
@@ -32,19 +32,7 @@
         <div class="controls">
           <input type="text" id="username" name="name" placeholder="输入用户真实姓名" check-type="required" required-message="姓名不能为空！" />
         </div>
-      </div>
-      <div class="control-group">
-        <label class="control-label" for="password">密码</label>
-        <div class="controls">
-          <input type="password" id="password" name="password" placeholder="输入密码" check-type="passWord" />
-        </div>
-      </div>
-      <div class="control-group">
-        <label class="control-label" for="confirmPwd">确认密码</label>
-        <div class="controls">
-          <input type="password" id="confirmPwd" name="confirmPwd" placeholder="输入确认密码" check-type="confirmPwd" />
-        </div>
-      </div>
+      </div>     
       <div class="control-group">
         <label class="control-label" for="inputEmail">邮箱</label>
         <div class="controls">
@@ -57,6 +45,13 @@
           <input type="text" id="phone" name="phone" placeholder="13800138000" check-type="mobile" maxlength="11">
         </div>
       </div>
+      <div class="control-group" id="check-box">      
+        <label class="control-label">密码修改</label>
+        <div class="controls">
+          <label class="checkbox"> <input id="chk-pwd" type="checkbox" onclick="showpwddiv()" > 点击修改密码
+          </label>         
+        </div>
+      </div>      
     </form>
   </div>
   <div class="modal-footer">
@@ -67,6 +62,33 @@
 
 
 <script type="text/javascript">
+	function showpwddiv(){
+		var $divpwd = $("<div id='div-pwd'>"+
+	       "<div class='control-group'>"+
+	        "<label class='control-label' for='password'>密码</label>"+
+	        "<div class='controls'>"+
+	         "<input type='password' id='password' name='password' placeholder='输入密码'/>"+
+	        "</div>"+
+	      "</div>"+
+	      "<div class='control-group'>"+
+	        "<label class='control-label' for='confirmPwd'>确认密码</label>"+
+	        "<div class='controls'>"+
+	          "<input type='password' id='confirmPwd' name='confirmPwd' placeholder='输入确认密码' />"+
+	        "</div>"+
+	      "</div>"+
+	      "</div>");
+	      
+		if($("#chk-pwd").get(0).checked){
+			$divpwd.insertAfter($("#check-box"));
+			$("#confirmPwd").attr("check-type","confirmPwd");
+			$("#password").attr("check-type","passWord");
+			$.fn.validateBlurbak();
+		}else{
+			$("#div-pwd").remove();
+			$("#confirmPwd").removeAttr("check-type");
+			$("#password").removeAttr("check-type");
+		}
+	}
 	//响应查询按钮
 	function searchData() {
 		var searchname = $("#search-name").val();
@@ -83,13 +105,13 @@
 			url : item.id,
 			dataType : 'json',
 			success : function(data) {
+				$("#div-pwd").remove();
+				$("#chk-pwd").get(0).checked =false;
 				$("#username").val(data.name);
 				$("#inputEmail").val(data.email);
-				$("#password").val(data.passwordHash);
-				$("#confirmPwd").val(data.passwordHash);
 				$("#phone").val(data.phone);
 				$("#uri").val(data.uri);
-				$('#myModal').modal('show')
+				$('#myModal').modal('show');				
 			}
 		});
 	}

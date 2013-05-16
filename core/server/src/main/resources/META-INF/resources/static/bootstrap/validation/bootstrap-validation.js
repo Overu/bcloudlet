@@ -30,6 +30,9 @@ $.fn.myValidate = function(btnId,callbacksuccess) {
 		//鼠标焦点事件处理
 		validateBlur();
 };
+
+$.fn.validateBlurbak = function() {validateBlur();}
+
 	
    var defaults = {
         validRules : [
@@ -281,5 +284,5 @@ var passWordStatus = function(i){
 	}
 	return status;
 }
-     
+
 })(jQuery);   
