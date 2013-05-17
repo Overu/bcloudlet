@@ -5,6 +5,7 @@ import org.cloudlet.core.server.CoreUtil;
 import org.cloudlet.core.server.Folder;
 import org.cloudlet.core.server.Repository;
 import org.cloudlet.core.server.Tag;
+import org.cloudlet.core.server.WebPlatform;
 
 import java.net.URISyntaxException;
 
@@ -52,8 +53,8 @@ public class Books extends Folder<Book> {
 
   @Override
   @POST
-  @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Book doCreate(Book book) {
     return super.doCreate(book);
   }
@@ -136,7 +137,7 @@ public class Books extends Folder<Book> {
 
   @Override
   public Book newContent() {
-    Book result = new Book();
+    Book result = WebPlatform.get().getInstance(getEntryType());
     result.setParent(this);
     return result;
   }

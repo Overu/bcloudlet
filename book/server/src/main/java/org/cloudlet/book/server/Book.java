@@ -263,18 +263,18 @@ public class Book extends Item {
     super.readMedia(params);
     Media cover = params.getFirst(COVER);
     if (cover != null) {
-      this.cover = cover;
+      setCover(cover);
     }
     Media source = params.getFirst(SOURCE);
     if (source != null) {
-      this.source = source;
+      setSource(source);
     }
   }
 
   @Override
   public void readParams(MultivaluedMap<String, String> params) {
     super.readParams(params);
-    String tagVal = params.getFirst(Book.TAG);
+    String tagVal = params.getFirst(Book.TAGS);
     if (tagVal != null) {
       Tag tag = repo.getTags().getOrCreateTag(tagVal, getType());
       this.addTag(tag);
@@ -294,6 +294,9 @@ public class Book extends Item {
   }
 
   public void setCover(Media cover) {
+    if (cover != null) {
+      cover.setParent(this);
+    }
     this.cover = cover;
   }
 
