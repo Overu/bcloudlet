@@ -244,7 +244,7 @@ public abstract class Content {
       if (result != null) {
         result.readParams(params);
         result.readMedia(files);
-        result.update();
+        createChild(result);
       }
     } catch (Exception e) {
       // VirusFoundException, VirusFoundException will be handled by

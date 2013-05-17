@@ -45,8 +45,7 @@
           <input type="text" id="phone" name="phone" placeholder="13800138000" check-type="mobile" maxlength="11">
         </div>
       </div>
-      <div class="control-group" id="check-box">      
-        <label class="control-label">密码修改</label>
+      <div class="control-group" id="check-box"> 
         <div class="controls">
           <label class="checkbox"> <input id="chk-pwd" type="checkbox" onclick="showpwddiv()" > 点击修改密码
           </label>         
