@@ -264,12 +264,10 @@ public class Book extends Item {
     Media cover = params.getFirst(COVER);
     if (cover != null) {
       this.cover = cover;
-      this.cover.setParent(this);
     }
     Media source = params.getFirst(SOURCE);
     if (source != null) {
       this.source = source;
-      this.source.setParent(this);
     }
   }
 
