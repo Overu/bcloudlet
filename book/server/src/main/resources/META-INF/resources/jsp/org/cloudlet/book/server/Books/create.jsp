@@ -30,6 +30,18 @@
         <input type="file" id="cover" name="cover" multiple  required-message="图书封面图片不能为空！">
       </div>
     </div>
+       <div class="control-group">
+      <label class="control-label" for="tags">图书类别</label>
+      <div class="controls">
+        <select id="tags" name="tags" multiple="multiple">
+            <option value="小说">小说</option>
+            <option value="文学">文学</option>
+            <option value="杂志">杂志</option>
+            <option value="计算机">计算机</option>
+            <option value="法律">法律</option>
+          </select>
+      </div>
+    </div>
     <div class="control-group">
       <div class="controls">
         <a href="javascript:void(0)" id="save-book" role="button" class="btn">上传</a> 

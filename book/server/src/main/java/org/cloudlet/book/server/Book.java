@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
@@ -75,10 +76,10 @@ public class Book extends Item {
 
   public static final String AUTHOR = "author";
 
-  @OneToOne
+  @OneToOne(cascade = CascadeType.ALL)
   private Media cover;
 
-  @OneToOne
+  @OneToOne(cascade = CascadeType.ALL)
   private Media source;
 
   @OneToOne
@@ -263,10 +264,12 @@ public class Book extends Item {
     Media cover = params.getFirst(COVER);
     if (cover != null) {
       this.cover = cover;
+      this.cover.setParent(this);
     }
     Media source = params.getFirst(SOURCE);
     if (source != null) {
       this.source = source;
+      this.source.setParent(this);
     }
   }
 
