@@ -270,6 +270,16 @@ public class Book extends Item {
     }
   }
 
+  @Override
+  public void readParams(MultivaluedMap<String, String> params) {
+    super.readParams(params);
+    String tagVal = params.getFirst(Book.TAG);
+    if (tagVal != null) {
+      Tag tag = repo.getTags().getOrCreateTag(tagVal, getType());
+      this.addTag(tag);
+    }
+  }
+
   public void setAuthors(String author) {
     this.authors = author;
   }
