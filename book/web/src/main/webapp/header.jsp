@@ -25,7 +25,7 @@
     </div>
     <div class="m-pctrl">
       <div id='w-login' style="display: none">
-        <a href="/login" id="gotologin" hidefocus="hidefocus">登录</a><span class="w-sep">|</span><a href="/reg" hidefocus="hidefocus">注册</a>
+        <a href="/login" id="gotologin" hidefocus="hidefocus">登录</a><span class="w-sep">|</span><a href="/logout" hidefocus="hidefocus">注册</a>
       </div>
       <div class="m-person" id="w-person" style="display: none">
         <div class="w-dropdown-menu">

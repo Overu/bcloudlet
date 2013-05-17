@@ -55,6 +55,7 @@ public final class BookStore extends Repository {
   protected boolean doInit() {
     super.doInit();
     books = createChild(BOOKS, Books.class);
+    orders = createChild(ORDERS, Orders.class);
     return true;
   }
 
