@@ -134,7 +134,7 @@
                     ¥ <span itemprop="price">${it.price}</span>
                   </del>
                 </div>
-                <span id="paybootn" class="w-btn w-btn1" condition="needtobuy">购买</span> <span class="w-btn" id="mygift">赠送</span>
+                <span id="paybootn" class="w-btn w-btn1" condition="needtobuy" onclick="clickpay('${it.id}', '123456', 'web')"> 购买</span> <span class="w-btn" id="mygift">赠送</span>
                 <div class="loadnext">
                   <div class="spin"></div>
                 </div>
@@ -207,7 +207,7 @@
   </div>
   <script type="text/javascript">
 			seajs.use([ 'duokan/store/1/page/book',
-					'duokan/store/1/page/patched' ]);
+					'duokan/store/1/page/patched', 'duokan/store/1/page/pay' ]);
 		</script>
 </body>
 </html>
