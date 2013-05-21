@@ -10,7 +10,7 @@
       <a class="brand" href="/admin.html">睿泰书城管理控制台</a>
       <div class="nav-collapse collapse">
         <ul class="nav">
-          <li class=""><a href="/books/admin.html">图书</a></li>
+          <li class=""><a href="/books/books.html">图书</a></li>
           <li class=""><a href="/users/admin.html">订单管理</a></li>
           <li class=""><a href="/users/admin.html">系统管理</a></li>
         </ul>

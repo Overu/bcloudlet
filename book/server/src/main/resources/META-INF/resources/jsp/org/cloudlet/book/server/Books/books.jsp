@@ -4,7 +4,7 @@
 <section id="mybooks">
   <div class="container-fluid">
     <div class="page-header">
-      <h1>系统用户</h1>
+      <h1>图书</h1>
     </div>
     <div class="input-append" align="right">
       <input id="search-name" class="span2" id="appendedInputButtons" type="text">

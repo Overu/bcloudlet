@@ -13,6 +13,7 @@ import org.cloudlet.core.server.WebPlatform;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -75,6 +76,12 @@ public class Book extends Item {
   public static final String PRICE = "price";
 
   public static final String AUTHOR = "author";
+
+  public static final String NEW_PRICE = "new_price";
+
+  public static final String PAPER_PRICE = "paper_price";
+
+  public static final String AUTHORS = "authors";
 
   @OneToOne(cascade = CascadeType.ALL)
   private Media cover;
@@ -274,10 +281,34 @@ public class Book extends Item {
   @Override
   public void readParams(MultivaluedMap<String, String> params) {
     super.readParams(params);
-    String tagVal = params.getFirst(Book.TAGS);
-    if (tagVal != null) {
-      Tag tag = repo.getTags().getOrCreateTag(tagVal, getType());
-      this.addTag(tag);
+    // String tagVal = params.getFirst(Book.TAGS);
+    List<String> tags = params.get(Book.TAGS);
+    if (tags != null && !tags.isEmpty()) {
+      for (String tag : tags) {
+        if (tag != null) {
+          Tag tagdata = repo.getTags().getOrCreateTag(tag, getType());
+          this.addTag(tagdata);
+        }
+      }
+    }
+    String priceval = params.getFirst(PRICE);
+    if (priceval != null) {
+      setPrice(Float.valueOf(priceval));
+    }
+
+    String new_price_val = params.getFirst(NEW_PRICE);
+    if (new_price_val != null) {
+      setNew_price(Float.valueOf(new_price_val));
+    }
+
+    String paper_price_val = params.getFirst(PAPER_PRICE);
+    if (paper_price_val != null) {
+      setPaper_price(Float.valueOf(paper_price_val));
+    }
+
+    String author_val = params.getFirst(AUTHORS);
+    if (author_val != null) {
+      setAuthors(author_val);
     }
   }
 

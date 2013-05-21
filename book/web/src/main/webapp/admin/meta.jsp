@@ -6,3 +6,4 @@
 <link href="/static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 <link href="/static/css/main.css" rel="stylesheet">
 <link href="/static/simpleGrid/css/simplePagingGrid-0.4.css" rel="stylesheet">
+<link rel="stylesheet" href="/static/bootstrap/css/font-awesome.min.css">

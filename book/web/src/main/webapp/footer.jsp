@@ -8,6 +8,7 @@
 </footer>
 <script src="/static/jquery/jquery.min.js"></script>
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
-<script src="/static/bootstrap/validation/bootstrap-validation.js"></script>
 <script src="/static/simpleGrid/js/handlebars-1.0.rc.1.js"></script>
 <script src="/static/simpleGrid/js/simplePagingGrid-0.5.0.2.js"></script>
+<script type="text/javascript" src="/static/bootstrap/js/bootstrap-multiselect.js"></script>
+<script type="text/javascript" src="/static/bootstrap/validation/bootstrap-acknowledgeinput.js"></script>
