@@ -46,7 +46,7 @@ public class JpaRealm extends AuthorizingRealm {
     if (user == null) {
       return null;
     }
-    SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(userName, user.getPasswordHash(), getName());
+    SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user, user.getPasswordHash(), getName());
     return info;
   }
 

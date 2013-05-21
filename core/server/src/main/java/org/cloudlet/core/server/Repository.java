@@ -25,7 +25,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.RuntimeDelegate;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -111,6 +110,7 @@ public class Repository extends Item {
   public Response loginCheck(@QueryParam("forward") String forward) {
     Subject subject = SecurityUtils.getSubject();
     if (subject.isAuthenticated()) {
+      User user = (User) subject.getPrincipal();
       return redirect(forward);
     } else {
       return Response.ok(new Viewable(LOGIN)).build();
