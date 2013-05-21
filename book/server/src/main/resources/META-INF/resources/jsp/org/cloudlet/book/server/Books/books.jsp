@@ -25,54 +25,96 @@
     <form id="editform" class="form-horizontal">
       <div>
         <input type="hidden" id="uri">
-      </div>
-      <div class="control-group">
-        <label class="control-label" for="booktitle">书名</label>
-        <div class="controls">
-          <input type="text" id="booktitle" name="title" placeholder="输入书名" check-type="required" required-message="书名不能为空！" />
+      </div>     
+    <div class="control-group">
+      <label class="control-label" for="booktitle">名称</label>
+      <div class="controls">
+        <div class="input-append" data-role="acknowledge-input">
+          <input type="text" id="booktitle" name="title" placeholder="bookname" required="required" data-type="text" />
+          <div data-role="acknowledgement">
+            <i></i>
+          </div>
         </div>
       </div>
-      <div class="control-group">
-        <label class="control-label" for="booksummary">摘要</label>
-        <div class="controls">
-          <textarea rows="3" cols="30" id="booksummary" name="summary" placeholder="输入书籍摘要" check-type="required" required-message="摘要不能为空！"></textarea>
-          
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="tags">图书类别</label>
+      <div class="controls">
+        <div class="input-append" data-role="acknowledge-input">
+          <select id="tags" required="required" name="tags" multiple="multiple" data-role="multiselect">
+            <option value="小说">小说</option>
+            <option value="文学">文学</option>
+            <option value="杂志">杂志</option>
+            <option value="计算机">计算机</option>
+            <option value="法律">法律</option>
+          </select>
+          <div data-role="acknowledgement">
+            <i></i>
+          </div>
         </div>
       </div>
-    <!--   <div class="control-group">
-        <label class="control-label" for="password">密码</label>
-        <div class="controls">
-          <input type="password" id="password" name="password" placeholder="输入密码" check-type="passWord" />
-        </div>
-      </div> -->
-      <!-- <div class="control-group">
-        <label class="control-label" for="confirmPwd">确认密码</label>
-        <div class="controls">
-          <input type="password" id="confirmPwd" name="confirmPwd" placeholder="输入确认密码" check-type="confirmPwd" />
-        </div>
-      </div>
-      <div class="control-group">
-        <label class="control-label" for="inputEmail">邮箱</label>
-        <div class="controls">
-          <input type="text" id="inputEmail" name="email" placeholder="123@163.com" check-type="mail" mail-message="邮箱格式不正确！">
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="authors">作者</label>
+      <div class="controls">
+        <div class="input-append" data-role="acknowledge-input">
+          <input type="text" id="authors" name="authors" placeholder="作者" required="required" data-type="text" />
+          <div data-role="acknowledgement">
+            <i></i>
+          </div>
         </div>
       </div>
-      <div class="control-group">
-        <label class="control-label" for="phone">手机</label>
-        <div class="controls">
-          <input type="text" id="phone" name="phone" placeholder="13800138000" check-type="mobile" maxlength="11">
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="price">价格</label>
+      <div class="controls">
+        <div class="input-append" data-role="acknowledge-input">
+          <input type="text" id="price" name="price" placeholder="价格(两位小数)" required="required" data-type="decimal" />
+          <div data-role="acknowledgement">
+            <i></i>
+          </div>
         </div>
-      </div> -->
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="new_price">最新价格</label>
+      <div class="controls">
+        <div class="input-append" data-role="acknowledge-input">
+          <input type="text" id="new_price" name="new_price" placeholder="最新价格(两位小数)" required="required" data-type="decimal" />
+          <div data-role="acknowledgement">
+            <i></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="paper_price">纸质书价格</label>
+      <div class="controls">
+        <div class="input-append" data-role="acknowledge-input">
+          <input type="text" id="paper_price" name="paper_price" placeholder="纸质书籍价格(两位小数)" required="required" data-type="decimal" />
+          <div data-role="acknowledgement">
+            <i></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="summary">摘要</label>
+      <div class="controls">
+        <textarea style="width: 500px;" cols="50" rows="3" id="summary" name="summary"></textarea>
+      </div>
+    </div>   
     </form>
   </div>
   <div class="modal-footer">
     <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
-    <button id="save-edit" class="btn btn-primary">保存</button>
+    <button id="save-edit" type="button" class="btn btn-primary" onclick="createInstance();">保存</button>
   </div>
 </div>
 
 
 <script type="text/javascript">
+	
 	//响应查询按钮
 	function searchData() {
 		var searchname = $("#search-name").val();
@@ -90,6 +132,16 @@
 			dataType : 'json',
 			success : function(data) {
 				$("#booktitle").val(data.title);
+				$("#booktitle").blur();
+				$("#price").val(data.price);
+				$("#price").blur();
+				$("#authors").val(data.authors);
+				$("#authors").blur();
+				$("#new_price").val(data.new_price);
+				$("#new_price").blur();
+				$("#paper_price").val(data.paper_price);
+				$("#paper_price").blur();
+				/* $("#tags").val(data.tags); */
 				$("#booksummary").val(data.summary);
 				/* $("#password").val(data.passwordHash);
 				$("#confirmPwd").val(data.passwordHash);
@@ -100,18 +152,23 @@
 		});
 	}
 
-	//提交表单数据更新数据库
-	$('#editform').myValidate("save-edit", function() {
-		$.ajax({
-			type : 'put',
+	$().ready(function() {
+		$().acknowledgeinput();
+	});
+
+	function createInstance() {
+		var options = {
 			url : $("#uri").val(),
-			data : $("#editform").serialize(),//序列化表单里所有的内容
+			type : 'put',
+			data : $('#editform').formSerialize(),
 			success : function(data) {
 				$('#myModal').modal('hide');
 				$("#booksGrid").simplePagingGrid("refresh");
 			}
-		});
-	});
+		};
+
+		$("#editform").ajaxSubmit(options);
+	}
 
 	//响应删除按钮
 	function deleteItem(item) {
@@ -133,13 +190,16 @@
 			.simplePagingGrid(
 					{
 						dataUrl : '/books',
-						columnNames : [ "#", "书名", "作者", "修改", "删除" ],
-						columnKeys : [ "rowId", "title", "authors", "修改", "删除" ],
-						columnWidths : [ "5%", "30%","20%", "12%",
+						columnNames : [ "#", "书名", "作者", "价格", "修改", "删除" ],
+						columnKeys : [ "rowId", "title", "authors", "price",
+								"修改", "删除" ],
+						columnWidths : [ "5%", "30%", "10%", "10%", "12%",
 								"13%" ],
-						sortable : [ false, true, false, false, false ],
+						sortable : [ false, true, false, true, false, false,
+								false ],
 						initialSortColumn : "title",
 						cellTemplates : [
+								null,
 								null,
 								null,
 								null,

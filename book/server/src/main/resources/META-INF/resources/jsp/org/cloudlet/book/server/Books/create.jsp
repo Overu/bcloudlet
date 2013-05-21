@@ -7,7 +7,7 @@
   <div class="page-header">
     <h1>上传新书</h1>
   </div>
-  <form id="newBook" class="form-horizontal" enctype="multipart/form-data" method="post" action="./">
+  <form id="newBook" class="form-horizontal">
     <div class="control-group">
       <label class="control-label" for="booktitle">名称</label>
       <div class="controls">
@@ -112,9 +112,9 @@
 
     <div class="control-group">
       <div class="controls">
-        <!--  <a href="javascript:void(0)" id="save-book" role="button" class="btn">上传</a>  -->
-        <button type="submit" id="save-book" class="btn">上传</button>
-        <!--   <a href="create.html" role="button" class="btn">重置</a> -->
+        <!-- <a href="javascript:void(0)" id="save-book" role="button" class="btn">上传</a>  -->
+        <button type="button" id="save-book" class="btn" onclick="createInstance();">上传</button>
+        <a href="create.html" role="button" class="btn">重置</a>
       </div>
     </div>
   </form>
@@ -122,6 +122,19 @@
 <jsp:include page="footer.jsp"></jsp:include>
 <script type="text/javascript">
 	$().ready(function() {
-		$().acknowledgeinput();
+		$().acknowledgeinput();		
 	});
+	function createInstance(){
+		 var options = {
+				 	url:'./',
+				 	contentType:"multipart/form-data",
+				 	type:'post',
+				 	data: $('#newBook').formSerialize(),
+		            success : function(json) { 		            	
+						window.location.href = 'books.html';
+		             }
+		        }; 
+		
+			$("#newBook").ajaxSubmit(options);
+	}
 </script>

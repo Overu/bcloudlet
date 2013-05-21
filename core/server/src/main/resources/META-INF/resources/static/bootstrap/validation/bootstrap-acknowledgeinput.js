@@ -37,6 +37,8 @@
             icon_success: "icon-ok",
             icon_danger: "icon-warning-sign",
             update_on: "change",
+            update_blur: "blur",
+            update_focus: "focus",
             default_state: "visible"
         };
 
@@ -144,6 +146,10 @@
                 $(this).parent().find('[data-role=acknowledgement]').addClass('add-on').find('i').removeClass();
             }
         }).on(acknowledgeVars.update_on, function () {
+            updateIcons($(this));
+        }).on(acknowledgeVars.update_blur, function () {
+            updateIcons($(this));
+        }).on(acknowledgeVars.update_focus, function () {
             updateIcons($(this));
         });
     };
