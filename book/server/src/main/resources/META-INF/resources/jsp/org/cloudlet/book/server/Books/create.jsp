@@ -113,7 +113,7 @@
     <div class="control-group">
       <div class="controls">
         <!-- <a href="javascript:void(0)" id="save-book" role="button" class="btn">上传</a>  -->
-        <button type="button" id="save-book" class="btn" onclick="createInstance();">上传</button>
+        <button type="submit" id="save-book" class="btn" onclick="createInstance();">上传</button>
         <a href="create.html" role="button" class="btn">重置</a>
       </div>
     </div>
@@ -133,8 +133,8 @@
 		            success : function(json) { 		            	
 						window.location.href = 'books.html';
 		             }
-		        }; 
-		
+		        };		
 			$("#newBook").ajaxSubmit(options);
+			return false;
 	}
 </script>

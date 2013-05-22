@@ -108,7 +108,7 @@
   </div>
   <div class="modal-footer">
     <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
-    <button id="save-edit" type="button" class="btn btn-primary" onclick="createInstance();">保存</button>
+    <button id="save-edit" type="submit" class="btn btn-primary" onclick="createInstance();">保存</button>
   </div>
 </div>
 
@@ -123,6 +123,32 @@
 		$("#booksGrid").simplePagingGrid("refresh", uri);
 	}
 
+	//初始化编辑form页面
+	var editFormini = function(){
+		
+	$("#booktitle").val(null);
+		$("#price").val(null);
+		$("#authors").val(null);
+		$("#new_price").val(null);
+		$("#paper_price").val(null);
+		$('option', $('#tags')).each(function(element) {
+			$(this).removeAttr('selected').prop('selected', false);
+		});
+		$('#tags').multiselect('refresh');
+		$("#booksummary").val(null);
+		$("#uri").val(null);
+	};
+
+	//后台调用输入框的blur事件	
+	var editFormBlur = function() {
+		$("#booktitle").blur();
+		$("#price").blur();
+		$("#authors").blur();
+		$("#new_price").blur();
+		$("#paper_price").blur();
+		$('#tags').change();
+	};
+
 	//响应修改按钮
 	//查询数据并填充表单数据
 	function editItem(item) {
@@ -131,22 +157,20 @@
 			url : item.id,
 			dataType : 'json',
 			success : function(data) {
+				editFormini();
 				$("#booktitle").val(data.title);
-				$("#booktitle").blur();
 				$("#price").val(data.price);
-				$("#price").blur();
 				$("#authors").val(data.authors);
-				$("#authors").blur();
 				$("#new_price").val(data.new_price);
-				$("#new_price").blur();
 				$("#paper_price").val(data.paper_price);
-				$("#paper_price").blur();
-				/* $("#tags").val(data.tags); */
+				for ( var i = 0; i < data.tags.length; i++) {
+					var item = data.tags[i];
+					var tag = item.value;
+					$('#tags').multiselect('select', tag);
+				}
 				$("#booksummary").val(data.summary);
-				/* $("#password").val(data.passwordHash);
-				$("#confirmPwd").val(data.passwordHash);
-				$("#phone").val(data.phone); */
 				$("#uri").val(data.uri);
+				editFormBlur();
 				$('#myModal').modal('show')
 			}
 		});
@@ -168,6 +192,7 @@
 		};
 
 		$("#editform").ajaxSubmit(options);
+		return false;
 	}
 
 	//响应删除按钮

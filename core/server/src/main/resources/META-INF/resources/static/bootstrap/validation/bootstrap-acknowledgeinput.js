@@ -98,7 +98,13 @@
                 } else if (required || (isNotNullOrEmpty(inputEl.val()) && !isInt)) {
                     modify_classes(false, acknowledgeVars.icon_danger);
                 }
-            } else if (data_type.toLowerCase() === "decimal") {
+            } else if (data_type.toLowerCase() === "decimal") {            	
+            	//补充小数点加零
+            	re = /^(\-)?([0-9])+$/;
+                var isNumber = re.test(inputEl.val());
+                if (isNumber) {
+                	inputEl.val(inputEl.val()+".00");
+				}
                 re = /^(\-)?(([0-9])+(\.)([0-9])+|0)$/;
                 var isDecimal = re.test(inputEl.val());
 
