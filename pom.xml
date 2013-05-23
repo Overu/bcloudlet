@@ -9,7 +9,7 @@
 
   <properties>
     <!-- Convenience property to set the GWT version -->
-    <jersey.version>2.0-m13-2</jersey.version>
+    <jersey.version>2.0-rc1</jersey.version>
     <gwt.version>2.5.0</gwt.version>
     <guice.version>3.0</guice.version>
     <gin.version>2.0.0</gin.version>
@@ -221,6 +221,11 @@
       <dependency>
         <groupId>org.glassfish.jersey.ext</groupId>
         <artifactId>jersey-proxy-client</artifactId>
+        <version>${jersey.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.glassfish.jersey.ext</groupId>
+        <artifactId>jersey-mvc-jsp</artifactId>
         <version>${jersey.version}</version>
       </dependency>
       <dependency>
@@ -462,7 +467,7 @@
             </execution>
           </executions>
           <configuration>
-           <encoding>UTF-8</encoding>
+            <encoding>UTF-8</encoding>
           </configuration>
         </plugin>
 
