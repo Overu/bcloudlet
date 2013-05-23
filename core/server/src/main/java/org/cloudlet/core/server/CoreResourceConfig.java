@@ -12,6 +12,7 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.internal.ServiceFinderBinder;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.mvc.jsp.JspMvcFeature;
 import org.glassfish.jersey.server.spi.internal.ResourceMethodInvocationHandlerProvider;
 
 import java.io.IOException;
@@ -44,7 +45,8 @@ public class CoreResourceConfig extends ResourceConfig {
   @Inject
   public CoreResourceConfig() {
     // super(JaxbContextResolver.class);
-    super(WebPlatform.get().getRepository().getClass(), JacksonFeature.class, XmlResourceBinder.class, ShiroExceptionMapper.class);
+    super(WebPlatform.get().getRepository().getClass(), JacksonFeature.class, XmlResourceBinder.class, ShiroExceptionMapper.class,
+        JspMvcFeature.class);
     register(new ServiceFinderBinder<ResourceMethodInvocationHandlerProvider>(ResourceMethodInvocationHandlerProvider.class));
   }
 
