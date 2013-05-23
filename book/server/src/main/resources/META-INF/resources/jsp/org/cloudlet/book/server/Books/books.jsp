@@ -16,7 +16,7 @@
 <jsp:include page="footer.jsp"></jsp:include>
 
 <!-- Modal -->
-<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="myModal"  style="width: 50%;" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h3 id="myModalLabel">修改书籍信息</h3>
@@ -58,7 +58,7 @@
       <label class="control-label" for="authors">作者</label>
       <div class="controls">
         <div class="input-append" data-role="acknowledge-input">
-          <input type="text" id="authors" name="authors" placeholder="作者" required="required" data-type="text" />
+          <input type="text" id="authors" name="authors" placeholder="睿泰" required="required" data-type="text" />
           <div data-role="acknowledgement">
             <i></i>
           </div>
@@ -69,7 +69,7 @@
       <label class="control-label" for="price">价格</label>
       <div class="controls">
         <div class="input-append" data-role="acknowledge-input">
-          <input type="text" id="price" name="price" placeholder="价格(两位小数)" required="required" data-type="decimal" />
+          <input type="text" id="price" name="price" placeholder="19.99" required="required" data-type="decimal" />
           <div data-role="acknowledgement">
             <i></i>
           </div>
@@ -80,7 +80,7 @@
       <label class="control-label" for="new_price">最新价格</label>
       <div class="controls">
         <div class="input-append" data-role="acknowledge-input">
-          <input type="text" id="new_price" name="new_price" placeholder="最新价格(两位小数)" required="required" data-type="decimal" />
+          <input type="text" id="new_price" name="new_price" placeholder="9.99" required="required" data-type="decimal" />
           <div data-role="acknowledgement">
             <i></i>
           </div>
@@ -91,7 +91,7 @@
       <label class="control-label" for="paper_price">纸质书价格</label>
       <div class="controls">
         <div class="input-append" data-role="acknowledge-input">
-          <input type="text" id="paper_price" name="paper_price" placeholder="纸质书籍价格(两位小数)" required="required" data-type="decimal" />
+          <input type="text" id="paper_price" name="paper_price" placeholder="39.99" required="required" data-type="decimal" />
           <div data-role="acknowledgement">
             <i></i>
           </div>
@@ -101,7 +101,7 @@
     <div class="control-group">
       <label class="control-label" for="summary">摘要</label>
       <div class="controls">
-        <textarea style="width: 500px;" cols="50" rows="3" id="summary" name="summary"></textarea>
+        <textarea style="width: 300px;" cols="50" rows="3" id="summary" name="summary"></textarea>
       </div>
     </div>   
     </form>
@@ -215,8 +215,8 @@
 			.simplePagingGrid(
 					{
 						dataUrl : '/books',
-						columnNames : [ "#", "书名", "作者", "价格", "修改", "删除" ],
-						columnKeys : [ "rowId", "title", "authors", "price",
+						columnNames : [ "#", "书名", "作者", "最新价格", "修改", "删除" ],
+						columnKeys : [ "rowId", "title", "authors", "new_price",
 								"修改", "删除" ],
 						columnWidths : [ "5%", "30%", "10%", "10%", "12%",
 								"13%" ],

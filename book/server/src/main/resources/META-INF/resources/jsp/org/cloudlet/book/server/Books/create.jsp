@@ -63,7 +63,7 @@
       <label class="control-label" for="authors">作者</label>
       <div class="controls">
         <div class="input-append" data-role="acknowledge-input">
-          <input type="text" id="authors" name="authors" placeholder="作者" required="required" data-type="text" />
+          <input type="text" id="authors" name="authors" placeholder="睿泰" required="required" data-type="text" />
           <div data-role="acknowledgement">
             <i></i>
           </div>
@@ -74,7 +74,7 @@
       <label class="control-label" for="price">价格</label>
       <div class="controls">
         <div class="input-append" data-role="acknowledge-input">
-          <input type="text" id="price" name="price" placeholder="价格(两位小数)" required="required" data-type="decimal" />
+          <input type="text" id="price" name="price" placeholder="19.99" required="required" data-type="decimal" />
           <div data-role="acknowledgement">
             <i></i>
           </div>
@@ -85,7 +85,7 @@
       <label class="control-label" for="new_price">最新价格</label>
       <div class="controls">
         <div class="input-append" data-role="acknowledge-input">
-          <input type="text" id="new_price" name="new_price" placeholder="最新价格(两位小数)" required="required" data-type="decimal" />
+          <input type="text" id="new_price" name="new_price" placeholder="9.99" required="required" data-type="decimal" />
           <div data-role="acknowledgement">
             <i></i>
           </div>
@@ -96,7 +96,7 @@
       <label class="control-label" for="paper_price">纸质书价格</label>
       <div class="controls">
         <div class="input-append" data-role="acknowledge-input">
-          <input type="text" id="paper_price" name="paper_price" placeholder="纸质书籍价格(两位小数)" required="required" data-type="decimal" />
+          <input type="text" id="paper_price" name="paper_price" placeholder="39.99" required="required" data-type="decimal" />
           <div data-role="acknowledgement">
             <i></i>
           </div>
