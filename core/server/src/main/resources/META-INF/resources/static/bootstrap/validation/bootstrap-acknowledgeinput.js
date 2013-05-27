@@ -140,10 +140,73 @@
                     modify_classes(false, acknowledgeVars.icon_danger);
                 }
             }
+            else if (data_type.toLowerCase() === "password") {
+            	var isPassword = checkPwd(inputEl.val());
 
-            
+                if (isNotNullOrEmpty(inputEl.val()) && isPassword) {
+                    modify_classes(true, acknowledgeVars.icon_success);
+                } else if (required || (isNotNullOrEmpty(inputEl.val()) && !isPassword)) {
+                    modify_classes(false, acknowledgeVars.icon_danger);
+                }
+            }else if (data_type.toLowerCase() === "chkpwd") {
+            	var isChkPwd = confirmPwd(inputEl.val());               
+
+                if (isNotNullOrEmpty(inputEl.val()) && isChkPwd) {
+                    modify_classes(true, acknowledgeVars.icon_success);
+                } else if (required || (isNotNullOrEmpty(inputEl.val()) && !isChkPwd)) {
+                    modify_classes(false, acknowledgeVars.icon_danger);
+                }
+            }else if (data_type.toLowerCase() === "mobile") {
+            	 re = /^(13|15|18)[0-9]{9}$/;
+                 var isMobile = re.test(inputEl.val());        
+
+                if (isNotNullOrEmpty(inputEl.val()) && isMobile) {
+                    modify_classes(true, acknowledgeVars.icon_success);
+                } else if (required || (isNotNullOrEmpty(inputEl.val()) && !isMobile)) {
+                    modify_classes(false, acknowledgeVars.icon_danger);
+                }
+            }
         };
 
+        var confirmPwd = function(value){
+        	var inputObj = $("input[type='password']");
+        	var pwd1 = $.trim(inputObj.eq(0).val());
+        	var pwd2 = $.trim(inputObj.eq(1).val());
+        	if(pwd2!=''){
+        		if(pwd1 == pwd2){	
+        			return true;
+        		}else{
+        			return false;
+        		}
+        	}else{
+        		return false;
+        	}
+        	
+        };
+        	
+        var checkPwd = function(value){
+        	if(value.length >= 6 )
+        	{		
+        		/*if(/[a-zA-Z]+/.test(value) && /[0-9]+/.test(value) && /\W+\D+/.test(value)) {
+        				return 1;
+        		}else if(/[a-zA-Z]+/.test(value) || /[0-9]+/.test(value) || /\W+\D+/.test(value)) {
+        			if(/[a-zA-Z]+/.test(value) && /[0-9]+/.test(value)) {
+        				return 2;
+        			}else if(/\[a-zA-Z]+/.test(value) && /\W+\D+/.test(value)) {
+        				return 2;
+        			}else if(/[0-9]+/.test(value) && /\W+\D+/.test(value)) {
+        				return 2;
+        			}else{
+        				return 3;
+        			}
+        		}	*/
+        		return true;
+        	}else{
+        		return false;
+        	}
+        };
+        
+        
         $.extend(acknowledgeVars, options);
 
         $('[data-role=acknowledge-input]').find('input:not([type=radio]):not([type=checkbox]),textarea,select').each(function () {

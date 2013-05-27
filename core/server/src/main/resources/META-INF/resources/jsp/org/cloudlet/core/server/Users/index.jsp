@@ -28,23 +28,38 @@
         <input type="hidden" id="uri">
       </div>
       <div class="control-group">
-        <label class="control-label" for="username">姓名</label>
-        <div class="controls">
-          <input type="text" id="username" name="name" placeholder="输入用户真实姓名" check-type="required" required-message="姓名不能为空！" />
-        </div>
-      </div>     
-      <div class="control-group">
-        <label class="control-label" for="inputEmail">邮箱</label>
-        <div class="controls">
-          <input type="text" id="inputEmail" name="email" placeholder="123@163.com" check-type="mail" mail-message="邮箱格式不正确！">
+      <label class="control-label" for="username">姓名</label>
+      <div class="controls">
+      <div class="input-append" data-role="acknowledge-input">
+          <input type="text" id="username" name="name" placeholder="输入用户真实姓名" required="required" data-type="text" />
+          <div data-role="acknowledgement">
+            <i></i>
+          </div>
         </div>
       </div>
+    </div>    
       <div class="control-group">
-        <label class="control-label" for="phone">手机</label>
-        <div class="controls">
-          <input type="text" id="phone" name="phone" placeholder="13800138000" check-type="mobile" maxlength="11">
+      <label class="control-label" for="inputEmail">邮箱</label>
+      <div class="controls">
+      <div class="input-append" data-role="acknowledge-input">
+        <input type="text" id="inputEmail" name="email" placeholder="123@163.com" required="required" data-type="email"/>
+         <div data-role="acknowledgement">
+            <i></i>
+          </div>
         </div>
       </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="phone">手机</label>
+      <div class="controls">
+       <div class="input-append" data-role="acknowledge-input">
+        <input type="text" id="phone" name="phone" placeholder="13800138000" required="required" data-type="mobile" maxlength="11">
+         <div data-role="acknowledgement">
+            <i></i>
+          </div>
+        </div>
+      </div>
+    </div>
       <div class="control-group" id="check-box"> 
         <div class="controls">
           <label class="checkbox"> <input id="chk-pwd" type="checkbox" onclick="showpwddiv()" > 点击修改密码
@@ -54,8 +69,8 @@
     </form>
   </div>
   <div class="modal-footer">
-    <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
-    <button id="save-edit" class="btn btn-primary">保存</button>
+    <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>    
+    <button id="save-edit" type="submit" class="btn btn-primary" onclick="createInstance();">保存</button>
   </div>
 </div>
 
@@ -66,26 +81,31 @@
 	       "<div class='control-group'>"+
 	        "<label class='control-label' for='password'>密码</label>"+
 	        "<div class='controls'>"+
-	         "<input type='password' id='password' name='password' placeholder='输入密码'/>"+
+	        " <div class='input-append' data-role='acknowledge-input'>"+
+	         "<input type='password' id='password' name='password' placeholder='输入密码'  required='required' data-type='password' />"+
+	         " <div data-role='acknowledgement'>"+
+	          " <i></i>"+
+	          "</div>"+
+	          "</div>"+
 	        "</div>"+
 	      "</div>"+
 	      "<div class='control-group'>"+
 	        "<label class='control-label' for='confirmPwd'>确认密码</label>"+
 	        "<div class='controls'>"+
-	          "<input type='password' id='confirmPwd' name='confirmPwd' placeholder='输入确认密码' />"+
+	        " <div class='input-append' data-role='acknowledge-input'>"+
+	          "<input type='password' id='confirmPwd' name='confirmPwd' placeholder'输入确认密码' required='required' data-type='chkpwd' />"+
+	          " <div data-role='acknowledgement'>"+
+	          " <i></i>"+
+	          "</div>"+
 	        "</div>"+
 	      "</div>"+
 	      "</div>");
 	      
 		if($("#chk-pwd").get(0).checked){
-			$divpwd.insertAfter($("#check-box"));
-			$("#confirmPwd").attr("check-type","confirmPwd");
-			$("#password").attr("check-type","passWord");
+			$divpwd.insertAfter($("#check-box"));			
 			$.fn.validateBlurbak();
 		}else{
-			$("#div-pwd").remove();
-			$("#confirmPwd").removeAttr("check-type");
-			$("#password").removeAttr("check-type");
+			$("#div-pwd").remove();			
 		}
 	}
 	//响应查询按钮
@@ -95,6 +115,22 @@
 				+ searchname;
 		$("#usersGrid").simplePagingGrid("refresh", uri);
 	}
+	
+	//初始化编辑form页面
+	var editFormini = function(){
+	$("#username").val(null);
+	$("#inputEmail").val(null);
+	$("#phone").val(null);	
+	$("#uri").val(null);
+};
+
+//后台调用输入框的blur事件	
+var editFormBlur = function() {
+	$("#username").blur();
+	$("#inputEmail").blur();
+	$("#phone").blur();	
+};
+
 
 	//响应修改按钮
 	//查询数据并填充表单数据
@@ -115,7 +151,7 @@
 		});
 	}
 
-	//提交表单数据更新数据库
+	/* //提交表单数据更新数据库
 	$('#editform').myValidate("save-edit", function() {
 		$.ajax({
 			type : 'put',
@@ -126,8 +162,27 @@
 				$("#usersGrid").simplePagingGrid("refresh");
 			}
 		});
+	}); */
+
+	$().ready(function() {
+		$().acknowledgeinput();
 	});
 
+	function createInstance() {
+		var options = {
+			url : $("#uri").val(),
+			type : 'put',
+			data : $('#editform').formSerialize(),
+			success : function(data) {
+				$('#myModal').modal('hide');
+				$("#usersGrid").simplePagingGrid("refresh");
+			}
+		};
+
+		$("#editform").ajaxSubmit(options);
+		return false;
+	}
+	
 	//响应删除按钮
 	function deleteItem(item) {
 		if (!confirm("是否确定删除此数据?")) {
