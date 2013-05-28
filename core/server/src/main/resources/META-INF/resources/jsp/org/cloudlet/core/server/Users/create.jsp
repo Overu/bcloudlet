@@ -70,7 +70,7 @@
     <div class="control-group">
       <div class="controls">
         <!-- <a href="javascript:void(0)" id="save_From" onclick="createInstance();" role="button" class="btn">保存</a> -->
-        <button id="save_From" type="submit" class="btn" onclick="createInstance();">保存</button>
+        <button id="save_From" type="button" class="btn" onclick="createInstance();">保存</button>
         <a href="create.html" role="button" class="btn">重置</a>
       </div>
     </div>
@@ -86,9 +86,8 @@ $().ready(function() {
 function createInstance(){
 	 var options = {
 			 	url:'./',			 	
-			 	type:'post',
-			 	/* contentType:"application/x-www-form-urlencoded", */
-			 	data: $('#createform').formSerialize(),
+			 	type:'POST',			 
+			 	data: $('#createform').serialize(),
 	            success : function(data) { 		            	
 					window.location.href = 'index.html';
 	             },
@@ -96,13 +95,27 @@ function createInstance(){
 	 				if (textStatus == "success") {
 	 					window.location.href = 'index.html';
 	 				} else {
-	 					window.location.href = 'index.html';
+	 					window.location.href = 'create.html';
 	 				}
 
 	 			}
 	        };		
 		$("#createform").ajaxSubmit(options);
-		return false;	
+		return false;
+/* 		
+	$.ajax({
+		type : 'POST',
+		url : './',
+		data : $("#createform").serialize(),//序列化表单里所有的内容					
+		complete : function(data, textStatus) {
+			if (textStatus == "success") {
+				window.location.href = 'index.html';
+			} else {
+				window.location.href = 'create.html';
+			}
+
+		}
+	}); */
 }
 
 /* 	$('#createform').myValidate("save_From", function() {

@@ -74,7 +74,7 @@
       <label class="control-label" for="price">价格</label>
       <div class="controls">
         <div class="input-append" data-role="acknowledge-input">
-          <input type="text" id="price" name="price" placeholder="19.99" required="required" data-type="decimal" />
+          <input type="text" id="price" name="price" placeholder="19.99"  required="required" data-type="decimal" />
           <div data-role="acknowledgement">
             <i></i>
           </div>
@@ -113,7 +113,7 @@
     <div class="control-group">
       <div class="controls">
         <!-- <a href="javascript:void(0)" id="save-book" role="button" class="btn">上传</a>  -->
-        <button type="submit" id="save-book" class="btn" onclick="createInstance();">上传</button>
+        <button type="button" id="save-book" class="btn" onclick="createInstance();">上传</button>
         <a href="create.html" role="button" class="btn">重置</a>
       </div>
     </div>
@@ -132,7 +132,15 @@
 				 	data: $('#newBook').formSerialize(),
 		            success : function(json) { 		            	
 						window.location.href = 'books.html';
-		             }
+		             },
+		             complete : function(data, textStatus) {
+			 				if (textStatus == "success") {
+			 					window.location.href = 'books.html';
+			 				} else {
+			 					window.location.href = 'create.html';
+			 				}
+
+			 			}
 		        };		
 			$("#newBook").ajaxSubmit(options);
 			return false;

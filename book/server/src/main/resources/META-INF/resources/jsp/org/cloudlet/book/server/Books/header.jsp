@@ -6,7 +6,7 @@
 <meta charset="utf-8">
 <title>图书库</title>
 <jsp:include page="/admin/meta.jsp"></jsp:include>
-<script src="/static/bootstrap/js/bootstrap.js"></script>
+<!-- <script src="/static/bootstrap/js/bootstrap.js"></script> -->
 </head>
 <body data-spy="scroll" data-target=".bs-docs-sidebar">
   <jsp:include page="/admin/navbar.jsp"></jsp:include>

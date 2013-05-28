@@ -103,7 +103,7 @@
 	      
 		if($("#chk-pwd").get(0).checked){
 			$divpwd.insertAfter($("#check-box"));			
-			$.fn.validateBlurbak();
+			$().acknowledgeinput();
 		}else{
 			$("#div-pwd").remove();			
 		}
