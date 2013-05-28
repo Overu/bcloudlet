@@ -31,7 +31,7 @@
       <label class="control-label" for="username">姓名</label>
       <div class="controls">
       <div class="input-append" data-role="acknowledge-input">
-          <input type="text" id="username" name="name" placeholder="输入用户真实姓名" required="required" data-type="text" />
+          <input type="text" id="username" name="name" placeholder="输入用户真实姓名" required="required" data-type="text" check-type="required"/>
           <div data-role="acknowledgement">
             <i></i>
           </div>
@@ -42,7 +42,7 @@
       <label class="control-label" for="inputEmail">邮箱</label>
       <div class="controls">
       <div class="input-append" data-role="acknowledge-input">
-        <input type="text" id="inputEmail" name="email" placeholder="123@163.com" required="required" data-type="email"/>
+        <input type="text" id="inputEmail" name="email" placeholder="123@163.com" required="required" data-type="email"  check-type="email"/>
          <div data-role="acknowledgement">
             <i></i>
           </div>
@@ -53,7 +53,7 @@
       <label class="control-label" for="phone">手机</label>
       <div class="controls">
        <div class="input-append" data-role="acknowledge-input">
-        <input type="text" id="phone" name="phone" placeholder="13800138000" required="required" data-type="mobile" maxlength="11">
+        <input type="text" id="phone" name="phone" placeholder="13800138000" required="required" data-type="mobile" check-type="mobile" maxlength="11">
          <div data-role="acknowledgement">
             <i></i>
           </div>
@@ -70,7 +70,7 @@
   </div>
   <div class="modal-footer">
     <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>    
-    <button id="save-edit" type="submit" class="btn btn-primary" onclick="createInstance();">保存</button>
+    <button id="save-edit" type="button" class="btn btn-primary">保存</button>
   </div>
 </div>
 
@@ -82,7 +82,7 @@
 	        "<label class='control-label' for='password'>密码</label>"+
 	        "<div class='controls'>"+
 	        " <div class='input-append' data-role='acknowledge-input'>"+
-	         "<input type='password' id='password' name='password' placeholder='输入密码'  required='required' data-type='password' />"+
+	         "<input type='password' id='password' name='password' placeholder='输入密码'  required='required' data-type='passWord' check-type='passWord' maxlength='16' />"+
 	         " <div data-role='acknowledgement'>"+
 	          " <i></i>"+
 	          "</div>"+
@@ -93,7 +93,7 @@
 	        "<label class='control-label' for='confirmPwd'>确认密码</label>"+
 	        "<div class='controls'>"+
 	        " <div class='input-append' data-role='acknowledge-input'>"+
-	          "<input type='password' id='confirmPwd' name='confirmPwd' placeholder'输入确认密码' required='required' data-type='chkpwd' />"+
+	          "<input type='password' id='confirmPwd' name='confirmPwd' placeholder'输入确认密码' required='required' data-type='confirmPwd'  check-type='confirmPwd' />"+
 	          " <div data-role='acknowledgement'>"+
 	          " <i></i>"+
 	          "</div>"+
@@ -104,6 +104,7 @@
 		if($("#chk-pwd").get(0).checked){
 			$divpwd.insertAfter($("#check-box"));			
 			$().acknowledgeinput();
+			$.fn.validateBlurForm();
 		}else{
 			$("#div-pwd").remove();			
 		}
@@ -141,28 +142,21 @@ var editFormBlur = function() {
 			dataType : 'json',
 			success : function(data) {
 				$("#div-pwd").remove();
+				editFormini();
 				$("#chk-pwd").get(0).checked =false;
 				$("#username").val(data.name);
 				$("#inputEmail").val(data.email);
 				$("#phone").val(data.phone);
 				$("#uri").val(data.uri);
+				
+				editFormBlur();
 				$('#myModal').modal('show');				
 			}
 		});
 	}
 
-	/* //提交表单数据更新数据库
-	$('#editform').myValidate("save-edit", function() {
-		$.ajax({
-			type : 'put',
-			url : $("#uri").val(),
-			data : $("#editform").serialize(),//序列化表单里所有的内容
-			success : function(data) {
-				$('#myModal').modal('hide');
-				$("#usersGrid").simplePagingGrid("refresh");
-			}
-		});
-	}); */
+	//提交表单数据更新数据库
+	$('#editform').myValidate("save-edit", createInstance); 
 
 	$().ready(function() {
 		$().acknowledgeinput();

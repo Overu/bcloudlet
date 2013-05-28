@@ -148,7 +148,7 @@
                 } else if (required || (isNotNullOrEmpty(inputEl.val()) && !isPassword)) {
                     modify_classes(false, acknowledgeVars.icon_danger);
                 }
-            }else if (data_type.toLowerCase() === "chkpwd") {
+            }else if (data_type.toLowerCase() === "confirmpwd") {
             	var isChkPwd = confirmPwd(inputEl.val());               
 
                 if (isNotNullOrEmpty(inputEl.val()) && isChkPwd) {
@@ -185,24 +185,11 @@
         };
         	
         var checkPwd = function(value){
-        	if(value.length >= 6 )
+        	if(value.length < 6 )
         	{		
-        		/*if(/[a-zA-Z]+/.test(value) && /[0-9]+/.test(value) && /\W+\D+/.test(value)) {
-        				return 1;
-        		}else if(/[a-zA-Z]+/.test(value) || /[0-9]+/.test(value) || /\W+\D+/.test(value)) {
-        			if(/[a-zA-Z]+/.test(value) && /[0-9]+/.test(value)) {
-        				return 2;
-        			}else if(/\[a-zA-Z]+/.test(value) && /\W+\D+/.test(value)) {
-        				return 2;
-        			}else if(/[0-9]+/.test(value) && /\W+\D+/.test(value)) {
-        				return 2;
-        			}else{
-        				return 3;
-        			}
-        		}	*/
-        		return true;
+        		return false;        		
         	}else{
-        		return false;
+        		return true;
         	}
         };
         

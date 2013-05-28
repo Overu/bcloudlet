@@ -30,7 +30,7 @@
       <label class="control-label" for="booktitle">名称</label>
       <div class="controls">
         <div class="input-append" data-role="acknowledge-input">
-          <input type="text" id="booktitle" name="title" placeholder="bookname" required="required" data-type="text" />
+          <input type="text" id="booktitle" name="title" placeholder="bookname" required="required" data-type="text" check-type="required"/>
           <div data-role="acknowledgement">
             <i></i>
           </div>
@@ -58,7 +58,7 @@
       <label class="control-label" for="authors">作者</label>
       <div class="controls">
         <div class="input-append" data-role="acknowledge-input">
-          <input type="text" id="authors" name="authors" placeholder="睿泰" required="required" data-type="text" />
+          <input type="text" id="authors" name="authors" placeholder="睿泰" required="required" data-type="text"  check-type="required"/>
           <div data-role="acknowledgement">
             <i></i>
           </div>
@@ -69,7 +69,7 @@
       <label class="control-label" for="price">价格</label>
       <div class="controls">
         <div class="input-append" data-role="acknowledge-input">
-          <input type="text" id="price" name="price" placeholder="19.99" required="required" data-type="decimal" />
+          <input type="text" id="price" name="price" placeholder="19.99" required="required" data-type="decimal"  check-type="decimal"/>
           <div data-role="acknowledgement">
             <i></i>
           </div>
@@ -80,7 +80,7 @@
       <label class="control-label" for="new_price">最新价格</label>
       <div class="controls">
         <div class="input-append" data-role="acknowledge-input">
-          <input type="text" id="new_price" name="new_price" placeholder="9.99" required="required" data-type="decimal" />
+          <input type="text" id="new_price" name="new_price" placeholder="9.99" required="required" data-type="decimal"  check-type="decimal"/>
           <div data-role="acknowledgement">
             <i></i>
           </div>
@@ -91,7 +91,7 @@
       <label class="control-label" for="paper_price">纸质书价格</label>
       <div class="controls">
         <div class="input-append" data-role="acknowledge-input">
-          <input type="text" id="paper_price" name="paper_price" placeholder="39.99" required="required" data-type="decimal" />
+          <input type="text" id="paper_price" name="paper_price" placeholder="39.99" required="required" data-type="decimal"  check-type="decimal"/>
           <div data-role="acknowledgement">
             <i></i>
           </div>
@@ -108,7 +108,7 @@
   </div>
   <div class="modal-footer">
     <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
-    <button id="save-edit" type="submit" class="btn btn-primary" onclick="createInstance();">保存</button>
+    <button id="save-edit" type="button" class="btn btn-primary">保存</button>
   </div>
 </div>
 
@@ -146,7 +146,7 @@
 		$("#authors").blur();
 		$("#new_price").blur();
 		$("#paper_price").blur();
-		$('#tags').change();
+		$('#tags').change();		
 	};
 
 	//响应修改按钮
@@ -194,7 +194,8 @@
 		$("#editform").ajaxSubmit(options);
 		return false;
 	}
-
+	$('#editform').myValidate("save-edit", createInstance); 
+	
 	//响应删除按钮
 	function deleteItem(item) {
 		if (!confirm("是否确定删除此数据?")) {
