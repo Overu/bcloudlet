@@ -12,7 +12,7 @@
       <label class="control-label" for="booktitle">名称</label>
       <div class="controls">
         <div class="input-append" data-role="acknowledge-input">
-          <input type="text" id="booktitle" name="title" placeholder="bookname" required="required" data-type="text"  check-type="required"/>
+          <input type="text" id="booktitle" name="title" placeholder="bookname" required="required" data-type="text"  check-type="required"  required-message="请输入图书名称"/>
           <div data-role="acknowledgement">
             <i></i>
           </div>
@@ -63,7 +63,7 @@
       <label class="control-label" for="authors">作者</label>
       <div class="controls">
         <div class="input-append" data-role="acknowledge-input">
-          <input type="text" id="authors" name="authors" placeholder="睿泰" required="required" data-type="text"  check-type="required" />
+          <input type="text" id="authors" name="authors" placeholder="睿泰" required="required" data-type="text"  check-type="required"  required-message="请输入图书作者"/>
           <div data-role="acknowledgement">
             <i></i>
           </div>

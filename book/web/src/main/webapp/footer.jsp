@@ -14,3 +14,4 @@
 <script type="text/javascript" src="/static/bootstrap/validation/bootstrap-acknowledgeinput.js"></script>
 <script type="text/javascript" src="/static/jquery/jquery.form.js"></script>
 <script type="text/javascript" src="/static/bootstrap/validation/bootstrap-validation-form.js"></script>
+<script type="text/javascript" src="/static/bootstrap/js/bootbox.min.js">

@@ -198,17 +198,19 @@
 	
 	//响应删除按钮
 	function deleteItem(item) {
-		if (!confirm("是否确定删除此数据?")) {
-			return false;
-		}
-		$.ajax({
-			type : 'delete',
-			url : item.id,
-			success : function() {
-				//刷新table
-				$("#booksGrid").simplePagingGrid("refresh");
-			}
-		});
+		
+		bootbox.confirm("是否确定删除此数据?", "取消", "确定", function(result){
+			if(result){
+				$.ajax({
+					type : 'delete',
+					url : item.id,
+					success : function() {
+						//刷新table
+						$("#booksGrid").simplePagingGrid("refresh");
+					}
+				});
+			};			
+		});	
 	}
 
 	//编辑Table数据

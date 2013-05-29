@@ -386,7 +386,7 @@ public abstract class Content {
   }
 
   @GET
-  @Produces(MediaType.APPLICATION_JSON)
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   @XmlTransient
   public Content getJsonView() {
     doLoad();

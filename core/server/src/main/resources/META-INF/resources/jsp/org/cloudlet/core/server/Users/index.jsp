@@ -73,8 +73,7 @@
     <button id="save-edit" type="button" class="btn btn-primary">保存</button>
   </div>
 </div>
-
-
+</script>
 <script type="text/javascript">
 	function showpwddiv(){
 		var $divpwd = $("<div id='div-pwd'>"+
@@ -179,17 +178,19 @@ var editFormBlur = function() {
 	
 	//响应删除按钮
 	function deleteItem(item) {
-		if (!confirm("是否确定删除此数据?")) {
-			return false;
-		}
-		$.ajax({
-			type : 'delete',
-			url : item.id,
-			success : function() {
-				//刷新table
-				$("#usersGrid").simplePagingGrid("refresh");
-			}
+		bootbox.confirm("是否确定删除此数据?", "取消", "确定", function(result){
+			if(result){
+				$.ajax({
+					type : 'delete',
+					url : item.id,
+					success : function() {
+						//刷新table
+						$("#usersGrid").simplePagingGrid("refresh");
+					}
+				});
+			};			
 		});
+		
 	}
 
 	//编辑Table数据
