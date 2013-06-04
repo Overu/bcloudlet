@@ -10,17 +10,17 @@ import org.cloudlet.core.server.OAuthInitializer;
 
 import javax.servlet.ServletContext;
 
-import io.buji.oauth.OAuthFilter;
-import io.buji.oauth.OAuthRealm;
-import io.buji.oauth.filter.OAuthRolesAuthorizationFilter;
+import io.buji.pac4j.ClientFilter;
+import io.buji.pac4j.ClientRealm;
+import io.buji.pac4j.filter.ClientRolesAuthorizationFilter;
 
 public class WebSecurityModule extends ShiroWebModule {
 
-  public static final Key<OAuthFilter> OAUTH = Key.get(OAuthFilter.class);
+  public static final Key<ClientFilter> OAUTH = Key.get(ClientFilter.class);
 
-  public static final Key<OAuthRolesAuthorizationFilter> GOOGLE_ROLES = Key.get(OAuthRolesAuthorizationFilter.class, Google.class);
+  public static final Key<ClientRolesAuthorizationFilter> GOOGLE_ROLES = Key.get(ClientRolesAuthorizationFilter.class, Google.class);
 
-  public static final Key<OAuthRolesAuthorizationFilter> YAHOO_ROLES = Key.get(OAuthRolesAuthorizationFilter.class, Yahoo.class);
+  public static final Key<ClientRolesAuthorizationFilter> YAHOO_ROLES = Key.get(ClientRolesAuthorizationFilter.class, Yahoo.class);
 
   public WebSecurityModule(final ServletContext sc) {
     super(sc);
@@ -29,7 +29,7 @@ public class WebSecurityModule extends ShiroWebModule {
   @Override
   public void configure() {
     super.configure();
-    bind(OAuthRealm.class).in(Singleton.class);
+    bind(ClientRealm.class).in(Singleton.class);
   }
 
   @Override
@@ -46,7 +46,7 @@ public class WebSecurityModule extends ShiroWebModule {
     addFilterChain("/**", ANON);
 
     bindRealm().to(JpaRealm.class);
-    bindRealm().to(OAuthRealm.class).in(Singleton.class);
+    bindRealm().to(ClientRealm.class).in(Singleton.class);
     bind(OAuthInitializer.class).asEagerSingleton();
     bindConstant().annotatedWith(Names.named("shiro.globalSessionTimeout")).to(30000L);
   }
