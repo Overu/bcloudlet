@@ -26,3 +26,6 @@
   </form>
 </section>
 <jsp:include page="footer.jsp"></jsp:include>
+<script>
+ seajs.use(['/static/bookJS/navbar.js','/static/bookJS/common.js']);
+</script>

@@ -10,7 +10,7 @@
       <label class="control-label" for="username">姓名</label>
       <div class="controls">
       <div class="input-append" data-role="acknowledge-input">
-          <input type="text" id="username" name="name" placeholder="输入用户真实姓名" required="required" data-type="text" check-type="required" />
+          <input type="text" id="username" name="name" placeholder="输入用户真实姓名" data-type="text" check-type="required" />
           <div data-role="acknowledgement">
             <i></i>
           </div>
@@ -21,7 +21,7 @@
       <label class="control-label" for="password">密码</label>
       <div class="controls">
        <div class="input-append" data-role="acknowledge-input">
-        <input type="password" id="password" name="password" placeholder="输入密码" required="required" data-type="passWord" check-type="passWord" maxlength="16"/>
+        <input type="password" id="password" name="password" placeholder="输入密码" data-type="passWord" check-type="passWord" maxlength="16"/>
         <div data-role="acknowledgement">
             <i></i>
           </div>
@@ -32,7 +32,7 @@
       <label class="control-label" for="confirmPwd">确认密码</label>
       <div class="controls">
       <div class="input-append" data-role="acknowledge-input">
-        <input type="password" id="confirmPwd" name="confirmPwd" placeholder="输入确认密码" required="required" data-type="confirmPwd"  check-type="confirmPwd" />
+        <input type="password" id="confirmPwd" name="confirmPwd" placeholder="输入确认密码" data-type="confirmPwd"  check-type="confirmPwd" />
          <div data-role="acknowledgement">
             <i></i>
           </div>
@@ -43,7 +43,7 @@
       <label class="control-label" for="inputEmail">邮箱</label>
       <div class="controls">
       <div class="input-append" data-role="acknowledge-input">
-        <input type="text" id="inputEmail" name="email" placeholder="123@163.com" required="required" data-type="email" check-type="email"/>
+        <input type="text" id="inputEmail" name="email" placeholder="123@163.com" data-type="email" check-type="email"/>
          <div data-role="acknowledgement">
             <i></i>
           </div>
@@ -54,7 +54,7 @@
       <label class="control-label" for="phone">手机</label>
       <div class="controls">
        <div class="input-append" data-role="acknowledge-input">
-        <input type="text" id="phone" name="phone" placeholder="13800138000" required="required" data-type="mobile" check-type="mobile" maxlength="11">
+        <input type="text" id="phone" name="phone" placeholder="13800138000" data-type="mobile" check-type="mobile" maxlength="11">
          <div data-role="acknowledgement">
             <i></i>
           </div>
@@ -77,32 +77,6 @@
   </form>
 </section>
 <jsp:include page="footer.jsp"></jsp:include>
-<script type="text/javascript">
-$().ready(function() {
-	$().acknowledgeinput();		
-});
-
-$('#createform').myValidate("save_From", createInstance); 
-		
-function createInstance(){
-	
-		var options = {
-			 	url:'./',			 	
-			 	type:'POST',			 
-			 	data: $('#createform').serialize(),
-	            success : function(data) { 		            	
-					window.location.href = 'index.html';
-	             },
-	             complete : function(data, textStatus) {
-	 				if (textStatus == "success") {
-	 					window.location.href = 'index.html';
-	 				} else {
-	 					window.location.href = 'create.html';
-	 				}
-
-	 			}
-	        };		
-		$("#createform").ajaxSubmit(options);
-		return false;
-}
+<script>
+ seajs.use(['/static/bookJS/navbar.js','/static/bookJS/common.js','/static/user/create.js']);
 </script>
