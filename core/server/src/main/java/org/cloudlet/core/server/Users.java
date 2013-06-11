@@ -6,7 +6,6 @@ import org.apache.shiro.crypto.hash.SimpleHash;
 import javax.persistence.Entity;
 import javax.persistence.NoResultException;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -53,6 +52,11 @@ public class Users extends Folder<User> {
   @Override
   public Class<User> getEntryType() {
     return User.class;
+  }
+
+  @Override
+  public String getTitle() {
+    return "系统用户";
   }
 
   @Override

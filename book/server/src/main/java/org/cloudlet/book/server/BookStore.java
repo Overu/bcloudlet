@@ -43,6 +43,11 @@ public final class BookStore extends Repository {
     return orders;
   }
 
+  @Override
+  public String getTitle() {
+    return "睿泰书城";
+  }
+
   public void setBooks(Books books) {
     this.books = books;
   }

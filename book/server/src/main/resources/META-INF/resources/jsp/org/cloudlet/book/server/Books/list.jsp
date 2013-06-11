@@ -16,7 +16,6 @@
       <p class="author">
         <span>${i.authors}</span><span>薛好大</span>
       </p>
-
       <div class="w-starfive" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
         <ul class="five">
           <li class='red'></li>

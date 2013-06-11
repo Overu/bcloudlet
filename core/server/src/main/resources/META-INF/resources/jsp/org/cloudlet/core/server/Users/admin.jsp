@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<jsp:include page="header.jsp"></jsp:include>
+<%@taglib uri="http://www.cloudlet.org/jsp/web" prefix="w"%>
+<w:include page="header.jsp"></w:include>
 <section id="newbook">
   <div class="page-header">
     <h1>上传新书</h1>
@@ -25,7 +26,7 @@
     </div>
   </form>
 </section>
-<jsp:include page="footer.jsp"></jsp:include>
 <script>
- seajs.use(['/static/bookJS/navbar.js','/static/bookJS/common.js']);
+	seajs.use([ '/static/bookJS/navbar.js', '/static/bookJS/common.js' ]);
 </script>
+<w:include page="footer.jsp"></w:include>
