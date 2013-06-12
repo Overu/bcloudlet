@@ -13,15 +13,30 @@ public class IncludeTag extends TagSupport {
 
   private boolean flush;
 
+  private boolean parent;
+
   @Override
   public int doEndTag() throws JspException {
+    pageContext.getRequest().setAttribute("it", content);
     return super.doEndTag();
   }
 
   @Override
   public int doStartTag() throws JspException {
     try {
-      pageContext.include(page, flush);
+      if (parent) {
+        content = (Content) pageContext.getRequest().getAttribute("it");
+        if (content != null) {
+          Content parent = content.getParent();
+          if (parent != null) {
+            pageContext.getRequest().setAttribute("it", parent);
+            String absolutePage = "/jsp/" + parent.getClass().getName().replaceAll("\\.", "/") + "/" + page;
+            pageContext.include(absolutePage, flush);
+          }
+        }
+      } else {
+        pageContext.include(page, flush);
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -36,6 +51,10 @@ public class IncludeTag extends TagSupport {
     return flush;
   }
 
+  public boolean isParent() {
+    return parent;
+  }
+
   @Override
   public void release() {
     super.release();
@@ -48,6 +67,10 @@ public class IncludeTag extends TagSupport {
 
   public void setPage(String page) {
     this.page = page;
+  }
+
+  public void setParent(boolean parent) {
+    this.parent = parent;
   }
 
 }

@@ -22,20 +22,9 @@
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
-  </tag>
-  <tag>
-    <name>includeParent</name>
-    <tag-class>org.cloudlet.core.servlet.tags.IncludeParentTag</tag-class>
-    <body-content>empty</body-content>
     <attribute>
-      <description>Path relative parent content type</description>
-      <name>page</name>
-      <required>true</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description>Flag to flush the content</description>
-      <name>flush</name>
+      <description>Relative to parent or not</description>
+      <name>parent</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>

@@ -4,4 +4,4 @@
 </div>
 </div>
 </div>
-<w:includeParent page="footer.jsp"></w:includeParent>
+<w:include parent="true" page="footer.jsp"></w:include>
