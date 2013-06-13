@@ -7,7 +7,7 @@
     </div>
     <nav class="m-nav">
       <ul itemprop="breadcrumb">
-        <li id="index"><a href="/" hidefocus="hidefocus">首页</a></li>
+        <li id="index"><a href="/books/" hidefocus="hidefocus">首页</a></li>
         <li id="rank"><a href="/books/r/hot" hidefocus="hidefocus">排行榜</a></li>
         <li id="bargain"><a href="/books/r/recommendation" hidefocus="hidefocus">精品<span class="dot">·</span>特价
         </a></li>

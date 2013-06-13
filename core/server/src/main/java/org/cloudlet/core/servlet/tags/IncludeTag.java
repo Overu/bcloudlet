@@ -17,8 +17,11 @@ public class IncludeTag extends TagSupport {
 
   @Override
   public int doEndTag() throws JspException {
-    pageContext.getRequest().setAttribute("it", content);
+    if (parent) {
+      pageContext.getRequest().setAttribute("it", content);
+    }
     return super.doEndTag();
+
   }
 
   @Override

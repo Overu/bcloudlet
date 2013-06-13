@@ -1,10 +1,5 @@
-      </div>
-    </div>
-  </div>
-  <footer class="footer">
-    <div class="container" style="height: 5%;">
-      <jsp:include page="/footer.jsp"></jsp:include>      
-    </div>
-  </footer>
-</body>
-</html>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://www.cloudlet.org/jsp/web" prefix="w"%>
+</div>
+<w:include parent="true" page="footer.jsp"></w:include>
