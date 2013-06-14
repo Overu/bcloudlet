@@ -102,3 +102,56 @@ height: 0;
 overflow: hidden;
 visibility: hidden;
 }
+
+
+.w-txtlist2 li a {
+display: block;
+margin-left: 10px;
+padding-left: 10px;
+border-left: 2px solid #EEE;
+color: #666;
+}
+
+.w-txtlist2 .num {
+margin-left: 15px;
+font-size: 11px;
+color: #999;
+font-weight: 400;
+-webkit-text-size-adjust: none;
+}
+
+.w-txtlist2 em {
+display: initial!important;
+}
+
+.m-directory .w-box {
+padding: 0;
+width: 228px;
+}
+
+.g-sd .w-box {
+margin-bottom: 10px;
+}
+
+.w-box {
+width: 208px;
+height: 316px;
+padding: 10px;
+border: 1px solid #F1EDE5;
+background: white;
+}
+
+.w-slider {
+position: relative;
+zoom: 1;
+width: 770px;
+height: 316px;
+overflow: hidden;
+padding: 1px 3px 3px;
+margin: -1px 0 5px -3px;
+cursor: pointer;
+}
+
+.w-slider {
+background: url(../lib/images/slider.jpg?201306141402) 0 bottom no-repeat;
+}

@@ -2,9 +2,8 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <section id="thumbnails">
   <div class="row-fluid">
-    <ul class="thumbnails">
+    <ul class="thumbnails">  
       <c:forEach var="i" items="${it.items}" varStatus="status">
-
 
         <li class="span2 itm" book_id="${i.id}"><a href="${i.uri}" class="cover" hidefocus="hidefocus">
             <div class="thumbnail">
@@ -44,6 +43,7 @@
       </c:forEach>
     </ul>
 </section>
+
 </div>
 
 
