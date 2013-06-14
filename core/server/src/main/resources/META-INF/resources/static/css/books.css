@@ -1,0 +1,104 @@
+.m-header {
+position: relative;
+z-index: 100;
+padding: 0 0 25px;
+height: 62px;
+}
+
+.m-logo a {
+overflow: hidden;
+text-indent: -20000px;
+background-position: 0 0;
+}
+
+
+.m-logo, .m-logo a {
+display: inline;
+float: left;
+width: 230px;
+height: 70px;
+}
+
+
+
+.m-logo a {
+background: url(../lib/images/logo.png) no-repeat;
+}
+
+[hidefocus], input, textarea {
+outline: none;
+}
+
+
+.nav-pills > li > a {
+font: 700 16px/20px 'microsoft yahei',STXihei;
+}
+
+.jumbotron a {
+color: white;
+color: rgba(3, 3, 3, .5);
+-webkit-transition: all .2s ease-in-out;
+-moz-transition: all .2s ease-in-out;
+transition: all .2s ease-in-out;
+}
+
+
+.w-search .searchform {
+display: block;
+height: 28px;
+background-position: 6px -17px;
+background-color: #DCD7D2;
+border-radius: 14px;
+}
+
+.w-search .searchform, .w-search .searchform .btn, .w-more, .w-other a, .w-more-close, .w-more-open, .m-readerhelp .step1, .m-readerhelp .step2, .w-close, .w-msg, .w-icon-gift, .w-icon-question, .w-icon-read, .w-icon-time, .w-icon-question2 {
+background: url(../lib/images/icon.png) -9999px -9999px no-repeat;
+}
+
+.m-pctrl {
+position: absolute;
+top: 10px;
+right: 5px;
+z-index: 200;
+margin-left: 15px;
+font-family: 'microsoft yahei',STXihei,arial;
+}
+
+
+.w-starfive li {
+float: left;
+width: 14px;
+height: 18px;
+line-height: 18px;
+margin: 0!important;
+padding: 0!important;
+background-position: 0 -642px;
+}
+
+.w-starfive .red {
+background-position: -19px -642px;
+}
+
+.m-sns a, .w-box4 .logo, .w-reader li a, .w-device span, .w-starfive li, .w-starfive-big li, .w-reply-doc .arr, .w-paylist .itm, .w-dropdown-menu0 .btn span, .w-comm-ok .info em, .w-tab-btn a, .m-catalogue em, .m-readerhelp .prev, .m-readerhelp .next, .w-exchange a, .w-hpimg .arr, .w-dropdown-menu .btn, .w-fbox .gotop a, .w-tab2 .go {
+background: url(../lib/images/sprite.png) -9999px -9999px no-repeat;
+}
+
+.g-bd, .g-bd1, .g-ft, .m-nav ul, .m-bookdetail .wrap, .m-login, .m-bookdetail .act, .w-ttl, .w-aimg ul, .w-tab ul, .w-tab, .w-tab1 ul, .w-tab1, .w-box3 .act, .w-box3, .w-box4, .w-category, .w-booklist ul, .w-booklist .intro, .w-dropdown-menu .ttl, .w-reader ul, .w-device, .w-starfive, .w-starfive ul, .w-starfive-big, .w-starfive-big ul, .w-page, .w-paylist, .w-form, .w-form li, .w-slider .tab, .w-reply-doc .form, .m-comm-single .comm-info, .m-comm-single .act-use, .m-catalogue .secondary, .m-catalogue, .m-bookdetail .other, .m-readhelp .tab, .m-readhelp .wrap, .w-bookitm, .m-redeem-ok, .m-redeem .deemin-intr, .m-bookdetail .share, .w-box, .m-directory .list, .w-booklist li, .w-txtlist2, .w-txtlist3, .w-tab2 ul, .w-paystep2, .w-null, .w-pclist .itm, .w-layer .act, .m-publish-list .list ul, .w-hpimg .wrap, .w-ptab ul, .m-invitesuccess .book, .m-sns ul, .w-msg2, .w-txtlist .first, .w-explorer ul, .w-layer2 .box, .w-other ul .m-login .addr {
+zoom: 1;
+}
+li {
+list-style: none;
+}
+li {
+display: list-item;
+text-align: -webkit-match-parent;
+}
+
+.g-bd::after, .g-bd1::after, .g-ft::after, .m-nav ul::after, .m-bookdetail .wrap::after, .m-login::after, .m-bookdetail .act::after, .w-ttl::after, .w-aimg ul::after, .w-tab ul::after, .w-tab::after, .w-tab1 ul::after, .w-tab1::after, .w-box3 .act::after, .w-box3::after, .w-box4 .cnt::after, .w-category::after, .w-booklist ul::after, .w-booklist .intro::after, .w-dropdown-menu .ttl::after, .w-device::after, .w-starfive::after, .w-starfive-big::after, .w-page::after, .w-paylist::after, .w-form::after, .w-form li::after, .w-slider .tab::after, .w-reply-doc .form::after, .m-comm-single .comm-info::after, .m-comm-single .act-use::after, .m-catalogue .secondary::after, .m-catalogue::after, .m-bookdetail .other::after, .m-readerhelp .tab ul::after, .m-readerhelp .wrap::after, .w-bookitm::after, .m-redeem-ok::after, .m-redeem .deemin-intr::after, .m-bookdetail .share::after, .w-box::after, .m-directory .list::after, .w-booklist li::after, .w-txtlist2::after, .w-txtlist3::after, .w-tab2 ul::after, .w-paystep2::after, .w-null::after, .w-pclist .itm::after, .w-layer .act::after, .m-publish-list .list ul::after, .w-hpimg .wrap::after, .w-ptab ul::after, .m-invitesuccess .book::after, .m-sns ul::after, .w-msg2::after, .w-txtlist .first::after, .w-explorer ul::after, .w-layer2 .box::after, .w-other ul::after, .m-login .addr::after {
+clear: both;
+content: '.';
+display: block;
+height: 0;
+overflow: hidden;
+visibility: hidden;
+}

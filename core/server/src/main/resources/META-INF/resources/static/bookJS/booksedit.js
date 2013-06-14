@@ -4,6 +4,16 @@
 
 	  // 通过 require 引入依赖
 	  var $ = require('jquery');
+	  
+	  var acknowledgeinput = require('../bootstrap/validation/bootstrap-acknowledgeinput.js');
+	  var validation = require('../bootstrap/validation/bootstrap-validation-form.js');
+	  var bootbox = require('../bootstrap/js/bootbox.min.js');
+	  var form = require('../jquery/jquery.form.js');
+	  var multiselect = require('../bootstrap/js/bootstrap-multiselect.js');
+	  var simplePagingGrid = require('../simpleGrid/js/simplePagingGrid-0.5.0.2.js');
+	  var handlebars = require('../simpleGrid/js/handlebars-1.0.rc.1.js');
+	  var bootstrap = require('../bootstrap/js/bootstrap.min.js');
+	  
 	  //响应查询按钮
 	function searchData() {
 		var searchname = $("#search-name").val();

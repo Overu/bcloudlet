@@ -12,6 +12,7 @@
 <link href="/static/css/main.css" rel="stylesheet">
 <link href="/static/simpleGrid/css/simplePagingGrid-0.4.css" rel="stylesheet">
 <link rel="stylesheet" href="/static/bootstrap/css/font-awesome.min.css">
+<link href="/static/css/books.css" rel="stylesheet">
 <script type="text/javascript" src="/static/lib/seajs/2.0.0/sea.js"></script>
 <script type="text/javascript">
 	seajs.config({
@@ -26,11 +27,16 @@
 		    }
 		  }
 	});
+	
+	// FIXME 临时解决方案
+	  window.onLoadImg = function(evt) {
+	    evt.style.display = 'block'
+	  }
 </script>
 </head>
 <body data-spy="scroll" data-target=".bs-docs-sidebar">
   <!-- Navbar ================================================== -->
-  <div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
       <div class="container">
         <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -44,6 +50,32 @@
             <li class=""><a href="/users/">用户</a></li>
           </ul>
         </div>
+        <div class="w-search">
+      <div class="searchform" href="javascript:void(0);" hidefocus="hidefocus">
+        <input type="text" id="dk-text" class="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" hidefocus="hidefocus" value="搜索书名或者作者..."> <span title="搜索" class="btn" id="searchbotton" style="display: none"></span>
+      </div>
+      <div class="m-pctrl">
+      <div id="w-login" style="">
+        <a href="/login" id="gotologin" hidefocus="hidefocus">登录</a><span class="w-sep">|</span><a href="/logout" hidefocus="hidefocus">注册</a>
+      </div>
+      <div class="m-person" id="w-person" style="display: none; ">
+        <div class="w-dropdown-menu">
+          <div class="ttl">
+            <a href="/u/mybook" class="username" id="username" hidefocus="hidefocus"></a><a class="btn" href="javascript:void(0);" hidefocus="hidefocus">&nbsp;</a>
+          </div>
+          <div class="cnt" style="display: none; ">
+            <ul class="list">
+              <li><a href="/u/mybook" hidefocus="hidefocus">已购图书 </a></li>
+              <li><a href="/u/redeem" hidefocus="hidefocus">我的兑换码 </a></li>
+              <li><a href="/u/invite" hidefocus="hidefocus">我的邀请码</a></li>
+              <li><a href="/u/settings" hidefocus="hidefocus">帐号设置</a></li>
+            </ul>
+            <a href="javascript:void(0);" class="exit" id="exit" hidefocus="hidefocus">退出</a> <span class="arr0"></span> <span class="arr1"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
       </div>
     </div>
   </div>
