@@ -155,3 +155,7 @@ cursor: pointer;
 .w-slider {
 background: url(../lib/images/slider.jpg?201306141402) 0 bottom no-repeat;
 }
+
+.row-fluid [class*="span"] {
+margin-left: 0%;
+}

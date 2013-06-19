@@ -1,15 +1,20 @@
 package org.cloudlet.book.server;
 
+import com.google.inject.Inject;
+
 import org.cloudlet.core.server.Content;
 import org.cloudlet.core.server.CoreUtil;
 import org.cloudlet.core.server.Folder;
 import org.cloudlet.core.server.Repository;
 import org.cloudlet.core.server.Tag;
+import org.cloudlet.core.server.Tags;
 import org.cloudlet.core.server.WebPlatform;
 
 import java.net.URISyntaxException;
+import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -42,6 +47,12 @@ public class Books extends Folder<Book> {
 
   @QueryParam(Book.TAG)
   protected String tag;
+
+  @Transient
+  private Tags tags;
+
+  @Inject
+  private transient Repository repo;
 
   @Override
   public void addJoin(StringBuilder sql) {
@@ -122,6 +133,14 @@ public class Books extends Folder<Book> {
     return result;
   }
 
+  public Tags getTags() {
+    if (tags == null) {
+      tags = repo.getTags();
+      tags.doLoad();
+    }
+    return tags;
+  }
+
   @Override
   public String getType() {
     return TYPE_NAME;
@@ -171,9 +190,12 @@ public class Books extends Folder<Book> {
     this.promoted = promoted;
   }
 
+  public void setTags(Tags tags) {
+    this.tags = tags;
+  }
+
   @Override
   protected Book createFrom(MultivaluedMap<String, String> params) {
     return newContent();
   }
-
 }

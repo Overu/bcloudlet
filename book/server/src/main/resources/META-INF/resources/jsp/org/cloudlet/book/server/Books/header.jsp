@@ -18,3 +18,15 @@
   </div>
 </header>
 <div class="container">
+<!-- Docs nav    ================================================== -->
+  <div class="row">
+    <div class="span3 bs-docs-sidebar">
+      <ul class="nav nav-list bs-docs-sidenav">
+        <div>
+          <h3>图书分类</h3>
+        </div>
+        <c:forEach var="i" items="${it.tags.items}">          
+            <li><a href="/books/t/${i.value}" hidefocus="hidefocus"><span>${i.value}</span></a></li>         
+        </c:forEach>
+      </ul>
+    </div>
