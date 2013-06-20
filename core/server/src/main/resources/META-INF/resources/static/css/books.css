@@ -145,10 +145,10 @@ background: white;
 position: relative;
 zoom: 1;
 width: 770px;
-height: 316px;
+height: 270px;
 overflow: hidden;
 padding: 1px 3px 3px;
-margin: -1px 0 5px -3px;
+margin: 35px 0 5px -3px;
 cursor: pointer;
 }
 
@@ -158,4 +158,18 @@ background: url(../lib/images/slider.jpg?201306141402) 0 bottom no-repeat;
 
 .row-fluid [class*="span"] {
 margin-left: 0%;
+}
+
+section {
+padding-top: 0px;
+}
+
+/* .w-ttl {
+padding-left: 25px;
+} */
+
+.container-fluid .w-more {
+position: absolute;
+margin-top: -30px;
+margin-left: 700px;
 }

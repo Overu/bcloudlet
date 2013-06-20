@@ -2,13 +2,24 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://www.cloudlet.org/jsp/web" prefix="w"%>
 <w:include page="header.jsp"></w:include>
+<div class="row">
+    <div class="span3 bs-docs-sidebar">
+      <ul class="nav nav-list bs-docs-sidenav">
+        <div>
+          <h3>图书分类</h3>
+        </div>
+        <c:forEach var="i" items="${it.tags.items}">          
+            <li><a href="/books/t/${i.value}" hidefocus="hidefocus"><span>${i.value}</span></a></li>         
+        </c:forEach>
+      </ul>
+    </div>
 <div class="span9">
   <section>   
     <div class="container-fluid">
       <div>
         <section id="thumbnails">
           <div>
-            <h1>全部图书>${it.tag.value}</h1>
+            <h5>全部图书>${it.tag.value}</h5>
           </div>
           <div class="row-fluid">
             <ul class="thumbnails">
@@ -45,7 +56,9 @@
           </div>
           
       </div>
-    </div>
+   
   </section>
 </div>
+ </div>
+
 <w:include page="footer.jsp"></w:include>

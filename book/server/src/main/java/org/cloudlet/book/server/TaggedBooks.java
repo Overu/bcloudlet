@@ -1,10 +1,14 @@
 package org.cloudlet.book.server;
 
+import com.google.inject.Inject;
+
 import org.cloudlet.core.server.QueryFeed;
 import org.cloudlet.core.server.Repository;
 import org.cloudlet.core.server.Tag;
+import org.cloudlet.core.server.Tags;
 import org.cloudlet.core.server.WebPlatform;
 
+import javax.persistence.Transient;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -17,6 +21,12 @@ import javax.xml.bind.annotation.XmlType;
 public class TaggedBooks extends QueryFeed<Book> {
 
   private Tag tag;
+
+  @Transient
+  private Tags tags;
+
+  @Inject
+  private transient Repository repo;
 
   @Override
   public void addJoin(StringBuilder sql) {
@@ -47,6 +57,15 @@ public class TaggedBooks extends QueryFeed<Book> {
     return tag;
   }
 
+  public Tags getTags() {
+
+    if (tags == null) {
+      tags = repo.getTags();
+      tags.doLoad();
+    }
+    return tags;
+  }
+
   @Override
   public void prepareQuery(StringBuilder sql) {
     if (tag != null) {
@@ -65,5 +84,9 @@ public class TaggedBooks extends QueryFeed<Book> {
 
   public void setTag(Tag tag) {
     this.tag = tag;
+  }
+
+  public void setTags(Tags tags) {
+    this.tags = tags;
   }
 }

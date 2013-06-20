@@ -22,7 +22,7 @@ public abstract class Collection<E extends Item> extends Content {
   protected int start;
 
   @QueryParam("limit")
-  @DefaultValue("10")
+  @DefaultValue("8")
   @Transient
   protected int limit;
 
