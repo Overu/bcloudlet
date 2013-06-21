@@ -1,8 +1,8 @@
 .m-header {
 position: relative;
 z-index: 100;
-padding: 0 0 25px;
-height: 62px;
+padding: 25px 0 25px;
+height: 50px;
 }
 
 .m-logo a {
@@ -156,10 +156,11 @@ cursor: pointer;
 background: url(../lib/images/slider.jpg?201306141402) 0 bottom no-repeat;
 }
 
-.row-fluid [class*="span"] {
-margin-left: 0%;
-}
-
+/* .row-fluid [class*="span"] {
+margin-top: 0px;
+margin-bottom: 5px;
+} 
+ */
 section {
 padding-top: 0px;
 }
@@ -172,4 +173,14 @@ padding-left: 25px;
 position: absolute;
 margin-top: -30px;
 margin-left: 700px;
+}
+
+.w-more-open {
+background-position: 0 -351px;
+zoom: 1;
+}
+
+form {
+margin: 0 0 20px;
+padding: 10px 20px 0 0;
 }

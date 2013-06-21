@@ -49,14 +49,15 @@
             <li class=""><a href="/courses/">课件</a></li>
             <li class=""><a href="/users/">用户</a></li>
           </ul>
-        </div>
-        <div class="w-search">
-      <div class="searchform" href="javascript:void(0);" hidefocus="hidefocus">
-        <input type="text" id="dk-text" class="text" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" hidefocus="hidefocus" value="搜索书名或者作者..."> <span title="搜索" class="btn" id="searchbotton" style="display: none"></span>
+          <div >
+        <form class="form-search">
+            <input type="text" class="input-medium search-query">            
+         </form>
       </div>
+        </div>         
       <div class="m-pctrl">
-      <div id="w-login" style="">
-        <a href="/login" id="gotologin" hidefocus="hidefocus">登录</a><span class="w-sep">|</span><a href="/logout" hidefocus="hidefocus">注册</a>
+      <div id="w-login" class="nav-collapse collapse">
+        <li><a href="/login" id="gotologin" hidefocus="hidefocus">登录</a><span class="w-sep">|</span><a href="/logout" hidefocus="hidefocus">注册</a></li>
       </div>
       <div class="m-person" id="w-person" style="display: none; ">
         <div class="w-dropdown-menu">
@@ -74,8 +75,7 @@
           </div>
         </div>
       </div>
-    </div>
-    </div>
+    </div>       
       </div>
     </div>
   </div>

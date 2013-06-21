@@ -4,7 +4,7 @@
 <w:include page="header.jsp"></w:include>
 <div class="row">
     <div class="span3 bs-docs-sidebar">
-      <ul class="nav nav-list bs-docs-sidenav">
+      <ul class="nav nav-list">
         <div>
           <h3>图书分类</h3>
         </div>
@@ -24,9 +24,11 @@
           <div class="row-fluid">
             <ul class="thumbnails">
               <c:forEach var="i" items="${it.items}" varStatus="status">
+              <c:if test="${status.count%4==1}"><ul class="thumbnails"></c:if>   
                 <li class="span3" book_id="${i.id}"><a href="${i.uri}"></a>
                   <div class="thumbnail">
-                    <img src="${i.coverUrl}" /> <a class="title" href="${ i.uri }" hidefocus="hidefocus">${ i.title }</a>
+                    <img src="${i.coverUrl}"/>
+                    <a href="${ i.uri }" style="height: 50px;">${ i.title }</a>
                     <p class="author">
                       <span>retech</span>
                     </p>
