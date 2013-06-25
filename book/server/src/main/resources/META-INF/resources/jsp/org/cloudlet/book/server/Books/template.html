@@ -1,0 +1,34 @@
+<script type="text/template" id="jst-more">
+{@each items as itm, index}
+{@if index%4===0}
+<ul class="thumbnails">
+{@/if}
+<li class="span3" book_id ="$${ itm.id }">
+<div class="thumbnail">
+<a href="$${ itm.uri }">
+<img src="$${ itm.coverUrl }" />
+</a>
+<div class="caption">
+<a class="title" href="$${itm.id}" hidefocus="hidefocus">
+$${ itm.title }
+</a>
+{@if itm.authors != null && itm.authors != ''}
+<p class="author"><span>$${itm.id}</span></p>
+{@else}<p class="author"><span>retech</span></p> 
+{@/if}
+
+{@if itm.new_price!=0}
+<span>¥ $${ itm.new_price }</span><del>¥ $${ itm.price }</del>
+{@else if itm.price !=0}
+<span>¥ ${ itm.price }</span>
+{@else}
+<span>免费</span>
+{@/if}
+</div>
+</div>
+</li>
+{@if index%4===3}
+</ul>
+{@/if}
+{@/each}
+</script>

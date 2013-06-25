@@ -16,11 +16,3 @@
   </section>
 </div>
 <w:include page="footer.jsp"></w:include>
-<jsp:include page="template.html"></jsp:include>
-<script>
-      seajs.use([ 'duokan/store/1/page/book',
-          'duokan/store/1/page/patched' ])
-    </script>
-  <script>
-      seajs.use('duokan/store/1/page/act_rank_sale');
-    </script>

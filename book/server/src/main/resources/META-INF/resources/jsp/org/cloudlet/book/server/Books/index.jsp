@@ -30,21 +30,24 @@
                 <h4>推荐阅读</h4>
                 <a href="/books/r/recommendation" class="w-more" hidefocus="hidefocus">更多</a>
               </div>
-              <jsp:include page="booklist.jsp"></jsp:include>
+              <div class="row-fluid" id="recommendation">              
+              </div>
             </section>
              <section id="thumbnails">
               <div >
                 <h4>最新上架</h4>
-                <a href="/books/r/recommendation" class="w-more" hidefocus="hidefocus">更多</a>
+                <a href="/books/r/latest" class="w-more" hidefocus="hidefocus">更多</a>
               </div>
-              <jsp:include page="booklist.jsp"></jsp:include>
+              <div class="row-fluid" id="latest">              
+              </div>
             </section>
              <section id="thumbnails">
               <div >
                 <h4>最新特价</h4>
-                <a href="/books/r/recommendation" class="w-more" hidefocus="hidefocus">更多</a>
+                <a href="/books/r/newsale" class="w-more" hidefocus="hidefocus">更多</a>
+              </div>             
+              <div class="row-fluid" id="newsale">              
               </div>
-              <jsp:include page="booklist.jsp"></jsp:include>
             </section>
           </div>
         </div>
@@ -52,3 +55,7 @@
     </div>
     </div>
   <w:include page="footer.jsp"></w:include>
+  <jsp:include page="template.html"></jsp:include>
+  <script>
+      seajs.use('/static/bookJS/index.js');
+    </script>

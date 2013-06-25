@@ -4,7 +4,7 @@
 <w:include page="header.jsp"></w:include>
 <div class="row">
     <div class="span3 bs-docs-sidebar">
-      <ul class="nav nav-list">
+      <ul class="nav nav-list bs-docs-sidenav">
         <div>
           <h3>图书分类</h3>
         </div>
@@ -25,9 +25,10 @@
             <ul class="thumbnails">
               <c:forEach var="i" items="${it.items}" varStatus="status">
               <c:if test="${status.count%4==1}"><ul class="thumbnails"></c:if>   
-                <li class="span3" book_id="${i.id}"><a href="${i.uri}"></a>
+                <li class="span3" book_id="${i.id}">
                   <div class="thumbnail">
-                    <img src="${i.coverUrl}"/>
+                  <a href="${i.uri}"><img src="${i.coverUrl}"/></a>                    
+                     <div class="caption">
                     <a href="${ i.uri }" style="height: 50px;">${ i.title }</a>
                     <p class="author">
                       <span>retech</span>
@@ -45,22 +46,13 @@
                           <span class="price1">免费</span>
                         </c:otherwise>
                       </c:choose>
+                    </div>
                     </div></li>
+                    <c:if test="${status.count%4==0}"></ul></c:if> 
               </c:forEach>
             </ul>
-
-<div class="w-page2">
-                  <!-- <em><span id='one-page'>1</span>/<span id='total-page'>12</span></em> -->
-                  <a class="pre<c:if test='${it.firstPage}'> init</c:if>" hidefocus="hidefocus" href="${it.previousPageUri}">上一页</a> <a
-                    class="next<c:if test='${it.lastPage}'> init</c:if>" hidefocus="hidefocus" href="${it.nextPageUri}">下一页</a>
-                </div>
-        </section>
-          </div>
-          
       </div>
-   
-  </section>
+     </section>
 </div>
  </div>
-
 <w:include page="footer.jsp"></w:include>

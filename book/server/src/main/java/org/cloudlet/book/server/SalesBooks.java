@@ -16,30 +16,12 @@ public class SalesBooks extends QueryFeed<Book> {
 
   private BookRank rank;
 
-  @Override
-  public void doLoad() {
-    switch (rank) {
-    case HOT:
-      start = 0;
-      break;
-    case MONTHLY:
-      start = 10;
-      break;
-    case FREE:
-      start = 20;
-      break;
-    case RATED:
-      start = 5;
-      break;
-    case LATEST:
-      start = 10;
-      break;
-    default:
-      break;
-    }
-
-    super.doLoad();
-  }
+  /*
+   * @Override public void doLoad() { switch (rank) { case HOT: start = 0; break; case MONTHLY: start = 10; break; case FREE: start = 20;
+   * break; case RATED: start = 5; break; case LATEST: start = 10; break; default: break; }
+   * 
+   * super.doLoad(); }
+   */
 
   @Override
   @XmlTransient

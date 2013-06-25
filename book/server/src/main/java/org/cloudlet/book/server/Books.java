@@ -108,6 +108,7 @@ public class Books extends Folder<Book> {
   }
 
   @Path("r/{rank}")
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public SalesBooks getRankedBooks(@PathParam("rank") String path) {
     BookRank rank = BookRank.getByPath(path);
     if (rank != null) {
