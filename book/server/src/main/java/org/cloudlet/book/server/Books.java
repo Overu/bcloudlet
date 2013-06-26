@@ -11,6 +11,8 @@ import org.cloudlet.core.server.Tags;
 import org.cloudlet.core.server.WebPlatform;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -117,6 +119,13 @@ public class Books extends Folder<Book> {
       return query;
     }
     return null;
+  }
+
+  @Path("search/{value}")
+  public SearchBooks getSearchBooks(@PathParam("value") String value) {
+    SearchBooks query = newChild("search/" + value, SearchBooks.class);
+    query.setSearch_value(value);
+    return query;
   }
 
   @Path("t/{tag}")

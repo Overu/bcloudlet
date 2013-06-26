@@ -180,7 +180,16 @@ background-position: 0 -351px;
 zoom: 1;
 }
 
-form {
-margin: 0 0 20px;
-padding: 10px 20px 0 0;
+.input-append, .input-prepend {
+margin-bottom: 8px;
+margin-top: 5px;
 }
+
+/* .input-prepend .btn {
+display: none;
+position: absolute;
+margin-left: 0px;
+top: 6px;
+height: 19px;
+background-position: 0 11px;
+} */
