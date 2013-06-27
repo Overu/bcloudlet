@@ -18,6 +18,10 @@ define(function(require, exports, module) {
 		}
 	});
 	$("#searchbotton").click(function() {
+		if($("#search-text").val()==null||$("#search-text").val()==""){
+			$("#searchbotton").hide();
+			return;
+		}
 		window.location.href = "/books/search/" + $("#search-text").val();
 	});
 });
