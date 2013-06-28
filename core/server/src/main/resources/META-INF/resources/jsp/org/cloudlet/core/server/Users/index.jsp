@@ -9,7 +9,7 @@
     </div>
     <div class="input-append" align="right">
       <input id="search-name" class="span2" id="appendedInputButtons" type="text">
-      <button id="search-btn" class="btn" onclick="searchData();" type="button">查询</button>
+      <button id="search-btn" class="btn" type="button">查询</button>
     </div>
 
     <div id="usersGrid"></div>
@@ -76,7 +76,7 @@
   </div>
 </div>
 <script>
-	seajs.use([ '/static/bookJS/navbar.js', '/static/bookJS/common.js',
+	seajs.use([ '/static/bookJS/navbar.js',
 			'/static/user/usersedit.js' ]);
 </script>
 
